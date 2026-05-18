@@ -169,7 +169,7 @@
                     <li><a href="#" class="active"><span>🏠</span> Dashboard</a></li>
                     <li><a href="#" onclick="openStatsModal('patients')"><span>👥</span> Patients</a></li>
                     <li><a href="#" onclick="openStatsModal('doctors')"><span>🩺</span> Doctors</a></li>
-                    <li><a href="#" onclick="openStatsModal('appointments')"><span>📅</span> Appointments</a></li>
+                    <li><a href="#" onclick="document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})"><span>📅</span> Appointments</a></li>
                     <li><a href="#"><span>⚙️</span> Settings</a></li>
                 </ul>
             </div>
@@ -327,7 +327,7 @@
                     <div class="panel">
                         <div class="panel-header">
                             <div><span style="color:var(--danger); margin-right:8px;">📅</span> Next Appointment</div>
-                            <button style="border:1px solid var(--border); background:#fff; border-radius:6px; padding:4px 12px; font-size:11px; cursor:pointer;" onclick="document.getElementById('table-deliveries').scrollIntoView({behavior:'smooth'})">See All</button>
+                            <button style="border:1px solid var(--border); background:#fff; border-radius:6px; padding:4px 12px; font-size:11px; cursor:pointer;" onclick="document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})">See All</button>
                         </div>
                         <div style="padding: 20px;" id="upcoming-appt-widget">
                             <p style="text-align: center; color: var(--text-light); font-size: 13px;">Searching for upcoming appointments...</p>
@@ -451,11 +451,12 @@
             const titleEl = document.getElementById('statsModalTitle');
             const bodyEl = document.getElementById('statsModalBody');
             let html = '';
+            const now = new Date();
 
             if (type === 'patients') {
                 titleEl.innerText = "Patient Insights";
-                const currentMonth = new Date().getMonth();
-                const currentYear = new Date().getFullYear();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
                 let newThisMonth = 0;
                 allPatientsData.forEach(p => {
                     const d = new Date(p.created_at);
@@ -470,8 +471,13 @@
                 `;
             } else if (type === 'doctors') {
                 titleEl.innerText = "Doctor Insights";
-                let verified = allDoctorsData.filter(d => d.status === 'approved').length;
-                let pending = allDoctorsData.length - verified;
+                
+                // Matches the logic in the rendering engine perfectly
+                let pending = 0; let verified = 0;
+                allDoctorsData.forEach(d => {
+                    if (d.status === 'pending' || d.status === 'incomplete') pending++;
+                    else verified++;
+                });
                 
                 html = `
                     <div class="stat-row"><span class="stat-label">Total Doctors</span> <span class="stat-val">${allDoctorsData.length}</span></div>
@@ -480,10 +486,19 @@
                 `;
             } else if (type === 'appointments') {
                 titleEl.innerText = "Appointment Insights";
-                let active = allAppointmentsData.filter(a => a.status === 'scheduled' || a.status === 'pending_payment').length;
-                let past = allAppointmentsData.length - active;
-                let online = allAppointmentsData.filter(a => a.type === 'online').length;
-                let clinic = allAppointmentsData.length - online;
+                
+                // Calculates using exact timestamps to separate past vs future
+                let active = 0; let past = 0; let online = 0; let clinic = 0;
+                allAppointmentsData.forEach(a => {
+                    const apptDate = new Date(a.preferred_datetime || a.created_at);
+                    // If the consultation is marked completed OR the date has passed, it's past.
+                    if (a.consultation_completed || apptDate < now) {
+                        past++;
+                    } else {
+                        active++;
+                    }
+                    if (a.type === 'online') online++; else clinic++;
+                });
 
                 html = `
                     <div class="stat-row"><span class="stat-label">Total Lifetime Appointments</span> <span class="stat-val">${allAppointmentsData.length}</span></div>
@@ -507,14 +522,15 @@
 
         // ================= 100% ACCURATE MAIN DASHBOARD STATS =================
         function updateAccurateStats() {
-            // MAIN CARD NUMBERS (100% Accurate API Counting)
+            const now = new Date();
+            // MAIN CARD NUMBERS
             document.getElementById('stat-patients').innerText = allPatientsData.length;
             document.getElementById('stat-doctors').innerText = allDoctorsData.length;
             document.getElementById('stat-appts').innerText = allAppointmentsData.length;
 
             // Patients Subtext
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
             let newPatientsThisMonth = 0;
             allPatientsData.forEach(p => {
                 const d = new Date(p.created_at);
@@ -523,18 +539,19 @@
             document.getElementById('stat-patients-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">+${newPatientsThisMonth} joined this month</span> <span style="margin-left:auto;">Click for info →</span>`;
 
             // Doctors Subtext
-            let verified = 0; let pending = 0;
+            let pending = 0; let verified = 0;
             allDoctorsData.forEach(d => {
-                if (d.status === 'approved') verified++;
-                else pending++;
+                if (d.status === 'pending' || d.status === 'incomplete') pending++;
+                else verified++;
             });
             document.getElementById('stat-doctors-sub').innerHTML = `<span style="color:var(--success); font-weight:600;">${verified} Verified</span><span style="margin-left:auto; color:var(--warning); font-weight:600;">${pending} Pending</span>`;
 
-            // Appointments Subtext
+            // Appointments Subtext (checks timestamps accurately)
             let active = 0; let past = 0;
             allAppointmentsData.forEach(a => {
-                if (a.status === 'scheduled' || a.status === 'pending_payment') active++;
-                else past++;
+                const apptDate = new Date(a.preferred_datetime || a.created_at);
+                if (a.consultation_completed || apptDate < now) past++;
+                else active++;
             });
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
         }
@@ -584,9 +601,17 @@
         // ================= DYNAMIC UPCOMING APPOINTMENT WIDGET =================
         function renderUpcomingWidget() {
             const widget = document.getElementById('upcoming-appt-widget');
+            const now = new Date();
             
-            // Find the most recent active appointment
-            const upcoming = allAppointmentsData.find(a => a.status === 'scheduled' || a.status === 'pending_payment');
+            // Filter only appointments that are in the future
+            const futureAppts = allAppointmentsData.filter(a => {
+                const apptDate = new Date(a.preferred_datetime || a.created_at);
+                return apptDate >= now && !a.consultation_completed;
+            });
+
+            // Sort them to find the closest one
+            futureAppts.sort((a, b) => new Date(a.preferred_datetime || a.created_at) - new Date(b.preferred_datetime || b.created_at));
+            const upcoming = futureAppts.length > 0 ? futureAppts[0] : null;
             
             if (!upcoming) {
                 widget.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">No upcoming appointments scheduled.</div>`;
@@ -597,6 +622,7 @@
             const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             const initials = (upcoming.patient_name || "P").substring(0,2).toUpperCase();
+            const prettyStatus = (upcoming.status || 'Scheduled').replace('_', ' ');
 
             widget.innerHTML = `
                 <div class="appt-manage-card">
@@ -608,7 +634,7 @@
                                 <div style="font-size:11px; color:var(--text-muted);">${upcoming.patient_email || 'No email registered'}</div>
                             </div>
                         </div>
-                        <span class="badge pending" style="text-transform: capitalize;">${upcoming.status.replace('_', ' ')}</span>
+                        <span class="badge pending" style="text-transform: capitalize;">${prettyStatus}</span>
                     </div>
                     <hr style="border:0; border-top:1px solid var(--border-light);">
                     <div class="appt-detail-row">
@@ -647,7 +673,7 @@
                 // Execute Calculations
                 updateAccurateStats();
                 calculateRevenueData();
-                renderUpcomingWidget(); // Populate dynamic right panel
+                renderUpcomingWidget(); 
                 
                 // Render UI
                 renderDoctorList();
@@ -667,7 +693,7 @@
             }
 
             container.innerHTML = allDoctorsData.map(doc => {
-                const isPending = doc.status === 'pending';
+                const isPending = doc.status === 'pending' || doc.status === 'incomplete';
                 const badgeClass = isPending ? 'pending' : 'verified';
                 const badgeText = isPending ? 'Pending' : 'Verified';
                 
