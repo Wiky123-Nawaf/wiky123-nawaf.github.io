@@ -138,7 +138,7 @@
         .appt-detail-label { color: var(--text-muted); }
         .appt-detail-value { font-weight: 500; color: var(--text-main); text-align: right; }
 
-        /* ====== MODALS & FORMS (DOCTOR PORTAL MATCH) ====== */
+        /* ====== MODALS & FORMS ====== */
         .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
         .modal-box { background: #fff; border-radius: 12px; width: 100%; max-width: 450px; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -157,7 +157,8 @@
         .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
         .form-control { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; background: #f9fafb;}
         .form-control:focus { border-color: var(--primary); background: #fff; }
-        .btn-primary { background: var(--primary); color: white; padding: 10px 16px; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; width: 100%; }
+        .btn-primary { background: var(--primary); color: white; padding: 10px 16px; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; width: 100%; transition: 0.2s;}
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         
         /* File Upload UI */
         .file-upload-box { border: 1px dashed #d1d5db; border-radius: 8px; padding: 16px; text-align: center; background-color: #f9fafb; cursor: pointer; transition: 0.2s; position: relative; font-size: 12px; color: #4b5563; }
@@ -400,7 +401,7 @@
                 <button class="modal-close" onclick="closeAddDoctorModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Register a new doctor. They will be auto-approved even if only the name is provided.</p>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Register a new doctor. They will be auto-approved so they can log in instantly.</p>
                 <form id="adminAddDocForm" onsubmit="event.preventDefault(); submitAdminNewDoctor();">
                     
                     <div class="form-row">
@@ -409,25 +410,31 @@
                             <input type="text" id="newDocName" class="form-control" placeholder="Dr. John Doe" required>
                         </div>
                         <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" id="newDocEmail" class="form-control" placeholder="doctor@clinic.com">
+                            <label>Email Address <span style="color:var(--danger)">*</span></label>
+                            <input type="email" id="newDocEmail" class="form-control" placeholder="doctor@clinic.com" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
+                            <label>Password <span style="color:var(--danger)">*</span></label>
+                            <input type="text" id="newDocPass" class="form-control" placeholder="Set a temporary password" required>
+                        </div>
+                        <div class="form-group">
                             <label>Specialty</label>
                             <input type="text" id="newDocSpec" class="form-control" placeholder="Cardiologist">
                         </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label>Phone Number</label>
                             <input type="text" id="newDocPhone" class="form-control" placeholder="+60123456789">
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Clinic Location</label>
-                        <input type="text" id="newDocLoc" class="form-control" placeholder="HQ Clinic">
+                        <div class="form-group">
+                            <label>Clinic Location</label>
+                            <input type="text" id="newDocLoc" class="form-control" placeholder="HQ Clinic">
+                        </div>
                     </div>
                     
                     <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 24px 0;">
@@ -478,7 +485,7 @@
                         <div class="form-group"></div>
                     </div>
                     
-                    <button type="submit" class="btn-primary" style="margin-top: 16px;">Create & Approve Doctor</button>
+                    <button type="submit" class="btn-primary" id="btnSubmitDoctor" style="margin-top: 16px;">Create & Approve Doctor</button>
                 </form>
             </div>
         </div>
@@ -525,7 +532,7 @@
                         <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
-                <button class="btn-primary" onclick="submitEditAppt()" style="margin-top:16px;">Save Changes</button>
+                <button class="btn-primary" id="editApptSubmitBtn" onclick="submitEditAppt()" style="margin-top:16px;">Save Changes</button>
             </div>
         </div>
     </div>
@@ -702,7 +709,7 @@
             document.getElementById('stat-revenue').innerText = `MYR ${curRev.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
         }
 
-        // 4. NEXT APPOINTMENT WIDGET (WITH EMAIL FIX)
+        // 4. NEXT APPOINTMENT WIDGET
         function renderUpcomingWidget() {
             const widget = document.getElementById('upcoming-appt-widget');
             const now = new Date();
@@ -790,7 +797,7 @@
             } catch (e) { console.error("Data Load Error:", e); }
         }
 
-        // 6. RENDER TABLE (ALIGNED DATES + EDIT BUTTON)
+        // 6. RENDER TABLE WITH EDIT BUTTON
         function renderAppointmentsTable() {
             const tableBody = document.getElementById('table-deliveries');
             const seeMoreContainer = document.getElementById('seeMoreContainer');
@@ -883,30 +890,37 @@
         function closeEditApptModal() { document.getElementById('editApptModal').style.display = 'none'; }
         
         async function submitEditAppt() {
-            // Note: Since this modifies backend data, in a real scenario you need a PUT /api/admin/appointments route.
-            // For the requested UI demo, we will simulate the update and refresh local arrays.
             const id = document.getElementById('editApptId').value;
             const newDt = document.getElementById('editApptDatetime').value;
             const newDocId = document.getElementById('editApptDoctor').value;
             const newStatus = document.getElementById('editApptStatus').value;
 
-            // Mock update locally to show functionality instantly
-            const appt = allAppointmentsData.find(a => a.id == id);
-            if(appt) {
-                appt.preferred_datetime = newDt;
-                appt.status = newStatus;
-                const newDoc = allDoctorsData.find(d => d.id === newDocId);
-                if(newDoc) appt.doctor_name = newDoc.name;
-            }
+            const btn = document.getElementById('editApptSubmitBtn');
+            btn.innerText = "Saving...";
+            btn.disabled = true;
 
-            alert("Appointment successfully updated! (UI Updated locally)");
-            closeEditApptModal();
-            
-            // Re-render everything
-            updateAccurateStats();
-            renderUpcomingWidget();
-            filteredAppointmentsData = [...allAppointmentsData];
-            renderAppointmentsTable();
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/appointments/${id}`, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify({
+                        preferred_datetime: newDt,
+                        doctor_id: newDocId,
+                        status: newStatus
+                    })
+                });
+
+                if(!res.ok) throw new Error("Failed to update appointment");
+
+                alert("Appointment successfully updated!");
+                closeEditApptModal();
+                loadCoreData(); // Re-fetches all arrays and re-renders table correctly
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "Save Changes";
+                btn.disabled = false;
+            }
         }
 
         // ================= RENDER DOCTORS & DETAILS =================
@@ -926,8 +940,8 @@
                 if (isPending) {
                     actionsHtml = `
                     <div class="doc-actions" onclick="event.stopPropagation()">
-                        <button class="btn-approve" onclick="verifyDoctor('${doc.id}', 'approve')">Approve</button>
-                        <button class="btn-reject" onclick="verifyDoctor('${doc.id}', 'reject')">Reject</button>
+                        <button class="btn-approve" onclick="verifyDoctor(event, '${doc.id}', 'approve')">Approve</button>
+                        <button class="btn-reject" onclick="verifyDoctor(event, '${doc.id}', 'reject')">Reject</button>
                     </div>`;
                 }
 
@@ -958,7 +972,7 @@
             const body = document.getElementById('doctorDetailsBody');
             
             const docLink = (name, url) => {
-                if(url) return `<a href="${url}" target="_blank" class="doc-link-btn">📄 View ${name} <span>→</span></a>`;
+                if(url && url !== "null") return `<a href="${url}" target="_blank" class="doc-link-btn">📄 View ${name} <span>→</span></a>`;
                 return `<div class="doc-link-btn disabled">❌ ${name} not uploaded</div>`;
             };
 
@@ -991,10 +1005,16 @@
         }
         function closeDoctorDetailsModal() { document.getElementById('doctorDetailsModal').style.display = 'none'; }
 
-        async function verifyDoctor(id, action) {
+        async function verifyDoctor(event, id, action) {
+            event.stopPropagation(); // Prevent opening the modal
             if (!confirm(`Are you sure you want to ${action} this doctor?`)) return;
-            const res = await fetch(`${API_BASE}/api/admin/doctors/${id}/verify?action=${action}`, { method: 'POST', headers: headers });
-            if (res.ok) { alert(`Doctor ${action}d successfully`); loadCoreData(); } 
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/doctors/${id}/verify?action=${action}`, { method: 'POST', headers: headers });
+                if (res.ok) { alert(`Doctor ${action}d successfully`); loadCoreData(); } 
+                else { alert("Action failed."); }
+            } catch (e) {
+                alert("Network error: " + e.message);
+            }
         }
 
         // ================= ADD NEW DOCTOR MODAL =================
@@ -1003,20 +1023,55 @@
         
         async function submitAdminNewDoctor() {
             const name = document.getElementById('newDocName').value;
-            if(!name) { alert("Doctor Full Name is required"); return; }
+            const email = document.getElementById('newDocEmail').value;
+            const pass = document.getElementById('newDocPass').value;
             
-            // To create files directly from the admin panel to firebase requires a dedicated backend route.
-            // As requested: the flow acts as if they are immediately approved.
-            
-            // Note: If you want true file uploading here, you need to POST a FormData object 
-            // to a new backend admin route just like `/api/doctor/complete_profile`.
-            
-            alert(`Doctor ${name} has been created and marked as Approved!`);
-            closeAddDoctorModal();
-            
-            // In a real scenario, we'd wait for API to respond, then reload:
-            // await fetch('/api/admin/doctors/add', {method: 'POST', body: formData, ...});
-            loadCoreData();
+            if(!name || !email || !pass) {
+                alert("Name, Email, and Password are required!");
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitDoctor');
+            btn.innerText = "Creating...";
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append("name", name);
+                formData.append("email", email);
+                formData.append("password", pass);
+                formData.append("specialty", document.getElementById('newDocSpec').value || "");
+                formData.append("phone", document.getElementById('newDocPhone').value || "");
+                formData.append("location", document.getElementById('newDocLoc').value || "");
+
+                ['Photo','Resume','APC','MMC','IC'].forEach(ext => {
+                    const fileInput = document.getElementById('newDoc'+ext);
+                    if(fileInput && fileInput.files[0]) {
+                        formData.append(ext.toLowerCase(), fileInput.files[0]);
+                    }
+                });
+
+                const res = await fetch(`${API_BASE}/api/admin/doctors/add`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }, // NO Content-Type for FormData
+                    body: formData
+                });
+
+                if(!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || "Failed to create doctor");
+                }
+
+                alert(`Doctor ${name} created and automatically approved!`);
+                closeAddDoctorModal();
+                document.getElementById('adminAddDocForm').reset();
+                loadCoreData(); // Refresh UI
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "Create & Approve Doctor";
+                btn.disabled = false;
+            }
         }
 
         // ================= OTHER LOGIC =================
