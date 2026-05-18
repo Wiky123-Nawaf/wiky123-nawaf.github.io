@@ -65,7 +65,7 @@
         .page-title h1 { font-size: 20px; font-weight: 700; color: var(--text-main); }
         .page-title p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-        /* ====== METRIC CARDS (ALL CLICKABLE) ====== */
+        /* ====== METRIC CARDS ====== */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .metric-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; cursor: pointer; transition: 0.2s; }
         .metric-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
@@ -94,11 +94,11 @@
         thead th { background: #fff; text-align: left; padding: 12px 20px; font-size: 11px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border); }
         td { padding: 14px 20px; font-size: 13px; border-bottom: 1px solid var(--border-light); color: var(--text-main); vertical-align: middle; }
         
-        .checkbox-circle { display: inline-block; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; vertical-align: middle; cursor: pointer; transition: 0.2s; }
+        .checkbox-circle { display: inline-block; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
         .checkbox-circle:hover { border-color: var(--primary); }
         
         .avatar-sm { width: 26px; height: 26px; border-radius: 50%; vertical-align: middle; margin-right: 8px; }
-        .time-pill { font-size:11px; color:var(--purple-text); font-weight:600; background:var(--purple-light); padding:4px 8px; border-radius:6px; display:inline-block; margin-left: 8px;}
+        .time-pill { font-size:11px; color:var(--purple-text); font-weight:600; background:var(--purple-light); padding:4px 8px; border-radius:6px; display:inline-block; }
 
         .see-more-container { text-align: center; padding: 12px; border-top: 1px solid var(--border-light); }
         .btn-see-more { background: transparent; border: 1px solid var(--border); color: var(--text-main); font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
@@ -142,7 +142,6 @@
         .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
         .modal-body { padding: 20px; max-height: 400px; overflow-y: auto; }
         
-        /* Stats Modal Specific */
         .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
         .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
         .stat-label { color: var(--text-muted); font-size: 13px; }
@@ -221,8 +220,6 @@
 
             <!-- METRIC CARDS (ALL OPEN THEIR RESPECTIVE API MODALS) -->
             <div class="metrics-grid">
-                
-                <!-- Card 1: Patients -->
                 <div class="metric-card clickable" onclick="openStatsModal('patients')" title="Click to view details">
                     <div class="card-header">Total Patients <span class="arrow">↗</span></div>
                     <div class="card-body">
@@ -231,7 +228,6 @@
                     <div class="card-footer" id="stat-patients-sub">Loading...</div>
                 </div>
 
-                <!-- Card 2: Doctors -->
                 <div class="metric-card clickable" onclick="openStatsModal('doctors')" title="Click to view details">
                     <div class="card-header">Total Doctors <span class="arrow">↗</span></div>
                     <div class="card-body">
@@ -240,7 +236,6 @@
                     <div class="card-footer" id="stat-doctors-sub">Loading...</div>
                 </div>
 
-                <!-- Card 3: Appointments -->
                 <div class="metric-card clickable" onclick="openStatsModal('appointments')" title="Click to view details">
                     <div class="card-header">Active Appointments <span class="arrow">↗</span></div>
                     <div class="card-body">
@@ -249,7 +244,6 @@
                     <div class="card-footer" id="stat-appts-sub">Loading...</div>
                 </div>
 
-                <!-- Card 4: Revenue -->
                 <div class="metric-card clickable" onclick="openRevenueModal()" title="Click to view all-time history">
                     <div class="card-header">Monthly Revenue <span class="arrow" style="color:var(--primary);">↗</span></div>
                     <div class="card-body rev-body">
@@ -323,7 +317,7 @@
                         </div>
                     </div>
 
-                    <!-- APPOINTMENT MANAGEMENT PANEL (NOW 100% DYNAMIC API DRIVEN) -->
+                    <!-- APPOINTMENT MANAGEMENT PANEL -->
                     <div class="panel">
                         <div class="panel-header">
                             <div><span style="color:var(--danger); margin-right:8px;">📅</span> Next Appointment</div>
@@ -340,7 +334,7 @@
 
     <!-- ================= MODALS ================= -->
     
-    <!-- STATS DETAILS MODAL (NEW: Triggered by clicking cards 1, 2, 3) -->
+    <!-- STATS DETAILS MODAL -->
     <div id="statsDetailsModal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-header">
@@ -348,12 +342,11 @@
                 <button class="modal-close" onclick="closeStatsModal()">&times;</button>
             </div>
             <div class="modal-body" id="statsModalBody">
-                <!-- Content injected dynamically via JS based on API Data -->
             </div>
         </div>
     </div>
 
-    <!-- Revenue History Modal (Card 4) -->
+    <!-- Revenue History Modal -->
     <div id="revenueModal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="border-radius: 8px;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 10px;">
@@ -381,7 +374,7 @@
         </div>
     </div>
 
-    <!-- Add Doctor Admin Form Modal -->
+    <!-- Add Doctor Modal -->
     <div id="addDoctorModal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <div class="modal-header">
@@ -407,7 +400,7 @@
         </div>
     </div>
 
-    <!-- Symptom Read More Modal -->
+    <!-- Symptom Modal -->
     <div id="symptomModal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="max-width: 400px;">
             <div class="modal-header">
@@ -428,14 +421,13 @@
         const API_BASE = "https://api.doktura.ai/api";
         const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
         
-        // Data Stores
         let allAppointmentsData = [];
         let filteredAppointmentsData = [];
         let allPatientsData = []; 
         let allDoctorsData = [];
         let currentTableLimit = 3; 
 
-        // Notification Toggle
+        // Notification Dropdown
         function toggleNotifications() {
             const dropdown = document.getElementById('notifDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
@@ -446,7 +438,7 @@
             }
         });
 
-        // ================= DYNAMIC STATS MODAL FOR CARDS 1, 2, 3 =================
+        // 1. STATS MODALS
         function openStatsModal(type) {
             const titleEl = document.getElementById('statsModalTitle');
             const bodyEl = document.getElementById('statsModalBody');
@@ -471,8 +463,6 @@
                 `;
             } else if (type === 'doctors') {
                 titleEl.innerText = "Doctor Insights";
-                
-                // Matches the logic in the rendering engine perfectly
                 let pending = 0; let verified = 0;
                 allDoctorsData.forEach(d => {
                     if (d.status === 'pending' || d.status === 'incomplete') pending++;
@@ -486,17 +476,10 @@
                 `;
             } else if (type === 'appointments') {
                 titleEl.innerText = "Appointment Insights";
-                
-                // Calculates using exact timestamps to separate past vs future
                 let active = 0; let past = 0; let online = 0; let clinic = 0;
                 allAppointmentsData.forEach(a => {
                     const apptDate = new Date(a.preferred_datetime || a.created_at);
-                    // If the consultation is marked completed OR the date has passed, it's past.
-                    if (a.consultation_completed || apptDate < now) {
-                        past++;
-                    } else {
-                        active++;
-                    }
+                    if (a.consultation_completed || apptDate < now) past++; else active++;
                     if (a.type === 'online') online++; else clinic++;
                 });
 
@@ -510,35 +493,27 @@
                     <div class="stat-row"><span class="stat-label">In-Clinic Visits</span> <span class="stat-val">${clinic}</span></div>
                 `;
             }
-
             bodyEl.innerHTML = html;
             document.getElementById('statsDetailsModal').style.display = 'flex';
         }
+        function closeStatsModal() { document.getElementById('statsDetailsModal').style.display = 'none'; }
 
-        function closeStatsModal() {
-            document.getElementById('statsDetailsModal').style.display = 'none';
-        }
-
-
-        // ================= 100% ACCURATE MAIN DASHBOARD STATS =================
+        // 2. MAIN CARD STATS
         function updateAccurateStats() {
             const now = new Date();
-            // MAIN CARD NUMBERS
             document.getElementById('stat-patients').innerText = allPatientsData.length;
             document.getElementById('stat-doctors').innerText = allDoctorsData.length;
             document.getElementById('stat-appts').innerText = allAppointmentsData.length;
 
-            // Patients Subtext
             const currentMonth = now.getMonth();
             const currentYear = now.getFullYear();
-            let newPatientsThisMonth = 0;
+            let newPatients = 0;
             allPatientsData.forEach(p => {
                 const d = new Date(p.created_at);
-                if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) newPatientsThisMonth++;
+                if (d.getMonth() === currentMonth && d.getFullYear() === currentYear) newPatients++;
             });
-            document.getElementById('stat-patients-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">+${newPatientsThisMonth} joined this month</span> <span style="margin-left:auto;">Click for info →</span>`;
+            document.getElementById('stat-patients-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">+${newPatients} joined this month</span> <span style="margin-left:auto;">Click for info →</span>`;
 
-            // Doctors Subtext
             let pending = 0; let verified = 0;
             allDoctorsData.forEach(d => {
                 if (d.status === 'pending' || d.status === 'incomplete') pending++;
@@ -546,7 +521,6 @@
             });
             document.getElementById('stat-doctors-sub').innerHTML = `<span style="color:var(--success); font-weight:600;">${verified} Verified</span><span style="margin-left:auto; color:var(--warning); font-weight:600;">${pending} Pending</span>`;
 
-            // Appointments Subtext (checks timestamps accurately)
             let active = 0; let past = 0;
             allAppointmentsData.forEach(a => {
                 const apptDate = new Date(a.preferred_datetime || a.created_at);
@@ -556,60 +530,50 @@
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
         }
 
-        // ================= REVENUE ENGINE =================
+        // 3. REVENUE ENGINE
         let revenueByMonth = {};
         let allTimeTotal = 0;
-
         function calculateRevenueData() {
-            revenueByMonth = {};
-            allTimeTotal = 0;
-
+            revenueByMonth = {}; allTimeTotal = 0;
             allAppointmentsData.forEach(appt => {
                 let amt = parseFloat(appt.amount_paid) || 0;
                 if (amt === 0 && appt.type === "online") amt = 38.0; 
-
                 const d = new Date(appt.created_at || appt.preferred_datetime);
                 if (!isNaN(d)) {
-                    const monthKey = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
-                    const displayLabel = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-                    
-                    if (!revenueByMonth[monthKey]) revenueByMonth[monthKey] = { label: displayLabel, total: 0 };
-                    revenueByMonth[monthKey].total += amt;
+                    const mk = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
+                    const label = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+                    if (!revenueByMonth[mk]) revenueByMonth[mk] = { label: label, total: 0 };
+                    revenueByMonth[mk].total += amt;
                     allTimeTotal += amt;
                 }
             });
-
-            allPatientsData.forEach(patient => {
-                if (patient.is_subscribed) {
-                    const d = new Date(patient.created_at);
+            allPatientsData.forEach(p => {
+                if (p.is_subscribed) {
+                    const d = new Date(p.created_at);
                     if (!isNaN(d)) {
-                        const monthKey = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
-                        const displayLabel = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-                        
-                        if (!revenueByMonth[monthKey]) revenueByMonth[monthKey] = { label: displayLabel, total: 0 };
-                        revenueByMonth[monthKey].total += 50.0;
+                        const mk = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
+                        const label = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+                        if (!revenueByMonth[mk]) revenueByMonth[mk] = { label: label, total: 0 };
+                        revenueByMonth[mk].total += 50.0;
                         allTimeTotal += 50.0;
                     }
                 }
             });
-
-            const currentMonthKey = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0');
-            const currentMonthRevenue = revenueByMonth[currentMonthKey] ? revenueByMonth[currentMonthKey].total : 0;
-            document.getElementById('stat-revenue').innerText = `MYR ${currentMonthRevenue.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            const curMk = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0');
+            const curRev = revenueByMonth[curMk] ? revenueByMonth[curMk].total : 0;
+            document.getElementById('stat-revenue').innerText = `MYR ${curRev.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
         }
 
-        // ================= DYNAMIC UPCOMING APPOINTMENT WIDGET =================
+        // 4. NEXT APPOINTMENT WIDGET (WITH EMAIL FIX)
         function renderUpcomingWidget() {
             const widget = document.getElementById('upcoming-appt-widget');
             const now = new Date();
             
-            // Filter only appointments that are in the future
             const futureAppts = allAppointmentsData.filter(a => {
-                const apptDate = new Date(a.preferred_datetime || a.created_at);
-                return apptDate >= now && !a.consultation_completed;
+                const d = new Date(a.preferred_datetime || a.created_at);
+                return d >= now && !a.consultation_completed;
             });
 
-            // Sort them to find the closest one
             futureAppts.sort((a, b) => new Date(a.preferred_datetime || a.created_at) - new Date(b.preferred_datetime || b.created_at));
             const upcoming = futureAppts.length > 0 ? futureAppts[0] : null;
             
@@ -624,6 +588,13 @@
             const initials = (upcoming.patient_name || "P").substring(0,2).toUpperCase();
             const prettyStatus = (upcoming.status || 'Scheduled').replace('_', ' ');
 
+            // Email Fallback Fix
+            let displayEmail = upcoming.patient_email;
+            if (!displayEmail) {
+                const match = allPatientsData.find(p => p.name === upcoming.patient_name);
+                if (match) displayEmail = match.email;
+            }
+
             widget.innerHTML = `
                 <div class="appt-manage-card">
                     <div class="appt-manage-header">
@@ -631,7 +602,7 @@
                             <div class="appt-avatar-placeholder">${initials}</div>
                             <div>
                                 <div style="font-weight:600; font-size:13px; color:var(--text-main);">${upcoming.patient_name || 'Anonymous'}</div>
-                                <div style="font-size:11px; color:var(--text-muted);">${upcoming.patient_email || 'No email registered'}</div>
+                                <div style="font-size:11px; color:var(--text-muted);">${displayEmail || 'Email not provided'}</div>
                             </div>
                         </div>
                         <span class="badge pending" style="text-transform: capitalize;">${prettyStatus}</span>
@@ -653,7 +624,7 @@
             `;
         }
 
-        // ================= FETCH CORE DATA =================
+        // 5. FETCH CORE DATA
         async function loadCoreData() {
             try {
                 const [appRes, patRes, docsApprRes, docsPendRes] = await Promise.all([
@@ -670,12 +641,10 @@
                 const pendingDocs = docsPendRes.ok ? await docsPendRes.json() : [];
                 allDoctorsData = [...pendingDocs, ...approvedDocs];
                 
-                // Execute Calculations
                 updateAccurateStats();
                 calculateRevenueData();
                 renderUpcomingWidget(); 
                 
-                // Render UI
                 renderDoctorList();
                 filteredAppointmentsData = [...allAppointmentsData];
                 renderAppointmentsTable();
@@ -684,7 +653,75 @@
             } catch (e) { console.error("Data Load Error:", e); }
         }
 
-        // ================= RENDER DOCTORS =================
+        // 6. RENDER TABLE WITH PERFECT ALIGNMENT FIX
+        function renderAppointmentsTable() {
+            const tableBody = document.getElementById('table-deliveries');
+            const seeMoreContainer = document.getElementById('seeMoreContainer');
+
+            if (filteredAppointmentsData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>`;
+                seeMoreContainer.style.display = 'none';
+                return;
+            }
+
+            const itemsToShow = filteredAppointmentsData.slice(0, currentTableLimit);
+
+            tableBody.innerHTML = itemsToShow.map(app => {
+                const d = new Date(app.preferred_datetime || app.created_at);
+                const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                let sympText = app.symptoms && app.symptoms !== 'null' ? app.symptoms : "General Visit";
+                let displaySymp = sympText.length > 20 ? sympText.substring(0, 20) + "..." : sympText;
+                const safeSymp = sympText.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
+
+                return `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <span class="checkbox-circle" style="margin-top: 2px;" title="Mark selected"></span>
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <span style="font-weight:500; white-space: nowrap;">${dateStr}</span>
+                                <span class="time-pill" style="margin-left:0; width: max-content;">${timeStr}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <img src="https://ui-avatars.com/api/?name=${app.patient_name}&background=f3f4f6" class="avatar-sm"> 
+                            <span style="font-weight:500;">${app.patient_name || 'Anonymous'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <img src="https://ui-avatars.com/api/?name=${app.doctor_name}&background=random" class="avatar-sm">
+                            <span style="font-weight:500;">${app.doctor_name || 'Unassigned'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="color:var(--text-main); font-weight: 500; cursor:pointer;" onclick="openSymptomModal('${safeSymp}')">"${displaySymp}"</span>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            seeMoreContainer.style.display = (currentTableLimit >= filteredAppointmentsData.length) ? 'none' : 'block';
+        }
+
+        function filterAppointments() {
+            const query = document.getElementById('apptSearchInput').value.toLowerCase();
+            filteredAppointmentsData = allAppointmentsData.filter(app => {
+                return (app.patient_name || "").toLowerCase().includes(query) || 
+                       (app.doctor_name || "").toLowerCase().includes(query);
+            });
+            currentTableLimit = 3; 
+            renderAppointmentsTable();
+        }
+        function loadMoreAppointments() {
+            currentTableLimit += 3;
+            renderAppointmentsTable();
+        }
+
+        // 7. RENDER DOCTORS
         function renderDoctorList() {
             const container = document.getElementById('list-pending-doctors');
             if (allDoctorsData.length === 0) {
@@ -724,97 +761,29 @@
                 </div>`;
             }).join('');
         }
-
         async function verifyDoctor(id, action) {
             if (!confirm(`Are you sure you want to ${action} this doctor?`)) return;
             const res = await fetch(`${API_BASE}/admin/doctors/${id}/verify?action=${action}`, { method: 'POST', headers: headers });
             if (res.ok) { alert(`Doctor ${action}d successfully`); loadCoreData(); } 
-            else { alert("Action failed."); }
         }
 
-        // ================= RENDER TABLE =================
-        function filterAppointments() {
-            const query = document.getElementById('apptSearchInput').value.toLowerCase();
-            filteredAppointmentsData = allAppointmentsData.filter(app => {
-                return (app.patient_name || "").toLowerCase().includes(query) || 
-                       (app.doctor_name || "").toLowerCase().includes(query);
-            });
-            currentTableLimit = 3; 
-            renderAppointmentsTable();
-        }
-
-        function loadMoreAppointments() {
-            currentTableLimit += 3;
-            renderAppointmentsTable();
-        }
-
-        function renderAppointmentsTable() {
-            const tableBody = document.getElementById('table-deliveries');
-            const seeMoreContainer = document.getElementById('seeMoreContainer');
-
-            if (filteredAppointmentsData.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No records found.</td></tr>`;
-                seeMoreContainer.style.display = 'none';
-                return;
-            }
-
-            const itemsToShow = filteredAppointmentsData.slice(0, currentTableLimit);
-
-            tableBody.innerHTML = itemsToShow.map(app => {
-                const d = new Date(app.preferred_datetime || app.created_at);
-                const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
-                let sympText = app.symptoms && app.symptoms !== 'null' ? app.symptoms : "General Visit";
-                let displaySymp = sympText.length > 20 ? sympText.substring(0, 20) + "..." : sympText;
-                const safeSymp = sympText.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
-
-                return `
-                <tr>
-                    <td>
-                        <span class="checkbox-circle" title="Mark selected"></span>
-                        <span style="font-weight:500;">${dateStr}</span>
-                        <span class="time-pill">${timeStr}</span>
-                    </td>
-                    <td>
-                        <img src="https://ui-avatars.com/api/?name=${app.patient_name}&background=f3f4f6" class="avatar-sm"> 
-                        <span style="font-weight:500;">${app.patient_name || 'Anonymous'}</span>
-                    </td>
-                    <td>
-                        <img src="https://ui-avatars.com/api/?name=${app.doctor_name}&background=random" class="avatar-sm">
-                        <span style="font-weight:500;">${app.doctor_name || 'Unassigned'}</span>
-                    </td>
-                    <td>
-                        <span style="color:var(--text-main); font-weight: 500; cursor:pointer;" onclick="openSymptomModal('${safeSymp}')">"${displaySymp}"</span>
-                    </td>
-                </tr>`;
-            }).join('');
-
-            seeMoreContainer.style.display = (currentTableLimit >= filteredAppointmentsData.length) ? 'none' : 'block';
-        }
-
-        // ================= REVENUE MODAL =================
+        // 8. OTHER MODALS & CHARTS
         function openRevenueModal() {
             const sortedMonths = Object.keys(revenueByMonth).sort().reverse();
             const tbody = document.getElementById('revenueHistoryTableBody');
             tbody.innerHTML = '';
-
             if (sortedMonths.length === 0 || allTimeTotal === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding: 20px; color: var(--text-muted);">No revenue recorded yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding: 20px;">No revenue yet.</td></tr>';
             } else {
-                sortedMonths.forEach(key => {
-                    const item = revenueByMonth[key];
-                    if(item.total > 0) {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td style="padding: 16px 24px; color: #374151; font-weight: 500; border-bottom: 1px solid var(--border-light);">${item.label}</td>
-                                <td style="padding: 16px 24px; text-align: right; color: #111827; font-weight: 600; border-bottom: 1px solid var(--border-light);">MYR ${item.total.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                            </tr>
-                        `;
+                sortedMonths.forEach(k => {
+                    if(revenueByMonth[k].total > 0) {
+                        tbody.innerHTML += `<tr>
+                            <td style="padding: 16px 24px; font-weight: 500; border-bottom: 1px solid var(--border-light);">${revenueByMonth[k].label}</td>
+                            <td style="padding: 16px 24px; text-align: right; font-weight: 600; border-bottom: 1px solid var(--border-light);">MYR ${revenueByMonth[k].total.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        </tr>`;
                     }
                 });
             }
-            
             document.getElementById('allTimeRevenueTotal').innerText = `MYR ${allTimeTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
             document.getElementById('revenueModal').style.display = 'flex';
         }
@@ -822,66 +791,41 @@
         
         function openAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'flex'; }
         function closeAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'none'; }
-        function submitAdminNewDoctor() {
-            alert("To protect platform security, Doctors must register directly via the portal.");
-            closeAddDoctorModal();
-        }
-
-        function openSymptomModal(text) { document.getElementById('symptomFullText').innerText = text; document.getElementById('symptomModal').style.display = 'flex'; }
+        function submitAdminNewDoctor() { alert("Register directly via portal."); closeAddDoctorModal(); }
+        function openSymptomModal(t) { document.getElementById('symptomFullText').innerText = t; document.getElementById('symptomModal').style.display = 'flex'; }
         function closeSymptomModal() { document.getElementById('symptomModal').style.display = 'none'; }
 
-        // ================= CHART LOGIC =================
         let chartInstance = null;
         function renderChartWithRealData(appointments) {
-            const counts = {};
-            const monthsLabel = [];
-            
+            const counts = {}; const monthsLabel = [];
             for (let i = 5; i >= 0; i--) {
                 const d = new Date(); d.setMonth(d.getMonth() - i);
-                const monthStr = d.toLocaleString('en-US', { month: 'short' });
-                monthsLabel.push(monthStr);
-                counts[monthStr] = 0;
+                const mStr = d.toLocaleString('en-US', { month: 'short' });
+                monthsLabel.push(mStr); counts[mStr] = 0;
             }
-
             appointments.forEach(a => {
                 const d = new Date(a.created_at || a.preferred_datetime);
                 const m = d.toLocaleString('en-US', { month: 'short' });
                 if (counts[m] !== undefined) counts[m]++;
             });
-
             const data = monthsLabel.map(m => counts[m] || 0);
             
             const ctx = document.getElementById('mainChart').getContext('2d');
             if (chartInstance) chartInstance.destroy(); 
-            
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: monthsLabel,
-                    datasets: [{
-                        label: 'Appointments',
-                        data: data,
-                        backgroundColor: function(context) { return context.dataIndex === 5 ? '#0066cc' : '#e0f2fe'; },
-                        borderRadius: 6, 
-                        barPercentage: 0.5
-                    }]
+                    datasets: [{ label: 'Appointments', data: data, backgroundColor: c => c.dataIndex === 5 ? '#0066cc' : '#e0f2fe', borderRadius: 6, barPercentage: 0.5 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#9ca3af' }, grid: { borderDash: [5, 5], color: '#e5e7eb' } },
-                        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: {weight: 500} } }
-                    }
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } }
                 }
             });
         }
-
         function logout() { localStorage.removeItem('admin_token'); window.location.href = "admin_login.html"; }
-
-        // Boot
-        window.onload = () => {
-            loadCoreData();
-        };
+        window.onload = () => { loadCoreData(); };
     </script>
 </body>
 </html>
