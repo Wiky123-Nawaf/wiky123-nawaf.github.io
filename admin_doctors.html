@@ -40,8 +40,6 @@
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; scroll-behavior: smooth; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; background: #fff; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index: 10;}
         .header-right { display: flex; align-items: center; gap: 20px; margin-left: auto; }
-        .bell-icon { cursor: pointer; color: var(--text-muted); font-size: 18px; padding-right: 16px; border-right: 1px solid var(--border); transition: 0.2s;}
-        
         .search-bar { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; width: 320px; background: #fff;}
         .search-bar input { border: none; outline: none; font-size: 13px; width: 100%; margin-left: 8px; }
 
@@ -81,14 +79,7 @@
         
         .doc-c-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
         .doc-c-schedule { font-size: 12px; color: var(--text-muted); }
-        .doc-c-schedule strong { color: var(--text-main); display: block; margin-top: 4px; font-size: 14px;}
         
-        .doc-c-actions { display: flex; gap: 8px; }
-        .btn-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: #f9fafb; cursor: pointer; color: var(--text-muted); transition: 0.2s;}
-        .btn-icon:hover { background: #e5e7eb; color: var(--text-main); }
-        .btn-icon.danger { color: #ef4444; background: #fef2f2; border-color: #fecaca;}
-        .btn-icon.danger:hover { background: #fee2e2; }
-
         .doc-pend-actions { display: flex; gap: 8px; width: 100%; margin-top: 16px;}
         .btn-reject { flex: 1; padding: 10px; border: none; background: #fef2f2; color: #ef4444; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer;}
         .btn-approve { flex: 1; padding: 10px; border: none; background: #dcfce7; color: #16a34a; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer;}
@@ -104,7 +95,6 @@
         .dd-tags { display: flex; gap: 12px; }
         .dd-tag { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
         .dd-tag.avail { background: #dcfce7; color: #16a34a; border: 1px solid #a7f3d0;}
-        .dd-tag.time { background: #f3f4f6; color: var(--text-main); }
         .btn-outline-danger { border: 1px solid #ef4444; color: #ef4444; background: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
 
         .dd-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;}
@@ -120,8 +110,6 @@
 
         .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
         
-        /* Tab: Detail */
-        .about-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
         .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px;}
         .fee-card { background: #f9fafb; padding: 20px; border-radius: 12px;}
         .doc-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 12px; font-size: 14px; font-weight: 600;}
@@ -139,6 +127,7 @@
         .ac-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize;}
         .ac-status.completed { background: #dcfce7; color: #16a34a; }
         .ac-status.scheduled { background: #eff6ff; color: #0066cc; }
+        .ac-status.pending_payment { background: #fef3c7; color: #d97706; }
         .ac-status.cancelled { background: #fef2f2; color: #ef4444; }
         .ac-detail-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;}
         .ac-label { color: var(--text-muted); }
@@ -149,6 +138,17 @@
         .rev-header { margin-bottom: 24px; }
         .rev-score { font-size: 32px; font-weight: 700; color: #f59e0b; display: flex; align-items: baseline; gap: 4px;}
         .rev-score span { font-size: 16px; color: var(--text-muted); font-weight: 500;}
+        .rev-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 16px;}
+        .rev-bar-row { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-muted); font-weight: 500;}
+        .r-bar-bg { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden;}
+        .r-bar-fill { height: 100%; background: #10b981; border-radius: 4px;}
+        .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 24px; margin-bottom: 24px;}
+        .ri-head { display: flex; justify-content: space-between; margin-bottom: 12px;}
+        .ri-user { display: flex; gap: 12px; align-items: center;}
+        .ri-user img { width: 40px; height: 40px; border-radius: 50%; }
+        .ri-date { font-size: 12px; color: var(--text-muted);}
+        .ri-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; display:flex; gap:8px; align-items:center;}
+        .ri-body { font-size: 14px; color: var(--text-muted); line-height: 1.6;}
 
         /* Tab: Schedule */
         .sched-row { display: flex; justify-content: space-between; padding: 16px 20px; border-radius: 8px; margin-bottom: 12px; font-size: 14px; font-weight: 600;}
@@ -168,7 +168,7 @@
         .ci-label { color: var(--text-muted); margin-bottom: 4px; display: block;}
         .ci-val { font-weight: 600; color: var(--text-main); line-height: 1.4; word-break: break-all;}
         
-        /* ====== ADD DOCTOR MODAL ====== */
+        /* ====== MODALS ====== */
         .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
         .modal-box { background: #fff; border-radius: 16px; width: 100%; max-width: 650px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -176,25 +176,16 @@
         .modal-close { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; }
         .modal-body { padding: 24px; overflow-y: auto; }
         
-        .upload-profile-box { border: 1px dashed var(--primary); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #f0f7ff; margin-bottom: 32px;}
-        
-        .form-section-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; margin-top: 24px; color: var(--text-main);}
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;}
         .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .form-group label { font-size: 13px; color: var(--text-muted); }
+        .form-group label { font-size: 13px; color: var(--text-muted); font-weight:600; }
         .form-control { padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #f9fafb;}
-        .form-control:focus { border-color: var(--primary); background: #fff; }
         
-        .upload-zone { border: 1px dashed var(--border); border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;}
-        .uz-left { display: flex; gap: 12px; align-items: center; }
-        .uz-icon { width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; display: flex; justify-content: center; align-items: center; color: var(--text-muted);}
-        .uz-text div { font-size: 14px; font-weight: 600; color: var(--primary); }
-        .uz-text span { font-size: 11px; color: var(--text-muted);}
-        .btn-browse { background: #6b7280; color: #fff; padding: 8px 16px; border-radius: 8px; border: none; font-size: 12px; font-weight: 600; cursor: pointer;}
-        .btn-browse:hover { background: #4b5563; }
-        
+        .week-row { background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; padding: 16px; margin-bottom: 16px;}
+        .wr-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-weight: 600; font-size: 14px; text-transform: capitalize;}
+        .wr-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px;}
-        .btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center;}
+        .btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer;}
         .btn-add-submit { flex: 1; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;}
     </style>
 </head>
@@ -224,16 +215,14 @@
     </aside>
 
     <main class="main-content">
-        <!-- HEADER -->
         <header>
             <div class="search-bar">
                 <span>🔍</span> 
-                <input type="text" id="searchInput" placeholder="Search doctor by name or specialty..." onkeyup="filterSearch()">
+                <input type="text" id="searchInput" placeholder="Search doctor by name..." onkeyup="filterSearch()">
             </div> 
             <div class="header-right">
-                <div class="bell-icon">🔔</div>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <div class="user-info-sm" style="text-align:right;"><span class="name">Admin Dashboard</span><span class="email">Super Admin</span></div>
+                    <div class="user-info-sm" style="text-align:right;"><span class="name">Admin Dashboard</span></div>
                     <img src="https://ui-avatars.com/api/?name=Admin&background=0066cc&color=fff" style="width:36px; height:36px; border-radius:50%;">
                 </div>
             </div>
@@ -243,7 +232,7 @@
         <div class="dashboard-body active" id="doctors-view">
             <div class="page-title">
                 <h1>Doctors</h1>
-                <button class="btn-primary" onclick="openAddDoctorModal()">+ Add Doctor</button>
+                <button class="btn-primary" onclick="alert('Use the Doctor App to register new doctors.')">+ Add Doctor</button>
             </div>
             
             <div class="doc-filters">
@@ -261,7 +250,6 @@
         <div class="dashboard-body" id="doctor-detail-view">
             <div class="btn-back" onclick="switchMainView('doctors')">← Back</div>
             
-            <!-- Details Header Card -->
             <div class="dd-header-card">
                 <div class="dd-top-info">
                     <img src="" id="dd-head-img">
@@ -269,16 +257,14 @@
                         <div class="dd-name" id="dd-head-name">Doctor Name</div>
                         <div class="dd-spec" id="dd-head-spec">Specialty</div>
                         <div class="dd-tags">
-                            <span class="dd-tag" id="dd-status-tag">● Status</span>
+                            <span class="dd-tag avail" id="dd-status-tag">● Status</span>
                         </div>
                     </div>
                 </div>
-                <button class="btn-outline-danger" onclick="alert('Delete functionality restricted.')">Delete Doctor</button>
+                <button class="btn-outline-danger" onclick="alert('Feature restricted.')">Delete Doctor</button>
             </div>
 
-            <!-- Detail Layout -->
             <div class="dd-layout">
-                <!-- Left Main Content -->
                 <div class="dd-main-card">
                     <div class="dd-tabs">
                         <button class="dd-tab-btn active" onclick="switchTab('detail', this)">Detail Of Doctor</button>
@@ -290,40 +276,29 @@
                     <!-- TAB 1: DETAIL -->
                     <div id="tab-detail" class="dd-tab-content active">
                         <h3 class="section-title">About</h3>
-                        <p class="about-text" id="dd-about-text">Professional medical practitioner registered with Doktura AI.</p>
-                        <div class="dd-tag time" style="width: max-content; margin-bottom: 32px;" id="dd-location-tag">📍 Location Not Set</div>
+                        <p class="about-text" style="margin-bottom: 32px;">Professional medical practitioner registered with Doktura AI.</p>
                         
                         <h3 class="section-title">Consultation Fees</h3>
                         <div class="fee-grid">
-                            <div class="fee-card">
-                                <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">Online Consultation</div>
-                                <div style="font-size:20px; font-weight:700;">38 RM</div>
-                            </div>
-                            <div class="fee-card">
-                                <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">In Clinic Visit</div>
-                                <div style="font-size:20px; font-weight:700;">Subject to Clinic</div>
-                            </div>
+                            <div class="fee-card"><div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">Online Consultation</div><div style="font-size:20px; font-weight:700;">38 RM</div></div>
+                            <div class="fee-card"><div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">In Clinic Visit</div><div style="font-size:20px; font-weight:700;">Subject to Clinic</div></div>
                         </div>
 
                         <h3 class="section-title">Medical Documents</h3>
-                        <div id="docs-list-container">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div id="docs-list-container"></div>
                     </div>
 
                     <!-- TAB 2: SCHEDULE -->
                     <div id="tab-schedule" class="dd-tab-content">
-                        <h3 class="section-title" style="margin-bottom: 24px;">Weekly Availability</h3>
-                        <div id="schedule-list-container">
-                            <!-- Populated dynamically -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                            <h3 class="section-title" style="margin:0;">Weekly Availability</h3>
                         </div>
+                        <div id="schedule-list-container"></div>
                     </div>
 
                     <!-- TAB 3: APPOINTMENTS -->
                     <div id="tab-appointments" class="dd-tab-content">
-                        <div class="dd-appts-grid" id="dd-appts-container">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div class="dd-appts-grid" id="dd-appts-container"></div>
                     </div>
 
                     <!-- TAB 4: REVIEWS -->
@@ -331,8 +306,10 @@
                         <div class="rev-header">
                             <div class="rev-score" id="dd-rev-score">0.0<span>/5.0</span></div>
                             <div style="font-size:13px; color:var(--text-muted); margin-top:8px;" id="dd-rev-count">0 ratings • 0 reviews</div>
+                            <div class="rev-bars" id="dd-rev-bars"></div>
                         </div>
-                        <p style="color:var(--text-muted); font-size:14px; text-align:center; padding:30px;">Detailed reviews system currently syncing...</p>
+                        <h3 class="section-title" style="margin-top: 32px; margin-bottom: 16px;">Patient Reviews</h3>
+                        <div id="dd-rev-comments"></div>
                     </div>
                 </div>
 
@@ -354,12 +331,13 @@
                     </div>
 
                     <div class="dd-sidebar-box">
-                        <h3 class="section-title">Contact info</h3>
-                        <div class="ci-row"><div><span class="ci-label">Name</span><span class="ci-val" id="sb-name">Name</span></div></div>
-                        <div class="ci-row"><div><span class="ci-label">Speciality</span><span class="ci-val" id="sb-spec">General</span></div></div>
-                        <div class="ci-row"><div><span class="ci-label">Email</span><span class="ci-val" id="sb-email">email@example.com</span></div></div>
-                        <div class="ci-row"><div><span class="ci-label">Contact</span><span class="ci-val" id="sb-phone">-</span></div></div>
-                        <div class="ci-row"><div><span class="ci-label">Location</span><span class="ci-val" id="sb-location">-</span></div></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+                            <h3 class="section-title" style="margin:0;">Contact info</h3>
+                            <button class="btn-primary" style="padding:4px 12px; font-size:11px;" onclick="openEditModal()">Edit Profile</button>
+                        </div>
+                        <div class="ci-row"><div><span class="ci-label">Email</span><span class="ci-val" id="sb-email">N/A</span></div></div>
+                        <div class="ci-row"><div><span class="ci-label">Contact</span><span class="ci-val" id="sb-phone">N/A</span></div></div>
+                        <div class="ci-row"><div><span class="ci-label">Location</span><span class="ci-val" id="sb-location">N/A</span></div></div>
                     </div>
                 </div>
             </div>
@@ -367,88 +345,31 @@
 
     </main>
 
-    <!-- FULL ADD DOCTOR MODAL -->
-    <div id="addDoctorModal" class="modal-overlay">
+    <!-- EDIT DOCTOR MODAL -->
+    <div id="editDoctorModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
-                <h2><span style="color:var(--primary);">🩺</span> Add New Doctor</h2>
-                <button class="modal-close" onclick="closeAddDoctorModal()">&times;</button>
+                <h2><span style="color:var(--primary);">✏️</span> Edit Doctor Details & Schedule</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="adminAddDocForm" onsubmit="event.preventDefault(); submitAdminNewDoctor();">
+                <form id="adminEditDocForm" onsubmit="event.preventDefault(); submitEditDoctor();">
+                    <input type="hidden" id="editDocId">
                     
-                    <!-- Profile Upload -->
-                    <div class="upload-profile-box">
-                        <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="width:40px; height:40px; background:#fff; border-radius:8px; display:flex; justify-content:center; align-items:center; color:var(--primary);">👤</div>
-                            <div>
-                                <div style="font-size:14px; font-weight:600;" id="photoFileName">Upload a profile picture.</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Max size 2MB</div>
-                            </div>
-                        </div>
-                        <input type="file" id="newDocPhoto" accept="image/*" style="display:none;" onchange="updateFileText(this, 'photoFileName')">
-                        <button type="button" onclick="document.getElementById('newDocPhoto').click()" style="border:1px solid var(--primary); background:#fff; color:var(--primary); padding:6px 16px; border-radius:20px; font-weight:600; font-size:12px; cursor:pointer;">Browse</button>
-                    </div>
-
-                    <!-- General Information -->
-                    <div class="form-section-title">General Information</div>
+                    <h3 class="section-title">Contact Information</h3>
                     <div class="form-grid">
-                        <div class="form-group"><label>Full Name *</label><input type="text" id="newDocName" class="form-control" placeholder="Dr. John Doe" required></div>
-                        <div class="form-group"><label>Speciality</label><input type="text" id="newDocSpec" class="form-control" placeholder="General Practitioner"></div>
-                        <div class="form-group"><label>Email Address *</label><input type="email" id="newDocEmail" class="form-control" placeholder="doctor@clinic.com" required></div>
-                        <div class="form-group"><label>Initial Password *</label><input type="text" id="newDocPass" class="form-control" placeholder="Temporary login password" required></div>
-                        <div class="form-group"><label>Contact Number</label><input type="text" id="newDocPhone" class="form-control" placeholder="+60 123 456 789"></div>
-                        <div class="form-group"><label>Clinic Location</label><input type="text" id="newDocLocation" class="form-control" placeholder="Main Clinic Branch"></div>
+                        <div class="form-group"><label>Contact Number</label><input type="text" id="editDocPhone" class="form-control" placeholder="+60 123 456 789"></div>
+                        <div class="form-group"><label>Clinic Location</label><input type="text" id="editDocLocation" class="form-control" placeholder="Main Clinic Branch"></div>
                     </div>
 
-                    <!-- Documents -->
-                    <div class="form-section-title">Professional Documents</div>
-                    
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label>Resume / CV</label>
-                        <div class="upload-zone">
-                            <div class="uz-left">
-                                <div class="uz-icon">📄</div>
-                                <div class="uz-text"><div id="resumeFileName">Select PDF or DOC file</div><span>Max file size: 10MB</span></div>
-                            </div>
-                            <input type="file" id="newDocResume" style="display:none;" onchange="updateFileText(this, 'resumeFileName')">
-                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocResume').click()">Browse</button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label>Borang 11 (APC)</label>
-                        <div class="upload-zone">
-                            <div class="uz-left">
-                                <div class="uz-icon">📄</div>
-                                <div class="uz-text"><div id="apcFileName">Select APC PDF</div><span>Max file size: 10MB</span></div>
-                            </div>
-                            <input type="file" id="newDocAPC" style="display:none;" onchange="updateFileText(this, 'apcFileName')">
-                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocAPC').click()">Browse</button>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label>Borang 15 (MMC)</label>
-                        <div class="upload-zone">
-                            <div class="uz-left">
-                                <div class="uz-icon">📄</div>
-                                <div class="uz-text"><div id="mmcFileName">Select MMC PDF</div><span>Max file size: 10MB</span></div>
-                            </div>
-                            <input type="file" id="newDocMMC" style="display:none;" onchange="updateFileText(this, 'mmcFileName')">
-                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocMMC').click()">Browse</button>
-                        </div>
-                    </div>
-
-                    <!-- Weekly Availability Note -->
-                    <div class="form-section-title">Weekly Availability</div>
-                    <div style="font-size:13px; color:var(--text-muted); background:#f9fafb; padding:16px; border-radius:8px; border:1px solid var(--border-light); margin-bottom:16px;">
-                        Doctors can configure their own daily available hours and shifts directly from their Doctor Dashboard after successfully logging in. By default, newly added doctors are set as available during standard clinic hours.
+                    <h3 class="section-title" style="margin-top:24px;">Weekly Schedule</h3>
+                    <div id="editScheduleContainer">
+                        <!-- Populated dynamically via JS -->
                     </div>
 
                     <div class="modal-footer" style="padding: 16px 0 0 0; margin-top:24px;">
-                        <button type="button" class="btn-cancel" onclick="closeAddDoctorModal()">Cancel</button>
-                        <button type="submit" class="btn-add-submit" id="btnSubmitAddDoc">Create & Approve Doctor</button>
+                        <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn-add-submit" id="btnSubmitEditDoc">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -456,23 +377,21 @@
     </div>
 
     <script>
-        // Check Auth token
         const API_BASE = "https://api.doktura.ai/api";
         const token = localStorage.getItem('admin_token');
         if (!token) window.location.href = "admin_login.html";
-
         const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
         
         let allDoctorsData = [];
         let allAppointmentsData = [];
         let currentFilterState = 'All';
+        let currentlyViewingDocId = null; // Store ID for editing
 
         window.onload = () => { loadCoreData(); };
 
         // ================= FETCH ALL DATA =================
         async function loadCoreData() {
             try {
-                // Fetch approved docs, pending docs, and all appointments concurrently
                 const [docsRes, pendRes, apptRes] = await Promise.all([
                     fetch(`${API_BASE}/doctors`, { headers }),
                     fetch(`${API_BASE}/admin/doctors/pending`, { headers }),
@@ -482,8 +401,6 @@
                 const approvedDocs = docsRes.ok ? await docsRes.json() : [];
                 const pendingDocs = pendRes.ok ? await pendRes.json() : [];
                 
-                // CRITICAL FIX: Explicitly assign "Verified" to doctors fetched from the approved endpoint
-                // and "Pending" to doctors from the pending endpoint because the backend doesn't send the status key.
                 const mapDoc = (d, defaultStatus) => ({
                     id: d.id,
                     name: d.name || 'Unknown Doctor',
@@ -491,11 +408,11 @@
                     rating: d.rating || 0.0,
                     status: defaultStatus, 
                     img: d.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name || 'D')}&background=random`,
-                    email: d.email || '',
-                    phone: d.phone || '',
-                    location: d.location || '',
+                    email: d.email || 'N/A',       // <--- Using new backend fields
+                    phone: d.phone || 'N/A',       // <--- Using new backend fields
+                    location: d.location || 'N/A', 
                     reviews: d.review_count || 0,
-                    availability: d.availability || {},
+                    availability: d.availability || {}, // <--- Using new backend fields
                     resume_url: d.resume_url,
                     apc_url: d.apc_url,
                     mmc_url: d.mmc_url,
@@ -507,15 +424,19 @@
                     ...approvedDocs.map(d => mapDoc(d, 'Verified'))
                 ];
 
-                // Appointments
                 allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
+
+                // If we are currently viewing a doctor, refresh their detailed view automatically
+                if(currentlyViewingDocId) {
+                    viewDoctorDetail(currentlyViewingDocId);
+                } else {
+                    renderGrid(currentFilterState);
+                }
 
             } catch (e) {
                 console.error("Fetch Data Error:", e);
-                document.getElementById('doctors-grid').innerHTML = `<p style="color:var(--danger); text-align:center; grid-column:1/-1;">Error loading data: ${e.message}</p>`;
+                document.getElementById('doctors-grid').innerHTML = `<p style="color:var(--danger); text-align:center; grid-column:1/-1;">Error loading data.</p>`;
             }
-
-            renderGrid(currentFilterState);
         }
 
         // ================= MAIN GRID RENDER =================
@@ -526,24 +447,16 @@
             renderGrid(type);
         }
 
-        function filterSearch() {
-            renderGrid(currentFilterState);
-        }
+        function filterSearch() { renderGrid(currentFilterState); }
 
         function renderGrid(filter) {
             const grid = document.getElementById('doctors-grid');
             const searchQ = document.getElementById('searchInput').value.toLowerCase();
-            
             let docs = allDoctorsData;
             
-            // Apply Status Filter
             if(filter === 'Request') docs = docs.filter(d => d.status === 'Pending');
             if(filter === 'Verified') docs = docs.filter(d => d.status === 'Verified');
-
-            // Apply Text Search
-            if(searchQ) {
-                docs = docs.filter(d => d.name.toLowerCase().includes(searchQ) || d.spec.toLowerCase().includes(searchQ));
-            }
+            if(searchQ) docs = docs.filter(d => d.name.toLowerCase().includes(searchQ) || d.spec.toLowerCase().includes(searchQ));
 
             if(docs.length === 0) {
                 grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No doctors found matching criteria.</p>`;
@@ -554,21 +467,13 @@
                 const isAvail = doc.status === 'Verified';
                 const badgeClass = isAvail ? 'available' : 'pending';
                 const badgeText = isAvail ? 'Verified' : 'Pending';
-                const ratingHtml = isAvail ? `<span class="doc-c-rating">⭐ ${parseFloat(doc.rating).toFixed(1)}</span>` : '';
                 
-                // Construct Actions based on status
-                let actionsHtml = isAvail ? `
-                    <div class="doc-c-actions">
-                        <div class="btn-icon">✏️</div>
-                    </div>
-                ` : `
-                    <div class="doc-pend-actions">
+                let actionsHtml = isAvail ? `<div class="doc-c-actions"><div class="btn-icon">✏️</div></div>` : 
+                    `<div class="doc-pend-actions">
                         <button class="btn-reject" onclick="verifyDoctorAction(event, '${doc.id}', 'reject')">✕ Reject</button>
                         <button class="btn-approve" onclick="verifyDoctorAction(event, '${doc.id}', 'approve')">✓ Approve</button>
-                    </div>
-                `;
+                    </div>`;
 
-                // FIX: Removed the condition on onclick, all cards are clickable now.
                 return `
                 <div class="doc-card" onclick="viewDoctorDetail('${doc.id}')">
                     <div class="doc-c-top">
@@ -577,44 +482,30 @@
                             <div class="doc-c-status ${badgeClass}">${badgeText}</div>
                         </div>
                         <div class="doc-c-info">
-                            <div class="doc-c-name-row"><div class="doc-c-name">${doc.name}</div>${ratingHtml}</div>
+                            <div class="doc-c-name-row"><div class="doc-c-name">${doc.name}</div></div>
                             <div class="doc-c-spec">${doc.spec}</div>
                         </div>
                     </div>
                     <div class="doc-c-bottom">
-                        <div class="doc-c-schedule">${doc.location ? `📍 ${doc.location}` : 'No location set'}</div>
+                        <div class="doc-c-schedule">${doc.location !== 'N/A' ? `📍 ${doc.location}` : 'No location set'}</div>
                         ${actionsHtml}
                     </div>
-                </div>
-                `;
+                </div>`;
             }).join('');
         }
 
-        // ================= APPROVE / REJECT DOCTOR =================
         async function verifyDoctorAction(e, docId, action) {
-            e.stopPropagation(); // FIX: Prevent the card click from firing when a button is clicked
+            e.stopPropagation(); 
             if(!confirm(`Are you sure you want to ${action} this doctor?`)) return;
-
             try {
-                const res = await fetch(`${API_BASE}/admin/doctors/${docId}/verify?action=${action}`, { 
-                    method: 'POST', 
-                    headers: headers 
-                });
-                
-                if(res.ok) {
-                    alert(`Doctor ${action}d successfully!`);
-                    loadCoreData(); // Reload list
-                } else {
-                    const err = await res.json();
-                    alert("Error: " + err.detail);
-                }
-            } catch(e) {
-                alert("Network Error: " + e.message);
-            }
+                await fetch(`${API_BASE}/admin/doctors/${docId}/verify?action=${action}`, { method: 'POST', headers: headers });
+                loadCoreData(); 
+            } catch(e) { alert("Network Error"); }
         }
 
         // ================= DOCTOR DETAIL VIEW =================
         function switchMainView(view) {
+            if(view === 'doctors') currentlyViewingDocId = null;
             document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
             document.getElementById(`${view}-view`).classList.add('active');
         }
@@ -629,60 +520,49 @@
         function viewDoctorDetail(id) {
             const doc = allDoctorsData.find(d => d.id === id);
             if(!doc) return;
+            currentlyViewingDocId = doc.id;
             
-            // Get appointments for this doctor
-            const docAppts = allAppointmentsData.filter(a => a.doctor_name === doc.name || a.doctor_id === doc.id);
-            const activeAppts = docAppts.filter(a => a.status === 'scheduled');
+            // Filter appointments specific to this doctor
+            const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id);
             
-            // Unique Patients Count
+            // FIX: UPCOMING APPOINTMENTS MATH (Include both scheduled and pending_payment)
+            const activeAppts = docAppts.filter(a => a.status === 'scheduled' || a.status === 'pending_payment');
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
             switchMainView('doctor-detail');
             
-            // Header Info
+            // Profile Header
             document.getElementById('dd-head-name').innerText = doc.name;
             document.getElementById('dd-head-spec').innerText = doc.spec;
             document.getElementById('dd-head-img').src = doc.img;
-            document.getElementById('dd-location-tag').innerText = `📍 ${doc.location || 'Location not specified'}`;
             
-            // FIX: Set dynamic status badge in detail header
             const statusTag = document.getElementById('dd-status-tag');
             if (doc.status === 'Verified') {
                 statusTag.className = 'dd-tag avail';
                 statusTag.innerHTML = '● Verified';
-                statusTag.style.background = ''; 
-                statusTag.style.color = '';
+                statusTag.style.background = ''; statusTag.style.color = '';
             } else {
                 statusTag.className = 'dd-tag'; 
-                statusTag.style.background = '#fef3c7'; // Warning yellow
-                statusTag.style.color = '#d97706';
+                statusTag.style.background = '#fef3c7'; statusTag.style.color = '#d97706';
                 statusTag.innerHTML = '● Pending';
             }
 
-            // Right Sidebar Stats
+            // Right Sidebar General Stats
             document.getElementById('sb-patients-count').innerText = uniquePatients;
             document.getElementById('sb-upcoming-count').innerText = activeAppts.length;
             document.getElementById('sb-rating-score').innerText = parseFloat(doc.rating).toFixed(1);
             document.getElementById('sb-rating-sub').innerText = `Based on ${doc.reviews} reviews`;
             
-            document.getElementById('dd-rev-score').innerHTML = `${parseFloat(doc.rating).toFixed(1)}<span>/5.0</span>`;
-            document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings`;
+            document.getElementById('sb-email').innerText = doc.email;
+            document.getElementById('sb-phone').innerText = doc.phone;
+            document.getElementById('sb-location').innerText = doc.location;
 
-            // Right Sidebar Info
-            document.getElementById('sb-name').innerText = doc.name;
-            document.getElementById('sb-spec').innerText = doc.spec;
-            document.getElementById('sb-email').innerText = doc.email || 'N/A';
-            document.getElementById('sb-phone').innerText = doc.phone || 'N/A';
-            document.getElementById('sb-location').innerText = doc.location || 'N/A';
-
-            // DOCUMENTS TAB
+            // TAB: DOCUMENTS
             const docsList = document.getElementById('docs-list-container');
             const makeDocRow = (label, url) => {
-                if(url && url !== "null") {
-                    return `<div class="doc-row"><span>${label}</span><a href="${url}" target="_blank" class="btn-download">View Document</a></div>`;
-                } else {
-                    return `<div class="doc-row"><span style="color:var(--text-muted);">${label}</span><a class="btn-download disabled">Not Uploaded</a></div>`;
-                }
+                return (url && url !== "null") ? 
+                    `<div class="doc-row"><span>${label}</span><a href="${url}" target="_blank" class="btn-download">View Document</a></div>` : 
+                    `<div class="doc-row"><span style="color:var(--text-muted);">${label}</span><a class="btn-download disabled">Not Uploaded</a></div>`;
             };
             docsList.innerHTML = `
                 ${makeDocRow('Resume / CV', doc.resume_url)}
@@ -691,7 +571,7 @@
                 ${makeDocRow('Identification Card (IC)', doc.ic_url)}
             `;
 
-            // SCHEDULE TAB
+            // TAB: SCHEDULE (Uses new backend data)
             const schedList = document.getElementById('schedule-list-container');
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             let schedHtml = '';
@@ -705,13 +585,13 @@
             });
             schedList.innerHTML = schedHtml;
 
-            // APPOINTMENTS TAB
+            // TAB: APPOINTMENTS (Using all filtered appts)
             const apptContainer = document.getElementById('dd-appts-container');
             if(docAppts.length === 0) {
                 apptContainer.innerHTML = `<p style="grid-column: 1/-1; color:var(--text-muted); text-align:center; padding:20px;">No appointments assigned yet.</p>`;
             } else {
                 apptContainer.innerHTML = docAppts.map(a => {
-                    const statusClass = (a.status === 'completed') ? 'completed' : (a.status === 'cancelled' ? 'cancelled' : 'scheduled');
+                    const statusClass = (a.status === 'completed') ? 'completed' : (a.status === 'cancelled' ? 'cancelled' : (a.status === 'scheduled' ? 'scheduled' : 'pending_payment'));
                     const d = new Date(a.preferred_datetime || a.created_at);
                     const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -731,65 +611,112 @@
                 }).join('');
             }
 
-            // Reset to first tab
-            switchTab('detail', document.querySelector('.dd-tab-btn'));
-        }
+            // TAB: REVIEWS (Fully Built UI)
+            const reviewsWithStars = docAppts.filter(a => a.patient_review_stars > 0);
+            document.getElementById('dd-rev-score').innerHTML = `${parseFloat(doc.rating).toFixed(1)}<span>/5.0</span>`;
+            document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings • ${reviewsWithStars.length} reviews`;
 
-        // ================= ADD DOCTOR MODAL & SUBMISSION =================
-        function openAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'flex'; }
-        function closeAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'none'; }
+            let starCounts = {5:0, 4:0, 3:0, 2:0, 1:0};
+            reviewsWithStars.forEach(r => { starCounts[r.patient_review_stars] = (starCounts[r.patient_review_stars] || 0) + 1; });
+            const totalR = doc.reviews > 0 ? doc.reviews : 1; // Prevent div by zero
 
-        function updateFileText(input, textId) {
-            if(input.files.length > 0) {
-                document.getElementById(textId).innerText = input.files[0].name;
+            document.getElementById('dd-rev-bars').innerHTML = [5,4,3,2,1].map(star => {
+                const pct = (starCounts[star] / totalR) * 100;
+                return `<div class="rev-bar-row"><span>⭐ ${star}</span><div class="r-bar-bg"><div class="r-bar-fill" style="width:${pct}%;"></div></div><span>(${starCounts[star]})</span></div>`;
+            }).join('');
+
+            const commentsContainer = document.getElementById('dd-rev-comments');
+            if(reviewsWithStars.length === 0) {
+                commentsContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No patient reviews yet.</p>`;
+            } else {
+                commentsContainer.innerHTML = reviewsWithStars.map(r => {
+                    const d = new Date(r.created_at);
+                    let starsHtml = "⭐".repeat(r.patient_review_stars);
+                    return `
+                    <div class="review-item">
+                        <div class="ri-head">
+                            <div class="ri-user">
+                                <img src="https://ui-avatars.com/api/?name=${r.patient_name || 'Patient'}">
+                                <div><div style="font-weight:600; font-size:14px;">${r.patient_name || 'Anonymous'}</div><div style="color:#f59e0b; font-size:12px;">${starsHtml}</div></div>
+                            </div>
+                            <div class="ri-date">Consultation on <strong>${d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric'})}</strong></div>
+                        </div>
+                        <div class="ri-body">"${r.patient_review_comment || 'No comment provided.'}"</div>
+                    </div>`;
+                }).join('');
             }
         }
 
-        async function submitAdminNewDoctor() {
-            const btn = document.getElementById('btnSubmitAddDoc');
-            btn.innerText = "Creating & Uploading...";
+        // ================= EDIT DOCTOR MODAL & SUBMISSION =================
+        function openEditModal() {
+            const doc = allDoctorsData.find(d => d.id === currentlyViewingDocId);
+            if(!doc) return;
+
+            document.getElementById('editDocId').value = doc.id;
+            document.getElementById('editDocPhone').value = doc.phone !== 'N/A' ? doc.phone : '';
+            document.getElementById('editDocLocation').value = doc.location !== 'N/A' ? doc.location : '';
+
+            const schedCont = document.getElementById('editScheduleContainer');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            
+            schedCont.innerHTML = days.map(day => {
+                const times = doc.availability ? doc.availability[day] : null;
+                const isChecked = times && times.length === 2 ? 'checked' : '';
+                const startT = isChecked ? times[0] : '09:00';
+                const endT = isChecked ? times[1] : '17:00';
+
+                return `
+                <div class="week-row">
+                    <div class="wr-top"><span>${day}</span><input type="checkbox" id="chk_${day}" ${isChecked} style="width:18px;height:18px;"></div>
+                    <div class="wr-inputs">
+                        <div class="form-group"><label>Start Time</label><input type="time" id="start_${day}" class="form-control" value="${startT}"></div>
+                        <div class="form-group"><label>End Time</label><input type="time" id="end_${day}" class="form-control" value="${endT}"></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('editDoctorModal').style.display = 'flex';
+        }
+
+        function closeEditModal() { document.getElementById('editDoctorModal').style.display = 'none'; }
+
+        async function submitEditDoctor() {
+            const docId = document.getElementById('editDocId').value;
+            const btn = document.getElementById('btnSubmitEditDoc');
+            btn.innerText = "Saving...";
             btn.disabled = true;
 
-            try {
-                const formData = new FormData();
-                formData.append("name", document.getElementById('newDocName').value);
-                formData.append("email", document.getElementById('newDocEmail').value);
-                formData.append("password", document.getElementById('newDocPass').value);
-                formData.append("specialty", document.getElementById('newDocSpec').value);
-                formData.append("phone", document.getElementById('newDocPhone').value);
-                formData.append("location", document.getElementById('newDocLocation').value);
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            let newAvailability = {};
 
-                // Append Files
-                const appendFile = (inputId, formKey) => {
-                    const el = document.getElementById(inputId);
-                    if(el.files.length > 0) formData.append(formKey, el.files[0]);
-                };
-                appendFile('newDocPhoto', 'photo');
-                appendFile('newDocResume', 'resume');
-                appendFile('newDocAPC', 'apc');
-                appendFile('newDocMMC', 'mmc');
-
-                // POST to backend API route (admin_router)
-                const res = await fetch(`${API_BASE}/admin/doctors/add`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }, // Form data so NO Content-Type
-                    body: formData
-                });
-
-                if(!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.detail || "Failed to create doctor account");
+            days.forEach(day => {
+                if(document.getElementById(`chk_${day}`).checked) {
+                    newAvailability[day] = [document.getElementById(`start_${day}`).value, document.getElementById(`end_${day}`).value];
                 }
+            });
 
-                alert("Doctor successfully added and approved!");
-                document.getElementById('adminAddDocForm').reset();
-                closeAddDoctorModal();
-                loadCoreData();
+            const payload = {
+                phone: document.getElementById('editDocPhone').value,
+                location: document.getElementById('editDocLocation').value,
+                availability: newAvailability
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/doctors/${docId}/edit`, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify(payload)
+                });
+                
+                if(!res.ok) throw new Error("Failed to update doctor");
+                
+                closeEditModal();
+                loadCoreData(); // Will refresh and automatically reopen the profile View
 
             } catch (e) {
                 alert("Error: " + e.message);
             } finally {
-                btn.innerText = "Create & Approve Doctor";
+                btn.innerText = "Save Changes";
                 btn.disabled = false;
             }
         }
