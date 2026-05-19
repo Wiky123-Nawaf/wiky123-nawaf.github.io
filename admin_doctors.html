@@ -116,7 +116,7 @@
         .btn-download { background: var(--primary); color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 600;}
         .btn-download.disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed;}
 
-        /* Tab: Appointments */
+        /* Tab: Appointments & Pagination */
         .dd-appts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .appt-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px;}
         .ac-head { display: flex; justify-content: space-between; align-items: flex-start;}
@@ -127,12 +127,18 @@
         .ac-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize;}
         .ac-status.completed { background: #dcfce7; color: #16a34a; }
         .ac-status.scheduled { background: #eff6ff; color: #0066cc; }
-        .ac-status.pending_payment { background: #fef3c7; color: #d97706; }
         .ac-status.cancelled { background: #fef2f2; color: #ef4444; }
         .ac-detail-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;}
         .ac-label { color: var(--text-muted); }
         .ac-val { font-weight: 600; color: var(--text-main); }
         .ac-val.blue { color: var(--primary); text-transform: capitalize;}
+        
+        .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-light); flex-wrap: wrap;}
+        .page-btn { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .page-btn:hover:not(:disabled) { background: #f9fafb; color: var(--text-main); }
+        .page-btn.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .page-info { font-size: 13px; color: var(--text-muted); margin-right: auto; }
 
         /* Tab: Reviews */
         .rev-header { margin-bottom: 24px; }
@@ -294,14 +300,19 @@
                             <h3 class="section-title" style="margin:0;">Weekly Availability</h3>
                         </div>
                         <div id="schedule-list-container"></div>
-                        <p style="font-size:12px; color:var(--text-muted); margin-top:20px; background:#f9fafb; padding:16px; border-radius:8px;">
-                            <strong>Note regarding Doctor Portal:</strong> Changes made here will update the core database correctly. However, if your Doctor Portal uses a different format (like separate "Online" and "Clinic" hours), that specific Doctor Portal page will need to be updated by a developer to match this core database format (one shift per day).
-                        </p>
                     </div>
 
-                    <!-- TAB 3: APPOINTMENTS -->
+                    <!-- TAB 3: APPOINTMENTS WITH PAGINATION AND SEARCH -->
                     <div id="tab-appointments" class="dd-tab-content">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                            <h3 class="section-title" style="margin:0;">Doctor's Appointments</h3>
+                            <div class="search-bar" style="width: 250px;">
+                                <span>🔍</span> 
+                                <input type="text" id="docApptSearchInput" placeholder="Search patient name..." onkeyup="filterDocAppts()">
+                            </div>
+                        </div>
                         <div class="dd-appts-grid" id="dd-appts-container"></div>
+                        <div id="docApptsPagination"></div>
                     </div>
 
                     <!-- TAB 4: REVIEWS -->
@@ -388,7 +399,13 @@
         let allDoctorsData = [];
         let allAppointmentsData = [];
         let currentFilterState = 'All';
-        let currentlyViewingDocId = null; // Store ID for editing
+        let currentlyViewingDocId = null; 
+
+        // Pagination and Search specifically for the Doctor Appts Tab
+        let currentDocAppts = [];
+        let filteredDocAppts = [];
+        let docApptPage = 1;
+        const docApptsPerPage = 4;
 
         window.onload = () => { loadCoreData(); };
 
@@ -429,7 +446,6 @@
 
                 allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
 
-                // If viewing a doctor, refresh their detailed view automatically
                 if(currentlyViewingDocId) {
                     viewDoctorDetail(currentlyViewingDocId);
                 } else {
@@ -525,11 +541,14 @@
             if(!doc) return;
             currentlyViewingDocId = doc.id;
             
-            // FIX: Safely fallback to doctor_name if doctor_id doesn't match perfectly.
-            const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id || a.doctor_name === doc.name);
+            // Filter appointments specific to this doctor, AND hide abandoned checkouts (pending_payment)
+            const docAppts = allAppointmentsData.filter(a => 
+                (a.doctor_id === doc.id || a.doctor_name === doc.name) && 
+                a.status !== 'pending_payment'
+            );
             
-            // Count BOTH scheduled and pending_payment
-            const activeAppts = docAppts.filter(a => a.status === 'scheduled' || a.status === 'pending_payment');
+            // ONLY count "scheduled" as upcoming.
+            const activeAppts = docAppts.filter(a => a.status === 'scheduled');
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
             switchMainView('doctor-detail');
@@ -588,31 +607,12 @@
             });
             schedList.innerHTML = schedHtml;
 
-            // TAB: APPOINTMENTS 
-            const apptContainer = document.getElementById('dd-appts-container');
-            if(docAppts.length === 0) {
-                apptContainer.innerHTML = `<p style="grid-column: 1/-1; color:var(--text-muted); text-align:center; padding:20px;">No appointments assigned yet.</p>`;
-            } else {
-                apptContainer.innerHTML = docAppts.map(a => {
-                    const statusClass = (a.status === 'completed') ? 'completed' : (a.status === 'cancelled' ? 'cancelled' : (a.status === 'scheduled' ? 'scheduled' : 'pending_payment'));
-                    const d = new Date(a.preferred_datetime || a.created_at);
-                    const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                    
-                    return `
-                    <div class="appt-card">
-                        <div class="ac-head">
-                            <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
-                            <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
-                        </div>
-                        <div>
-                            <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
-                            <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
-                            <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">MYR ${parseFloat(a.amount_paid||0).toFixed(2)}</span></div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
+            // TAB: APPOINTMENTS (Using Pagination Logic)
+            currentDocAppts = docAppts;
+            filteredDocAppts = [...docAppts];
+            docApptPage = 1;
+            document.getElementById('docApptSearchInput').value = '';
+            renderDocAppts();
 
             // TAB: REVIEWS 
             const reviewsWithStars = docAppts.filter(a => a.patient_review_stars > 0);
@@ -648,6 +648,82 @@
                     </div>`;
                 }).join('');
             }
+
+            // Reset to first tab
+            switchTab('detail', document.querySelector('.dd-tab-btn'));
+        }
+
+        // ================= DOCTOR APPOINTMENTS PAGINATION =================
+        function filterDocAppts() {
+            const query = document.getElementById('docApptSearchInput').value.toLowerCase();
+            filteredDocAppts = currentDocAppts.filter(a => 
+                (a.patient_name || '').toLowerCase().includes(query) ||
+                (a.patient_id || '').toLowerCase().includes(query)
+            );
+            docApptPage = 1;
+            renderDocAppts();
+        }
+
+        function renderDocAppts() {
+            const container = document.getElementById('dd-appts-container');
+            const pagContainer = document.getElementById('docApptsPagination');
+            
+            if (filteredDocAppts.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; color:var(--text-muted); text-align:center; padding:20px;">No appointments found.</p>`;
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            const startIdx = (docApptPage - 1) * docApptsPerPage;
+            const paginatedAppts = filteredDocAppts.slice(startIdx, startIdx + docApptsPerPage);
+
+            container.innerHTML = paginatedAppts.map(a => {
+                let statusClass = 'scheduled';
+                if (a.status === 'completed') statusClass = 'completed';
+                if (a.status === 'cancelled') statusClass = 'cancelled';
+                
+                const d = new Date(a.preferred_datetime || a.created_at);
+                const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                
+                return `
+                <div class="appt-card">
+                    <div class="ac-head">
+                        <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
+                        <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
+                    </div>
+                    <div>
+                        <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
+                        <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
+                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">MYR ${parseFloat(a.amount_paid||0).toFixed(2)}</span></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            const totalPages = Math.ceil(filteredDocAppts.length / docApptsPerPage);
+            if (totalPages <= 1) {
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            let html = `<div class="pagination">
+                <span class="page-info">Showing ${startIdx + 1} to ${Math.min(docApptPage * docApptsPerPage, filteredDocAppts.length)} of ${filteredDocAppts.length}</span>
+                <button class="page-btn" onclick="changeDocApptPage(${docApptPage - 1})" ${docApptPage === 1 ? 'disabled' : ''}>Prev</button>`;
+                
+            for(let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i === docApptPage ? 'active' : ''}" onclick="changeDocApptPage(${i})">${i}</button>`;
+            }
+            
+            html += `<button class="page-btn" onclick="changeDocApptPage(${docApptPage + 1})" ${docApptPage === totalPages ? 'disabled' : ''}>Next</button>
+            </div>`;
+            pagContainer.innerHTML = html;
+        }
+
+        function changeDocApptPage(page) {
+            const totalPages = Math.ceil(filteredDocAppts.length / docApptsPerPage);
+            if (page < 1 || page > totalPages) return;
+            docApptPage = page;
+            renderDocAppts();
         }
 
         // ================= EDIT DOCTOR MODAL & SUBMISSION =================
