@@ -294,6 +294,9 @@
                             <h3 class="section-title" style="margin:0;">Weekly Availability</h3>
                         </div>
                         <div id="schedule-list-container"></div>
+                        <p style="font-size:12px; color:var(--text-muted); margin-top:20px; background:#f9fafb; padding:16px; border-radius:8px;">
+                            <strong>Note regarding Doctor Portal:</strong> Changes made here will update the core database correctly. However, if your Doctor Portal uses a different format (like separate "Online" and "Clinic" hours), that specific Doctor Portal page will need to be updated by a developer to match this core database format (one shift per day).
+                        </p>
                     </div>
 
                     <!-- TAB 3: APPOINTMENTS -->
@@ -408,11 +411,11 @@
                     rating: d.rating || 0.0,
                     status: defaultStatus, 
                     img: d.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name || 'D')}&background=random`,
-                    email: d.email || 'N/A',       // <--- Using new backend fields
-                    phone: d.phone || 'N/A',       // <--- Using new backend fields
+                    email: d.email || 'N/A',       
+                    phone: d.phone || 'N/A',       
                     location: d.location || 'N/A', 
                     reviews: d.review_count || 0,
-                    availability: d.availability || {}, // <--- Using new backend fields
+                    availability: d.availability || {}, 
                     resume_url: d.resume_url,
                     apc_url: d.apc_url,
                     mmc_url: d.mmc_url,
@@ -426,7 +429,7 @@
 
                 allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
 
-                // If we are currently viewing a doctor, refresh their detailed view automatically
+                // If viewing a doctor, refresh their detailed view automatically
                 if(currentlyViewingDocId) {
                     viewDoctorDetail(currentlyViewingDocId);
                 } else {
@@ -522,10 +525,10 @@
             if(!doc) return;
             currentlyViewingDocId = doc.id;
             
-            // Filter appointments specific to this doctor
-            const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id);
+            // FIX: Safely fallback to doctor_name if doctor_id doesn't match perfectly.
+            const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id || a.doctor_name === doc.name);
             
-            // FIX: UPCOMING APPOINTMENTS MATH (Include both scheduled and pending_payment)
+            // Count BOTH scheduled and pending_payment
             const activeAppts = docAppts.filter(a => a.status === 'scheduled' || a.status === 'pending_payment');
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
@@ -571,7 +574,7 @@
                 ${makeDocRow('Identification Card (IC)', doc.ic_url)}
             `;
 
-            // TAB: SCHEDULE (Uses new backend data)
+            // TAB: SCHEDULE 
             const schedList = document.getElementById('schedule-list-container');
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             let schedHtml = '';
@@ -585,7 +588,7 @@
             });
             schedList.innerHTML = schedHtml;
 
-            // TAB: APPOINTMENTS (Using all filtered appts)
+            // TAB: APPOINTMENTS 
             const apptContainer = document.getElementById('dd-appts-container');
             if(docAppts.length === 0) {
                 apptContainer.innerHTML = `<p style="grid-column: 1/-1; color:var(--text-muted); text-align:center; padding:20px;">No appointments assigned yet.</p>`;
@@ -611,14 +614,14 @@
                 }).join('');
             }
 
-            // TAB: REVIEWS (Fully Built UI)
+            // TAB: REVIEWS 
             const reviewsWithStars = docAppts.filter(a => a.patient_review_stars > 0);
             document.getElementById('dd-rev-score').innerHTML = `${parseFloat(doc.rating).toFixed(1)}<span>/5.0</span>`;
             document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings • ${reviewsWithStars.length} reviews`;
 
             let starCounts = {5:0, 4:0, 3:0, 2:0, 1:0};
             reviewsWithStars.forEach(r => { starCounts[r.patient_review_stars] = (starCounts[r.patient_review_stars] || 0) + 1; });
-            const totalR = doc.reviews > 0 ? doc.reviews : 1; // Prevent div by zero
+            const totalR = doc.reviews > 0 ? doc.reviews : 1;
 
             document.getElementById('dd-rev-bars').innerHTML = [5,4,3,2,1].map(star => {
                 const pct = (starCounts[star] / totalR) * 100;
@@ -630,7 +633,7 @@
                 commentsContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No patient reviews yet.</p>`;
             } else {
                 commentsContainer.innerHTML = reviewsWithStars.map(r => {
-                    const d = new Date(r.created_at);
+                    const d = new Date(r.created_at || new Date());
                     let starsHtml = "⭐".repeat(r.patient_review_stars);
                     return `
                     <div class="review-item">
@@ -711,7 +714,7 @@
                 if(!res.ok) throw new Error("Failed to update doctor");
                 
                 closeEditModal();
-                loadCoreData(); // Will refresh and automatically reopen the profile View
+                loadCoreData(); 
 
             } catch (e) {
                 alert("Error: " + e.message);
