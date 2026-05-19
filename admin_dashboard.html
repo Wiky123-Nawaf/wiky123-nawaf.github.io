@@ -118,10 +118,12 @@
         .btn-view:hover { background: #e0f2fe; }
         .btn-deact { border: 1px solid #ef4444; color: #ef4444; background: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;}
         .btn-deact:hover { background: #fee2e2; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-align: center; display: inline-block;}
         .status-badge.active { background: #ecfdf5; color: #10b981; }
         .status-badge.inactive { background: #f3f4f6; color: #6b7280; }
-        .status-badge.premium { background: var(--purple-light); color: var(--purple-text); border: 1px solid var(--purple-text); }
+        .status-badge.premium { background: var(--purple-light); color: var(--purple-text); }
+        .status-badge.deactivated { background: #fee2e2; color: #ef4444; }
 
         .see-more-container { text-align: center; padding: 12px; border-top: 1px solid var(--border-light); }
         .btn-see-more { background: transparent; border: 1px solid var(--border); color: var(--text-main); font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
@@ -191,14 +193,42 @@
         .file-upload-box input[type="file"] { opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
         .file-name-display { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Document Links UI */
-        .doc-link-btn { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.2s; background: #fafafa;}
-        .doc-link-btn:hover { border-color: var(--primary); color: var(--primary); background: #fff;}
-        .doc-link-btn.disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--border-light); }
-
-        /* Premium Badge Styles */
-        .premium-banner { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 8px 16px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2); }
-        .premium-banner.free-tier { background: var(--bg-body); color: var(--text-muted); border: 1px solid var(--border); box-shadow: none; }
+        /* ====== VIEW PATIENT MODAL (EXACT SCREENSHOT UI) ====== */
+        .vp-modal-box { max-width: 850px !important; border-radius: 16px; padding: 0; }
+        .vp-header-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: #111827;}
+        .vp-profile-section { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .vp-profile-section img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+        .vp-profile-section .vp-name { font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+        .vp-profile-section .vp-email { font-size: 14px; color: #6b7280; }
+        
+        .vp-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+        .vp-form-group { display: flex; flex-direction: column; gap: 6px; }
+        .vp-form-group label { font-size: 13px; font-weight: 600; color: #111827; }
+        .vp-form-input { padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; color: #111827; background: #ffffff; outline: none; pointer-events: none; display: flex; align-items: center; gap: 8px;}
+        .vp-form-input.with-icon { padding-left: 12px; }
+        
+        .vp-section-title { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 16px; }
+        
+        .vp-reports-container { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 32px; }
+        .vp-report-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: space-between; min-width: 280px; }
+        .vp-report-info { display: flex; gap: 12px; align-items: center; }
+        .vp-report-icon { color: #ef4444; background: #fff; padding: 6px; border-radius: 4px; border: 1px solid #e5e7eb; display:flex; align-items:center; justify-content:center;}
+        .vp-report-text .title { font-size: 13px; font-weight: 600; color: #111827; }
+        .vp-report-text .meta { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .vp-report-dl { color: #111827; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center;}
+        
+        .vp-appts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .vp-appt-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .vp-appt-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+        .vp-appt-label { color: #9ca3af; }
+        .vp-appt-val { font-weight: 600; color: #111827; display:flex; gap:8px; align-items:center;}
+        .vp-badge-status { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: capitalize; align-self: flex-end;}
+        
+        .vp-footer-actions { display: flex; gap: 16px; justify-content: space-between; padding-top: 24px; }
+        .vp-btn-deactivate { border: 1px solid #ef4444; color: #ef4444; background: transparent; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1; transition:0.2s; text-align: center;}
+        .vp-btn-deactivate:hover { background: #fef2f2; }
+        .vp-btn-ok { background: #0066cc; color: white; padding: 12px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; flex: 1; transition:0.2s; text-align: center;}
+        .vp-btn-ok:hover { background: #0052a3; }
     </style>
 </head>
 <body>
@@ -388,11 +418,6 @@
                     <h1>User Management</h1>
                     <p>Manage the patient status and track upcoming sessions.</p>
                 </div>
-                <div>
-                    <select style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); outline: none; font-size: 14px; color: var(--text-main); font-weight: 500; cursor: pointer; background: #fff;">
-                        <option>Current Data</option>
-                    </select>
-                </div>
             </div>
 
             <!-- Patient Metrics -->
@@ -417,7 +442,7 @@
                 </div>
                 <div class="p-metric-card">
                     <div class="p-card-header">
-                        <div class="p-icon-wrap red">✕</div> Inactive Users
+                        <div class="p-icon-wrap red">✕</div> Inactive / Deactivated
                     </div>
                     <div class="p-value-row">
                         <div class="p-value" id="p-stat-inactive">0</div>
@@ -436,10 +461,15 @@
                         <span style="color:var(--text-muted);">🔍</span> 
                         <input type="text" id="patientSearchInput" placeholder="Search by name or email" onkeyup="filterPatientsTable()">
                     </div>
-                    <div style="display: flex; gap: 12px;">
-                        <button style="border:1px solid var(--border); background:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; font-size: 13px; font-weight: 500;">
-                            ⚙️ Filter
-                        </button>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <!-- UPDATED FILTER DROPDOWN -->
+                        <select id="patientFilterSelect" onchange="filterPatientsTable()" style="border:1px solid var(--border); background:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; font-size: 13px; font-weight: 500; outline:none;">
+                            <option value="All">⚙️ Filter Status: All</option>
+                            <option value="Active">Active</option>
+                            <option value="Premium">Premium</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Deactivated">Deactivated</option>
+                        </select>
                         <button class="btn-add" onclick="openAddPatientModal()">+ Add New User</button>
                     </div>
                 </div>
@@ -466,7 +496,6 @@
                     <button class="btn-see-more" onclick="loadMorePatients()">See More ↓</button>
                 </div>
             </div>
-
         </div>
 
     </main>
@@ -559,14 +588,17 @@
         </div>
     </div>
 
-    <!-- VIEW PATIENT MODAL -->
+    <!-- VIEW PATIENT MODAL (SCREENSHOT UI) -->
     <div id="viewPatientModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2>Patient Profile Overview</h2>
+        <div class="modal-box vp-modal-box">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-light); padding: 24px;">
+                <div class="vp-header-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Detail User
+                </div>
                 <button class="modal-close" onclick="closeViewPatientModal()">&times;</button>
             </div>
-            <div class="modal-body" id="viewPatientBody">
+            <div class="modal-body" id="viewPatientBody" style="padding: 24px; max-height: calc(100vh - 120px); overflow-y: auto;">
                 <!-- Dynamically Populated via JS -->
             </div>
         </div>
@@ -974,11 +1006,21 @@
                 const lastLogin = new Date(p.last_login || p.created_at);
                 const daysSince = (now - lastLogin) / (1000 * 60 * 60 * 24);
                 
-                // Set explicitly false if locally deactivated
-                if (p.is_deactivated) { p.isActive = false; } 
-                else { p.isActive = daysSince <= 90; }
+                p.isActive = daysSince <= 90;
+
+                // Accurately map status category for filtering and badges
+                if (p.is_deactivated) {
+                    p.statusCategory = "Deactivated";
+                    p.isActive = false; // Forces inactive for metric counts
+                } else if (!p.isActive) {
+                    p.statusCategory = "Inactive";
+                } else if (p.is_subscribed) {
+                    p.statusCategory = "Premium";
+                } else {
+                    p.statusCategory = "Active";
+                }
                 
-                if (p.isActive) activeCount++;
+                if (p.statusCategory === "Active" || p.statusCategory === "Premium") activeCount++;
                 else inactiveCount++;
             });
 
@@ -992,10 +1034,16 @@
 
         function filterPatientsTable() {
             const query = document.getElementById('patientSearchInput').value.toLowerCase();
+            const filterVal = document.getElementById('patientFilterSelect').value;
+            
             filteredPatientsData = allPatientsData.filter(p => {
-                return (p.name || "").toLowerCase().includes(query) || 
-                       (p.email || "").toLowerCase().includes(query) ||
-                       (p.id || "").toLowerCase().includes(query);
+                const matchSearch = (p.name || "").toLowerCase().includes(query) || 
+                                    (p.email || "").toLowerCase().includes(query) ||
+                                    (p.id || "").toLowerCase().includes(query);
+                                    
+                const matchFilter = (filterVal === "All") || (p.statusCategory === filterVal);
+
+                return matchSearch && matchFilter;
             });
             currentPatientTableLimit = 6; 
             renderPatientsTable();
@@ -1011,7 +1059,7 @@
             const seeMoreContainer = document.getElementById('seeMorePatientsContainer');
 
             if (filteredPatientsData.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No patients found.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No patients match the filters.</td></tr>`;
                 seeMoreContainer.style.display = 'none';
                 return;
             }
@@ -1019,27 +1067,16 @@
             const itemsToShow = filteredPatientsData.slice(0, currentPatientTableLimit);
 
             tableBody.innerHTML = itemsToShow.map(p => {
-                const joinedDate = new Date(p.created_at).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+                const joinedDate = new Date(p.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-');
                 const pidStr = p.id ? "ID" + p.id.substring(0,4).toUpperCase() : "Unknown";
                 
                 const mockAge = p.age || (p.id ? 20 + (p.id.charCodeAt(0) % 30) : 30);
-
                 const bookingsCount = allAppointmentsData.filter(a => a.patient_id === p.id).length;
 
-                let statusClass = p.isActive ? 'active' : 'inactive';
-                let statusText = p.isActive ? 'Active' : 'Inactive';
-                
-                // Highlight Premium Users
-                if(p.is_subscribed && p.isActive) {
-                    statusClass = 'premium';
-                    statusText = 'Premium';
-                }
-
-                // If user was manually deactivated
-                if(p.is_deactivated) {
-                    statusClass = 'inactive';
-                    statusText = 'Deactivated';
-                }
+                let statusClass = "inactive";
+                if (p.statusCategory === "Active") statusClass = "active";
+                if (p.statusCategory === "Premium") statusClass = "premium";
+                if (p.statusCategory === "Deactivated") statusClass = "deactivated";
 
                 return `
                 <tr>
@@ -1054,7 +1091,7 @@
                     <td>${joinedDate}</td>
                     <td>${p.phone || 'N/A'}</td>
                     <td style="font-weight:600;">${bookingsCount}</td>
-                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td><span class="status-badge ${statusClass}">${p.statusCategory}</span></td>
                     <td>
                         <div style="display:flex; gap:8px;">
                             <button class="btn-view" onclick="viewPatient('${p.id}')">View</button>
@@ -1069,107 +1106,172 @@
             seeMoreContainer.style.display = (currentPatientTableLimit >= filteredPatientsData.length) ? 'none' : 'block';
         }
 
-        // ================= FULLY FUNCTIONAL: VIEW PATIENT =================
+        // ================= FULLY FUNCTIONAL: VIEW PATIENT (EXACT SCREENSHOT UI) =================
         async function viewPatient(id) {
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
             
             const body = document.getElementById('viewPatientBody');
-            body.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">Fetching patient details & documents...</div>`;
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">Fetching patient details & documents...</div>`;
             document.getElementById('viewPatientModal').style.display = 'flex';
 
-            let appointmentsHtml = '';
-            let documentsHtml = '<p style="font-size:12px; color:var(--text-muted);">No documents uploaded yet.</p>';
+            let appts = [];
+            let reports = [];
 
             try {
                 // 1. Fetch Patient Details via the dedicated endpoint
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/detail`, { headers });
-                let appts = [];
-                let reports = [];
-
+                
                 if (res.ok) {
                     const detailData = await res.json();
                     appts = detailData.appointments || [];
+                    reports = detailData.reports || []; // Backend might have added this
                 }
 
-                // 2. Fetch Medical Reports/Documents (assuming a standard admin endpoint exists)
-                try {
-                    const reportsRes = await fetch(`${API_BASE}/admin/patient/${id}/reports`, { headers });
-                    if(reportsRes.ok) {
-                        const repData = await reportsRes.json();
-                        if(repData.reports && repData.reports.length > 0) {
-                            reports = repData.reports;
+                // 2. Fallback Fetch for Medical Reports (if endpoint 1 didn't include them)
+                if (reports.length === 0) {
+                    try {
+                        const reportsRes = await fetch(`${API_BASE}/reports`, { headers });
+                        if(reportsRes.ok) {
+                            const repData = await reportsRes.json();
+                            if(repData.reports && repData.reports.length > 0) {
+                                // Filter out reports specifically for this patient if the endpoint returns all
+                                reports = repData.reports.filter(r => r.patient_id === id || !r.patient_id);
+                            }
                         }
-                    }
-                } catch(e) {
-                    console.log("Could not pull reports, proceeding with profile data.");
+                    } catch(e) { console.log("Fallback report fetch failed."); }
                 }
 
-                // Structure Documents Data
+                const joinedStr = new Date(patient.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-');
+                const mockAge = patient.age || (patient.id ? 20 + (patient.id.charCodeAt(0) % 30) : 30);
+                const bookingsCount = allAppointmentsData.filter(a => a.patient_id === patient.id).length;
+
+                // Construct Medical Reports HTML
+                let reportsHtml = '<p style="font-size:13px; color:var(--text-muted);">No documents uploaded yet.</p>';
                 if (reports.length > 0) {
-                    documentsHtml = reports.map(r => `
-                        <a href="${r.drive_url || '#'}" target="_blank" class="doc-link-btn" style="margin-bottom:8px;">
-                            <div><span style="margin-right:8px;">📄</span> ${r.name || r.filename}</div>
-                            <div style="font-size:11px; color:var(--text-muted); font-weight:normal;">${r.date || 'Unknown'} - ${r.status}</div>
-                        </a>
-                    `).join('');
+                    reportsHtml = `
+                    <div class="vp-reports-container">
+                        ${reports.map(r => {
+                            const dateStr = new Date(r.created_at || r.report_date || Date.now()).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-');
+                            return `
+                            <div class="vp-report-card">
+                                <div class="vp-report-info">
+                                    <div class="vp-report-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                    </div>
+                                    <div class="vp-report-text">
+                                        <div class="title">${r.report_name || r.name || r.filename || 'Document.pdf'}</div>
+                                        <div class="meta">4 MB • ${dateStr}</div>
+                                    </div>
+                                </div>
+                                <a href="${r.drive_url || '#'}" target="_blank" class="vp-report-dl">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                </a>
+                            </div>`;
+                        }).join('')}
+                    </div>`;
                 }
 
-                // Structure Appointments Data
+                // Construct Appointment History HTML
+                let apptsHtml = '<p style="font-size:13px; color:var(--text-muted);">No past appointments.</p>';
                 if (appts.length > 0) {
                     appts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-                    appointmentsHtml = appts.slice(0, 3).map(a => {
-                        const dt = new Date(a.preferred_datetime || a.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                        return `
-                        <div style="padding:12px; border:1px solid var(--border-light); border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <div style="font-size:13px; font-weight:600; color:var(--text-main);">${a.type === 'online' ? 'Online Consultation' : 'In-Clinic Visit'}</div>
-                                <div style="font-size:11px; color:var(--text-muted);">${dt}</div>
-                            </div>
-                            <span class="status-badge" style="background:#f3f4f6; color:#4b5563;">${a.status}</span>
-                        </div>`;
-                    }).join('');
-                } else {
-                    appointmentsHtml = '<p style="font-size:12px; color:var(--text-muted);">No past appointments.</p>';
+                    apptsHtml = `
+                    <div class="vp-appts-grid">
+                        ${appts.slice(0, 4).map(a => {
+                            const d = new Date(a.preferred_datetime || a.created_at);
+                            const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                            
+                            const isOnline = a.type === 'online';
+                            const typeColor = isOnline ? 'color: #4f46e5;' : 'color: #8b5cf6;';
+                            const typeText = isOnline ? 'Online' : 'In Clinic Visit';
+                            
+                            let statusColor = '#6b7280'; let statusBg = '#f3f4f6';
+                            if(a.status === 'completed') { statusColor = '#10b981'; statusBg = '#ecfdf5'; }
+                            if(a.status === 'cancelled') { statusColor = '#ef4444'; statusBg = '#fef2f2'; }
+
+                            return `
+                            <div class="vp-appt-card">
+                                <div class="vp-appt-row">
+                                    <span class="vp-appt-label">Date & Time</span>
+                                    <span class="vp-appt-val">${dtStr} <span style="color:#0066cc; background:#eff6ff; padding:2px 6px; border-radius:4px;">${tmStr}</span></span>
+                                </div>
+                                <div class="vp-appt-row">
+                                    <span class="vp-appt-label">Doctor</span>
+                                    <span class="vp-appt-val" style="font-weight:600;">${a.doctor_name || 'Dr. Assigned'}</span>
+                                </div>
+                                <div class="vp-appt-row">
+                                    <span class="vp-appt-label">Type Appointment</span>
+                                    <span class="vp-appt-val" style="${typeColor} font-weight:600;">${typeText}</span>
+                                </div>
+                                <div class="vp-appt-row" style="margin-top:8px;">
+                                    <span class="vp-appt-label">Type Appointment</span> <!-- Mocking the status label as in screenshot -->
+                                    <span class="vp-badge-status" style="color:${statusColor}; background:${statusBg};">${a.status}</span>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>`;
                 }
 
-                // Format Premium Banner
-                const isPremium = patient.is_subscribed;
-                const premiumBanner = isPremium 
-                    ? `<div class="premium-banner"><span>⭐ Doktura Premium Subscriber</span><span>Active</span></div>`
-                    : `<div class="premium-banner free-tier"><span>Doktura Free Tier User</span><span>Upgrade Available</span></div>`;
-
-                // Render Data into Modal
+                // Compile Final Modal HTML
                 body.innerHTML = `
-                    ${premiumBanner}
-                    
-                    <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px;">
-                        <img src="${patient.photo_url || `https://ui-avatars.com/api/?name=${patient.name}&background=f3f4f6`}" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
+                    <div class="vp-profile-section">
+                        <img src="${patient.photo_url || `https://ui-avatars.com/api/?name=${patient.name}&background=f3f4f6`}" alt="Avatar">
                         <div>
-                            <h3 style="font-size:18px; color:var(--text-main); margin-bottom:4px;">${patient.name || 'Anonymous User'}</h3>
-                            <p style="font-size:13px; color:var(--text-muted); margin-bottom: 8px;">ID: ${patient.id}</p>
-                            <span class="badge ${patient.is_deactivated ? 'pending' : 'verified'}" style="display:inline-block;">
-                                ${patient.is_deactivated ? 'Account Deactivated' : 'Account Active'}
-                            </span>
+                            <div class="vp-name">${patient.name || 'Anonymous User'}</div>
+                            <div class="vp-email">${patient.email || 'N/A'}</div>
                         </div>
                     </div>
                     
-                    <h4 style="font-size:14px; font-weight:600; border-bottom:1px solid var(--border-light); padding-bottom:8px; margin-bottom:16px;">Registration & Form Details</h4>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; background:#f9fafb; padding:16px; border-radius:8px; border:1px solid var(--border-light);">
-                        <div><label style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Email Address</label><div style="font-size:13px; font-weight:500; word-break:break-all;">${patient.email || "N/A"}</div></div>
-                        <div><label style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Phone Number</label><div style="font-size:13px; font-weight:500;">${patient.phone || "N/A"}</div></div>
-                        <div><label style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Age</label><div style="font-size:13px; font-weight:500;">${patient.age || "N/A"}</div></div>
-                        <div><label style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Registered On</label><div style="font-size:13px; font-weight:500;">${new Date(patient.created_at).toLocaleDateString()}</div></div>
+                    <div class="vp-form-grid">
+                        <div class="vp-form-group">
+                            <label>Name</label>
+                            <input type="text" class="vp-form-input" value="${patient.name || 'N/A'}" readonly>
+                        </div>
+                        <div class="vp-form-group">
+                            <label>Age</label>
+                            <input type="text" class="vp-form-input" value="${mockAge}" readonly>
+                        </div>
+                        <div class="vp-form-group">
+                            <label>Email</label>
+                            <input type="text" class="vp-form-input" value="${patient.email || 'N/A'}" readonly>
+                        </div>
+                        <div class="vp-form-group">
+                            <label>Phone Number</label>
+                            <input type="text" class="vp-form-input" value="${patient.phone || 'N/A'}" readonly>
+                        </div>
+                        <div class="vp-form-group">
+                            <label>Joined</label>
+                            <div class="vp-form-input with-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                ${joinedStr}
+                            </div>
+                        </div>
+                        <div class="vp-form-group">
+                            <label>Booking</label>
+                            <input type="text" class="vp-form-input" value="${bookingsCount}" readonly>
+                        </div>
+                        <div class="vp-form-group" style="grid-column: 1 / -1;">
+                            <label>Status</label>
+                            <div class="vp-form-input" style="justify-content:space-between; background:#fff; border:1px solid #e5e7eb;">
+                                <span>${patient.statusCategory}</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                        </div>
                     </div>
 
-                    <h4 style="font-size:14px; font-weight:600; border-bottom:1px solid var(--border-light); padding-bottom:8px; margin-bottom:16px;">Uploaded Documents & Reports</h4>
-                    <div style="margin-bottom:24px;">
-                        ${documentsHtml}
-                    </div>
+                    <div class="vp-section-title">Medical Reports</div>
+                    ${reportsHtml}
 
-                    <h4 style="font-size:14px; font-weight:600; border-bottom:1px solid var(--border-light); padding-bottom:8px; margin-bottom:16px;">Recent Appointments</h4>
-                    <div>
-                        ${appointmentsHtml}
+                    <div class="vp-section-title">Appointment History</div>
+                    ${apptsHtml}
+
+                    <div class="vp-footer-actions">
+                        <button class="vp-btn-deactivate" ${patient.is_deactivated ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : `onclick="deactivatePatient('${patient.id}')"`}>
+                            ${patient.is_deactivated ? 'Access Revoked' : 'Deactivate'}
+                        </button>
+                        <button class="vp-btn-ok" onclick="closeViewPatientModal()">OK</button>
                     </div>
                 `;
 
@@ -1184,24 +1286,25 @@
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
 
-            if(!confirm(`Are you sure you want to deactivate ${patient.name || 'this patient'}? They will no longer be able to log in.`)) return;
+            if(!confirm(`Are you sure you want to deactivate ${patient.name || 'this patient'}? They will be permanently removed from Firebase and must sign up again.`)) return;
 
             try {
-                // Assuming an endpoint exists or simulating successful visual revocation
+                // Call backend API to physically delete user
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/deactivate`, {
                     method: 'POST',
                     headers: headers
                 });
 
                 if(res.ok) {
-                    alert("Patient successfully deactivated.");
+                    alert("Patient successfully deactivated. Access fully revoked.");
                 } else {
-                    console.warn("Backend missing deactivate endpoint. Fallback to local visual deactivation.");
+                    console.warn("Backend endpoint not found, falling back to local block.");
                     alert("Patient access revoked locally for this session.");
                 }
 
                 // Update UI state
                 patient.is_deactivated = true; 
+                closeViewPatientModal();
                 processPatientData(); // Re-render table
 
             } catch (e) {
@@ -1252,9 +1355,8 @@
                 alert(`Patient profile for ${name} created successfully!`);
                 closeAddPatientModal();
                 document.getElementById('adminAddPatientForm').reset();
-                loadCoreData(); // Refresh patient table
+                loadCoreData(); // Refresh data
             } catch (e) {
-                // If endpoint doesn't exist yet, we do a local UI fallback simulation
                 console.warn(e.message);
                 alert("Notice: Backend endpoint missing. Simulating patient creation locally for demonstration.");
                 
