@@ -22,13 +22,13 @@
         body { display: flex; height: 100vh; background-color: var(--bg-body); overflow: hidden; color: var(--text-main); }
 
         /* ====== SIDEBAR ====== */
-        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0;}
         .sidebar-top { padding: 24px 20px; }
         .logo { margin-bottom: 32px; display: flex; align-items: center; padding-left: 8px; }
         .logo img { height: 24px; width: auto; }
         .menu-label { font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-left: 12px; }
         .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-        .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s;}
+        .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s; cursor: pointer;}
         .nav-menu a:hover { background-color: var(--bg-body); color: var(--text-main); }
         .nav-menu a.active { background-color: var(--primary-light); color: var(--primary); font-weight: 600; }
         
@@ -60,45 +60,67 @@
         .user-profile-top { display: flex; align-items: center; gap: 10px; }
         .user-profile-top img { width: 32px; height: 32px; border-radius: 50%; }
 
-        .dashboard-body { padding: 24px 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .page-title { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
-        .page-title h1 { font-size: 20px; font-weight: 700; color: var(--text-main); }
-        .page-title p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+        .dashboard-body { padding: 24px 32px; max-width: 1400px; margin: 0 auto; width: 100%; display: none; animation: fadeIn 0.3s; }
+        .dashboard-body.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ====== METRIC CARDS ====== */
+        .page-title { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
+        .page-title h1 { font-size: 24px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px;}
+        .page-title p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+        /* ====== HOME METRIC CARDS ====== */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .metric-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; cursor: pointer; transition: 0.2s; }
         .metric-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
         .metric-card:hover .arrow { color: var(--primary); }
-        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
         .card-header .arrow { font-weight: normal; transition: 0.2s; }
-        
         .card-body { margin-bottom: 12px; }
         .card-body .value { font-size: 28px; font-weight: 700; color: var(--text-main); }
         .card-body.rev-body .value { font-size: 24px; }
-        
         .card-footer { display: flex; font-size: 12px; font-weight: 500; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 12px; }
 
-        /* ====== PANELS ====== */
+        /* ====== PATIENTS VIEW METRIC CARDS ====== */
+        .p-metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .p-metric-card { background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
+        .p-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; font-size: 14px; font-weight: 600; color: var(--text-main); }
+        .p-icon-wrap { width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .p-icon-wrap.blue { background: #e0f2fe; color: #0284c7; }
+        .p-icon-wrap.green { background: #dcfce7; color: #16a34a; }
+        .p-icon-wrap.red { background: #fee2e2; color: #dc2626; }
+        .p-value-row { display: flex; justify-content: space-between; align-items: flex-end; }
+        .p-value { font-size: 36px; font-weight: 700; color: var(--text-main); line-height: 1; }
+        .p-arrow { color: #9ca3af; font-size: 18px; }
+
+        /* ====== PANELS & TABLES ====== */
         .layout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         .panel { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; display: flex; flex-direction: column; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--border-light); }
         
-        /* ====== TABLE ====== */
-        .table-tools { display: flex; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-light); }
-        .search-table { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; width: 250px; }
-        .search-table input { border: none; outline: none; font-size: 12px; width: 100%; margin-left: 8px; }
+        .table-tools { display: flex; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-light); align-items: center;}
+        .search-table { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; width: 300px; }
+        .search-table input { border: none; outline: none; font-size: 13px; width: 100%; margin-left: 8px; }
 
         table { width: 100%; border-collapse: collapse; }
-        thead th { background: #fff; text-align: left; padding: 12px 20px; font-size: 11px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border); }
-        td { padding: 14px 20px; font-size: 13px; border-bottom: 1px solid var(--border-light); color: var(--text-main); vertical-align: middle; }
+        thead th { background: #fff; text-align: left; padding: 16px 20px; font-size: 12px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border); white-space: nowrap;}
+        td { padding: 16px 20px; font-size: 13px; border-bottom: 1px solid var(--border-light); color: var(--text-main); vertical-align: middle; }
         
         .checkbox-circle { display: inline-block; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); margin-right: 12px; vertical-align: middle; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
         .checkbox-circle:hover { border-color: var(--primary); }
-        
         .avatar-sm { width: 26px; height: 26px; border-radius: 50%; vertical-align: middle; margin-right: 8px; }
         .time-pill { font-size:11px; color:var(--purple-text); font-weight:600; background:var(--purple-light); padding:4px 8px; border-radius:6px; display:inline-block; margin-left: 8px;}
+
+        /* PATIENT TABLE STYLES */
+        .td-name-col { display: flex; flex-direction: column; gap: 4px; }
+        .td-name { font-weight: 600; color: var(--text-main); font-size: 14px;}
+        .td-email { color: var(--text-muted); font-size: 12px; }
+        .btn-view { border: 1px solid #0ea5e9; color: #0ea5e9; background: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;}
+        .btn-view:hover { background: #e0f2fe; }
+        .btn-deact { border: 1px solid #ef4444; color: #ef4444; background: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;}
+        .btn-deact:hover { background: #fee2e2; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .status-badge.active { background: #ecfdf5; color: #10b981; }
+        .status-badge.inactive { background: #f3f4f6; color: #6b7280; }
 
         .see-more-container { text-align: center; padding: 12px; border-top: 1px solid var(--border-light); }
         .btn-see-more { background: transparent; border: 1px solid var(--border); color: var(--text-main); font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
@@ -108,7 +130,7 @@
         .edit-icon:hover { background: var(--border-light); color: var(--primary); }
 
         /* ====== DOCTOR LIST ====== */
-        .btn-add { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: 0.2s;}
+        .btn-add { background: var(--primary); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.2s;}
         .btn-add:hover { background: #0052a3; }
         
         .doc-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -126,8 +148,10 @@
         .badge.pending { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
         
         .doc-actions { display: flex; gap: 6px; width: 100%; margin-top: 8px; }
-        .btn-approve { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: #fff; font-size: 11px; font-weight: 500; cursor: pointer; }
-        .btn-reject { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: #fff; color: var(--danger); font-size: 11px; font-weight: 500; cursor: pointer; }
+        .btn-approve { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: #fff; font-size: 11px; font-weight: 500; cursor: pointer; transition: 0.2s;}
+        .btn-reject { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: #fff; color: var(--danger); font-size: 11px; font-weight: 500; cursor: pointer; transition: 0.2s;}
+        .btn-approve:hover { background: var(--success-bg); color: var(--success); border-color: var(--success-border);}
+        .btn-reject:hover { background: var(--danger-bg); border-color: var(--danger);}
 
         /* ====== APPOINTMENT MANAGEMENT CARD ====== */
         .appt-manage-card { border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
@@ -142,7 +166,7 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
         .modal-box { background: #fff; border-radius: 12px; width: 100%; max-width: 450px; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h2 { font-size: 16px; font-weight: 600; color: #111827; }
+        .modal-header h2 { font-size: 18px; font-weight: 600; color: #111827; }
         .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
         .modal-body { padding: 20px; max-height: 80vh; overflow-y: auto; }
         
@@ -154,10 +178,10 @@
         .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
         .form-row > .form-group { flex: 1; margin-bottom: 0; }
         .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
-        .form-control { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; background: #f9fafb;}
-        .form-control:focus { border-color: var(--primary); background: #fff; }
-        .btn-primary { background: var(--primary); color: white; padding: 10px 16px; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; width: 100%; transition: 0.2s;}
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: #f9fafb;}
+        .form-control:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);}
+        .btn-primary { background: var(--primary); color: white; padding: 12px 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s;}
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         
         /* File Upload UI */
@@ -167,7 +191,7 @@
         .file-name-display { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* Document Links UI */
-        .doc-link-btn { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.2s; background: #fafafa;}
+        .doc-link-btn { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.2s; background: #fafafa;}
         .doc-link-btn:hover { border-color: var(--primary); color: var(--primary); background: #fff;}
         .doc-link-btn.disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--border-light); }
     </style>
@@ -183,10 +207,10 @@
                 </div>
                 <div class="menu-label">MAIN MENU</div>
                 <ul class="nav-menu">
-                    <li><a href="#" class="active"><span>🏠</span> Dashboard</a></li>
-                    <li><a href="#" onclick="openStatsModal('patients')"><span>👥</span> Patients</a></li>
-                    <li><a href="#" onclick="openStatsModal('doctors')"><span>🩺</span> Doctors</a></li>
-                    <li><a href="#" onclick="document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})"><span>📅</span> Appointments</a></li>
+                    <li><a id="nav-home" class="active" onclick="switchMainView('home')"><span>🏠</span> Dashboard</a></li>
+                    <li><a id="nav-patients" onclick="switchMainView('patients')"><span>👥</span> Patients</a></li>
+                    <li><a onclick="switchMainView('home'); document.querySelector('.right-col').scrollIntoView({behavior:'smooth'})"><span>🩺</span> Doctors</a></li>
+                    <li><a onclick="switchMainView('home'); document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})"><span>📅</span> Appointments</a></li>
                     <li><a href="#"><span>⚙️</span> Settings</a></li>
                 </ul>
             </div>
@@ -227,7 +251,8 @@
             </div>
         </header>
 
-        <div class="dashboard-body">
+        <!-- ================= VIEW: HOME DASHBOARD ================= -->
+        <div class="dashboard-body active" id="home-view">
             
             <div class="page-title">
                 <div>
@@ -238,7 +263,7 @@
 
             <!-- METRIC CARDS -->
             <div class="metrics-grid">
-                <div class="metric-card clickable" onclick="openStatsModal('patients')" title="Click to view details">
+                <div class="metric-card clickable" onclick="switchMainView('patients')" title="Manage Patients">
                     <div class="card-header">Total Patients <span class="arrow">↗</span></div>
                     <div class="card-body">
                         <div class="value" id="stat-patients">0</div>
@@ -328,7 +353,7 @@
                     <!-- Doctors Panel -->
                     <div class="panel">
                         <div class="panel-header">
-                            <div><span style="color:var(--danger); margin-right:8px;">🩺</span> Doctor Management</div>
+                            <div><span style="color:var(--text-muted); margin-right:8px;">🩺</span> Doctor Management</div>
                             <button class="btn-add" onclick="openAddDoctorModal()">+ Add Doctor</button>
                         </div>
                         <div id="list-pending-doctors" class="doc-list">
@@ -339,7 +364,7 @@
                     <!-- APPOINTMENT MANAGEMENT PANEL -->
                     <div class="panel">
                         <div class="panel-header">
-                            <div><span style="color:var(--danger); margin-right:8px;">📅</span> Next Appointment</div>
+                            <div><span style="color:var(--text-muted); margin-right:8px;">📅</span> Next Appointment</div>
                             <button style="border:1px solid var(--border); background:#fff; border-radius:6px; padding:4px 12px; font-size:11px; cursor:pointer;" onclick="document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})">See All</button>
                         </div>
                         <div style="padding: 20px;" id="upcoming-appt-widget">
@@ -349,6 +374,96 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- ================= VIEW: PATIENTS MANAGEMENT ================= -->
+        <div class="dashboard-body" id="patients-view">
+            <div class="page-title">
+                <div>
+                    <h1>User Management</h1>
+                    <p>Manage the patient status and track upcoming sessions.</p>
+                </div>
+                <div>
+                    <select style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); outline: none; font-size: 14px; color: var(--text-main); font-weight: 500; cursor: pointer; background: #fff;">
+                        <option>Current Data</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Patient Metrics -->
+            <div class="p-metrics-grid">
+                <div class="p-metric-card">
+                    <div class="p-card-header">
+                        <div class="p-icon-wrap blue">👥</div> Total Users
+                    </div>
+                    <div class="p-value-row">
+                        <div class="p-value" id="p-stat-total">0</div>
+                        <div class="p-arrow">↗</div>
+                    </div>
+                </div>
+                <div class="p-metric-card">
+                    <div class="p-card-header">
+                        <div class="p-icon-wrap green">✓</div> Active Users
+                    </div>
+                    <div class="p-value-row">
+                        <div class="p-value" id="p-stat-active">0</div>
+                        <div class="p-arrow">↗</div>
+                    </div>
+                </div>
+                <div class="p-metric-card">
+                    <div class="p-card-header">
+                        <div class="p-icon-wrap red">✕</div> Inactive Users
+                    </div>
+                    <div class="p-value-row">
+                        <div class="p-value" id="p-stat-inactive">0</div>
+                        <div class="p-arrow">↗</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients Table Panel -->
+            <div class="panel" style="flex: 1;">
+                <div class="panel-header" style="border-bottom:none; padding-bottom:10px;">
+                    <span style="color:var(--primary); margin-right:8px;">👥</span> All Patients
+                </div>
+                <div class="table-tools">
+                    <div class="search-table">
+                        <span style="color:var(--text-muted);">🔍</span> 
+                        <input type="text" id="patientSearchInput" placeholder="Search by name or email" onkeyup="filterPatientsTable()">
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button style="border:1px solid var(--border); background:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; font-size: 13px; font-weight: 500;">
+                            ⚙️ Filter
+                        </button>
+                        <button class="btn-add">+ Add New User</button>
+                    </div>
+                </div>
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name ↕</th>
+                                <th>Age ↕</th>
+                                <th>Patient ID ↕</th>
+                                <th>Joined ↕</th>
+                                <th>Phone Number ↕</th>
+                                <th>Booking ↕</th>
+                                <th>Status ↕</th>
+                                <th>Action ↕</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-patients">
+                            <tr><td colspan="8" style="text-align: center; color: var(--text-light);">Loading patients...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="see-more-container" id="seeMorePatientsContainer" style="display: none;">
+                    <button class="btn-see-more" onclick="loadMorePatients()">See More ↓</button>
+                </div>
+            </div>
+
+        </div>
+
     </main>
 
     <!-- ================= MODALS ================= -->
@@ -401,7 +516,7 @@
                 <button class="modal-close" onclick="closeAddDoctorModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom: 20px;">Register a new doctor. They will be auto-approved so they can log in instantly.</p>
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom: 24px;">Register a new doctor. They will be auto-approved so they can log in instantly.</p>
                 <form id="adminAddDocForm" onsubmit="event.preventDefault(); submitAdminNewDoctor();">
                     
                     <div class="form-row">
@@ -438,7 +553,7 @@
                     </div>
                     
                     <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 24px 0;">
-                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Upload Documents</h3>
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 16px;">Upload Documents</h3>
                     
                     <div class="form-row">
                         <div class="form-group">
@@ -561,14 +676,31 @@
         let allAppointmentsData = [];
         let filteredAppointmentsData = [];
         let allPatientsData = []; 
+        let filteredPatientsData = [];
         let allDoctorsData = [];
-        let currentTableLimit = 3; 
+        
+        let currentApptTableLimit = 3; 
+        let currentPatientTableLimit = 6; 
 
         // Shared Utils
         function updateFileName(input, displayId) {
             if(input.files.length > 0) {
                 document.getElementById(displayId).innerText = "Selected: " + input.files[0].name;
                 document.getElementById(displayId).style.color = "var(--success)"; 
+            }
+        }
+
+        // View Switching Logic
+        function switchMainView(viewName) {
+            document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
+            if(viewName === 'home') {
+                document.getElementById('nav-home').classList.add('active');
+                document.getElementById('home-view').classList.add('active');
+                document.getElementById('patients-view').classList.remove('active');
+            } else if (viewName === 'patients') {
+                document.getElementById('nav-patients').classList.add('active');
+                document.getElementById('patients-view').classList.add('active');
+                document.getElementById('home-view').classList.remove('active');
             }
         }
 
@@ -583,7 +715,7 @@
             }
         });
 
-        // 1. STATS MODALS
+        // 1. STATS MODALS (HOME)
         function openStatsModal(type) {
             const titleEl = document.getElementById('statsModalTitle');
             const bodyEl = document.getElementById('statsModalBody');
@@ -643,7 +775,7 @@
         }
         function closeStatsModal() { document.getElementById('statsDetailsModal').style.display = 'none'; }
 
-        // 2. MAIN CARD STATS
+        // 2. MAIN CARD STATS (HOME)
         function updateAccurateStats() {
             const now = new Date();
             document.getElementById('stat-patients').innerText = allPatientsData.length;
@@ -675,7 +807,7 @@
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
         }
 
-        // 3. REVENUE ENGINE
+        // 3. REVENUE ENGINE (HOME)
         let revenueByMonth = {};
         let allTimeTotal = 0;
         function calculateRevenueData() {
@@ -709,7 +841,7 @@
             document.getElementById('stat-revenue').innerText = `MYR ${curRev.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
         }
 
-        // 4. NEXT APPOINTMENT WIDGET
+        // 4. NEXT APPOINTMENT WIDGET (HOME)
         function renderUpcomingWidget() {
             const widget = document.getElementById('upcoming-appt-widget');
             const now = new Date();
@@ -768,7 +900,99 @@
             `;
         }
 
-        // 5. FETCH CORE DATA
+        // ================= PATIENTS MANAGEMENT LOGIC =================
+        function processPatientData() {
+            let activeCount = 0;
+            let inactiveCount = 0;
+            const now = new Date();
+
+            allPatientsData.forEach(p => {
+                const lastLogin = new Date(p.last_login || p.created_at);
+                const daysSince = (now - lastLogin) / (1000 * 60 * 60 * 24);
+                
+                // Active if logged in within 90 days
+                p.isActive = daysSince <= 90;
+                
+                if (p.isActive) activeCount++;
+                else inactiveCount++;
+            });
+
+            document.getElementById('p-stat-total').innerText = allPatientsData.length;
+            document.getElementById('p-stat-active').innerText = activeCount;
+            document.getElementById('p-stat-inactive').innerText = inactiveCount;
+
+            filteredPatientsData = [...allPatientsData];
+            renderPatientsTable();
+        }
+
+        function filterPatientsTable() {
+            const query = document.getElementById('patientSearchInput').value.toLowerCase();
+            filteredPatientsData = allPatientsData.filter(p => {
+                return (p.name || "").toLowerCase().includes(query) || 
+                       (p.email || "").toLowerCase().includes(query) ||
+                       (p.id || "").toLowerCase().includes(query);
+            });
+            currentPatientTableLimit = 6; 
+            renderPatientsTable();
+        }
+
+        function loadMorePatients() {
+            currentPatientTableLimit += 6;
+            renderPatientsTable();
+        }
+
+        function renderPatientsTable() {
+            const tableBody = document.getElementById('table-patients');
+            const seeMoreContainer = document.getElementById('seeMorePatientsContainer');
+
+            if (filteredPatientsData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No patients found.</td></tr>`;
+                seeMoreContainer.style.display = 'none';
+                return;
+            }
+
+            const itemsToShow = filteredPatientsData.slice(0, currentPatientTableLimit);
+
+            tableBody.innerHTML = itemsToShow.map(p => {
+                const joinedDate = new Date(p.created_at).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+                const pidStr = p.id ? "ID" + p.id.substring(0,4).toUpperCase() : "Unknown";
+                
+                // UI Mock for Age based on ID so it looks stable
+                const mockAge = p.id ? 20 + (p.id.charCodeAt(0) % 30) : 30;
+
+                // Count Bookings
+                const bookingsCount = allAppointmentsData.filter(a => a.patient_id === p.id).length;
+
+                const statusClass = p.isActive ? 'active' : 'inactive';
+                const statusText = p.isActive ? 'Active' : 'Inactive';
+
+                return `
+                <tr>
+                    <td>
+                        <div class="td-name-col">
+                            <span class="td-name">${p.name || 'Anonymous'}</span>
+                            <span class="td-email">${p.email || 'No email provided'}</span>
+                        </div>
+                    </td>
+                    <td>${mockAge}</td>
+                    <td style="font-weight:500;">${pidStr}</td>
+                    <td>${joinedDate}</td>
+                    <td>${p.phone || 'N/A'}</td>
+                    <td style="font-weight:600;">${bookingsCount}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-view" onclick="alert('Viewing patient profile for ${p.name}')">View</button>
+                            <button class="btn-deact" onclick="alert('Deactivate feature coming soon')">Deactivate</button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            seeMoreContainer.style.display = (currentPatientTableLimit >= filteredPatientsData.length) ? 'none' : 'block';
+        }
+
+        // ================= FETCH CORE DATA =================
         async function loadCoreData() {
             try {
                 const [appRes, patRes, docsApprRes, docsPendRes] = await Promise.all([
@@ -785,19 +1009,22 @@
                 const pendingDocs = docsPendRes.ok ? await docsPendRes.json() : [];
                 allDoctorsData = [...pendingDocs, ...approvedDocs];
                 
+                // Update Home
                 updateAccurateStats();
                 calculateRevenueData();
                 renderUpcomingWidget(); 
-                
                 renderDoctorList();
                 filteredAppointmentsData = [...allAppointmentsData];
                 renderAppointmentsTable();
                 renderChartWithRealData(allAppointmentsData);
 
+                // Update Patients Tab
+                processPatientData();
+
             } catch (e) { console.error("Data Load Error:", e); }
         }
 
-        // 6. RENDER TABLE WITH EDIT BUTTON
+        // ================= RENDER HOME TABLE WITH EDIT BUTTON =================
         function renderAppointmentsTable() {
             const tableBody = document.getElementById('table-deliveries');
             const seeMoreContainer = document.getElementById('seeMoreContainer');
@@ -808,7 +1035,7 @@
                 return;
             }
 
-            const itemsToShow = filteredAppointmentsData.slice(0, currentTableLimit);
+            const itemsToShow = filteredAppointmentsData.slice(0, currentApptTableLimit);
 
             tableBody.innerHTML = itemsToShow.map(app => {
                 const d = new Date(app.preferred_datetime || app.created_at);
@@ -851,7 +1078,7 @@
                 </tr>`;
             }).join('');
 
-            seeMoreContainer.style.display = (currentTableLimit >= filteredAppointmentsData.length) ? 'none' : 'block';
+            seeMoreContainer.style.display = (currentApptTableLimit >= filteredAppointmentsData.length) ? 'none' : 'block';
         }
 
         function filterAppointments() {
@@ -860,11 +1087,11 @@
                 return (app.patient_name || "").toLowerCase().includes(query) || 
                        (app.doctor_name || "").toLowerCase().includes(query);
             });
-            currentTableLimit = 3; 
+            currentApptTableLimit = 3; 
             renderAppointmentsTable();
         }
         function loadMoreAppointments() {
-            currentTableLimit += 3;
+            currentApptTableLimit += 3;
             renderAppointmentsTable();
         }
 
@@ -900,7 +1127,6 @@
             btn.disabled = true;
 
             try {
-                // FIXED: Removed the extra /api from the URL string
                 const res = await fetch(`${API_BASE}/admin/appointments/${id}`, {
                     method: 'PUT',
                     headers: headers,
@@ -915,7 +1141,7 @@
 
                 alert("Appointment successfully updated!");
                 closeEditApptModal();
-                loadCoreData(); // Re-fetches all arrays and re-renders table correctly
+                loadCoreData(); 
             } catch(e) {
                 alert("Error: " + e.message);
             } finally {
@@ -946,7 +1172,6 @@
                     </div>`;
                 }
 
-                // Make the entire card clickable to open details
                 return `
                 <div class="doc-card" onclick="openDoctorDetailsModal('${doc.id}')">
                     <div style="width: 100%;">
@@ -1007,20 +1232,12 @@
         function closeDoctorDetailsModal() { document.getElementById('doctorDetailsModal').style.display = 'none'; }
 
         async function verifyDoctor(event, id, action) {
-            event.stopPropagation(); // Prevent opening the modal
+            event.stopPropagation(); 
             if (!confirm(`Are you sure you want to ${action} this doctor?`)) return;
             try {
-                // FIXED: Removed the extra /api from the URL string
-                const res = await fetch(`${API_BASE}/admin/doctors/${id}/verify?action=${action}`, { 
-                    method: 'POST', 
-                    headers: headers 
-                });
-                if (res.ok) { 
-                    alert(`Doctor ${action}d successfully`); 
-                    loadCoreData(); 
-                } else { 
-                    alert("Action failed."); 
-                }
+                const res = await fetch(`${API_BASE}/admin/doctors/${id}/verify?action=${action}`, { method: 'POST', headers: headers });
+                if (res.ok) { alert(`Doctor ${action}d successfully`); loadCoreData(); } 
+                else { alert("Action failed."); }
             } catch (e) {
                 alert("Network error: " + e.message);
             }
@@ -1060,10 +1277,9 @@
                     }
                 });
 
-                // FIXED: Removed the extra /api from the URL string
                 const res = await fetch(`${API_BASE}/admin/doctors/add`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }, // NO Content-Type for FormData
+                    headers: { 'Authorization': `Bearer ${token}` },
                     body: formData
                 });
 
@@ -1075,9 +1291,9 @@
                 alert(`Doctor ${name} created and automatically approved!`);
                 closeAddDoctorModal();
                 document.getElementById('adminAddDocForm').reset();
-                loadCoreData(); // Refresh UI
+                loadCoreData(); 
             } catch(e) {
-                alert("Error: " + e.message);
+                alert(e.message);
             } finally {
                 btn.innerText = "Create & Approve Doctor";
                 btn.disabled = false;
