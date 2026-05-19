@@ -103,7 +103,7 @@
         .dd-spec { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
         .dd-tags { display: flex; gap: 12px; }
         .dd-tag { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .dd-tag.avail { background: #dcfce7; color: #16a34a; }
+        .dd-tag.avail { background: #dcfce7; color: #16a34a; border: 1px solid #a7f3d0;}
         .dd-tag.time { background: #f3f4f6; color: var(--text-main); }
         .btn-outline-danger { border: 1px solid #ef4444; color: #ef4444; background: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
 
@@ -122,8 +122,6 @@
         
         /* Tab: Detail */
         .about-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
-        .spec-pills { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;}
-        .spec-pill { background: #e0f2fe; color: #0284c7; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; }
         .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px;}
         .fee-card { background: #f9fafb; padding: 20px; border-radius: 12px;}
         .doc-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 12px; font-size: 14px; font-weight: 600;}
@@ -146,7 +144,6 @@
         .ac-label { color: var(--text-muted); }
         .ac-val { font-weight: 600; color: var(--text-main); }
         .ac-val.blue { color: var(--primary); text-transform: capitalize;}
-        .btn-outline { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; font-weight: 600; font-size: 13px; cursor: pointer; color: var(--text-main);}
 
         /* Tab: Reviews */
         .rev-header { margin-bottom: 24px; }
@@ -170,11 +167,7 @@
         .ci-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; font-size: 13px;}
         .ci-label { color: var(--text-muted); margin-bottom: 4px; display: block;}
         .ci-val { font-weight: 600; color: var(--text-main); line-height: 1.4; word-break: break-all;}
-        .btn-edit-sm { background: #f3f4f6; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;}
         
-        .qs-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 16px;}
-        .qs-row:last-child { margin-bottom: 0; }
-
         /* ====== ADD DOCTOR MODAL ====== */
         .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
         .modal-box { background: #fff; border-radius: 16px; width: 100%; max-width: 650px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
@@ -199,10 +192,6 @@
         .uz-text span { font-size: 11px; color: var(--text-muted);}
         .btn-browse { background: #6b7280; color: #fff; padding: 8px 16px; border-radius: 8px; border: none; font-size: 12px; font-weight: 600; cursor: pointer;}
         .btn-browse:hover { background: #4b5563; }
-        
-        .week-row { background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; padding: 16px; margin-bottom: 16px;}
-        .wr-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-weight: 600; font-size: 14px;}
-        .wr-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px;}
         .btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center;}
@@ -264,7 +253,6 @@
             </div>
 
             <div class="docs-grid-container" id="doctors-grid">
-                <!-- Javascript populates this -->
                 <p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">Loading doctors data...</p>
             </div>
         </div>
@@ -281,7 +269,7 @@
                         <div class="dd-name" id="dd-head-name">Doctor Name</div>
                         <div class="dd-spec" id="dd-head-spec">Specialty</div>
                         <div class="dd-tags">
-                            <span class="dd-tag avail" id="dd-status-tag">● Status</span>
+                            <span class="dd-tag" id="dd-status-tag">● Status</span>
                         </div>
                     </div>
                 </div>
@@ -494,13 +482,14 @@
                 const approvedDocs = docsRes.ok ? await docsRes.json() : [];
                 const pendingDocs = pendRes.ok ? await pendRes.json() : [];
                 
-                // Merge and normalize the doctor datasets
-                allDoctorsData = [...pendingDocs, ...approvedDocs].map(d => ({
+                // CRITICAL FIX: Explicitly assign "Verified" to doctors fetched from the approved endpoint
+                // and "Pending" to doctors from the pending endpoint because the backend doesn't send the status key.
+                const mapDoc = (d, defaultStatus) => ({
                     id: d.id,
                     name: d.name || 'Unknown Doctor',
                     spec: d.specialty || 'General',
                     rating: d.rating || 0.0,
-                    status: d.status === 'approved' ? 'Verified' : 'Pending',
+                    status: defaultStatus, 
                     img: d.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name || 'D')}&background=random`,
                     email: d.email || '',
                     phone: d.phone || '',
@@ -511,7 +500,12 @@
                     apc_url: d.apc_url,
                     mmc_url: d.mmc_url,
                     ic_url: d.ic_url
-                }));
+                });
+
+                allDoctorsData = [
+                    ...pendingDocs.map(d => mapDoc(d, 'Pending')),
+                    ...approvedDocs.map(d => mapDoc(d, 'Verified'))
+                ];
 
                 // Appointments
                 allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
@@ -574,8 +568,9 @@
                     </div>
                 `;
 
+                // FIX: Removed the condition on onclick, all cards are clickable now.
                 return `
-                <div class="doc-card" onclick="${isAvail ? `viewDoctorDetail('${doc.id}')` : ''}">
+                <div class="doc-card" onclick="viewDoctorDetail('${doc.id}')">
                     <div class="doc-c-top">
                         <div class="doc-c-img-wrap">
                             <img src="${doc.img}">
@@ -597,7 +592,7 @@
 
         // ================= APPROVE / REJECT DOCTOR =================
         async function verifyDoctorAction(e, docId, action) {
-            e.stopPropagation(); // Prevent clicking into the card
+            e.stopPropagation(); // FIX: Prevent the card click from firing when a button is clicked
             if(!confirm(`Are you sure you want to ${action} this doctor?`)) return;
 
             try {
@@ -644,12 +639,26 @@
 
             switchMainView('doctor-detail');
             
-            // Header
+            // Header Info
             document.getElementById('dd-head-name').innerText = doc.name;
             document.getElementById('dd-head-spec').innerText = doc.spec;
             document.getElementById('dd-head-img').src = doc.img;
             document.getElementById('dd-location-tag').innerText = `📍 ${doc.location || 'Location not specified'}`;
             
+            // FIX: Set dynamic status badge in detail header
+            const statusTag = document.getElementById('dd-status-tag');
+            if (doc.status === 'Verified') {
+                statusTag.className = 'dd-tag avail';
+                statusTag.innerHTML = '● Verified';
+                statusTag.style.background = ''; 
+                statusTag.style.color = '';
+            } else {
+                statusTag.className = 'dd-tag'; 
+                statusTag.style.background = '#fef3c7'; // Warning yellow
+                statusTag.style.color = '#d97706';
+                statusTag.innerHTML = '● Pending';
+            }
+
             // Right Sidebar Stats
             document.getElementById('sb-patients-count').innerText = uniquePatients;
             document.getElementById('sb-upcoming-count').innerText = activeAppts.length;
