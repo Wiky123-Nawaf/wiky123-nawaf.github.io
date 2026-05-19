@@ -244,7 +244,7 @@
                 <ul class="nav-menu">
                     <li><a id="nav-home" class="active" onclick="switchMainView('home')"><span>🏠</span> Dashboard</a></li>
                     <li><a id="nav-patients" onclick="switchMainView('patients')"><span>👥</span> Patients</a></li>
-                    <li><a onclick="switchMainView('home'); document.querySelector('.right-col').scrollIntoView({behavior:'smooth'})"><span>🩺</span> Doctors</a></li>
+                    <li><a id="nav-doctors" href="admin_doctors.html"><span>🩺</span> Doctors</a></li>
                     <li><a onclick="switchMainView('home'); document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})"><span>📅</span> Appointments</a></li>
                     <li><a href="#"><span>⚙️</span> Settings</a></li>
                 </ul>
@@ -389,7 +389,7 @@
                     <div class="panel">
                         <div class="panel-header">
                             <div><span style="color:var(--text-muted); margin-right:8px;">🩺</span> Doctor Management</div>
-                            <button class="btn-add" onclick="openAddDoctorModal()">+ Add Doctor</button>
+                            <button class="btn-add" onclick="window.location.href='admin_doctors.html'">Manage Doctors</button>
                         </div>
                         <div id="list-pending-doctors" class="doc-list">
                             <p style="text-align: center; color: var(--text-light); font-size: 13px;">Checking for doctors...</p>
