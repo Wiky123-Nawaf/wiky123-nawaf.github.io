@@ -729,7 +729,9 @@
                             Schedule management is disabled while your account is pending approval.
                         </div>
 
-                        <div id="scheduleDaysContainer"></div>
+                        <div id="scheduleDaysContainer">
+                            <!-- Injected dynamically based on DB structure -->
+                        </div>
 
                         <button id="saveScheduleBtn" class="btn btn-primary" style="margin-top: 24px; width: auto; padding: 12px 32px;">Save Schedule</button>
                     </div>
@@ -1784,6 +1786,9 @@
                         document.getElementById('dashPhone').value = phoneClean;
                         document.getElementById('dashLocation').value = data.location || "";
 
+                        // Inject Schedule UI reading from Backend (data.availability)
+                        renderScheduleUI(data.availability || {});
+
                         setupRealTimeNotifications(data.id);
                         
                         if(data.status === 'approved' && !localStorage.getItem('approved_notified')) {
@@ -1952,58 +1957,84 @@
             }
         });
 
-        document.getElementById("saveScheduleBtn").addEventListener("click", () => {
-            alert("Schedule saved successfully!");
-        });
-
-
         // ================= SCHEDULE UI BUILDER ================= //
-        function renderScheduleUI() {
-            const days =['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        function renderScheduleUI(availability = {}) {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             const container = document.getElementById('scheduleDaysContainer');
             
-            // Build the top Global Time Inputs
-            container.innerHTML = `
-                <div class="global-times-row">
-                    <div style="flex:1;">
-                        <label style="font-size:13px; font-weight:500; color:#111827; margin-bottom:8px; display:block;">Time Availability (Online)</label>
-                        <input type="text" class="form-control" value="09:00 AM - 11:00 AM" disabled style="background:#f3f4f6;">
-                    </div>
-                    <div style="flex:1;">
-                        <label style="font-size:13px; font-weight:500; color:#111827; margin-bottom:8px; display:block;">Time Availability (In Clinic)</label>
-                        <input type="text" class="form-control" value="10:00 AM - 04:00 PM" disabled style="background:#f3f4f6;">
-                    </div>
-                </div>
-                <h3 style="font-size:14px; font-weight:600; margin-bottom:16px;">Weekly Availability</h3>
-            `;
+            let html = '<h3 style="font-size:14px; font-weight:600; margin-bottom:16px;">Weekly Availability</h3>';
             
-            // Build the individual day blocks
             days.forEach(day => {
-                const isWeekend = day === 'Saturday' || day === 'Sunday';
-                container.innerHTML += `
+                const times = availability[day];
+                const isChecked = times && times.length === 2 ? 'checked' : '';
+                const startT = isChecked ? times[0] : '09:00';
+                const endT = isChecked ? times[1] : '17:00';
+                const displayDay = day.charAt(0).toUpperCase() + day.slice(1);
+
+                html += `
                     <div style="border:1px solid #e5e7eb; border-radius:12px; padding:20px; margin-bottom:16px; background:#fff;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                            <div style="font-weight:600; font-size:14px;">${day}</div>
+                            <div style="font-weight:600; font-size:14px;">${displayDay}</div>
                             <div style="display:flex; align-items:center; gap:8px;">
-                                ${isWeekend ? '<span style="color:#ef4444; font-size:12px; font-style:italic;">Mark as off day</span>' : ''}
-                                <input type="checkbox" class="dash-input" ${!isWeekend ? 'checked' : ''} style="width:18px; height:18px; accent-color:#111827;">
+                                <span style="color:#ef4444; font-size:12px; font-style:italic; display:${isChecked ? 'none' : 'inline'};" id="off_label_${day}">Marked as off day</span>
+                                <input type="checkbox" id="chk_${day}" class="dash-input" ${isChecked} style="width:18px; height:18px; accent-color:#111827;" onchange="document.getElementById('off_label_${day}').style.display = this.checked ? 'none' : 'inline'">
                             </div>
                         </div>
                         <div class="schedule-times-row">
                             <div style="flex:1;">
-                                <label style="font-size:12px; color:#4b5563; margin-bottom:8px; display:block;">Online Hours</label>
-                                <input type="text" class="dash-input form-control" value="09:00 AM - 03:00 PM" style="text-align:center;">
+                                <label style="font-size:12px; color:#4b5563; margin-bottom:8px; display:block;">Start Time</label>
+                                <input type="time" id="start_${day}" class="dash-input form-control" value="${startT}" style="text-align:center;">
                             </div>
                             <div style="flex:1;">
-                                <label style="font-size:12px; color:#4b5563; margin-bottom:8px; display:block;">Clinic Hours</label>
-                                <input type="text" class="dash-input form-control" value="09:00 AM - 04:00 PM" style="text-align:center;">
+                                <label style="font-size:12px; color:#4b5563; margin-bottom:8px; display:block;">End Time</label>
+                                <input type="time" id="end_${day}" class="dash-input form-control" value="${endT}" style="text-align:center;">
                             </div>
                         </div>
                     </div>
                 `;
             });
+            container.innerHTML = html;
         }
-        renderScheduleUI();
+
+        // Handle Doctor Saving their own schedule (Mock/Alert or Future Backend Sync)
+        document.getElementById("saveScheduleBtn").addEventListener("click", async () => {
+            showGlobalLoader("Saving Schedule...");
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            let newAvailability = {};
+
+            days.forEach(day => {
+                if(document.getElementById(`chk_${day}`).checked) {
+                    newAvailability[day] = [
+                        document.getElementById(`start_${day}`).value, 
+                        document.getElementById(`end_${day}`).value
+                    ];
+                }
+            });
+
+            try {
+                // If a backend endpoint is added later (e.g. /api/doctor/schedule), this will execute it.
+                // Currently, since main.py doesn't have an endpoint for Doctors to save this directly, 
+                // we will throw an error to trigger the catch block and warn the user.
+                const token = await auth.currentUser.getIdToken(true);
+                const res = await fetch(`${API_BASE}/api/doctor/schedule`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ availability: newAvailability })
+                });
+
+                if(!res.ok) throw new Error("Endpoint not configured in backend yet.");
+                
+                hideGlobalLoader();
+                alert("Schedule saved successfully!");
+            } catch(e) {
+                hideGlobalLoader();
+                console.warn(e);
+                alert("Notice: Doctor Portal schedule saving is not yet enabled in the backend API. For now, the schedule you see is correctly synced directly from the Admin Dashboard.");
+            }
+        });
 
         // Lock/Unlock Fields Based on Status
         function setDashboardStatus(status) {
@@ -2090,6 +2121,9 @@
                 showView('view-login', null, false);
             });
         }
+
+        // Fallback Initialization of empty UI
+        renderScheduleUI({});
 
     </script>
 </body>
