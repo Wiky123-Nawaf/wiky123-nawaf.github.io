@@ -120,10 +120,10 @@
         .btn-deact:hover { background: #fee2e2; }
         
         .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-align: center; display: inline-block;}
-        .status-badge.active { background: #ecfdf5; color: #10b981; }
-        .status-badge.inactive { background: #f3f4f6; color: #6b7280; }
-        .status-badge.premium { background: var(--purple-light); color: var(--purple-text); }
-        .status-badge.deactivated { background: #fee2e2; color: #ef4444; }
+        .status-badge.active { background: #ecfdf5; color: #10b981; border: 1px solid #10b981; }
+        .status-badge.inactive { background: #f3f4f6; color: #6b7280; border: 1px solid #d1d5db; }
+        .status-badge.premium { background: #fef3c7; color: #d97706; border: 1px solid #f59e0b; }
+        .status-badge.deactivated { background: #fee2e2; color: #ef4444; border: 1px solid #ef4444; }
 
         .see-more-container { text-align: center; padding: 12px; border-top: 1px solid var(--border-light); }
         .btn-see-more { background: transparent; border: 1px solid var(--border); color: var(--text-main); font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
@@ -1286,29 +1286,30 @@
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
 
-            if(!confirm(`Are you sure you want to deactivate ${patient.name || 'this patient'}? They will be permanently removed from Firebase and must sign up again.`)) return;
+            if(!confirm(`Are you sure you want to completely DELETE ${patient.name || 'this patient'}? This action is permanent and will delete them from the database.`)) return;
 
             try {
-                // Call backend API to physically delete user
+                // Call backend API to physically delete user from Firebase & Database
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/deactivate`, {
                     method: 'POST',
                     headers: headers
                 });
 
                 if(res.ok) {
-                    alert("Patient successfully deactivated. Access fully revoked.");
+                    alert("Patient successfully deleted. Access fully revoked.");
                 } else {
                     console.warn("Backend endpoint not found, falling back to local block.");
                     alert("Patient access revoked locally for this session.");
                 }
 
-                // Update UI state
-                patient.is_deactivated = true; 
+                // Completely remove the patient from the frontend data array instantly
+                allPatientsData = allPatientsData.filter(p => p.id !== id);
+                
                 closeViewPatientModal();
                 processPatientData(); // Re-render table
 
             } catch (e) {
-                alert("Error deactivating patient: " + e.message);
+                alert("Error deleting patient: " + e.message);
             }
         }
 
