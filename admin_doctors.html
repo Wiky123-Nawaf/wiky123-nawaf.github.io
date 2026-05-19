@@ -54,6 +54,7 @@
 
         .btn-primary { background: var(--primary); color: white; padding: 10px 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;}
         .btn-primary:hover { background: #0052a3; }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* ====== DOCTORS GRID VIEW ====== */
         .doc-filters { display: flex; gap: 4px; margin-bottom: 24px; background: #f3f4f6; padding: 4px; border-radius: 8px; width: max-content; }
@@ -61,12 +62,12 @@
         .doc-filter-btn.active { background: #fff; color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         
         .docs-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px; }
-        .doc-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; position: relative; transition: 0.2s;}
+        .doc-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; position: relative; transition: 0.2s; cursor: pointer;}
         .doc-card:hover { border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
         
         .doc-c-top { display: flex; gap: 16px; margin-bottom: 20px; }
         .doc-c-img-wrap { position: relative; width: 85px; height: 85px; border-radius: 12px; flex-shrink: 0; }
-        .doc-c-img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+        .doc-c-img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-light);}
         
         .doc-c-status { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: 2px solid #fff; white-space: nowrap;}
         .doc-c-status.available { background: #dcfce7; color: #16a34a; }
@@ -74,7 +75,7 @@
 
         .doc-c-info { flex: 1; display: flex; flex-direction: column; justify-content: center;}
         .doc-c-name-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;}
-        .doc-c-name { font-size: 16px; font-weight: 700; color: var(--text-main); cursor:pointer;}
+        .doc-c-name { font-size: 16px; font-weight: 700; color: var(--text-main); }
         .doc-c-rating { background: #fffbeb; color: #d97706; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px;}
         .doc-c-spec { font-size: 13px; color: var(--text-muted); }
         
@@ -97,7 +98,7 @@
         
         .dd-header-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;}
         .dd-top-info { display: flex; gap: 20px; align-items: center; }
-        .dd-top-info img { width: 85px; height: 85px; border-radius: 16px; object-fit: cover; }
+        .dd-top-info img { width: 85px; height: 85px; border-radius: 16px; object-fit: cover; border: 1px solid var(--border-light);}
         .dd-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; color: var(--text-main);}
         .dd-spec { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
         .dd-tags { display: flex; gap: 12px; }
@@ -127,6 +128,7 @@
         .fee-card { background: #f9fafb; padding: 20px; border-radius: 12px;}
         .doc-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 12px; font-size: 14px; font-weight: 600;}
         .btn-download { background: var(--primary); color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 600;}
+        .btn-download.disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed;}
 
         /* Tab: Appointments */
         .dd-appts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -135,37 +137,21 @@
         .ac-user { display: flex; align-items: center; gap: 12px; }
         .ac-user img { width: 40px; height: 40px; border-radius: 50%; }
         .ac-name { font-weight: 600; font-size: 14px; color: var(--text-main);}
-        .ac-email { font-size: 12px; color: var(--text-muted);}
-        .ac-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;}
+        .ac-email { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;}
+        .ac-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize;}
         .ac-status.completed { background: #dcfce7; color: #16a34a; }
+        .ac-status.scheduled { background: #eff6ff; color: #0066cc; }
         .ac-status.cancelled { background: #fef2f2; color: #ef4444; }
         .ac-detail-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;}
         .ac-label { color: var(--text-muted); }
         .ac-val { font-weight: 600; color: var(--text-main); }
-        .ac-val.blue { color: var(--primary); }
+        .ac-val.blue { color: var(--primary); text-transform: capitalize;}
         .btn-outline { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; font-weight: 600; font-size: 13px; cursor: pointer; color: var(--text-main);}
 
         /* Tab: Reviews */
         .rev-header { margin-bottom: 24px; }
         .rev-score { font-size: 32px; font-weight: 700; color: #f59e0b; display: flex; align-items: baseline; gap: 4px;}
         .rev-score span { font-size: 16px; color: var(--text-muted); font-weight: 500;}
-        .rev-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 16px;}
-        .rev-bar-row { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-muted); font-weight: 500;}
-        .r-bar-bg { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden;}
-        .r-bar-fill { height: 100%; background: #10b981; border-radius: 4px;}
-        
-        .gallery-row { display: flex; gap: 12px; overflow-x: auto; margin-bottom: 32px; padding-bottom: 8px;}
-        .gallery-img { width: 120px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0;}
-        .gallery-more { width: 120px; height: 80px; border-radius: 8px; background: #111827; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; position: relative;}
-        .gallery-more img { position: absolute; width:100%; height:100%; object-fit: cover; opacity: 0.4; border-radius: 8px;}
-        
-        .review-item { border-bottom: 1px solid var(--border-light); padding-bottom: 24px; margin-bottom: 24px;}
-        .ri-head { display: flex; justify-content: space-between; margin-bottom: 12px;}
-        .ri-user { display: flex; gap: 12px; align-items: center;}
-        .ri-user img { width: 40px; height: 40px; border-radius: 50%; }
-        .ri-date { font-size: 12px; color: var(--text-muted);}
-        .ri-title { font-weight: 600; font-size: 15px; margin-bottom: 8px;}
-        .ri-body { font-size: 14px; color: var(--text-muted); line-height: 1.6;}
 
         /* Tab: Schedule */
         .sched-row { display: flex; justify-content: space-between; padding: 16px 20px; border-radius: 8px; margin-bottom: 12px; font-size: 14px; font-weight: 600;}
@@ -183,7 +169,7 @@
         
         .ci-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; font-size: 13px;}
         .ci-label { color: var(--text-muted); margin-bottom: 4px; display: block;}
-        .ci-val { font-weight: 600; color: var(--text-main); line-height: 1.4;}
+        .ci-val { font-weight: 600; color: var(--text-main); line-height: 1.4; word-break: break-all;}
         .btn-edit-sm { background: #f3f4f6; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;}
         
         .qs-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 16px;}
@@ -209,9 +195,10 @@
         .upload-zone { border: 1px dashed var(--border); border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;}
         .uz-left { display: flex; gap: 12px; align-items: center; }
         .uz-icon { width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; display: flex; justify-content: center; align-items: center; color: var(--text-muted);}
-        .uz-text div { font-size: 14px; font-weight: 600;}
+        .uz-text div { font-size: 14px; font-weight: 600; color: var(--primary); }
         .uz-text span { font-size: 11px; color: var(--text-muted);}
         .btn-browse { background: #6b7280; color: #fff; padding: 8px 16px; border-radius: 8px; border: none; font-size: 12px; font-weight: 600; cursor: pointer;}
+        .btn-browse:hover { background: #4b5563; }
         
         .week-row { background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; padding: 16px; margin-bottom: 16px;}
         .wr-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-weight: 600; font-size: 14px;}
@@ -234,17 +221,16 @@
                     <li><a href="admin_dashboard.html"><span>🏠</span> Dashboard</a></li>
                     <li><a href="admin_dashboard.html#patients"><span>👥</span> Patients</a></li>
                     <li><a class="active" onclick="switchMainView('doctors')"><span>🩺</span> Doctors</a></li>
-                    <li><a href="#"><span>📅</span> Appointments</a></li>
-                    <li><a href="#"><span>⚙️</span> Settings</a></li>
+                    <li><a href="admin_dashboard.html#appointments"><span>📅</span> Appointments</a></li>
                 </ul>
             </div>
         </div>
         <div class="sidebar-bottom">
             <div class="user-profile-sm">
-                <img src="https://ui-avatars.com/api/?name=Muaz+Syahrir&background=f3f4f6&color=111827">
-                <div class="user-info-sm"><span class="name">Muaz syahrir</span><span class="email">Muazsyahrir@gmail.c...</span></div>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=f3f4f6&color=111827">
+                <div class="user-info-sm"><span class="name">Super Admin</span><span class="email">admin@doktura.ai</span></div>
             </div>
-            <button class="logout-btn" onclick="window.location.href='admin_login.html'">🚪</button>
+            <button class="logout-btn" onclick="logout()">🚪</button>
         </div>
     </aside>
 
@@ -253,13 +239,13 @@
         <header>
             <div class="search-bar">
                 <span>🔍</span> 
-                <input type="text" placeholder="Search doctor...">
+                <input type="text" id="searchInput" placeholder="Search doctor by name or specialty..." onkeyup="filterSearch()">
             </div> 
             <div class="header-right">
                 <div class="bell-icon">🔔</div>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <div class="user-info-sm" style="text-align:right;"><span class="name">Sabrina Gomez</span><span class="email">Super Admin</span></div>
-                    <img src="https://ui-avatars.com/api/?name=Sabrina+Gomez&background=0066cc&color=fff" style="width:36px; height:36px; border-radius:50%;">
+                    <div class="user-info-sm" style="text-align:right;"><span class="name">Admin Dashboard</span><span class="email">Super Admin</span></div>
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0066cc&color=fff" style="width:36px; height:36px; border-radius:50%;">
                 </div>
             </div>
         </header>
@@ -278,28 +264,28 @@
             </div>
 
             <div class="docs-grid-container" id="doctors-grid">
-                <!-- Javascript will populate this based on screenshots -->
+                <!-- Javascript populates this -->
+                <p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">Loading doctors data...</p>
             </div>
         </div>
 
         <!-- VIEW 2: DOCTOR DETAILS FULL PAGE -->
         <div class="dashboard-body" id="doctor-detail-view">
-            <a href="#" class="btn-back" onclick="switchMainView('doctors')">← Back</a>
+            <div class="btn-back" onclick="switchMainView('doctors')">← Back</div>
             
             <!-- Details Header Card -->
             <div class="dd-header-card">
                 <div class="dd-top-info">
-                    <img src="https://ui-avatars.com/api/?name=Dr+Alicia&background=random" id="dd-head-img">
+                    <img src="" id="dd-head-img">
                     <div>
-                        <div class="dd-name" id="dd-head-name">Dr. Alicia Wexer</div>
-                        <div class="dd-spec" id="dd-head-spec">General Practitioner</div>
+                        <div class="dd-name" id="dd-head-name">Doctor Name</div>
+                        <div class="dd-spec" id="dd-head-spec">Specialty</div>
                         <div class="dd-tags">
-                            <span class="dd-tag avail">● Available</span>
-                            <span class="dd-tag time">🕒 Today 9AM - 2PM</span>
+                            <span class="dd-tag avail" id="dd-status-tag">● Status</span>
                         </div>
                     </div>
                 </div>
-                <button class="btn-outline-danger">Delete Doctor</button>
+                <button class="btn-outline-danger" onclick="alert('Delete functionality restricted.')">Delete Doctor</button>
             </div>
 
             <!-- Detail Layout -->
@@ -309,24 +295,16 @@
                     <div class="dd-tabs">
                         <button class="dd-tab-btn active" onclick="switchTab('detail', this)">Detail Of Doctor</button>
                         <button class="dd-tab-btn" onclick="switchTab('schedule', this)">Schedule</button>
-                        <button class="dd-tab-btn" onclick="switchTab('reviews', this)">Reviews</button>
                         <button class="dd-tab-btn" onclick="switchTab('appointments', this)">Appointments</button>
+                        <button class="dd-tab-btn" onclick="switchTab('reviews', this)">Reviews</button>
                     </div>
 
                     <!-- TAB 1: DETAIL -->
                     <div id="tab-detail" class="dd-tab-content active">
                         <h3 class="section-title">About</h3>
-                        <p class="about-text">Dr. Alicia Wexer is a dedicated General Practitioner with over 8 years of experience in providing comprehensive healthcare services. She specializes in preventive care, chronic disease management, and treating common illnesses. Dr. Wexer is committed to delivering personalized care and building lasting relationships with her patients.</p>
-                        <div class="dd-tag time" style="width: max-content; margin-bottom: 32px;">📍 Dental Clinic, Tun razak titiwangsa</div>
+                        <p class="about-text" id="dd-about-text">Professional medical practitioner registered with Doktura AI.</p>
+                        <div class="dd-tag time" style="width: max-content; margin-bottom: 32px;" id="dd-location-tag">📍 Location Not Set</div>
                         
-                        <h3 class="section-title">Specializations</h3>
-                        <div class="spec-pills">
-                            <span class="spec-pill">General Checkup</span>
-                            <span class="spec-pill">Fever & Flu</span>
-                            <span class="spec-pill">Preventive Care</span>
-                            <span class="spec-pill">Chronic Disease</span>
-                        </div>
-
                         <h3 class="section-title">Consultation Fees</h3>
                         <div class="fee-grid">
                             <div class="fee-card">
@@ -335,145 +313,38 @@
                             </div>
                             <div class="fee-card">
                                 <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">In Clinic Visit</div>
-                                <div style="font-size:20px; font-weight:700;">Cash</div>
+                                <div style="font-size:20px; font-weight:700;">Subject to Clinic</div>
                             </div>
                         </div>
 
-                        <h3 class="section-title">Medical Document</h3>
-                        <div class="doc-row"><span>Resume</span><a href="#" class="btn-download">Download</a></div>
-                        <div class="doc-row"><span>Borang 11 (APC)</span><a href="#" class="btn-download">Download</a></div>
-                        <div class="doc-row"><span>Borang 15 (MMC)</span><a href="#" class="btn-download">Download</a></div>
-                        <div class="doc-row"><span>Identification Card/IC</span><a href="#" class="btn-download">Download</a></div>
+                        <h3 class="section-title">Medical Documents</h3>
+                        <div id="docs-list-container">
+                            <!-- Populated dynamically -->
+                        </div>
                     </div>
 
                     <!-- TAB 2: SCHEDULE -->
                     <div id="tab-schedule" class="dd-tab-content">
                         <h3 class="section-title" style="margin-bottom: 24px;">Weekly Availability</h3>
-                        <div class="sched-row active"><span>Monday</span><span>9:00 AM - 2:00 PM</span></div>
-                        <div class="sched-row active"><span>Tuesday</span><span>9:00 AM - 5:00 PM</span></div>
-                        <div class="sched-row active"><span>Wednesday</span><span>10:00 AM - 3:00 PM</span></div>
-                        <div class="sched-row active"><span>Thursday</span><span>9:00 AM - 5:00 PM</span></div>
-                        <div class="sched-row active"><span>Friday</span><span>9:00 AM - 2:00 PM</span></div>
-                        <div class="sched-row inactive"><span>Saturday</span><span style="font-style:italic;">Not Available</span></div>
-                        <div class="sched-row inactive"><span>Sunday</span><span style="font-style:italic;">Not Available</span></div>
-
-                        <h3 class="section-title" style="margin-top: 32px; margin-bottom: 16px;">Consultation Duration</h3>
-                        <div class="fee-grid">
-                            <div class="fee-card">
-                                <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">Standard Consultation</div>
-                                <div style="font-size:20px; font-weight:700;">30 minutes</div>
-                            </div>
-                            <div class="fee-card">
-                                <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">Follow-up Session</div>
-                                <div style="font-size:20px; font-weight:700;">15 minutes</div>
-                            </div>
+                        <div id="schedule-list-container">
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
 
-                    <!-- TAB 3: REVIEWS -->
+                    <!-- TAB 3: APPOINTMENTS -->
+                    <div id="tab-appointments" class="dd-tab-content">
+                        <div class="dd-appts-grid" id="dd-appts-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: REVIEWS -->
                     <div id="tab-reviews" class="dd-tab-content">
                         <div class="rev-header">
-                            <div class="rev-score">5.0<span>/5.0</span></div>
-                            <div style="font-weight:700; margin-top:8px;">100% of patients are satisfied</div>
-                            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">12 ratings • 5 reviews</div>
-                            
-                            <div class="rev-bars">
-                                <div class="rev-bar-row"><span>⭐ 5</span><div class="r-bar-bg"><div class="r-bar-fill" style="width:100%;"></div></div><span>(12)</span></div>
-                                <div class="rev-bar-row"><span>⭐ 4</span><div class="r-bar-bg"><div class="r-bar-fill" style="width:0%;"></div></div><span>(0)</span></div>
-                                <div class="rev-bar-row"><span>⭐ 3</span><div class="r-bar-bg"><div class="r-bar-fill" style="width:0%;"></div></div><span>(0)</span></div>
-                            </div>
+                            <div class="rev-score" id="dd-rev-score">0.0<span>/5.0</span></div>
+                            <div style="font-size:13px; color:var(--text-muted); margin-top:8px;" id="dd-rev-count">0 ratings • 0 reviews</div>
                         </div>
-
-                        <div class="gallery-row">
-                            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=200&h=150&fit=crop" class="gallery-img">
-                            <img src="https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=200&h=150&fit=crop" class="gallery-img">
-                            <img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=200&h=150&fit=crop" class="gallery-img">
-                            <div class="gallery-more">
-                                <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=200&h=150&fit=crop">
-                                <span style="z-index: 2;">+56</span>
-                            </div>
-                        </div>
-
-                        <h3 class="section-title">Patient Reviews</h3>
-                        <div class="review-item">
-                            <div class="ri-head">
-                                <div class="ri-user">
-                                    <img src="https://ui-avatars.com/api/?name=Sarah+Ahmed&background=random">
-                                    <div><div style="font-weight:600; font-size:14px;">Sarah Ahmed</div><div style="color:#f59e0b; font-size:12px;">⭐⭐⭐⭐⭐</div></div>
-                                </div>
-                                <div class="ri-date">Consultation on <strong>Mar 12, 2024</strong></div>
-                            </div>
-                            <div class="ri-title">Very professional and attentive.</div>
-                            <div class="ri-body">Very professional and attentive. The doctor explained my condition clearly and provided helpful treatment advice.</div>
-                        </div>
-                        <div class="review-item">
-                            <div class="ri-head">
-                                <div class="ri-user">
-                                    <img src="https://ui-avatars.com/api/?name=Ali+Hassan&background=random">
-                                    <div><div style="font-weight:600; font-size:14px;">Ali Hassan</div><div style="color:#f59e0b; font-size:12px;">⭐⭐⭐⭐⭐</div></div>
-                                </div>
-                                <div class="ri-date">Consultation on <strong>Mar 12, 2024</strong></div>
-                            </div>
-                            <div class="ri-title">Quick response and accurate diagnosis.</div>
-                            <div class="ri-body">Good experience overall. Waiting time was slightly long but consultation was helpful.</div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 4: APPOINTMENTS -->
-                    <div id="tab-appointments" class="dd-tab-content">
-                        <div class="dd-appts-grid">
-                            <!-- Card 1 -->
-                            <div class="appt-card">
-                                <div class="ac-head">
-                                    <div class="ac-user"><img src="https://ui-avatars.com/api/?name=Abdullah+Khaled&background=eff6ff&color=0066cc"><div><div class="ac-name">Abdullah Khaled</div><div class="ac-email">Khaledyra@gmail.com</div></div></div>
-                                    <div class="ac-status cancelled">Cancelled</div>
-                                </div>
-                                <div>
-                                    <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">Sep 15, 2025 &nbsp;<span class="ac-val blue">12:30 PM</span></span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">Dr. Farhan Yusuf, Sp.OG</span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Type Appointment</span><span class="ac-val blue">Online</span></div>
-                                </div>
-                                <button class="btn-outline">Details</button>
-                            </div>
-                            <!-- Card 2 -->
-                            <div class="appt-card">
-                                <div class="ac-head">
-                                    <div class="ac-user"><img src="https://ui-avatars.com/api/?name=Abdullah+Khaled&background=eff6ff&color=0066cc"><div><div class="ac-name">Abdullah Khaled</div><div class="ac-email">Khaledyra@gmail.com</div></div></div>
-                                    <div class="ac-status completed">Completed</div>
-                                </div>
-                                <div>
-                                    <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">Sep 15, 2025 &nbsp;<span class="ac-val blue">12:30 PM</span></span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">Dr. Farhan Yusuf, Sp.OG</span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Type Appointment</span><span class="ac-val blue">Online</span></div>
-                                </div>
-                                <button class="btn-outline">Details</button>
-                            </div>
-                            <!-- Duplicate for grid visual -->
-                            <div class="appt-card">
-                                <div class="ac-head">
-                                    <div class="ac-user"><img src="https://ui-avatars.com/api/?name=Abdullah+Khaled&background=eff6ff&color=0066cc"><div><div class="ac-name">Abdullah Khaled</div><div class="ac-email">Khaledyra@gmail.com</div></div></div>
-                                    <div class="ac-status cancelled">Cancelled</div>
-                                </div>
-                                <div>
-                                    <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">Sep 15, 2025 &nbsp;<span class="ac-val blue">12:30 PM</span></span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">Dr. Farhan Yusuf, Sp.OG</span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Type Appointment</span><span class="ac-val blue">Online</span></div>
-                                </div>
-                                <button class="btn-outline">Details</button>
-                            </div>
-                            <div class="appt-card">
-                                <div class="ac-head">
-                                    <div class="ac-user"><img src="https://ui-avatars.com/api/?name=Abdullah+Khaled&background=eff6ff&color=0066cc"><div><div class="ac-name">Abdullah Khaled</div><div class="ac-email">Khaledyra@gmail.com</div></div></div>
-                                    <div class="ac-status completed">Completed</div>
-                                </div>
-                                <div>
-                                    <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">Sep 15, 2025 &nbsp;<span class="ac-val blue">12:30 PM</span></span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">Dr. Farhan Yusuf, Sp.OG</span></div>
-                                    <div class="ac-detail-row"><span class="ac-label">Type Appointment</span><span class="ac-val blue">Online</span></div>
-                                </div>
-                                <button class="btn-outline">Details</button>
-                            </div>
-                        </div>
+                        <p style="color:var(--text-muted); font-size:14px; text-align:center; padding:30px;">Detailed reviews system currently syncing...</p>
                     </div>
                 </div>
 
@@ -482,34 +353,25 @@
                     <div class="dd-sidebar-box">
                         <div class="dd-stat-row">
                             <div class="dd-stat-icon blue">👥</div>
-                            <div><div style="font-weight:700; font-size:20px;">50</div><div style="font-size:13px; color:var(--text-muted);">Total patients</div></div>
+                            <div><div style="font-weight:700; font-size:20px;" id="sb-patients-count">0</div><div style="font-size:13px; color:var(--text-muted);">Total patients</div></div>
                         </div>
                         <div class="dd-stat-row">
                             <div class="dd-stat-icon red">📅</div>
-                            <div><div style="font-weight:700; font-size:20px;">5</div><div style="font-size:13px; color:var(--text-muted);">Upcoming Appointment</div></div>
+                            <div><div style="font-weight:700; font-size:20px;" id="sb-upcoming-count">0</div><div style="font-size:13px; color:var(--text-muted);">Upcoming Appointments</div></div>
                         </div>
                         <div class="dd-stat-row">
                             <div class="dd-stat-icon yellow">⭐</div>
-                            <div><div style="font-weight:700; font-size:20px;">4.5/5.0</div><div style="font-size:12px; color:var(--text-muted); line-height:1.4; margin-top:2px;">Based on 120 reviews from patient.</div></div>
+                            <div><div style="font-weight:700; font-size:20px;" id="sb-rating-score">0.0</div><div style="font-size:12px; color:var(--text-muted); margin-top:2px;" id="sb-rating-sub">Based on 0 reviews.</div></div>
                         </div>
                     </div>
 
                     <div class="dd-sidebar-box">
                         <h3 class="section-title">Contact info</h3>
-                        <div class="ci-row"><div><span class="ci-label">Name</span><span class="ci-val" id="sb-name">Dr. Dianne Russell</span></div><button class="btn-edit-sm">Edit</button></div>
-                        <div class="ci-row"><div><span class="ci-label">Speciality</span><span class="ci-val" id="sb-spec">General Practitioner</span></div><button class="btn-edit-sm">Edit</button></div>
-                        <div class="ci-row"><div><span class="ci-label">MMC Number</span><span class="ci-val">*************</span></div><button class="btn-edit-sm">Edit</button></div>
-                        <div class="ci-row"><div><span class="ci-label">APC Number</span><span class="ci-val">*************</span></div><button class="btn-edit-sm">Edit</button></div>
-                        <div class="ci-row"><div><span class="ci-label">Email</span><span class="ci-val" id="sb-email">dianne@gmail.com</span></div><button class="btn-edit-sm">Edit</button></div>
-                        <div class="ci-row"><div><span class="ci-label">Contact</span><span class="ci-val">(252) 555-0126</span></div><button class="btn-edit-sm">Edit</button></div>
-                        <div class="ci-row"><div><span class="ci-label">Location</span><span class="ci-val" style="display:flex;gap:4px;"><span style="color:var(--text-muted);">📍</span> Dental Clinic, Tun razak titiwangsa</span></div><button class="btn-edit-sm">Edit</button></div>
-                    </div>
-
-                    <div class="dd-sidebar-box">
-                        <h3 class="section-title">Quick Stats</h3>
-                        <div class="qs-row"><span style="color:var(--text-muted);">Patients</span><span style="font-weight:600;">1,200+</span></div>
-                        <div class="qs-row"><span style="color:var(--text-muted);">Response Time</span><span style="font-weight:600;">5 mins</span></div>
-                        <div class="qs-row"><span style="color:var(--text-muted);">Rating</span><span style="font-weight:600; color:#d97706;">⭐ 4.6</span></div>
+                        <div class="ci-row"><div><span class="ci-label">Name</span><span class="ci-val" id="sb-name">Name</span></div></div>
+                        <div class="ci-row"><div><span class="ci-label">Speciality</span><span class="ci-val" id="sb-spec">General</span></div></div>
+                        <div class="ci-row"><div><span class="ci-label">Email</span><span class="ci-val" id="sb-email">email@example.com</span></div></div>
+                        <div class="ci-row"><div><span class="ci-label">Contact</span><span class="ci-val" id="sb-phone">-</span></div></div>
+                        <div class="ci-row"><div><span class="ci-label">Location</span><span class="ci-val" id="sb-location">-</span></div></div>
                     </div>
                 </div>
             </div>
@@ -517,184 +379,198 @@
 
     </main>
 
-    <!-- FULL ADD DOCTOR MODAL (Matches Images 6 & 7) -->
+    <!-- FULL ADD DOCTOR MODAL -->
     <div id="addDoctorModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
-                <h2><span style="color:var(--text-main);">🩺</span> Add Doctor</h2>
+                <h2><span style="color:var(--primary);">🩺</span> Add New Doctor</h2>
                 <button class="modal-close" onclick="closeAddDoctorModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="adminAddDocForm">
+                <form id="adminAddDocForm" onsubmit="event.preventDefault(); submitAdminNewDoctor();">
+                    
                     <!-- Profile Upload -->
                     <div class="upload-profile-box">
                         <div style="display:flex; gap:12px; align-items:center;">
                             <div style="width:40px; height:40px; background:#fff; border-radius:8px; display:flex; justify-content:center; align-items:center; color:var(--primary);">👤</div>
-                            <div><div style="font-size:14px; font-weight:600;">Upload a profile picture.</div><div style="font-size:12px; color:var(--text-muted);">Max size 2MB</div></div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600;" id="photoFileName">Upload a profile picture.</div>
+                                <div style="font-size:12px; color:var(--text-muted);">Max size 2MB</div>
+                            </div>
                         </div>
-                        <button type="button" style="border:1px solid var(--primary); background:#fff; color:var(--primary); padding:6px 16px; border-radius:20px; font-weight:600; font-size:12px; cursor:pointer;">Browse</button>
+                        <input type="file" id="newDocPhoto" accept="image/*" style="display:none;" onchange="updateFileText(this, 'photoFileName')">
+                        <button type="button" onclick="document.getElementById('newDocPhoto').click()" style="border:1px solid var(--primary); background:#fff; color:var(--primary); padding:6px 16px; border-radius:20px; font-weight:600; font-size:12px; cursor:pointer;">Browse</button>
                     </div>
 
                     <!-- General Information -->
                     <div class="form-section-title">General Information</div>
                     <div class="form-grid">
-                        <div class="form-group"><label>Name</label><input type="text" class="form-control" placeholder="Dr. Dianne Russell"></div>
-                        <div class="form-group"><label>Speciality</label><input type="text" class="form-control" placeholder="General Practitioner"></div>
-                        <div class="form-group"><label>MMC Number</label><input type="text" class="form-control" placeholder="Type here"></div>
-                        <div class="form-group"><label>APC Number</label><input type="text" class="form-control" placeholder="Type here"></div>
-                        <div class="form-group"><label>Email</label><input type="email" class="form-control" placeholder="dianne@gmail.com"></div>
-                        <div class="form-group"><label>Contact</label><input type="text" class="form-control" placeholder="+60 912 345 6789"></div>
+                        <div class="form-group"><label>Full Name *</label><input type="text" id="newDocName" class="form-control" placeholder="Dr. John Doe" required></div>
+                        <div class="form-group"><label>Speciality</label><input type="text" id="newDocSpec" class="form-control" placeholder="General Practitioner"></div>
+                        <div class="form-group"><label>Email Address *</label><input type="email" id="newDocEmail" class="form-control" placeholder="doctor@clinic.com" required></div>
+                        <div class="form-group"><label>Initial Password *</label><input type="text" id="newDocPass" class="form-control" placeholder="Temporary login password" required></div>
+                        <div class="form-group"><label>Contact Number</label><input type="text" id="newDocPhone" class="form-control" placeholder="+60 123 456 789"></div>
+                        <div class="form-group"><label>Clinic Location</label><input type="text" id="newDocLocation" class="form-control" placeholder="Main Clinic Branch"></div>
                     </div>
-                    <div class="form-group" style="margin-bottom:24px;"><label>Location</label><input type="text" class="form-control" placeholder="Clinic Address"></div>
 
                     <!-- Documents -->
-                    <div class="form-section-title">Documents are required</div>
+                    <div class="form-section-title">Professional Documents</div>
                     
                     <div class="form-group" style="margin-bottom:16px;">
-                        <label>Upload Resume<span style="color:red;">*</span></label>
+                        <label>Resume / CV</label>
                         <div class="upload-zone">
                             <div class="uz-left">
-                                <div class="uz-icon">☁️</div>
-                                <div class="uz-text"><div>Drag & drop your file</div><span>Max file size: 10MB (PDF, DOC, DOCX)</span></div>
+                                <div class="uz-icon">📄</div>
+                                <div class="uz-text"><div id="resumeFileName">Select PDF or DOC file</div><span>Max file size: 10MB</span></div>
                             </div>
-                            <button type="button" class="btn-browse">Browse from Computer</button>
+                            <input type="file" id="newDocResume" style="display:none;" onchange="updateFileText(this, 'resumeFileName')">
+                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocResume').click()">Browse</button>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label>Borang 11 (APC)<span style="color:red;">*</span></label>
-                        <div class="upload-zone"><div class="uz-left"><div class="uz-icon">☁️</div><div class="uz-text"><div>Drag & drop your file</div><span>Max file size: 10MB (PDF, DOC, DOCX)</span></div></div><button type="button" class="btn-browse">Browse from Computer</button></div>
-                    </div>
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label>Borang 15 (MMC)<span style="color:red;">*</span></label>
-                        <div class="upload-zone"><div class="uz-left"><div class="uz-icon">☁️</div><div class="uz-text"><div>Drag & drop your file</div><span>Max file size: 10MB (PDF, DOC, DOCX)</span></div></div><button type="button" class="btn-browse">Browse from Computer</button></div>
-                    </div>
-                    <div class="form-group" style="margin-bottom:24px;">
-                        <label>Identification Card/IC<span style="color:red;">*</span></label>
-                        <div class="upload-zone"><div class="uz-left"><div class="uz-icon">☁️</div><div class="uz-text"><div>Drag & drop your file</div><span>Max file size: 10MB (PDF, DOC, DOCX)</span></div></div><button type="button" class="btn-browse">Browse from Computer</button></div>
-                    </div>
-
-                    <!-- Weekly Availability -->
-                    <div class="form-section-title">Weekly Availability</div>
                     
-                    <!-- Day Rows -->
-                    <div class="week-row">
-                        <div class="wr-top"><span>Monday</span><input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;"></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM"></div>
-                        </div>
-                    </div>
-                    <div class="week-row">
-                        <div class="wr-top"><span>Tuesday</span><input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;"></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM"></div>
-                        </div>
-                    </div>
-                    <div class="week-row">
-                        <div class="wr-top"><span>Wednesday</span><input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;"></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM"></div>
-                        </div>
-                    </div>
-                    <div class="week-row">
-                        <div class="wr-top"><span>Thursday</span><input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;"></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM"></div>
-                        </div>
-                    </div>
-                    <div class="week-row">
-                        <div class="wr-top"><span>Friday</span><input type="checkbox" checked style="width:18px;height:18px;cursor:pointer;"></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM"></div>
-                        </div>
-                    </div>
-                    <div class="week-row" style="background:#f3f4f6;">
-                        <div class="wr-top"><span>Saturday</span><div style="display:flex;align-items:center;gap:8px;"><span style="color:#ef4444;font-size:12px;">Mark as off day</span><input type="checkbox" style="width:18px;height:18px;cursor:pointer;"></div></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM" disabled style="opacity:0.6;"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM" disabled style="opacity:0.6;"></div>
-                        </div>
-                    </div>
-                    <div class="week-row" style="background:#f3f4f6;">
-                        <div class="wr-top"><span>Sunday</span><div style="display:flex;align-items:center;gap:8px;"><span style="color:#ef4444;font-size:12px;">Mark as off day</span><input type="checkbox" style="width:18px;height:18px;cursor:pointer;"></div></div>
-                        <div class="wr-inputs">
-                            <div class="form-group"><label>Online Hours</label><input type="text" class="form-control" value="09:00 AM - 03:00 PM" disabled style="opacity:0.6;"></div>
-                            <div class="form-group"><label>Clinic Hours</label><input type="text" class="form-control" value="09:00 AM - 04:00 PM" disabled style="opacity:0.6;"></div>
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label>Borang 11 (APC)</label>
+                        <div class="upload-zone">
+                            <div class="uz-left">
+                                <div class="uz-icon">📄</div>
+                                <div class="uz-text"><div id="apcFileName">Select APC PDF</div><span>Max file size: 10MB</span></div>
+                            </div>
+                            <input type="file" id="newDocAPC" style="display:none;" onchange="updateFileText(this, 'apcFileName')">
+                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocAPC').click()">Browse</button>
                         </div>
                     </div>
 
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label>Borang 15 (MMC)</label>
+                        <div class="upload-zone">
+                            <div class="uz-left">
+                                <div class="uz-icon">📄</div>
+                                <div class="uz-text"><div id="mmcFileName">Select MMC PDF</div><span>Max file size: 10MB</span></div>
+                            </div>
+                            <input type="file" id="newDocMMC" style="display:none;" onchange="updateFileText(this, 'mmcFileName')">
+                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocMMC').click()">Browse</button>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Availability Note -->
+                    <div class="form-section-title">Weekly Availability</div>
+                    <div style="font-size:13px; color:var(--text-muted); background:#f9fafb; padding:16px; border-radius:8px; border:1px solid var(--border-light); margin-bottom:16px;">
+                        Doctors can configure their own daily available hours and shifts directly from their Doctor Dashboard after successfully logging in. By default, newly added doctors are set as available during standard clinic hours.
+                    </div>
+
+                    <div class="modal-footer" style="padding: 16px 0 0 0; margin-top:24px;">
+                        <button type="button" class="btn-cancel" onclick="closeAddDoctorModal()">Cancel</button>
+                        <button type="submit" class="btn-add-submit" id="btnSubmitAddDoc">Create & Approve Doctor</button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeAddDoctorModal()">Cancel</button>
-                <button class="btn-add-submit">Add</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data Mocking based precisely on the provided screenshots
-        const mockDoctors = [
-            { id:'1', name:'Dr. Alicia Wexer', spec:'General Practitioner', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
-            { id:'2', name:'Dr. Jacob Jones', spec:'Cardiology', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop' },
-            { id:'3', name:'Dr. Mona Flores', spec:'Cardiology', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1594824432258-f99f2257ab61?w=150&h=150&fit=crop' },
-            { id:'4', name:'Dr. Alicia Wexer', spec:'General Practitioner', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
-            { id:'5', name:'Dr. Alicia Wexer', spec:'General Practitioner', rating:0, status:'Pending', time:'-', img:'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
-            { id:'6', name:'Dr. Alicia Wexer', spec:'General Practitioner', rating:0, status:'Pending', time:'-', img:'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop' },
-            { id:'7', name:'Dr. Kathryn Murphy', spec:'General Practitioner', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1527613426401-41c9ee0cd56d?w=150&h=150&fit=crop' },
-            { id:'8', name:'Dr. Robert Fox', spec:'General Practitioner', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&h=150&fit=crop' },
-            { id:'9', name:'Dr. Cameron Williamson', spec:'General Practitioner', rating:4.6, status:'Verified', time:'9AM - 2PM', img:'https://images.unsplash.com/photo-1550831107-1553da8c8464?w=150&h=150&fit=crop' }
-        ];
+        // Check Auth token
+        const API_BASE = "https://api.doktura.ai/api";
+        const token = localStorage.getItem('admin_token');
+        if (!token) window.location.href = "admin_login.html";
 
-        window.onload = () => { renderGrid('All'); };
+        const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+        
+        let allDoctorsData = [];
+        let allAppointmentsData = [];
+        let currentFilterState = 'All';
 
-        // SWITCH VIEW (Grid vs Details)
-        function switchMainView(view) {
-            document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
-            document.getElementById(`${view}-view`).classList.add('active');
+        window.onload = () => { loadCoreData(); };
+
+        // ================= FETCH ALL DATA =================
+        async function loadCoreData() {
+            try {
+                // Fetch approved docs, pending docs, and all appointments concurrently
+                const [docsRes, pendRes, apptRes] = await Promise.all([
+                    fetch(`${API_BASE}/doctors`, { headers }),
+                    fetch(`${API_BASE}/admin/doctors/pending`, { headers }),
+                    fetch(`${API_BASE}/admin/appointments`, { headers })
+                ]);
+
+                const approvedDocs = docsRes.ok ? await docsRes.json() : [];
+                const pendingDocs = pendRes.ok ? await pendRes.json() : [];
+                
+                // Merge and normalize the doctor datasets
+                allDoctorsData = [...pendingDocs, ...approvedDocs].map(d => ({
+                    id: d.id,
+                    name: d.name || 'Unknown Doctor',
+                    spec: d.specialty || 'General',
+                    rating: d.rating || 0.0,
+                    status: d.status === 'approved' ? 'Verified' : 'Pending',
+                    img: d.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name || 'D')}&background=random`,
+                    email: d.email || '',
+                    phone: d.phone || '',
+                    location: d.location || '',
+                    reviews: d.review_count || 0,
+                    availability: d.availability || {},
+                    resume_url: d.resume_url,
+                    apc_url: d.apc_url,
+                    mmc_url: d.mmc_url,
+                    ic_url: d.ic_url
+                }));
+
+                // Appointments
+                allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
+
+            } catch (e) {
+                console.error("Fetch Data Error:", e);
+                document.getElementById('doctors-grid').innerHTML = `<p style="color:var(--danger); text-align:center; grid-column:1/-1;">Error loading data: ${e.message}</p>`;
+            }
+
+            renderGrid(currentFilterState);
         }
 
-        // TABS INSIDE DETAILS
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.dd-tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.dd-tab-content').forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-        }
-
-        // GRID FILTER LOGIC
+        // ================= MAIN GRID RENDER =================
         function filterGrid(type, btn) {
             document.querySelectorAll('.doc-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            currentFilterState = type;
             renderGrid(type);
+        }
+
+        function filterSearch() {
+            renderGrid(currentFilterState);
         }
 
         function renderGrid(filter) {
             const grid = document.getElementById('doctors-grid');
-            let docs = mockDoctors;
+            const searchQ = document.getElementById('searchInput').value.toLowerCase();
+            
+            let docs = allDoctorsData;
+            
+            // Apply Status Filter
             if(filter === 'Request') docs = docs.filter(d => d.status === 'Pending');
             if(filter === 'Verified') docs = docs.filter(d => d.status === 'Verified');
+
+            // Apply Text Search
+            if(searchQ) {
+                docs = docs.filter(d => d.name.toLowerCase().includes(searchQ) || d.spec.toLowerCase().includes(searchQ));
+            }
+
+            if(docs.length === 0) {
+                grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No doctors found matching criteria.</p>`;
+                return;
+            }
 
             grid.innerHTML = docs.map(doc => {
                 const isAvail = doc.status === 'Verified';
                 const badgeClass = isAvail ? 'available' : 'pending';
-                const badgeText = isAvail ? 'Available' : 'Pending';
-                const ratingHtml = isAvail ? `<span class="doc-c-rating">⭐ ${doc.rating}</span>` : '';
-                const timeHtml = isAvail ? `Today <strong>${doc.time}</strong>` : `&nbsp;`;
+                const badgeText = isAvail ? 'Verified' : 'Pending';
+                const ratingHtml = isAvail ? `<span class="doc-c-rating">⭐ ${parseFloat(doc.rating).toFixed(1)}</span>` : '';
                 
+                // Construct Actions based on status
                 let actionsHtml = isAvail ? `
                     <div class="doc-c-actions">
-                        <button class="btn-icon">✏️</button>
-                        <button class="btn-icon danger">🗑️</button>
+                        <div class="btn-icon">✏️</div>
                     </div>
                 ` : `
                     <div class="doc-pend-actions">
-                        <button class="btn-reject">✕ Reject</button>
-                        <button class="btn-approve">✓ Approved</button>
+                        <button class="btn-reject" onclick="verifyDoctorAction(event, '${doc.id}', 'reject')">✕ Reject</button>
+                        <button class="btn-approve" onclick="verifyDoctorAction(event, '${doc.id}', 'approve')">✓ Approve</button>
                     </div>
                 `;
 
@@ -711,7 +587,7 @@
                         </div>
                     </div>
                     <div class="doc-c-bottom">
-                        <div class="doc-c-schedule">${timeHtml}</div>
+                        <div class="doc-c-schedule">${doc.location ? `📍 ${doc.location}` : 'No location set'}</div>
                         ${actionsHtml}
                     </div>
                 </div>
@@ -719,26 +595,197 @@
             }).join('');
         }
 
-        // VIEW SPECIFIC DOCTOR (Updates Sidebars and Headers)
+        // ================= APPROVE / REJECT DOCTOR =================
+        async function verifyDoctorAction(e, docId, action) {
+            e.stopPropagation(); // Prevent clicking into the card
+            if(!confirm(`Are you sure you want to ${action} this doctor?`)) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/doctors/${docId}/verify?action=${action}`, { 
+                    method: 'POST', 
+                    headers: headers 
+                });
+                
+                if(res.ok) {
+                    alert(`Doctor ${action}d successfully!`);
+                    loadCoreData(); // Reload list
+                } else {
+                    const err = await res.json();
+                    alert("Error: " + err.detail);
+                }
+            } catch(e) {
+                alert("Network Error: " + e.message);
+            }
+        }
+
+        // ================= DOCTOR DETAIL VIEW =================
+        function switchMainView(view) {
+            document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
+            document.getElementById(`${view}-view`).classList.add('active');
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.dd-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.dd-tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
         function viewDoctorDetail(id) {
-            const doc = mockDoctors.find(d => d.id === id);
+            const doc = allDoctorsData.find(d => d.id === id);
             if(!doc) return;
             
-            switchMainView('doctor-detail');
-            document.getElementById('dd-head-name').innerText = doc.name;
-            document.getElementById('sb-name').innerText = doc.name;
-            document.getElementById('dd-head-spec').innerText = doc.spec;
-            document.getElementById('sb-spec').innerText = doc.spec;
-            document.getElementById('dd-head-img').src = doc.img;
+            // Get appointments for this doctor
+            const docAppts = allAppointmentsData.filter(a => a.doctor_name === doc.name || a.doctor_id === doc.id);
+            const activeAppts = docAppts.filter(a => a.status === 'scheduled');
             
+            // Unique Patients Count
+            const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
+
+            switchMainView('doctor-detail');
+            
+            // Header
+            document.getElementById('dd-head-name').innerText = doc.name;
+            document.getElementById('dd-head-spec').innerText = doc.spec;
+            document.getElementById('dd-head-img').src = doc.img;
+            document.getElementById('dd-location-tag').innerText = `📍 ${doc.location || 'Location not specified'}`;
+            
+            // Right Sidebar Stats
+            document.getElementById('sb-patients-count').innerText = uniquePatients;
+            document.getElementById('sb-upcoming-count').innerText = activeAppts.length;
+            document.getElementById('sb-rating-score').innerText = parseFloat(doc.rating).toFixed(1);
+            document.getElementById('sb-rating-sub').innerText = `Based on ${doc.reviews} reviews`;
+            
+            document.getElementById('dd-rev-score').innerHTML = `${parseFloat(doc.rating).toFixed(1)}<span>/5.0</span>`;
+            document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings`;
+
+            // Right Sidebar Info
+            document.getElementById('sb-name').innerText = doc.name;
+            document.getElementById('sb-spec').innerText = doc.spec;
+            document.getElementById('sb-email').innerText = doc.email || 'N/A';
+            document.getElementById('sb-phone').innerText = doc.phone || 'N/A';
+            document.getElementById('sb-location').innerText = doc.location || 'N/A';
+
+            // DOCUMENTS TAB
+            const docsList = document.getElementById('docs-list-container');
+            const makeDocRow = (label, url) => {
+                if(url && url !== "null") {
+                    return `<div class="doc-row"><span>${label}</span><a href="${url}" target="_blank" class="btn-download">View Document</a></div>`;
+                } else {
+                    return `<div class="doc-row"><span style="color:var(--text-muted);">${label}</span><a class="btn-download disabled">Not Uploaded</a></div>`;
+                }
+            };
+            docsList.innerHTML = `
+                ${makeDocRow('Resume / CV', doc.resume_url)}
+                ${makeDocRow('Borang 11 (APC)', doc.apc_url)}
+                ${makeDocRow('Borang 15 (MMC)', doc.mmc_url)}
+                ${makeDocRow('Identification Card (IC)', doc.ic_url)}
+            `;
+
+            // SCHEDULE TAB
+            const schedList = document.getElementById('schedule-list-container');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            let schedHtml = '';
+            days.forEach(day => {
+                const times = doc.availability ? doc.availability[day] : null;
+                if(times && times.length === 2) {
+                    schedHtml += `<div class="sched-row active"><span style="text-transform:capitalize;">${day}</span><span>${times[0]} - ${times[1]}</span></div>`;
+                } else {
+                    schedHtml += `<div class="sched-row inactive"><span style="text-transform:capitalize;">${day}</span><span style="font-style:italic;">Not Available</span></div>`;
+                }
+            });
+            schedList.innerHTML = schedHtml;
+
+            // APPOINTMENTS TAB
+            const apptContainer = document.getElementById('dd-appts-container');
+            if(docAppts.length === 0) {
+                apptContainer.innerHTML = `<p style="grid-column: 1/-1; color:var(--text-muted); text-align:center; padding:20px;">No appointments assigned yet.</p>`;
+            } else {
+                apptContainer.innerHTML = docAppts.map(a => {
+                    const statusClass = (a.status === 'completed') ? 'completed' : (a.status === 'cancelled' ? 'cancelled' : 'scheduled');
+                    const d = new Date(a.preferred_datetime || a.created_at);
+                    const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                    
+                    return `
+                    <div class="appt-card">
+                        <div class="ac-head">
+                            <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
+                            <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
+                        </div>
+                        <div>
+                            <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
+                            <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
+                            <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">MYR ${parseFloat(a.amount_paid||0).toFixed(2)}</span></div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
             // Reset to first tab
             switchTab('detail', document.querySelector('.dd-tab-btn'));
         }
 
-        // ADD DOCTOR MODAL TOGGLE
+        // ================= ADD DOCTOR MODAL & SUBMISSION =================
         function openAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'flex'; }
         function closeAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'none'; }
 
+        function updateFileText(input, textId) {
+            if(input.files.length > 0) {
+                document.getElementById(textId).innerText = input.files[0].name;
+            }
+        }
+
+        async function submitAdminNewDoctor() {
+            const btn = document.getElementById('btnSubmitAddDoc');
+            btn.innerText = "Creating & Uploading...";
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append("name", document.getElementById('newDocName').value);
+                formData.append("email", document.getElementById('newDocEmail').value);
+                formData.append("password", document.getElementById('newDocPass').value);
+                formData.append("specialty", document.getElementById('newDocSpec').value);
+                formData.append("phone", document.getElementById('newDocPhone').value);
+                formData.append("location", document.getElementById('newDocLocation').value);
+
+                // Append Files
+                const appendFile = (inputId, formKey) => {
+                    const el = document.getElementById(inputId);
+                    if(el.files.length > 0) formData.append(formKey, el.files[0]);
+                };
+                appendFile('newDocPhoto', 'photo');
+                appendFile('newDocResume', 'resume');
+                appendFile('newDocAPC', 'apc');
+                appendFile('newDocMMC', 'mmc');
+
+                // POST to backend API route (admin_router)
+                const res = await fetch(`${API_BASE}/admin/doctors/add`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }, // Form data so NO Content-Type
+                    body: formData
+                });
+
+                if(!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || "Failed to create doctor account");
+                }
+
+                alert("Doctor successfully added and approved!");
+                document.getElementById('adminAddDocForm').reset();
+                closeAddDoctorModal();
+                loadCoreData();
+
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "Create & Approve Doctor";
+                btn.disabled = false;
+            }
+        }
+
+        function logout() { localStorage.removeItem('admin_token'); window.location.href = "admin_login.html"; }
     </script>
 </body>
 </html>
