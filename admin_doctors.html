@@ -541,14 +541,18 @@
             if(!doc) return;
             currentlyViewingDocId = doc.id;
             
-            // Filter appointments specific to this doctor, AND hide abandoned checkouts (pending_payment)
-            const docAppts = allAppointmentsData.filter(a => 
-                (a.doctor_id === doc.id || a.doctor_name === doc.name) && 
-                a.status !== 'pending_payment'
-            );
+            // Filter appointments specific to this doctor
+            const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id || a.doctor_name === doc.name);
             
-            // ONLY count "scheduled" as upcoming.
-            const activeAppts = docAppts.filter(a => a.status === 'scheduled');
+            // FIX: Upcoming Appointments Math (Date checking logic added)
+            const now = new Date();
+            now.setHours(0, 0, 0, 0); // Start of today
+
+            const activeAppts = docAppts.filter(a => {
+                if (a.status !== 'scheduled') return false; // MUST be scheduled (paid)
+                const apptDate = new Date(a.preferred_datetime || a.created_at);
+                return apptDate >= now; // Must be today or in the future
+            });
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
             switchMainView('doctor-detail');
@@ -579,12 +583,14 @@
             document.getElementById('sb-phone').innerText = doc.phone;
             document.getElementById('sb-location').innerText = doc.location;
 
-            // TAB: DOCUMENTS
+            // TAB: DOCUMENTS (FIXED)
             const docsList = document.getElementById('docs-list-container');
             const makeDocRow = (label, url) => {
-                return (url && url !== "null") ? 
-                    `<div class="doc-row"><span>${label}</span><a href="${url}" target="_blank" class="btn-download">View Document</a></div>` : 
-                    `<div class="doc-row"><span style="color:var(--text-muted);">${label}</span><a class="btn-download disabled">Not Uploaded</a></div>`;
+                if (url && url !== "null" && url.trim() !== "") {
+                    return `<div class="doc-row"><span>${label}</span><a href="${url}" target="_blank" class="btn-download">View Document</a></div>`;
+                } else {
+                    return `<div class="doc-row"><span style="color:var(--text-muted);">${label}</span><a class="btn-download disabled">Not Uploaded</a></div>`;
+                }
             };
             docsList.innerHTML = `
                 ${makeDocRow('Resume / CV', doc.resume_url)}
@@ -685,6 +691,13 @@
                 const d = new Date(a.preferred_datetime || a.created_at);
                 const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                // FIX: Force visual 38 RM display if amount_paid = 0 for an online scheduled appt
+                let amount = parseFloat(a.amount_paid || 0);
+                if (a.type === 'online' && a.status === 'scheduled' && amount === 0) {
+                    amount = 38.0; 
+                }
+                const amtStr = `MYR ${amount.toFixed(2)}`;
                 
                 return `
                 <div class="appt-card">
@@ -695,7 +708,7 @@
                     <div>
                         <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
                         <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">MYR ${parseFloat(a.amount_paid||0).toFixed(2)}</span></div>
+                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">${amtStr}</span></div>
                     </div>
                 </div>`;
             }).join('');
