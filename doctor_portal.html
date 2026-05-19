@@ -1759,6 +1759,20 @@
                 if (!res.ok) throw new Error("Backend sync failed.");
                 
                 const data = await res.json();
+
+                // --- CRITICAL FIX: Fetch availability if missing from sync payload ---
+                if (!data.availability || Object.keys(data.availability).length === 0) {
+                    try {
+                        const docsRes = await fetch(`${API_BASE}/api/doctors`);
+                        const docsList = await docsRes.json();
+                        const matchedDoc = docsList.find(d => d.email === user.email);
+                        if (matchedDoc && matchedDoc.availability) {
+                            data.availability = matchedDoc.availability;
+                        }
+                    } catch(e) { console.warn("Could not fetch extended availability"); }
+                }
+                // -------------------------------------------------------------------
+                
                 let phoneClean = data.phone || "";
                 if(phoneClean.startsWith("+60")) phoneClean = phoneClean.substring(3).trim();
                 
@@ -1962,7 +1976,7 @@
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             const container = document.getElementById('scheduleDaysContainer');
             
-            let html = '<h3 style="font-size:14px; font-weight:600; margin-bottom:16px;">Weekly Availability</h3>';
+            let html = '';
             
             days.forEach(day => {
                 const times = availability[day];
@@ -1977,17 +1991,28 @@
                             <div style="font-weight:600; font-size:14px;">${displayDay}</div>
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <span style="color:#ef4444; font-size:12px; font-style:italic; display:${isChecked ? 'none' : 'inline'};" id="off_label_${day}">Marked as off day</span>
-                                <input type="checkbox" id="chk_${day}" class="dash-input" ${isChecked} style="width:18px; height:18px; accent-color:#111827;" onchange="document.getElementById('off_label_${day}').style.display = this.checked ? 'none' : 'inline'">
+                                <input type="checkbox" id="chk_${day}" class="dash-input" ${isChecked} style="width:18px; height:18px; accent-color:#111827;" onchange="
+                                    document.getElementById('off_label_${day}').style.display = this.checked ? 'none' : 'inline';
+                                    document.getElementById('start_${day}').disabled = !this.checked;
+                                    document.getElementById('end_${day}').disabled = !this.checked;
+                                    if(!this.checked) {
+                                        document.getElementById('start_${day}').style.opacity = '0.5';
+                                        document.getElementById('end_${day}').style.opacity = '0.5';
+                                    } else {
+                                        document.getElementById('start_${day}').style.opacity = '1';
+                                        document.getElementById('end_${day}').style.opacity = '1';
+                                    }
+                                ">
                             </div>
                         </div>
                         <div class="schedule-times-row">
                             <div style="flex:1;">
                                 <label style="font-size:12px; color:#4b5563; margin-bottom:8px; display:block;">Start Time</label>
-                                <input type="time" id="start_${day}" class="dash-input form-control" value="${startT}" style="text-align:center;">
+                                <input type="time" id="start_${day}" class="dash-input form-control" value="${startT}" ${!isChecked ? 'disabled style="opacity:0.5; text-align:center;"' : 'style="text-align:center;"'}>
                             </div>
                             <div style="flex:1;">
                                 <label style="font-size:12px; color:#4b5563; margin-bottom:8px; display:block;">End Time</label>
-                                <input type="time" id="end_${day}" class="dash-input form-control" value="${endT}" style="text-align:center;">
+                                <input type="time" id="end_${day}" class="dash-input form-control" value="${endT}" ${!isChecked ? 'disabled style="opacity:0.5; text-align:center;"' : 'style="text-align:center;"'}>
                             </div>
                         </div>
                     </div>
