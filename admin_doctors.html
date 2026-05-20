@@ -186,16 +186,26 @@
         .modal-close { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; }
         .modal-body { padding: 24px; overflow-y: auto; }
         
+        .upload-profile-box { border: 1px dashed var(--primary); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #f0f7ff; margin-bottom: 32px;}
+        .form-section-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; margin-top: 24px; color: var(--text-main);}
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;}
         .form-group { display: flex; flex-direction: column; gap: 8px; }
         .form-group label { font-size: 13px; color: var(--text-muted); font-weight:600; }
         .form-control { padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #f9fafb;}
         
+        .upload-zone { border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;}
+        .uz-left { display: flex; gap: 12px; align-items: center; }
+        .uz-icon { width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; display: flex; justify-content: center; align-items: center; color: var(--text-muted);}
+        .uz-text div { font-size: 14px; font-weight: 600; color: var(--primary); }
+        .uz-text span { font-size: 11px; color: var(--text-muted);}
+        .btn-browse { background: #6b7280; color: #fff; padding: 8px 16px; border-radius: 8px; border: none; font-size: 12px; font-weight: 600; cursor: pointer;}
+        .btn-browse:hover { background: #4b5563; }
+
         .week-row { background: #f9fafb; border: 1px solid var(--border-light); border-radius: 12px; padding: 16px; margin-bottom: 16px;}
         .wr-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-weight: 600; font-size: 14px; text-transform: capitalize;}
         .wr-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px;}
-        .btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer;}
+        .btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center;}
         .btn-add-submit { flex: 1; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;}
     </style>
 </head>
@@ -242,7 +252,7 @@
         <div class="dashboard-body active" id="doctors-view">
             <div class="page-title">
                 <h1>Doctors</h1>
-                <button class="btn-primary" onclick="alert('Use the Doctor App to register new doctors.')">+ Add Doctor</button>
+                <button class="btn-primary" onclick="openAddDoctorModal()">+ Add Doctor</button>
             </div>
             
             <div class="doc-filters">
@@ -411,6 +421,94 @@
                     <div class="modal-footer" style="padding: 16px 0 0 0; margin-top:24px;">
                         <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
                         <button type="submit" class="btn-add-submit" id="btnSubmitEditDoc">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULL ADD DOCTOR MODAL -->
+    <div id="addDoctorModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2><span style="color:var(--primary);">🩺</span> Add New Doctor</h2>
+                <button class="modal-close" onclick="closeAddDoctorModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminAddDocForm" onsubmit="event.preventDefault(); submitAdminNewDoctor();">
+                    
+                    <!-- Profile Upload -->
+                    <div class="upload-profile-box">
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <div style="width:40px; height:40px; background:#fff; border-radius:8px; display:flex; justify-content:center; align-items:center; color:var(--primary);">👤</div>
+                            <div>
+                                <div style="font-size:14px; font-weight:600;" id="photoFileName">Upload a profile picture.</div>
+                                <div style="font-size:12px; color:var(--text-muted);">Max size 2MB</div>
+                            </div>
+                        </div>
+                        <input type="file" id="newDocPhoto" accept="image/*" style="display:none;" onchange="updateFileText(this, 'photoFileName')">
+                        <button type="button" onclick="document.getElementById('newDocPhoto').click()" style="border:1px solid var(--primary); background:#fff; color:var(--primary); padding:6px 16px; border-radius:20px; font-weight:600; font-size:12px; cursor:pointer;">Browse</button>
+                    </div>
+
+                    <!-- General Information -->
+                    <div class="form-section-title">General Information</div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Full Name *</label><input type="text" id="newDocName" class="form-control" placeholder="Dr. John Doe" required></div>
+                        <div class="form-group"><label>Speciality</label><input type="text" id="newDocSpec" class="form-control" placeholder="General Practitioner"></div>
+                        <div class="form-group"><label>Email Address *</label><input type="email" id="newDocEmail" class="form-control" placeholder="doctor@clinic.com" required></div>
+                        <div class="form-group"><label>Initial Password *</label><input type="text" id="newDocPass" class="form-control" placeholder="Temporary login password" required></div>
+                        <div class="form-group"><label>Contact Number</label><input type="text" id="newDocPhone" class="form-control" placeholder="+60 123 456 789"></div>
+                        <div class="form-group"><label>Clinic Location</label><input type="text" id="newDocLocation" class="form-control" placeholder="Main Clinic Branch"></div>
+                    </div>
+
+                    <!-- Documents -->
+                    <div class="form-section-title">Professional Documents</div>
+                    
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label>Resume / CV</label>
+                        <div class="upload-zone">
+                            <div class="uz-left">
+                                <div class="uz-icon">📄</div>
+                                <div class="uz-text"><div id="resumeFileName">Select PDF or DOC file</div><span>Max file size: 10MB</span></div>
+                            </div>
+                            <input type="file" id="newDocResume" style="display:none;" onchange="updateFileText(this, 'resumeFileName')">
+                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocResume').click()">Browse</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label>Borang 11 (APC)</label>
+                        <div class="upload-zone">
+                            <div class="uz-left">
+                                <div class="uz-icon">📄</div>
+                                <div class="uz-text"><div id="apcFileName">Select APC PDF</div><span>Max file size: 10MB</span></div>
+                            </div>
+                            <input type="file" id="newDocAPC" style="display:none;" onchange="updateFileText(this, 'apcFileName')">
+                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocAPC').click()">Browse</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label>Borang 15 (MMC)</label>
+                        <div class="upload-zone">
+                            <div class="uz-left">
+                                <div class="uz-icon">📄</div>
+                                <div class="uz-text"><div id="mmcFileName">Select MMC PDF</div><span>Max file size: 10MB</span></div>
+                            </div>
+                            <input type="file" id="newDocMMC" style="display:none;" onchange="updateFileText(this, 'mmcFileName')">
+                            <button type="button" class="btn-browse" onclick="document.getElementById('newDocMMC').click()">Browse</button>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Availability Note -->
+                    <div class="form-section-title">Weekly Availability</div>
+                    <div style="font-size:13px; color:var(--text-muted); background:#f9fafb; padding:16px; border-radius:8px; border:1px solid var(--border-light); margin-bottom:16px;">
+                        Doctors can configure their own daily available hours and shifts directly from their Doctor Dashboard after successfully logging in. By default, newly added doctors are set as available during standard clinic hours.
+                    </div>
+
+                    <div class="modal-footer" style="padding: 16px 0 0 0; margin-top:24px;">
+                        <button type="button" class="btn-cancel" onclick="closeAddDoctorModal()">Cancel</button>
+                        <button type="submit" class="btn-add-submit" id="btnSubmitAddDoc">Create & Approve Doctor</button>
                     </div>
                 </form>
             </div>
@@ -896,7 +994,7 @@
             
             html += `<button class="page-btn" onclick="changeDocApptPage(${docApptPage + 1})" ${docApptPage === totalPages ? 'disabled' : ''}>Next</button>
             </div>`;
-            container.innerHTML = html;
+            pagContainer.innerHTML = html;
         }
 
         function changeDocApptPage(page) {
