@@ -207,21 +207,42 @@
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 16px;}
         .btn-cancel { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center;}
         .btn-add-submit { flex: 1; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;}
+
+        /* Notification Badge Overlays & Toast Animations */
+        .bell-badge { position: absolute; top: -3px; right: 13px; width: 14px; height: 14px; border-radius: 50%; background: var(--danger); border: 2px solid #fff; font-size: 8px; color:#fff; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+        .notif-container { position: relative; }
+        .bell-icon { cursor: pointer; color: var(--text-muted); font-size: 18px; padding-right: 16px; transition: 0.2s;}
+        .bell-icon:hover { color: var(--primary); }
+        .notif-dropdown { display: none; position: absolute; top: 35px; right: 10px; width: 300px; background: #fff; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 100; overflow: hidden; }
+        .notif-header { padding: 12px 16px; background: #f9fafb; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .notif-clear { color: var(--primary); cursor: pointer; font-size: 11px; }
+        .notif-list { max-height: 250px; overflow-y: auto; }
+        .notif-item { padding: 12px 16px; border-bottom: 1px solid var(--border-light); font-size: 12px; color: var(--text-main); display: flex; gap: 8px; cursor: pointer; }
+        .notif-item:hover { background: #f9fafb; }
+        .notif-item.unread { background: #f0f7ff; }
+        
+        .toast-notification { position: fixed; bottom: 24px; right: 24px; background: #fff; border-left: 4px solid var(--primary); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; gap: 12px; align-items: flex-start; z-index: 9999; animation: slideIn 0.3s forwards; max-width: 360px;}
+        .toast-notification.success { border-left-color: var(--success); }
+        .toast-notification.warning { border-left-color: var(--warning); }
+        .toast-close { background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 16px; margin-left: auto;}
+        @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+        @keyframes slideOut { from { transform: translateX(0); } to { transform: translateX(120%); } }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR - Persistently Consistent Menu Pointing Internationally -->
     <aside class="sidebar">
         <div>
             <div class="sidebar-top">
                 <div class="logo"><img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" alt="doktura.ai"></div>
                 <div class="menu-label">MAIN MENU</div>
                 <ul class="nav-menu">
-                    <li><a href="admin_dashboard.html"><span>🏠</span> Dashboard</a></li>
-                    <li><a href="admin_dashboard.html#patients"><span>👥</span> Patients</a></li>
-                    <li><a id="nav-doctors" class="active" onclick="switchMainView('doctors')"><span>🩺</span> Doctors</a></li>
-                    <li><a id="nav-appointments" onclick="switchMainView('appointments')"><span>📅</span> Appointments</a></li>
+                    <li><a id="nav-home" href="admin_dashboard.html#/dashboard"><span>🏠</span> Dashboard</a></li>
+                    <li><a id="nav-patients" href="admin_dashboard.html#/patients"><span>👥</span> Patients</a></li>
+                    <li><a id="nav-doctors" href="#/doctors"><span>🩺</span> Doctors</a></li>
+                    <li><a id="nav-appointments" href="#/appointments"><span>📅</span> Appointments</a></li>
+                    <li><a id="nav-settings" href="admin_dashboard.html#/settings"><span>⚙️</span> Settings</a></li>
                 </ul>
             </div>
         </div>
@@ -236,11 +257,23 @@
 
     <main class="main-content">
         <header>
-            <div class="search-bar">
+            <div class="search-bar" id="search-bar-wrap">
                 <span>🔍</span> 
                 <input type="text" id="searchInput" placeholder="Search doctor by name..." onkeyup="filterSearch()">
             </div> 
             <div class="header-right">
+                <div class="notif-container">
+                    <div class="bell-icon" onclick="toggleNotifications()">🔔 <span id="bellBadge" class="bell-badge" style="display:none;">0</span></div>
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>Notifications</span>
+                            <span onclick="clearAllNotifications()" style="color:var(--primary); cursor:pointer;">Clear All</span>
+                        </div>
+                        <div class="notif-list" id="notifList">
+                            <div style="text-align:center; padding:20px; color:var(--text-light); font-size:12px;">No unread alerts.</div>
+                        </div>
+                    </div>
+                </div>
                 <div style="display:flex; align-items:center; gap:12px;">
                     <div class="user-info-sm" style="text-align:right;"><span class="name">Admin Dashboard</span></div>
                     <img src="https://ui-avatars.com/api/?name=Admin&background=0066cc&color=fff" style="width:36px; height:36px; border-radius:50%;">
@@ -249,14 +282,14 @@
         </header>
 
         <!-- VIEW 1: DOCTORS GRID -->
-        <div class="dashboard-body active" id="doctors-view">
+        <div class="dashboard-body" id="doctors-view">
             <div class="page-title">
                 <h1>Doctors</h1>
                 <button class="btn-primary" onclick="openAddDoctorModal()">+ Add Doctor</button>
             </div>
             
             <div class="doc-filters">
-                <button class="doc-filter-btn active" onclick="filterGrid('All', this)">All</button>
+                <button class="doc-filter-btn active" id="filter-doc-all" onclick="filterGrid('All', this)">All</button>
                 <button class="doc-filter-btn" onclick="filterGrid('Request', this)">Request</button>
                 <button class="doc-filter-btn" onclick="filterGrid('Verified', this)">Verified</button>
             </div>
@@ -268,11 +301,11 @@
 
         <!-- VIEW 2: DOCTOR DETAILS FULL PAGE -->
         <div class="dashboard-body" id="doctor-detail-view">
-            <div class="btn-back" onclick="switchMainView('doctors')">← Back</div>
+            <div class="btn-back" onclick="window.location.hash='#/doctors'">← Back</div>
             
             <div class="dd-header-card">
                 <div class="dd-top-info">
-                    <img src="" id="dd-head-img">
+                    <img src="" id="dd-head-img" alt="doctor avatar">
                     <div>
                         <div class="dd-name" id="dd-head-name">Doctor Name</div>
                         <div class="dd-spec" id="dd-head-spec">Specialty</div>
@@ -624,7 +657,183 @@
         // Global appointments state
         let globalApptFilterState = 'All';
 
-        window.onload = () => { loadCoreData(); };
+        // ====== SYSTEM STATE HARNESS ======
+        function handleHashRouting() {
+            const hash = window.location.hash || '#/doctors';
+            
+            // Hide all views
+            document.querySelectorAll('.dashboard-body').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
+            document.getElementById('search-bar-wrap').style.display = 'none';
+
+            if (hash === '#/doctors') {
+                document.getElementById('nav-doctors').classList.add('active');
+                document.getElementById('doctors-view').classList.add('active');
+                document.getElementById('search-bar-wrap').style.display = 'flex';
+                renderGrid(currentFilterState);
+            } else if (hash.startsWith('#/doctors/detail/')) {
+                const docId = hash.split('/').pop();
+                document.getElementById('nav-doctors').classList.add('active');
+                document.getElementById('doctor-detail-view').classList.add('active');
+                viewDoctorDetail(docId);
+            } else if (hash === '#/appointments') {
+                document.getElementById('nav-appointments').classList.add('active');
+                document.getElementById('global-appointments-view').classList.add('active');
+                renderGlobalAppointments();
+            }
+        }
+        window.addEventListener('hashchange', handleHashRouting);
+
+        window.switchMainView = function(view) {
+            if (view === 'doctors') {
+                window.location.hash = '#/doctors';
+            } else if (view === 'appointments') {
+                window.location.hash = '#/appointments';
+            }
+        }
+
+        // ====== DYNAMIC REAL-TIME NOTIFICATIONS ENGINE ======
+        function renderNotifications() {
+            const container = document.getElementById('notifList');
+            const badge = document.getElementById('bellBadge');
+            const list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
+            const unreadCount = list.filter(n => n.unread).length;
+
+            if (unreadCount > 0) {
+                badge.innerText = unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:16px; font-size:11px; color:var(--text-light);">No active alerts.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(n => {
+                const unreadClass = n.unread ? 'unread' : '';
+                return `<div class="notif-item ${unreadClass}" onclick="handleNotifAction('${n.link}', '${n.id}')">
+                    <span>${n.type === 'prescription' ? '💊' : '🩺'}</span>
+                    <div>
+                        <div>${n.message}</div>
+                        <div style="font-size:10px; color:var(--text-light); margin-top:4px;">${new Date(n.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function handleNotifAction(link, id) {
+            let list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
+            let notif = list.find(n => n.id === id);
+            if (notif) {
+                notif.unread = false;
+                localStorage.setItem('admin_notifications', JSON.stringify(list));
+                renderNotifications();
+            }
+            if (link) {
+                window.location.href = link;
+                document.getElementById('notifDropdown').style.display = 'none';
+            }
+        }
+
+        function clearAllNotifications() {
+            localStorage.setItem('admin_notifications', '[]');
+            renderNotifications();
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            let list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
+            list.forEach(n => n.unread = false);
+            localStorage.setItem('admin_notifications', JSON.stringify(list));
+            renderNotifications();
+        }
+
+        function playAlertSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.15);
+            } catch (e) { console.log('Audio Context unsupported until user gesture.'); }
+        }
+
+        function createToastAlert(type, message, actionHash = '') {
+            playAlertSound();
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.innerHTML = `
+                <span>${type === 'warning' ? '💊' : '🩺'}</span>
+                <div>
+                    <p style="font-size:13px; font-weight:600; color:var(--text-main); margin-bottom:4px;">
+                        ${type === 'warning' ? 'Prescription Issued' : 'New Doctor Registered'}
+                    </p>
+                    <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">${message}</p>
+                    ${actionHash ? `<a href="${actionHash}" style="font-size:11px; font-weight:600; color:var(--primary); text-decoration:none; display:inline-block; margin-top:8px;">View Details →</a>` : ''}
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+        }
+
+        function pushAlertNotification(type, message, actionHash = '') {
+            const list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
+            const newNotif = {
+                id: 'n_' + Date.now() + Math.random(),
+                type: type,
+                message: message,
+                unread: true,
+                timestamp: new Date().toISOString(),
+                link: actionHash
+            };
+            list.unshift(newNotif);
+            localStorage.setItem('admin_notifications', JSON.stringify(list));
+            renderNotifications();
+            createToastAlert(type, message, actionHash);
+        }
+
+        async function pollCoreAlerts() {
+            try {
+                let list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
+                
+                // 1. Doctor Registration Verification Poll
+                const docsRes = await fetch(`${API_BASE}/admin/doctors/pending`, { headers });
+                if (docsRes.ok) {
+                    const pending = await docsRes.json();
+                    pending.forEach(d => {
+                        if (!list.some(n => n.id === 'd_' + d.id)) {
+                            pushAlertNotification('info', `Doctor validation request received from ${d.name}. Approval pending.`, `admin_doctors.html#/doctors`);
+                        }
+                    });
+                }
+
+                // 2. Prescription Billing configuration check
+                const apptsRes = await fetch(`${API_BASE}/admin/appointments`, { headers });
+                if (apptsRes.ok) {
+                    const appts = await apptsRes.json();
+                    appts.forEach(a => {
+                        if (a.consultation_completed && a.medications && a.medications.length > 0) {
+                            const needsPricing = a.medications.some(m => !m.price || parseFloat(m.price) === 0);
+                            if (needsPricing && !list.some(n => n.id === 'a_' + a.id)) {
+                                pushAlertNotification('warning', `Pharmacy item catalog pending for ${a.patient_name || 'Anonymous'}. Configure billing.`, `admin_doctors.html#/appointments`);
+                            }
+                        }
+                    });
+                }
+            } catch (e) { console.log("Real-time engine polling error: ", e); }
+        }
 
         // ================= FETCH ALL DATA =================
         async function loadCoreData() {
@@ -675,13 +884,7 @@
                     ...approvedDocs.map(d => mapDoc(d, 'Verified'))
                 ];
 
-                if(currentlyViewingDocId) {
-                    viewDoctorDetail(currentlyViewingDocId);
-                } else if (document.getElementById('global-appointments-view').classList.contains('active')) {
-                    renderGlobalAppointments();
-                } else {
-                    renderGrid(currentFilterState);
-                }
+                handleHashRouting();
 
             } catch (e) {
                 console.error("Fetch Data Error:", e);
@@ -731,7 +934,7 @@
                     </div>`;
 
                 return `
-                <div class="doc-card" onclick="viewDoctorDetail('${doc.id}')">
+                <div class="doc-card" onclick="window.location.hash='#/doctors/detail/${doc.id}'">
                     <div class="doc-c-top">
                         <div class="doc-c-img-wrap">
                             <img src="${doc.img}">
@@ -776,34 +979,12 @@
 
                 alert("Doctor deleted successfully.");
                 currentlyViewingDocId = null;
-                switchMainView('doctors');
+                window.location.hash = '#/doctors';
                 loadCoreData();
             } catch(e) {
                 alert("Error deleting doctor: " + e.message);
             }
         };
-
-        // ================= DYNAMIC ROUTE SWITCHER =================
-        window.switchMainView = function(view) {
-            currentlyViewingDocId = null;
-            
-            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
-            if (view === 'doctors') {
-                document.getElementById('nav-doctors').classList.add('active');
-            } else if (view === 'appointments') {
-                document.getElementById('nav-appointments').classList.add('active');
-            }
-
-            document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
-            
-            if (view === 'doctors') {
-                document.getElementById('doctors-view').classList.add('active');
-                renderGrid(currentFilterState);
-            } else if (view === 'appointments') {
-                document.getElementById('global-appointments-view').classList.add('active');
-                renderGlobalAppointments();
-            }
-        }
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.dd-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1370,6 +1551,12 @@
         };
 
         function logout() { localStorage.removeItem('admin_token'); window.location.href = "admin_login.html"; }
+        
+        window.onload = () => { 
+            loadCoreData(); 
+            // Core Polling Thread Integration
+            setInterval(pollCoreAlerts, 10000);
+        };
     </script>
 </body>
 </html>
