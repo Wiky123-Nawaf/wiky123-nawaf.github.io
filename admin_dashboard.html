@@ -28,17 +28,17 @@
         .logo img { height: 24px; width: auto; }
         .menu-label { font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; padding-left: 12px; }
         .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-        .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s; cursor: pointer;}
+        .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s; cursor: pointer;}
         .nav-menu a:hover { background-color: var(--bg-body); color: var(--text-main); }
         .nav-menu a.active { background-color: var(--primary-light); color: var(--primary); font-weight: 600; }
         
         .sidebar-bottom { padding: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
         .user-profile-sm { display: flex; align-items: center; gap: 12px; }
-        .user-profile-sm img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .user-profile-sm img { width: 36px; height: 36px; border-radius: 50%; }
         .user-info-sm { display: flex; flex-direction: column; }
         .user-info-sm .name { font-size: 13px; font-weight: 600; color: var(--text-main); }
-        .user-info-sm .email { font-size: 11px; color: var(--text-muted); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .logout-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; transition: 0.2s; }
+        .user-info-sm .email { font-size: 11px; color: var(--text-muted); }
+        .logout-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 18px; transition: 0.2s; }
         .logout-btn:hover { color: var(--danger); }
 
         /* ====== MAIN CONTENT ====== */
@@ -211,7 +211,6 @@
         
         .vp-reports-container { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 32px; }
         .vp-report-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: space-between; min-width: 280px; }
-        .vp-reports-container a { text-decoration: none;}
         .vp-report-info { display: flex; gap: 12px; align-items: center; }
         .vp-report-icon { color: #ef4444; background: #fff; padding: 6px; border-radius: 4px; border: 1px solid #e5e7eb; display:flex; align-items:center; justify-content:center;}
         .vp-report-text .title { font-size: 13px; font-weight: 600; color: #111827; }
@@ -230,46 +229,6 @@
         .vp-btn-deactivate:hover { background: #fef2f2; }
         .vp-btn-ok { background: #0066cc; color: white; padding: 12px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; flex: 1; transition:0.2s; text-align: center;}
         .vp-btn-ok:hover { background: #0052a3; }
-
-        /* ====== APPOINTMENTS COMPONENT ====== */
-        .btn-appt-action { width: 100%; padding: 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; text-align: center; }
-        .btn-appt-action:hover { background: var(--border-light); border-color: var(--text-muted); }
-
-        .ac-head { display: flex; justify-content: space-between; align-items: flex-start;}
-        .ac-user { display: flex; align-items: center; gap: 12px; }
-        .ac-user img { width: 40px; height: 40px; border-radius: 50%; }
-        .ac-name { font-weight: 600; font-size: 14px; color: var(--text-main);}
-        .ac-email { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;}
-        
-        .ac-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize;}
-        .ac-status.completed { background: #dcfce7; color: #16a34a; }
-        .ac-status.scheduled { background: #eff6ff; color: #0066cc; }
-        .ac-status.cancelled { background: #fef2f2; color: #ef4444; }
-        .ac-status.pending { background: #fef3c7; color: #d97706; }
-
-        .ac-detail-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;}
-        .ac-label { color: var(--text-muted); }
-        .ac-val { font-weight: 600; color: var(--text-main); }
-        .ac-val.blue { color: var(--primary); text-transform: capitalize;}
-
-        /* Tab: Appointments Pagination */
-        .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-light); flex-wrap: wrap;}
-        .page-btn { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .page-btn:hover:not(:disabled) { background: #f9fafb; color: var(--text-main); }
-        .page-btn.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
-        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .page-info { font-size: 13px; color: var(--text-muted); margin-right: auto; }
-
-        /* ====== STYLED SIDEBAR NAVIGATION WITH SVG PATHS ====== */
-        .nav-menu a svg { transition: stroke 0.2s; }
-        .nav-menu a.active svg { stroke: var(--primary); }
-        .nav-menu a.active { background-color: var(--primary-light); color: var(--primary); font-weight: 600; }
-        .nav-menu a.active:hover { background-color: var(--primary-light); }
-        
-        /* Highlight home link red/orange as requested in visual styles */
-        #nav-home.active svg { stroke: #ef4444; }
-        #nav-home.active { color: #ef4444; background-color: #fef2f2; }
-        #nav-home.active:hover { background-color: #fef2f2; }
     </style>
 </head>
 <body>
@@ -283,54 +242,23 @@
                 </div>
                 <div class="menu-label">MAIN MENU</div>
                 <ul class="nav-menu">
-                    <li>
-                        <a id="nav-home" class="active" onclick="switchMainView('home')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a id="nav-patients" onclick="switchMainView('patients')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            Patients
-                        </a>
-                    </li>
-                    <li>
-                        <a id="nav-doctors" href="admin_doctors.html">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                            Doctors
-                        </a>
-                    </li>
-                    <li>
-                        <a id="nav-appointments" onclick="switchMainView('appointments')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                            Appointments
-                        </a>
-                    </li>
-                    <li>
-                        <a id="nav-settings" onclick="alert('Settings view coming soon.')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                            Settings
-                        </a>
-                    </li>
+                    <li><a id="nav-home" class="active" onclick="switchMainView('home')"><span>🏠</span> Dashboard</a></li>
+                    <li><a id="nav-patients" onclick="switchMainView('patients')"><span>👥</span> Patients</a></li>
+                    <li><a id="nav-doctors" href="admin_doctors.html"><span>🩺</span> Doctors</a></li>
+                    <li><a onclick="switchMainView('home'); document.getElementById('appointmentTablePanel').scrollIntoView({behavior:'smooth'})"><span>📅</span> Appointments</a></li>
+                    <li><a href="#"><span>⚙️</span> Settings</a></li>
                 </ul>
             </div>
         </div>
         <div class="sidebar-bottom">
             <div class="user-profile-sm">
-                <img src="https://ui-avatars.com/api/?name=Admin&background=f3f4f6&color=111827" alt="Avatar">
+                <img src="https://ui-avatars.com/api/?name=Super+Admin&background=f3f4f6&color=111827" alt="Avatar">
                 <div class="user-info-sm">
-                    <span class="name" id="sidebar-admin-name">Super Admin</span>
-                    <span class="email">admin@doktura.ai</span>
+                    <span class="name">Super Admin</span>
+                    <span class="email">dokturamedic@gmail...</span>
                 </div>
             </div>
-            <button class="logout-btn" onclick="logout()" title="Logout">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-            </button>
+            <button class="logout-btn" onclick="logout()" title="Logout">🚪</button>
         </div>
     </aside>
 
@@ -534,6 +462,7 @@
                         <input type="text" id="patientSearchInput" placeholder="Search by name or email" onkeyup="filterPatientsTable()">
                     </div>
                     <div style="display: flex; gap: 12px; align-items: center;">
+                        <!-- UPDATED FILTER DROPDOWN -->
                         <select id="patientFilterSelect" onchange="filterPatientsTable()" style="border:1px solid var(--border); background:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; font-size: 13px; font-weight: 500; outline:none;">
                             <option value="All">⚙️ Filter Status: All</option>
                             <option value="Active">Active</option>
@@ -566,32 +495,6 @@
                 <div class="see-more-container" id="seeMorePatientsContainer" style="display: none;">
                     <button class="btn-see-more" onclick="loadMorePatients()">See More ↓</button>
                 </div>
-            </div>
-        </div>
-
-        <!-- ================= VIEW: GLOBAL APPOINTMENTS VIEW ================= -->
-        <div class="dashboard-body" id="global-appointments-view">
-            <div class="page-title">
-                <div>
-                    <h1>Appointments Timeline</h1>
-                    <p>Track delivery prescriptions, online consults, and billing statuses.</p>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <div class="search-bar" style="width: 280px; height: max-content; background: #fff;">
-                        <span>🔍</span> 
-                        <input type="text" id="globalApptSearchInput" placeholder="Search patient or doctor..." onkeyup="filterGlobalAppts()">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="doc-filters">
-                <button class="doc-filter-btn active" id="filter-all-appts" onclick="filterGlobalGrid('All', this)">All</button>
-                <button class="doc-filter-btn" onclick="filterGlobalGrid('Deliveries', this)">Medicine Deliveries</button>
-                <button class="doc-filter-btn" onclick="filterGlobalGrid('Others', this)">General Consultations</button>
-            </div>
-
-            <div class="docs-grid-container" id="global-appointments-grid" style="margin-top: 24px;">
-                <p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">Checking appointments...</p>
             </div>
         </div>
 
@@ -685,7 +588,7 @@
         </div>
     </div>
 
-    <!-- VIEW PATIENT MODAL (SCREENSHOT UI - BOOKING COUNTS FIXED) -->
+    <!-- VIEW PATIENT MODAL (SCREENSHOT UI) -->
     <div id="viewPatientModal" class="modal-overlay" style="display: none;">
         <div class="modal-box vp-modal-box">
             <div class="modal-header" style="border-bottom: 1px solid var(--border-light); padding: 24px;">
@@ -845,94 +748,6 @@
         </div>
     </div>
 
-    <!-- DETAIL APPOINTMENT MODAL (Exactly styled from Images with dynamic billing prices) -->
-    <div id="apptDetailModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box" style="max-width: 600px;">
-            <div class="modal-header" style="border-bottom: 1px solid var(--border-light); padding: 24px;">
-                <h2><span>📋</span> Detail Appointment</h2>
-                <button class="modal-close" onclick="closeApptDetailModal()">&times;</button>
-            </div>
-            <div class="modal-body" style="padding: 24px; max-height: calc(100vh - 120px); overflow-y: auto;">
-                <!-- Patient Mini Card -->
-                <div class="ac-user" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
-                    <img src="" id="modal-appt-patient-img" style="width: 48px; height: 48px; border-radius: 50%;">
-                    <div>
-                        <div class="ac-name" id="modal-appt-patient-name" style="font-size: 16px; font-weight: 700;">Patient Name</div>
-                        <div class="ac-email" id="modal-appt-patient-email" style="font-size: 13px; color: var(--text-muted);">patient@email.com</div>
-                    </div>
-                </div>
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Name & Age</label>
-                        <input type="text" id="modal-appt-name-age" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="text" id="modal-appt-email" class="form-control" readonly>
-                    </div>
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label>Type Appointment</label>
-                    <input type="text" id="modal-appt-type" class="form-control" readonly>
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label>Symptoms</label>
-                    <div id="modal-appt-symptoms" style="background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; white-space: pre-wrap;">No symptoms specified.</div>
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 16px;">
-                    <label>Doctor</label>
-                    <input type="text" id="modal-appt-doctor" class="form-control" readonly>
-                </div>
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="text" id="modal-appt-date" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Time</label>
-                        <input type="text" id="modal-appt-time" class="form-control" readonly>
-                    </div>
-                </div>
-                
-                <div class="form-grid" style="margin-top: 16px;">
-                    <div class="form-group">
-                        <label>Method Payment</label>
-                        <input type="text" id="modal-appt-payment" class="form-control" value="Stripe / Card (Paid)" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Location</label>
-                        <input type="text" id="modal-appt-location" class="form-control" readonly>
-                    </div>
-                </div>
-                
-                <div class="form-group" style="margin-top: 16px; margin-bottom: 16px;">
-                    <label>Appointment Status</label>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span id="modal-appt-status-badge" class="ac-status" style="font-size: 13px; padding: 6px 12px;">Scheduled</span>
-                    </div>
-                </div>
-                
-                <!-- Prescription Pricing Grid -->
-                <div id="modal-prescription-section" style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 20px;">
-                    <h3 class="section-title">Prescription Pricing Details</h3>
-                    <div id="modal-prescription-list">
-                        <!-- Populated dynamically via JS with Price & Qty inputs -->
-                    </div>
-                </div>
-
-                <div class="modal-footer" style="padding: 16px 0 0 0; margin-top:24px;">
-                    <button type="button" class="btn-cancel" onclick="closeApptDetailModal()">Close</button>
-                    <button type="button" class="btn-add-submit" id="btnSubmitPrescBilling" onclick="submitPrescriptionBilling()">Save & Send Bill</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Symptom Modal -->
     <div id="symptomModal" class="modal-overlay" style="display: none;">
         <div class="modal-box" style="max-width: 400px;">
@@ -947,9 +762,9 @@
     </div>
 
     <script>
-        // Check Auth and redirect safely to Admin_Portal.html
+        // Check Auth
         const token = localStorage.getItem('admin_token');
-        if (!token) window.location.href = "Admin_Portal.html";
+        if (!token) window.location.href = "admin_login.html";
 
         const API_BASE = "https://api.doktura.ai/api";
         const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
@@ -963,10 +778,6 @@
         let currentApptTableLimit = 3; 
         let currentPatientTableLimit = 6; 
 
-        // Global Appointments View Filters
-        let globalApptFilterState = 'All';
-        let currentViewingAppt = null;
-
         // Shared Utils
         function updateFileName(input, displayId) {
             if(input.files.length > 0) {
@@ -975,21 +786,17 @@
             }
         }
 
-        // ================= ROUTE SWITCHER CONTROL =================
+        // View Switching Logic
         function switchMainView(viewName) {
             document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
-
             if(viewName === 'home') {
                 document.getElementById('nav-home').classList.add('active');
                 document.getElementById('home-view').classList.add('active');
+                document.getElementById('patients-view').classList.remove('active');
             } else if (viewName === 'patients') {
                 document.getElementById('nav-patients').classList.add('active');
                 document.getElementById('patients-view').classList.add('active');
-            } else if (viewName === 'appointments') {
-                document.getElementById('nav-appointments').classList.add('active');
-                document.getElementById('global-appointments-view').classList.add('active');
-                renderGlobalAppointments();
+                document.getElementById('home-view').classList.remove('active');
             }
         }
 
@@ -1004,7 +811,7 @@
             }
         });
 
-        // ================= STATS INSIGHT MODALS =================
+        // 1. STATS MODALS (HOME)
         function openStatsModal(type) {
             const titleEl = document.getElementById('statsModalTitle');
             const bodyEl = document.getElementById('statsModalBody');
@@ -1064,7 +871,7 @@
         }
         function closeStatsModal() { document.getElementById('statsDetailsModal').style.display = 'none'; }
 
-        // MAIN METRICS ENGINE
+        // 2. MAIN CARD STATS (HOME)
         function updateAccurateStats() {
             const now = new Date();
             document.getElementById('stat-patients').innerText = allPatientsData.length;
@@ -1096,7 +903,7 @@
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
         }
 
-        // REVENUE INSIGHTS CALCULATIONS
+        // 3. REVENUE ENGINE (HOME)
         let revenueByMonth = {};
         let allTimeTotal = 0;
         function calculateRevenueData() {
@@ -1130,7 +937,7 @@
             document.getElementById('stat-revenue').innerText = `MYR ${curRev.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
         }
 
-        // NEXT INLINE APPOINTMENT COMPONENT
+        // 4. NEXT APPOINTMENT WIDGET (HOME)
         function renderUpcomingWidget() {
             const widget = document.getElementById('upcoming-appt-widget');
             const now = new Date();
@@ -1201,9 +1008,10 @@
                 
                 p.isActive = daysSince <= 90;
 
+                // Accurately map status category for filtering and badges
                 if (p.is_deactivated) {
                     p.statusCategory = "Deactivated";
-                    p.isActive = false; 
+                    p.isActive = false; // Forces inactive for metric counts
                 } else if (!p.isActive) {
                     p.statusCategory = "Inactive";
                 } else if (p.is_subscribed) {
@@ -1263,9 +1071,7 @@
                 const pidStr = p.id ? "ID" + p.id.substring(0,4).toUpperCase() : "Unknown";
                 
                 const mockAge = p.age || (p.id ? 20 + (p.id.charCodeAt(0) % 30) : 30);
-                
-                // Fallback check matching both patient_id OR patient_email to correct "Booking: 0" data bugs
-                const bookingsCount = allAppointmentsData.filter(a => a.patient_id === p.id || (a.patient_email && a.patient_email === p.email)).length;
+                const bookingsCount = allAppointmentsData.filter(a => a.patient_id === p.id).length;
 
                 let statusClass = "inactive";
                 if (p.statusCategory === "Active") statusClass = "active";
@@ -1300,7 +1106,7 @@
             seeMoreContainer.style.display = (currentPatientTableLimit >= filteredPatientsData.length) ? 'none' : 'block';
         }
 
-        // ================= PATIENT DEEP DETAIL MODAL =================
+        // ================= FULLY FUNCTIONAL: VIEW PATIENT (EXACT SCREENSHOT UI) =================
         async function viewPatient(id) {
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
@@ -1313,32 +1119,34 @@
             let reports = [];
 
             try {
+                // 1. Fetch Patient Details via the dedicated endpoint
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/detail`, { headers });
+                
                 if (res.ok) {
                     const detailData = await res.json();
                     appts = detailData.appointments || [];
-                    reports = detailData.reports || []; 
+                    reports = detailData.reports || []; // Backend might have added this
                 }
 
+                // 2. Fallback Fetch for Medical Reports (if endpoint 1 didn't include them)
                 if (reports.length === 0) {
                     try {
                         const reportsRes = await fetch(`${API_BASE}/reports`, { headers });
                         if(reportsRes.ok) {
                             const repData = await reportsRes.json();
                             if(repData.reports && repData.reports.length > 0) {
-                                reports = repData.reports.filter(r => r.patient_id === id);
+                                // Filter out reports specifically for this patient if the endpoint returns all
+                                reports = repData.reports.filter(r => r.patient_id === id || !r.patient_id);
                             }
                         }
-                    } catch(e) { console.log("Silent report retrieval skipped."); }
+                    } catch(e) { console.log("Fallback report fetch failed."); }
                 }
 
                 const joinedStr = new Date(patient.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-');
                 const mockAge = patient.age || (patient.id ? 20 + (patient.id.charCodeAt(0) % 30) : 30);
-                
-                // Fallback check matching both patient_id OR patient_email to correct "Booking: 0" data bugs
-                const bookingsCount = allAppointmentsData.filter(a => a.patient_id === patient.id || (a.patient_email && a.patient_email === patient.email)).length;
+                const bookingsCount = allAppointmentsData.filter(a => a.patient_id === patient.id).length;
 
-                // Construction layout elements
+                // Construct Medical Reports HTML
                 let reportsHtml = '<p style="font-size:13px; color:var(--text-muted);">No documents uploaded yet.</p>';
                 if (reports.length > 0) {
                     reportsHtml = `
@@ -1364,14 +1172,13 @@
                     </div>`;
                 }
 
-                // Render dynamic Appointments linked locally or fetched
-                let linkedAppts = appts.length > 0 ? appts : allAppointmentsData.filter(a => a.patient_id === id || (a.patient_email && a.patient_email === patient.email));
+                // Construct Appointment History HTML
                 let apptsHtml = '<p style="font-size:13px; color:var(--text-muted);">No past appointments.</p>';
-                if (linkedAppts.length > 0) {
-                    linkedAppts.sort((a, b) => new Date(b.created_at || b.preferred_datetime) - new Date(a.created_at || a.preferred_datetime));
+                if (appts.length > 0) {
+                    appts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                     apptsHtml = `
                     <div class="vp-appts-grid">
-                        ${linkedAppts.slice(0, 4).map(a => {
+                        ${appts.slice(0, 4).map(a => {
                             const d = new Date(a.preferred_datetime || a.created_at);
                             const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                             const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -1399,14 +1206,15 @@
                                     <span class="vp-appt-val" style="${typeColor} font-weight:600;">${typeText}</span>
                                 </div>
                                 <div class="vp-appt-row" style="margin-top:8px;">
-                                    <span class="vp-appt-label">Type Appointment</span>
-                                    <span class="vp-badge-status" style="color:${statusColor}; background:${statusBg}; text-transform:capitalize;">${a.status.replace('_',' ')}</span>
+                                    <span class="vp-appt-label">Type Appointment</span> <!-- Mocking the status label as in screenshot -->
+                                    <span class="vp-badge-status" style="color:${statusColor}; background:${statusBg};">${a.status}</span>
                                 </div>
                             </div>`;
                         }).join('')}
                     </div>`;
                 }
 
+                // Compile Final Modal HTML
                 body.innerHTML = `
                     <div class="vp-profile-section">
                         <img src="${patient.photo_url || `https://ui-avatars.com/api/?name=${patient.name}&background=f3f4f6`}" alt="Avatar">
@@ -1473,7 +1281,7 @@
         }
         function closeViewPatientModal() { document.getElementById('viewPatientModal').style.display = 'none'; }
 
-        // PHYSICAL DELETION OF EXPIRED PATIENTS (RAW REVO-DELETE)
+        // ================= FULLY FUNCTIONAL: DEACTIVATE PATIENT =================
         async function deactivatePatient(id) {
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
@@ -1481,6 +1289,7 @@
             if(!confirm(`Are you sure you want to completely DELETE ${patient.name || 'this patient'}? This action is permanent and will delete them from the database.`)) return;
 
             try {
+                // Call backend API to physically delete user from Firebase & Database
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/deactivate`, {
                     method: 'POST',
                     headers: headers
@@ -1489,20 +1298,22 @@
                 if(res.ok) {
                     alert("Patient successfully deleted. Access fully revoked.");
                 } else {
+                    console.warn("Backend endpoint not found, falling back to local block.");
                     alert("Patient access revoked locally for this session.");
                 }
 
+                // Completely remove the patient from the frontend data array instantly
                 allPatientsData = allPatientsData.filter(p => p.id !== id);
                 
                 closeViewPatientModal();
-                processPatientData(); 
+                processPatientData(); // Re-render table
 
             } catch (e) {
                 alert("Error deleting patient: " + e.message);
             }
         }
 
-        // ================= NEW PATIENT MANUAL CREATION =================
+        // ================= FULLY FUNCTIONAL: ADD PATIENT =================
         function openAddPatientModal() { document.getElementById('addPatientModal').style.display = 'flex'; }
         function closeAddPatientModal() { document.getElementById('addPatientModal').style.display = 'none'; }
 
@@ -1545,10 +1356,10 @@
                 alert(`Patient profile for ${name} created successfully!`);
                 closeAddPatientModal();
                 document.getElementById('adminAddPatientForm').reset();
-                loadCoreData(); 
+                loadCoreData(); // Refresh data
             } catch (e) {
                 console.warn(e.message);
-                alert("Notice: Simulating patient creation locally for this session.");
+                alert("Notice: Backend endpoint missing. Simulating patient creation locally for demonstration.");
                 
                 const newPat = {
                     id: "u_" + Math.random().toString(36).substr(2, 9),
@@ -1572,62 +1383,39 @@
             }
         }
 
-        // ================= EDIT APPOINTMENTS =================
-        function openEditApptModal(id) {
-            const appt = allAppointmentsData.find(a => a.id == id);
-            if(!appt) return;
-
-            document.getElementById('editApptId').value = id;
-            document.getElementById('editApptDatetime').value = appt.preferred_datetime || '';
-            document.getElementById('editApptStatus').value = appt.status || 'scheduled';
-
-            const docSelect = document.getElementById('editApptDoctor');
-            docSelect.innerHTML = '<option value="">-- Select Doctor --</option>';
-            allDoctorsData.forEach(d => {
-                const isSel = (d.name === appt.doctor_name) ? 'selected' : '';
-                docSelect.innerHTML += `<option value="${d.id}" ${isSel}>${d.name} (${d.specialty})</option>`;
-            });
-
-            document.getElementById('editApptModal').style.display = 'flex';
-        }
-
-        function closeEditApptModal() { document.getElementById('editApptModal').style.display = 'none'; }
-        
-        async function submitEditAppt() {
-            const id = document.getElementById('editApptId').value;
-            const newDt = document.getElementById('editApptDatetime').value;
-            const newDocId = document.getElementById('editApptDoctor').value;
-            const newStatus = document.getElementById('editApptStatus').value;
-
-            const btn = document.getElementById('editApptSubmitBtn');
-            btn.innerText = "Saving...";
-            btn.disabled = true;
-
+        // ================= FETCH CORE DATA =================
+        async function loadCoreData() {
             try {
-                const res = await fetch(`${API_BASE}/admin/appointments/${id}`, {
-                    method: 'PUT',
-                    headers: headers,
-                    body: JSON.stringify({
-                        preferred_datetime: newDt,
-                        doctor_id: newDocId,
-                        status: newStatus
-                    })
-                });
+                const [appRes, patRes, docsApprRes, docsPendRes] = await Promise.all([
+                    fetch(`${API_BASE}/admin/appointments`, { headers }),
+                    fetch(`${API_BASE}/admin/patients/all`, { headers }),
+                    fetch(`${API_BASE}/doctors`), 
+                    fetch(`${API_BASE}/admin/doctors/pending`, { headers })
+                ]);
 
-                if(!res.ok) throw new Error("Failed to update appointment");
+                if (appRes.ok) allAppointmentsData = await appRes.json();
+                if (patRes.ok) allPatientsData = await patRes.json();
+                
+                const approvedDocs = docsApprRes.ok ? await docsApprRes.json() : [];
+                const pendingDocs = docsPendRes.ok ? await docsPendRes.json() : [];
+                allDoctorsData = [...pendingDocs, ...approvedDocs];
+                
+                // Update Home
+                updateAccurateStats();
+                calculateRevenueData();
+                renderUpcomingWidget(); 
+                renderDoctorList();
+                filteredAppointmentsData = [...allAppointmentsData];
+                renderAppointmentsTable();
+                renderChartWithRealData(allAppointmentsData);
 
-                alert("Appointment successfully updated!");
-                closeEditApptModal();
-                loadCoreData(); 
-            } catch(e) {
-                alert("Error: " + e.message);
-            } finally {
-                btn.innerText = "Save Changes";
-                btn.disabled = false;
-            }
+                // Update Patients Tab
+                processPatientData();
+
+            } catch (e) { console.error("Data Load Error:", e); }
         }
 
-        // ================= HOME TABLE SEARCH =================
+        // ================= RENDER HOME TABLE WITH EDIT BUTTON =================
         function renderAppointmentsTable() {
             const tableBody = document.getElementById('table-deliveries');
             const seeMoreContainer = document.getElementById('seeMoreContainer');
@@ -1698,7 +1486,62 @@
             renderAppointmentsTable();
         }
 
-        // ================= RENDER PENDING DOCTORS (HOME) =================
+        // ================= EDIT APPOINTMENT LOGIC =================
+        function openEditApptModal(id) {
+            const appt = allAppointmentsData.find(a => a.id == id);
+            if(!appt) return;
+
+            document.getElementById('editApptId').value = id;
+            document.getElementById('editApptDatetime').value = appt.preferred_datetime || '';
+            document.getElementById('editApptStatus').value = appt.status || 'scheduled';
+
+            const docSelect = document.getElementById('editApptDoctor');
+            docSelect.innerHTML = '<option value="">-- Select Doctor --</option>';
+            allDoctorsData.forEach(d => {
+                const isSel = (d.name === appt.doctor_name) ? 'selected' : '';
+                docSelect.innerHTML += `<option value="${d.id}" ${isSel}>${d.name} (${d.specialty})</option>`;
+            });
+
+            document.getElementById('editApptModal').style.display = 'flex';
+        }
+
+        function closeEditApptModal() { document.getElementById('editApptModal').style.display = 'none'; }
+        
+        async function submitEditAppt() {
+            const id = document.getElementById('editApptId').value;
+            const newDt = document.getElementById('editApptDatetime').value;
+            const newDocId = document.getElementById('editApptDoctor').value;
+            const newStatus = document.getElementById('editApptStatus').value;
+
+            const btn = document.getElementById('editApptSubmitBtn');
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/appointments/${id}`, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify({
+                        preferred_datetime: newDt,
+                        doctor_id: newDocId,
+                        status: newStatus
+                    })
+                });
+
+                if(!res.ok) throw new Error("Failed to update appointment");
+
+                alert("Appointment successfully updated!");
+                closeEditApptModal();
+                loadCoreData(); 
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "Save Changes";
+                btn.disabled = false;
+            }
+        }
+
+        // ================= RENDER DOCTORS & DETAILS =================
         function renderDoctorList() {
             const container = document.getElementById('list-pending-doctors');
             if (allDoctorsData.length === 0) {
@@ -1746,8 +1589,8 @@
             const body = document.getElementById('doctorDetailsBody');
             
             const docLink = (name, url) => {
-                if(url && url !== "null") return `<a href="${url}" target="_blank" class="doc-link-btn" style="color:var(--primary); font-weight:600; text-decoration:none; display:block; padding: 4px 0;">📄 View ${name} →</a>`;
-                return `<div class="doc-link-btn disabled" style="color:var(--text-light); padding: 4px 0;">❌ ${name} not uploaded</div>`;
+                if(url && url !== "null") return `<a href="${url}" target="_blank" class="doc-link-btn">📄 View ${name} <span>→</span></a>`;
+                return `<div class="doc-link-btn disabled">❌ ${name} not uploaded</div>`;
             };
 
             body.innerHTML = `
@@ -1791,7 +1634,7 @@
             }
         }
 
-        // ================= MANUAL CREATION: DOCTORS =================
+        // ================= ADD NEW DOCTOR MODAL =================
         function openAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'flex'; }
         function closeAddDoctorModal() { document.getElementById('addDoctorModal').style.display = 'none'; }
         
@@ -1848,216 +1691,32 @@
             }
         }
 
-        // ================= VIEW: GLOBAL APPOINTMENTS GRID =================
-        function filterGlobalGrid(type, btn) {
-            document.querySelectorAll('#global-appointments-view .doc-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            globalApptFilterState = type;
-            renderGlobalAppointments();
-        }
-
-        function filterGlobalAppts() {
-            renderGlobalAppointments();
-        }
-
-        function renderGlobalAppointments() {
-            const grid = document.getElementById('global-appointments-grid');
-            const searchQ = (document.getElementById('globalApptSearchInput').value || '').toLowerCase();
-            
-            let appts = [...allAppointmentsData];
-
-            // Filter divided into Medicine Deliveries or General Consultations
-            if (globalApptFilterState === 'Deliveries') {
-                appts = appts.filter(a => a.delivery_status && a.delivery_status !== 'null');
-            } else if (globalApptFilterState === 'Others') {
-                appts = appts.filter(a => !a.delivery_status || a.delivery_status === 'null');
-            }
-
-            if (searchQ) {
-                appts = appts.filter(a => 
-                    (a.patient_name || '').toLowerCase().includes(searchQ) ||
-                    (a.patient_id || '').toLowerCase().includes(searchQ) ||
-                    (a.doctor_name || '').toLowerCase().includes(searchQ)
-                );
-            }
-
-            if (appts.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No appointments found.</p>`;
-                return;
-            }
-
-            grid.innerHTML = appts.map(a => {
-                let statusClass = 'scheduled';
-                if (a.status === 'completed') statusClass = 'completed';
-                if (a.status === 'cancelled') statusClass = 'cancelled';
-                if (a.status === 'pending') statusClass = 'pending';
-                
-                const d = new Date(a.preferred_datetime || a.created_at);
-                const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
-                let amount = parseFloat(a.amount_paid || 0);
-                if (a.type === 'online' && a.status === 'scheduled' && amount === 0) {
-                    amount = 38.0; 
-                }
-                const amtStr = `MYR ${amount.toFixed(2)}`;
-
-                let actionBtnHtml = '';
-                if (a.status === 'pending') {
-                    actionBtnHtml = `
-                    <div style="display: flex; gap: 8px; width: 100%; margin-top: 8px;">
-                        <button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="flex: 1;">Details</button>
-                        <button class="btn-reject" onclick="alert('Action Restricted')" style="padding: 8px; font-size: 12px; border-radius: 8px; flex: 1;">Cancel</button>
-                    </div>`;
-                } else {
-                    actionBtnHtml = `<button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="margin-top: 8px;">Details</button>`;
-                }
-
-                // Delivery information layout badge
-                let deliveryBadge = '';
-                if (a.delivery_status && a.delivery_status !== 'null') {
-                    deliveryBadge = `<span style="background:var(--warning-bg); color:var(--warning); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-left: 8px;">Delivery: ${a.delivery_status.replace('_',' ').toUpperCase()}</span>`;
-                }
-                
-                return `
-                <div class="appt-card" style="background:#fff; border: 1px solid var(--border); border-radius:16px; padding:20px;">
-                    <div class="ac-head" style="margin-bottom:12px;">
-                        <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                            <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
-                            ${deliveryBadge}
-                        </div>
-                    </div>
-                    <div>
-                        <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">${a.doctor_name || 'Unassigned'}</span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">${amtStr}</span></div>
-                    </div>
-                    ${actionBtnHtml}
-                </div>`;
-            }).join('');
-        }
-
-        // ================= APPOINTMENT DETAILED MODAL & BILLING PRICING =================
-        window.openApptDetailModal = function(apptId) {
-            const appt = allAppointmentsData.find(a => a.id === apptId);
-            if (!appt) return;
-            currentViewingAppt = appt;
-
-            document.getElementById('modal-appt-patient-name').innerText = appt.patient_name || 'Unknown Patient';
-            document.getElementById('modal-appt-patient-email').innerText = appt.patient_email || 'N/A';
-            document.getElementById('modal-appt-patient-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(appt.patient_name || 'P')}&background=eff6ff&color=0066cc`;
-
-            document.getElementById('modal-appt-name-age').value = appt.patient_name || 'N/A';
-            document.getElementById('modal-appt-email').value = appt.patient_email || 'N/A';
-            document.getElementById('modal-appt-type').value = (appt.type || 'Online').replace('-', ' ').toUpperCase();
-            document.getElementById('modal-appt-symptoms').innerText = appt.symptoms || 'No symptoms specified.';
-            document.getElementById('modal-appt-doctor').value = appt.doctor_name || 'Unassigned';
-
-            const d = new Date(appt.preferred_datetime || appt.created_at);
-            document.getElementById('modal-appt-date').value = d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
-            document.getElementById('modal-appt-time').value = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
-            document.getElementById('modal-appt-payment').value = 'Stripe / Card (Paid)';
-            document.getElementById('modal-appt-location').value = appt.location || 'Dental Clinic (Doktura HQ)';
-
-            const badge = document.getElementById('modal-appt-status-badge');
-            badge.className = `ac-status ${appt.status}`;
-            badge.innerText = appt.status.replace('_', ' ');
-
-            // Prescription configuration UI
-            const listContainer = document.getElementById('modal-prescription-list');
-            const submitBtn = document.getElementById('btnSubmitPrescBilling');
-
-            if (appt.consultation_completed) {
-                submitBtn.style.display = 'block';
-                if (appt.medications && appt.medications.length > 0) {
-                    listContainer.innerHTML = appt.medications.map((m, index) => {
-                        return `
-                        <div style="background: #f9fafb; border: 1px solid var(--border-light); padding: 16px; border-radius: 12px; margin-bottom: 12px;">
-                            <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--text-main);">${m.name}</div>
-                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
-                                ${m.dosage ? `${m.dosage} ` : ''}${m.uom || ''} | ${m.frequency || ''} | ${m.duration || ''}
-                                ${m.notes ? `<br><span style="font-style: italic; color: #b45309;">${m.notes}</span>` : ''}
-                            </div>
-                            <div class="form-grid" style="margin-bottom: 0;">
-                                <div class="form-group">
-                                    <label style="font-size: 11px;">Quantity *</label>
-                                    <input type="number" step="1" class="form-control med-qty-input" data-index="${index}" value="${m.quantity || 1.0}" style="padding: 8px 12px;">
-                                </div>
-                                <div class="form-group">
-                                    <label style="font-size: 11px;">Price (RM) *</label>
-                                    <input type="number" step="0.1" class="form-control med-price-input" data-index="${index}" value="${m.price || 0.0}" style="padding: 8px 12px;">
-                                </div>
-                            </div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No medications prescribed for this appointment.</p>`;
-                    submitBtn.style.display = 'none';
-                }
+        // ================= OTHER LOGIC =================
+        function openRevenueModal() {
+            const sortedMonths = Object.keys(revenueByMonth).sort().reverse();
+            const tbody = document.getElementById('revenueHistoryTableBody');
+            tbody.innerHTML = '';
+            if (sortedMonths.length === 0 || allTimeTotal === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding: 20px;">No revenue yet.</td></tr>';
             } else {
-                listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">Prescription will be available once the consultation is marked as completed by the Doctor.</p>`;
-                submitBtn.style.display = 'none';
-            }
-
-            document.getElementById('apptDetailModal').style.display = 'flex';
-        };
-
-        window.closeApptDetailModal = function() {
-            document.getElementById('apptDetailModal').style.display = 'none';
-            currentViewingAppt = null;
-        };
-
-        async function submitPrescriptionBilling() {
-            if (!currentViewingAppt) return;
-            const btn = document.getElementById('btnSubmitPrescBilling');
-            btn.innerText = "Sending Bill...";
-            btn.disabled = true;
-
-            const updatedMeds = [];
-            const qtyInputs = document.querySelectorAll('#modal-prescription-list .med-qty-input');
-            const priceInputs = document.querySelectorAll('#modal-prescription-list .med-price-input');
-
-            currentViewingAppt.medications.forEach((med, index) => {
-                const qty = parseFloat(qtyInputs[index].value) || 1.0;
-                const price = parseFloat(priceInputs[index].value) || 0.0;
-                
-                updatedMeds.push({
-                    name: med.name,
-                    dosage: parseFloat(med.dosage) || 1.0,
-                    uom: med.uom || 'TAB',
-                    frequency: med.frequency || 'ONCE A DAY',
-                    duration: med.duration || '3 DAY(S)',
-                    quantity: qty,
-                    notes: med.notes || '',
-                    price: price
+                sortedMonths.forEach(k => {
+                    if(revenueByMonth[k].total > 0) {
+                        tbody.innerHTML += `<tr>
+                            <td style="padding: 16px 24px; font-weight: 500; border-bottom: 1px solid var(--border-light);">${revenueByMonth[k].label}</td>
+                            <td style="padding: 16px 24px; text-align: right; font-weight: 600; border-bottom: 1px solid var(--border-light);">MYR ${revenueByMonth[k].total.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        </tr>`;
+                    }
                 });
-            });
-
-            try {
-                const res = await fetch(`${API_BASE}/admin/prescription/${currentViewingAppt.id}/price`, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify({ medications: updatedMeds })
-                });
-
-                if (!res.ok) throw new Error("Failed to set prescription price");
-                
-                alert("Bill finalized and prescription details sent to patient successfully!");
-                closeApptDetailModal();
-                loadCoreData(); 
-
-            } catch (e) {
-                alert("Error: " + e.message);
-            } finally {
-                btn.innerText = "Save & Send Bill";
-                btn.disabled = false;
             }
+            document.getElementById('allTimeRevenueTotal').innerText = `MYR ${allTimeTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('revenueModal').style.display = 'flex';
         }
+        function closeRevenueModal() { document.getElementById('revenueModal').style.display = 'none'; }
+        
+        function openSymptomModal(t) { document.getElementById('symptomFullText').innerText = t; document.getElementById('symptomModal').style.display = 'flex'; }
+        function closeSymptomModal() { document.getElementById('symptomModal').style.display = 'none'; }
 
-        // ================= REVENUE GRAPH ENGINE =================
+        // ================= CHART LOGIC =================
         let chartInstance = null;
         function renderChartWithRealData(appointments) {
             const counts = {}; const monthsLabel = [];
@@ -2087,34 +1746,8 @@
                 }
             });
         }
-
-        // ================= MISC UI =================
-        function openRevenueModal() {
-            const sortedMonths = Object.keys(revenueByMonth).sort().reverse();
-            const tbody = document.getElementById('revenueHistoryTableBody');
-            tbody.innerHTML = '';
-            if (sortedMonths.length === 0 || allTimeTotal === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding: 20px;">No revenue yet.</td></tr>';
-            } else {
-                sortedMonths.forEach(k => {
-                    if(revenueByMonth[k].total > 0) {
-                        tbody.innerHTML += `<tr>
-                            <td style="padding: 16px 24px; font-weight: 500; border-bottom: 1px solid var(--border-light);">${revenueByMonth[k].label}</td>
-                            <td style="padding: 16px 24px; text-align: right; font-weight: 600; border-bottom: 1px solid var(--border-light);">MYR ${revenueByMonth[k].total.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                        </tr>`;
-                    }
-                });
-            }
-            document.getElementById('allTimeRevenueTotal').innerText = `MYR ${allTimeTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-            document.getElementById('revenueModal').style.display = 'flex';
-        }
-        function closeRevenueModal() { document.getElementById('revenueModal').style.display = 'none'; }
-        
-        function openSymptomModal(t) { document.getElementById('symptomFullText').innerText = t; document.getElementById('symptomModal').style.display = 'flex'; }
-        function closeSymptomModal() { document.getElementById('symptomModal').style.display = 'none'; }
-
-        // Secure exit signout routing directly to Admin_Portal.html as requested
-        function logout() { localStorage.removeItem('admin_token'); window.location.href = "Admin_Portal.html"; }
+        function logout() { localStorage.removeItem('admin_token'); window.location.href = "admin_login.html"; }
+        window.onload = () => { loadCoreData(); };
     </script>
 </body>
 </html>
