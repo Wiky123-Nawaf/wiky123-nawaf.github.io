@@ -54,7 +54,7 @@
         .btn-primary:hover { background: #0052a3; }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* ====== DOCTORS GRID VIEW ====== */
+        /* ====== DOCTOR & APPOINTMENTS FILTER TABS ====== */
         .doc-filters { display: flex; gap: 4px; margin-bottom: 24px; background: #f3f4f6; padding: 4px; border-radius: 8px; width: max-content; }
         .doc-filter-btn { padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: 0.2s;}
         .doc-filter-btn.active { background: #fff; color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -210,8 +210,8 @@
                 <ul class="nav-menu">
                     <li><a href="admin_dashboard.html"><span>🏠</span> Dashboard</a></li>
                     <li><a href="admin_dashboard.html#patients"><span>👥</span> Patients</a></li>
-                    <li><a class="active" onclick="switchMainView('doctors')"><span>🩺</span> Doctors</a></li>
-                    <li><a href="admin_dashboard.html#appointments"><span>📅</span> Appointments</a></li>
+                    <li><a id="nav-doctors" class="active" onclick="switchMainView('doctors')"><span>🩺</span> Doctors</a></li>
+                    <li><a id="nav-appointments" onclick="switchMainView('appointments')"><span>📅</span> Appointments</a></li>
                 </ul>
             </div>
         </div>
@@ -361,6 +361,29 @@
             </div>
         </div>
 
+        <!-- VIEW 3: GLOBAL APPOINTMENTS -->
+        <div class="dashboard-body" id="global-appointments-view">
+            <div class="page-title">
+                <h1>Appointments</h1>
+                <div style="display:flex; gap:12px;">
+                    <div class="search-bar" style="width: 250px;">
+                        <span>🔍</span> 
+                        <input type="text" id="globalApptSearchInput" placeholder="Search patient or doctor..." onkeyup="filterGlobalAppts()">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doc-filters">
+                <button class="doc-filter-btn active" id="filter-all-appts" onclick="filterGlobalGrid('All', this)">All</button>
+                <button class="doc-filter-btn" onclick="filterGlobalGrid('Deliveries', this)">Medicine Deliveries</button>
+                <button class="doc-filter-btn" onclick="filterGlobalGrid('Others', this)">General Consultations</button>
+            </div>
+
+            <div class="docs-grid-container" id="global-appointments-grid">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+
     </main>
 
     <!-- EDIT DOCTOR PROFILE MODAL -->
@@ -500,6 +523,9 @@
         let docApptPage = 1;
         const docApptsPerPage = 4;
 
+        // Global appointments state
+        let globalApptFilterState = 'All';
+
         window.onload = () => { loadCoreData(); };
 
         // ================= FETCH ALL DATA =================
@@ -553,6 +579,8 @@
 
                 if(currentlyViewingDocId) {
                     viewDoctorDetail(currentlyViewingDocId);
+                } else if (document.getElementById('global-appointments-view').classList.contains('active')) {
+                    renderGlobalAppointments();
                 } else {
                     renderGrid(currentFilterState);
                 }
@@ -571,7 +599,13 @@
             renderGrid(type);
         }
 
-        function filterSearch() { renderGrid(currentFilterState); }
+        function filterSearch() { 
+            if (document.getElementById('global-appointments-view').classList.contains('active')) {
+                renderGlobalAppointments();
+            } else {
+                renderGrid(currentFilterState); 
+            }
+        }
 
         function renderGrid(filter) {
             const grid = document.getElementById('doctors-grid');
@@ -627,11 +661,27 @@
             } catch(e) { alert("Network Error"); }
         }
 
-        // ================= DOCTOR DETAIL VIEW =================
+        // ================= DYNAMIC ROUTE SWITCHER =================
         function switchMainView(view) {
-            if(view === 'doctors') currentlyViewingDocId = null;
+            currentlyViewingDocId = null;
+            
+            // Adjust Sidebar Class Actions
+            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            if (view === 'doctors') {
+                document.getElementById('nav-doctors').classList.add('active');
+            } else if (view === 'appointments') {
+                document.getElementById('nav-appointments').classList.add('active');
+            }
+
             document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
-            document.getElementById(`${view}-view`).classList.add('active');
+            
+            if (view === 'doctors') {
+                document.getElementById('doctors-view').classList.add('active');
+                renderGrid(currentFilterState);
+            } else if (view === 'appointments') {
+                document.getElementById('global-appointments-view').classList.add('active');
+                renderGlobalAppointments();
+            }
         }
 
         function switchTab(tabId, btn) {
@@ -658,7 +708,9 @@
             });
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
-            switchMainView('doctor-detail');
+            // Set detail layout active
+            document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
+            document.getElementById('doctor-detail-view').classList.add('active');
             
             // Profile Header
             document.getElementById('dd-head-name').innerText = doc.name;
@@ -844,7 +896,7 @@
             
             html += `<button class="page-btn" onclick="changeDocApptPage(${docApptPage + 1})" ${docApptPage === totalPages ? 'disabled' : ''}>Next</button>
             </div>`;
-            pagContainer.innerHTML = html;
+            container.innerHTML = html;
         }
 
         function changeDocApptPage(page) {
@@ -853,6 +905,98 @@
             docApptPage = page;
             renderDocAppts();
         }
+
+        // ================= GLOBAL APPOINTMENTS LAYOUT & FILTERS =================
+        window.filterGlobalGrid = function(type, btn) {
+            document.querySelectorAll('#global-appointments-view .doc-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            globalApptFilterState = type;
+            renderGlobalAppointments();
+        };
+
+        window.filterGlobalAppts = function() {
+            renderGlobalAppointments();
+        };
+
+        window.renderGlobalAppointments = function() {
+            const grid = document.getElementById('global-appointments-grid');
+            const searchQ = (document.getElementById('globalApptSearchInput').value || '').toLowerCase();
+            
+            let appts = [...allAppointmentsData];
+
+            // 1. Filter system divided by delivery status
+            if (globalApptFilterState === 'Deliveries') {
+                appts = appts.filter(a => a.delivery_status && a.delivery_status !== 'null');
+            } else if (globalApptFilterState === 'Others') {
+                appts = appts.filter(a => !a.delivery_status || a.delivery_status === 'null');
+            }
+
+            // 2. Filter search query
+            if (searchQ) {
+                appts = appts.filter(a => 
+                    (a.patient_name || '').toLowerCase().includes(searchQ) ||
+                    (a.patient_id || '').toLowerCase().includes(searchQ) ||
+                    (a.doctor_name || '').toLowerCase().includes(searchQ)
+                );
+            }
+
+            if (appts.length === 0) {
+                grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No appointments found matching criteria.</p>`;
+                return;
+            }
+
+            grid.innerHTML = appts.map(a => {
+                let statusClass = 'scheduled';
+                if (a.status === 'completed') statusClass = 'completed';
+                if (a.status === 'cancelled') statusClass = 'cancelled';
+                if (a.status === 'pending') statusClass = 'pending';
+                
+                const d = new Date(a.preferred_datetime || a.created_at);
+                const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                let amount = parseFloat(a.amount_paid || 0);
+                if (a.type === 'online' && a.status === 'scheduled' && amount === 0) {
+                    amount = 38.0; 
+                }
+                const amtStr = `MYR ${amount.toFixed(2)}`;
+
+                let actionBtnHtml = '';
+                if (a.status === 'pending') {
+                    actionBtnHtml = `
+                    <div style="display: flex; gap: 8px; width: 100%; margin-top: 8px;">
+                        <button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="flex: 1;">Details</button>
+                        <button class="btn-reject" onclick="alert('Action Restricted')" style="padding: 8px; font-size: 12px; border-radius: 8px; flex: 1;">Cancel</button>
+                    </div>`;
+                } else {
+                    actionBtnHtml = `<button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="margin-top: 8px;">Details</button>`;
+                }
+
+                // Delivery information layout badge
+                let deliveryBadge = '';
+                if (a.delivery_status && a.delivery_status !== 'null') {
+                    deliveryBadge = `<span style="background:var(--warning-bg); color:var(--warning); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-left: 8px;">Delivery: ${a.delivery_status.replace('_',' ').toUpperCase()}</span>`;
+                }
+                
+                return `
+                <div class="appt-card" style="background:#fff; border: 1px solid var(--border); border-radius:16px; padding:20px;">
+                    <div class="ac-head" style="margin-bottom:12px;">
+                        <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                            <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
+                            ${deliveryBadge}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">${a.doctor_name || 'Unassigned'}</span></div>
+                        <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
+                        <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
+                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">${amtStr}</span></div>
+                    </div>
+                    ${actionBtnHtml}
+                </div>`;
+            }).join('');
+        };
 
         // ================= EDIT DOCTOR MODAL & SUBMISSION =================
         function openEditModal() {
