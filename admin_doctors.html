@@ -420,31 +420,43 @@
 
                 const approvedDocs = docsRes.ok ? await docsRes.json() : [];
                 const pendingDocs = pendRes.ok ? await pendRes.json() : [];
+                allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
                 
-                const mapDoc = (d, defaultStatus) => ({
-                    id: d.id,
-                    name: d.name || 'Unknown Doctor',
-                    spec: d.specialty || 'General',
-                    rating: d.rating || 0.0,
-                    status: defaultStatus, 
-                    img: d.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name || 'D')}&background=random`,
-                    email: d.email || 'N/A',       
-                    phone: d.phone || 'N/A',       
-                    location: d.location || 'N/A', 
-                    reviews: d.review_count || 0,
-                    availability: d.availability || {}, 
-                    resume_url: d.resume_url,
-                    apc_url: d.apc_url,
-                    mmc_url: d.mmc_url,
-                    ic_url: d.ic_url
-                });
+                const mapDoc = (d, defaultStatus) => {
+                    const docAppts = allAppointmentsData.filter(a => a.doctor_id === d.id || a.doctor_name === d.name);
+                    const validReviews = docAppts.filter(a => a.patient_review_stars > 0);
+                    
+                    let calcRating = 0.0;
+                    let calcReviews = 0;
+                    if (validReviews.length > 0) {
+                        calcReviews = validReviews.length;
+                        const sum = validReviews.reduce((acc, curr) => acc + curr.patient_review_stars, 0);
+                        calcRating = sum / validReviews.length;
+                    }
+
+                    return {
+                        id: d.id,
+                        name: d.name || 'Unknown Doctor',
+                        spec: d.specialty || 'General',
+                        rating: calcRating,
+                        reviews: calcReviews,
+                        status: defaultStatus, 
+                        img: d.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.name || 'D')}&background=random`,
+                        email: d.email || 'N/A',       
+                        phone: d.phone || 'N/A',       
+                        location: d.location || 'N/A', 
+                        availability: d.availability || {}, 
+                        resume_url: d.resume_url,
+                        apc_url: d.apc_url,
+                        mmc_url: d.mmc_url,
+                        ic_url: d.ic_url
+                    };
+                };
 
                 allDoctorsData = [
                     ...pendingDocs.map(d => mapDoc(d, 'Pending')),
                     ...approvedDocs.map(d => mapDoc(d, 'Verified'))
                 ];
-
-                allAppointmentsData = apptRes.ok ? await apptRes.json() : [];
 
                 if(currentlyViewingDocId) {
                     viewDoctorDetail(currentlyViewingDocId);
@@ -541,17 +553,15 @@
             if(!doc) return;
             currentlyViewingDocId = doc.id;
             
-            // Filter appointments specific to this doctor
             const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id || a.doctor_name === doc.name);
             
-            // FIX: Upcoming Appointments Math (Date checking logic added)
             const now = new Date();
-            now.setHours(0, 0, 0, 0); // Start of today
+            now.setHours(0, 0, 0, 0); 
 
             const activeAppts = docAppts.filter(a => {
-                if (a.status !== 'scheduled') return false; // MUST be scheduled (paid)
+                if (a.status !== 'scheduled') return false; 
                 const apptDate = new Date(a.preferred_datetime || a.created_at);
-                return apptDate >= now; // Must be today or in the future
+                return apptDate >= now; 
             });
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
@@ -583,7 +593,7 @@
             document.getElementById('sb-phone').innerText = doc.phone;
             document.getElementById('sb-location').innerText = doc.location;
 
-            // TAB: DOCUMENTS (FIXED)
+            // TAB: DOCUMENTS
             const docsList = document.getElementById('docs-list-container');
             const makeDocRow = (label, url) => {
                 if (url && url !== "null" && url.trim() !== "") {
@@ -613,7 +623,7 @@
             });
             schedList.innerHTML = schedHtml;
 
-            // TAB: APPOINTMENTS (Using Pagination Logic)
+            // TAB: APPOINTMENTS 
             currentDocAppts = docAppts;
             filteredDocAppts = [...docAppts];
             docApptPage = 1;
@@ -623,7 +633,7 @@
             // TAB: REVIEWS 
             const reviewsWithStars = docAppts.filter(a => a.patient_review_stars > 0);
             document.getElementById('dd-rev-score').innerHTML = `${parseFloat(doc.rating).toFixed(1)}<span>/5.0</span>`;
-            document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings • ${reviewsWithStars.length} reviews`;
+            document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings • ${doc.reviews} reviews`;
 
             let starCounts = {5:0, 4:0, 3:0, 2:0, 1:0};
             reviewsWithStars.forEach(r => { starCounts[r.patient_review_stars] = (starCounts[r.patient_review_stars] || 0) + 1; });
@@ -692,7 +702,6 @@
                 const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-                // FIX: Force visual 38 RM display if amount_paid = 0 for an online scheduled appt
                 let amount = parseFloat(a.amount_paid || 0);
                 if (a.type === 'online' && a.status === 'scheduled' && amount === 0) {
                     amount = 38.0; 
