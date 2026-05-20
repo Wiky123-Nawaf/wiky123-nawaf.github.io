@@ -1033,8 +1033,9 @@
                 let active = 0; let past = 0; let online = 0; let clinic = 0;
                 allAppointmentsData.forEach(a => {
                     const apptDate = new Date(a.preferred_datetime || a.created_at);
-                    if (a.consultation_completed || apptDate < now) past++; else active++;
-                    if (a.type === 'online') online++; else clinic++;
+                    const isCompleted = a.status === 'completed' || a.status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+                    const isUpcoming = !isCompleted && apptDate >= now;
+                    if (isUpcoming) active++; else past++;
                 });
 
                 html = `
@@ -1078,8 +1079,10 @@
             let active = 0; let past = 0;
             allAppointmentsData.forEach(a => {
                 const apptDate = new Date(a.preferred_datetime || a.created_at);
-                if (a.consultation_completed || apptDate < now) past++;
-                else active++;
+                const isCompleted = a.status === 'completed' || a.status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+                const isUpcoming = !isCompleted && apptDate >= now;
+                if (isUpcoming) active++;
+                else past++;
             });
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
         }
@@ -1125,7 +1128,8 @@
             
             const futureAppts = allAppointmentsData.filter(a => {
                 const d = new Date(a.preferred_datetime || a.created_at);
-                return d >= now && !a.consultation_completed;
+                const isCompleted = a.status === 'completed' || a.status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+                return d >= now && !isCompleted;
             });
 
             futureAppts.sort((a, b) => new Date(a.preferred_datetime || a.created_at) - new Date(b.preferred_datetime || b.created_at));
@@ -1484,7 +1488,7 @@
                 }
 
                 // Completely remove the patient from the frontend data array instantly
-                allPatientsData = allPatientsData.filter(p => p.id !== id);
+                allPatientsData = allAppointmentsData.filter(p => p.id !== id);
                 
                 closeViewPatientModal();
                 processPatientData(); // Re-render table
@@ -1632,13 +1636,13 @@
                     </td>
                     <td>
                         <div style="display: flex; align-items: center;">
-                            <img src="https://ui-avatars.com/api/?name=${app.patient_name}&background=f3f4f6" class="avatar-sm"> 
+                            <img src="https://ui-avatars.com/api/?name=${app.patient_name}&background=f3f4f6" class="avatar-sm" alt="Patient Avatar"> 
                             <span style="font-weight:500;">${app.patient_name || 'Anonymous'}</span>
                         </div>
                     </td>
                     <td>
                         <div style="display: flex; align-items: center;">
-                            <img src="https://ui-avatars.com/api/?name=${app.doctor_name}&background=random" class="avatar-sm">
+                            <img src="https://ui-avatars.com/api/?name=${app.doctor_name}&background=random" class="avatar-sm" alt="Doctor Avatar">
                             <span style="font-weight:500;">${app.doctor_name || 'Unassigned'}</span>
                         </div>
                     </td>
@@ -1734,11 +1738,11 @@
 
             container.innerHTML = pending.map(doc => {
                 return `
-                <div class="doc-card" onclick="window.location.href='admin_doctors.html#/doctors/detail/${doc.id}'">
+                <div class="doc-card" onclick="window.location.hash='#/doctors/detail/${doc.id}'">
                     <div style="width: 100%;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="doc-info">
-                                <img src="${doc.photo_url || `https://ui-avatars.com/api/?name=${doc.name}&background=random`}">
+                                <img src="${doc.photo_url || `https://ui-avatars.com/api/?name=${doc.name}&background=random`}" alt="Doctor Avatar">
                                 <div class="doc-info-text">
                                     <div class="name">${doc.name}</div>
                                     <div class="spec">${doc.specialty || "General"}</div>
