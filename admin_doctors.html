@@ -54,7 +54,7 @@
         .btn-primary:hover { background: #0052a3; }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* ====== DOCTOR & APPOINTMENTS FILTER TABS ====== */
+        /* ====== DOCTORS GRID VIEW ====== */
         .doc-filters { display: flex; gap: 4px; margin-bottom: 24px; background: #f3f4f6; padding: 4px; border-radius: 8px; width: max-content; }
         .doc-filter-btn { padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: 0.2s;}
         .doc-filter-btn.active { background: #fff; color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -1288,6 +1288,63 @@
                 btn.disabled = false;
             }
         }
+
+        // ================= ADD DOCTOR MODAL & SUBMISSION =================
+        window.openAddDoctorModal = function() { document.getElementById('addDoctorModal').style.display = 'flex'; };
+        window.closeAddDoctorModal = function() { document.getElementById('addDoctorModal').style.display = 'none'; };
+
+        window.updateFileText = function(input, textId) {
+            if(input.files.length > 0) {
+                document.getElementById(textId).innerText = input.files[0].name;
+            }
+        };
+
+        window.submitAdminNewDoctor = async function() {
+            const btn = document.getElementById('btnSubmitAddDoc');
+            btn.innerText = "Creating & Uploading...";
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append("name", document.getElementById('newDocName').value);
+                formData.append("email", document.getElementById('newDocEmail').value);
+                formData.append("password", document.getElementById('newDocPass').value);
+                formData.append("specialty", document.getElementById('newDocSpec').value);
+                formData.append("phone", document.getElementById('newDocPhone').value);
+                formData.append("location", document.getElementById('newDocLocation').value);
+
+                const appendFile = (inputId, formKey) => {
+                    const el = document.getElementById(inputId);
+                    if(el.files.length > 0) formData.append(formKey, el.files[0]);
+                };
+                appendFile('newDocPhoto', 'photo');
+                appendFile('newDocResume', 'resume');
+                appendFile('newDocAPC', 'apc');
+                appendFile('newDocMMC', 'mmc');
+
+                const res = await fetch(`${API_BASE}/admin/doctors/add`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }, 
+                    body: formData
+                });
+
+                if(!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || "Failed to create doctor account");
+                }
+
+                alert("Doctor successfully added and approved!");
+                document.getElementById('adminAddDocForm').reset();
+                closeAddDoctorModal();
+                loadCoreData();
+
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "Create & Approve Doctor";
+                btn.disabled = false;
+            }
+        };
 
         function logout() { localStorage.removeItem('admin_token'); window.location.href = "admin_login.html"; }
     </script>
