@@ -128,11 +128,15 @@
         .ac-status.completed { background: #dcfce7; color: #16a34a; }
         .ac-status.scheduled { background: #eff6ff; color: #0066cc; }
         .ac-status.cancelled { background: #fef2f2; color: #ef4444; }
+        .ac-status.pending { background: #fef3c7; color: #d97706; }
         .ac-detail-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;}
         .ac-label { color: var(--text-muted); }
         .ac-val { font-weight: 600; color: var(--text-main); }
         .ac-val.blue { color: var(--primary); text-transform: capitalize;}
         
+        .btn-appt-action { width: 100%; padding: 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn-appt-action:hover { background: var(--border-light); border-color: var(--text-muted); }
+
         .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-light); flex-wrap: wrap;}
         .page-btn { padding: 6px 12px; border: 1px solid var(--border); background: #fff; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .page-btn:hover:not(:disabled) { background: #f9fafb; color: var(--text-main); }
@@ -359,7 +363,7 @@
 
     </main>
 
-    <!-- EDIT DOCTOR MODAL -->
+    <!-- EDIT DOCTOR PROFILE MODAL -->
     <div id="editDoctorModal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -390,6 +394,94 @@
         </div>
     </div>
 
+    <!-- DETAIL APPOINTMENT MODAL (With Prescription Billing pricing fields) -->
+    <div id="apptDetailModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><span>📋</span> Detail Appointment</h2>
+                <button class="modal-close" onclick="closeApptDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Patient Info Card -->
+                <div class="ac-user" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+                    <img src="" id="modal-appt-patient-img" style="width: 48px; height: 48px; border-radius: 50%;">
+                    <div>
+                        <div class="ac-name" id="modal-appt-patient-name" style="font-size: 16px; font-weight: 700;">Patient Name</div>
+                        <div class="ac-email" id="modal-appt-patient-email" style="font-size: 13px; color: var(--text-muted);">patient@email.com</div>
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name & Age</label>
+                        <input type="text" id="modal-appt-name-age" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" id="modal-appt-email" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Type Appointment</label>
+                    <input type="text" id="modal-appt-type" class="form-control" readonly>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Symptoms</label>
+                    <div id="modal-appt-symptoms" style="background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; white-space: pre-wrap;">No symptoms specified.</div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Doctor</label>
+                    <input type="text" id="modal-appt-doctor" class="form-control" readonly>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="text" id="modal-appt-date" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <input type="text" id="modal-appt-time" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-grid" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label>Method Payment</label>
+                        <input type="text" id="modal-appt-payment" class="form-control" value="Stripe / Card" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="modal-appt-location" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 16px; margin-bottom: 16px;">
+                    <label>Appointment Status</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="modal-appt-status-badge" class="ac-status" style="font-size: 13px; padding: 6px 12px;">Scheduled</span>
+                    </div>
+                </div>
+                
+                <!-- Prescription & Price Billing Section -->
+                <div id="modal-prescription-section" style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 20px;">
+                    <h3 class="section-title">Prescription Billing Details</h3>
+                    <div id="modal-prescription-list">
+                        <!-- Populated dynamically via JS with Price & Qty fields -->
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="padding: 16px 0 0 0; margin-top:24px;">
+                    <button type="button" class="btn-cancel" onclick="closeApptDetailModal()">Close</button>
+                    <button type="button" class="btn-add-submit" id="btnSubmitPrescBilling" onclick="submitPrescriptionBilling()">Save & Send Bill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = "https://api.doktura.ai/api";
         const token = localStorage.getItem('admin_token');
@@ -400,6 +492,7 @@
         let allAppointmentsData = [];
         let currentFilterState = 'All';
         let currentlyViewingDocId = null; 
+        let currentViewingAppt = null;
 
         // Pagination and Search specifically for the Doctor Appts Tab
         let currentDocAppts = [];
@@ -697,6 +790,7 @@
                 let statusClass = 'scheduled';
                 if (a.status === 'completed') statusClass = 'completed';
                 if (a.status === 'cancelled') statusClass = 'cancelled';
+                if (a.status === 'pending') statusClass = 'pending';
                 
                 const d = new Date(a.preferred_datetime || a.created_at);
                 const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -707,6 +801,17 @@
                     amount = 38.0; 
                 }
                 const amtStr = `MYR ${amount.toFixed(2)}`;
+
+                let actionBtnHtml = '';
+                if (a.status === 'pending') {
+                    actionBtnHtml = `
+                    <div style="display: flex; gap: 8px; width: 100%; margin-top: 8px;">
+                        <button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="flex: 1;">Details</button>
+                        <button class="btn-reject" onclick="alert('Action Restricted')" style="padding: 8px; font-size: 12px; border-radius: 8px; flex: 1;">Cancel</button>
+                    </div>`;
+                } else {
+                    actionBtnHtml = `<button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="margin-top: 8px;">Details</button>`;
+                }
                 
                 return `
                 <div class="appt-card">
@@ -719,6 +824,7 @@
                         <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
                         <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">${amtStr}</span></div>
                     </div>
+                    ${actionBtnHtml}
                 </div>`;
             }).join('');
 
@@ -818,6 +924,125 @@
                 alert("Error: " + e.message);
             } finally {
                 btn.innerText = "Save Changes";
+                btn.disabled = false;
+            }
+        }
+
+        // ================= APPOINTMENT DETAILS & PRESCRIPTION BILLING =================
+        window.openApptDetailModal = function(apptId) {
+            const appt = allAppointmentsData.find(a => a.id === apptId);
+            if (!appt) return;
+            currentViewingAppt = appt;
+
+            // Populate elements
+            document.getElementById('modal-appt-patient-name').innerText = appt.patient_name || 'Unknown Patient';
+            document.getElementById('modal-appt-patient-email').innerText = appt.patient_email || 'N/A';
+            document.getElementById('modal-appt-patient-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(appt.patient_name || 'P')}&background=eff6ff&color=0066cc`;
+
+            document.getElementById('modal-appt-name-age').value = appt.patient_name || 'N/A';
+            document.getElementById('modal-appt-email').value = appt.patient_email || 'N/A';
+            document.getElementById('modal-appt-type').value = (appt.type || 'Online').replace('-', ' ').toUpperCase();
+            document.getElementById('modal-appt-symptoms').innerText = appt.symptoms || 'No symptoms specified.';
+            document.getElementById('modal-appt-doctor').value = appt.doctor_name || 'Unassigned';
+
+            const d = new Date(appt.preferred_datetime || appt.created_at);
+            document.getElementById('modal-appt-date').value = d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+            document.getElementById('modal-appt-time').value = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('modal-appt-payment').value = 'Stripe / Card (Paid)';
+            document.getElementById('modal-appt-location').value = appt.location || 'Dental Clinic (Doktura HQ)';
+
+            const badge = document.getElementById('modal-appt-status-badge');
+            badge.className = `ac-status ${appt.status}`;
+            badge.innerText = appt.status.replace('_', ' ');
+
+            // Prescription billing setup
+            const listContainer = document.getElementById('modal-prescription-list');
+            const submitBtn = document.getElementById('btnSubmitPrescBilling');
+
+            if (appt.consultation_completed) {
+                submitBtn.style.display = 'block';
+                if (appt.medications && appt.medications.length > 0) {
+                    listContainer.innerHTML = appt.medications.map((m, index) => {
+                        return `
+                        <div style="background: #f9fafb; border: 1px solid var(--border-light); padding: 16px; border-radius: 12px; margin-bottom: 12px;">
+                            <div style="font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--text-main);">${m.name}</div>
+                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                                ${m.dosage ? `${m.dosage} ` : ''}${m.uom || ''} | ${m.frequency || ''} | ${m.duration || ''}
+                                ${m.notes ? `<br><span style="font-style: italic; color: #b45309;">${m.notes}</span>` : ''}
+                            </div>
+                            <div class="form-grid" style="margin-bottom: 0;">
+                                <div class="form-group">
+                                    <label style="font-size: 11px;">Quantity *</label>
+                                    <input type="number" step="1" class="form-control med-qty-input" data-index="${index}" value="${m.quantity || 1.0}" style="padding: 8px 12px;">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size: 11px;">Price (RM) *</label>
+                                    <input type="number" step="0.1" class="form-control med-price-input" data-index="${index}" value="${m.price || 0.0}" style="padding: 8px 12px;">
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No medications were prescribed for this appointment.</p>`;
+                    submitBtn.style.display = 'none';
+                }
+            } else {
+                listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">Prescription will be available once the consultation is marked as completed by the Doctor.</p>`;
+                submitBtn.style.display = 'none';
+            }
+
+            document.getElementById('apptDetailModal').style.display = 'flex';
+        };
+
+        window.closeApptDetailModal = function() {
+            document.getElementById('apptDetailModal').style.display = 'none';
+            currentViewingAppt = null;
+        };
+
+        async function submitPrescriptionBilling() {
+            if (!currentViewingAppt) return;
+            const btn = document.getElementById('btnSubmitPrescBilling');
+            btn.innerText = "Sending Bill...";
+            btn.disabled = true;
+
+            const updatedMeds = [];
+            const qtyInputs = document.querySelectorAll('#modal-prescription-list .med-qty-input');
+            const priceInputs = document.querySelectorAll('#modal-prescription-list .med-price-input');
+
+            currentViewingAppt.medications.forEach((med, index) => {
+                const qty = parseFloat(qtyInputs[index].value) || 1.0;
+                const price = parseFloat(priceInputs[index].value) || 0.0;
+                
+                updatedMeds.push({
+                    name: med.name,
+                    dosage: parseFloat(med.dosage) || 1.0,
+                    uom: med.uom || 'TAB',
+                    frequency: med.frequency || 'ONCE A DAY',
+                    duration: med.duration || '3 DAY(S)',
+                    quantity: qty,
+                    notes: med.notes || '',
+                    price: price
+                });
+            });
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/prescription/${currentViewingAppt.id}/price`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({ medications: updatedMeds })
+                });
+
+                if (!res.ok) throw new Error("Failed to set prescription price");
+                
+                alert("Bill finalized and prescription details sent to patient successfully!");
+                closeApptDetailModal();
+                loadCoreData(); 
+
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerText = "Save & Send Bill";
                 btn.disabled = false;
             }
         }
