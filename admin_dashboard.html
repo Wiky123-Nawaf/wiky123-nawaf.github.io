@@ -196,7 +196,7 @@
         .file-upload-box input[type="file"] { opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
         .file-name-display { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* ====== VIEW PATIENT MODAL ====== */
+        /* ====== VIEW PATIENT MODAL (SCREENSHOT UI) ====== */
         .vp-modal-box { max-width: 850px !important; border-radius: 16px; padding: 0; }
         .vp-header-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: #111827;}
         .vp-profile-section { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
@@ -1033,7 +1033,8 @@
                 let active = 0; let past = 0; let online = 0; let clinic = 0;
                 allAppointmentsData.forEach(a => {
                     const apptDate = new Date(a.preferred_datetime || a.created_at);
-                    const isCompleted = a.status === 'completed' || a.status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+                    const status = (a.status || '').toLowerCase();
+                    const isCompleted = status === 'completed' || status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
                     const isUpcoming = !isCompleted && apptDate >= now;
                     if (isUpcoming) active++; else past++;
                 });
@@ -1058,7 +1059,6 @@
             const now = new Date();
             document.getElementById('stat-patients').innerText = allPatientsData.length;
             document.getElementById('stat-doctors').innerText = allDoctorsData.length;
-            document.getElementById('stat-appts').innerText = allAppointmentsData.length;
 
             const currentMonth = now.getMonth();
             const currentYear = now.getFullYear();
@@ -1079,11 +1079,15 @@
             let active = 0; let past = 0;
             allAppointmentsData.forEach(a => {
                 const apptDate = new Date(a.preferred_datetime || a.created_at);
-                const isCompleted = a.status === 'completed' || a.status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+                const status = (a.status || '').toLowerCase();
+                const isCompleted = status === 'completed' || status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
                 const isUpcoming = !isCompleted && apptDate >= now;
                 if (isUpcoming) active++;
                 else past++;
             });
+            
+            // Set big number of Active card dynamically based on calculated active state
+            document.getElementById('stat-appts').innerText = active;
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
         }
 
@@ -1128,7 +1132,8 @@
             
             const futureAppts = allAppointmentsData.filter(a => {
                 const d = new Date(a.preferred_datetime || a.created_at);
-                const isCompleted = a.status === 'completed' || a.status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+                const status = (a.status || '').toLowerCase();
+                const isCompleted = status === 'completed' || status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
                 return d >= now && !isCompleted;
             });
 
