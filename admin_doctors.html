@@ -760,7 +760,7 @@
         }
 
         // ================= DYNAMIC ROUTE SWITCHER =================
-        function switchMainView(view) {
+        window.switchMainView = function(view) {
             currentlyViewingDocId = null;
             
             // Adjust Sidebar Class Actions
@@ -1192,7 +1192,7 @@
             document.getElementById('modal-appt-time').value = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
             document.getElementById('modal-appt-payment').value = 'Stripe / Card (Paid)';
-            document.getElementById('modal-appt-location').value = appt.location || 'Dental Clinic (Doktura HQ)';
+            document.getElementById('modal-appt-location').value = appt.location || 'Dental Clinic (Dental Clinic (Doktura HQ))';
 
             const badge = document.getElementById('modal-appt-status-badge');
             badge.className = `ac-status ${appt.status}`;
