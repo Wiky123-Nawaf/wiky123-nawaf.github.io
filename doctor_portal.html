@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doktura AI - Doctor Portal</title>
-    <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
+    <link class="favicon" rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <style>
         /* ================= BASE STYLES ================= */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,7 +74,7 @@
         .file-upload-box.disabled { opacity: 0.6; cursor: not-allowed; }
         .file-upload-box input[type="file"] { opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
         .file-upload-box input[type="file"]:disabled { cursor: not-allowed; }
-        .file-name-display { font-size: 12px; color: #0066cc; margin-top: 8px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-upload-box class { font-size: 12px; color: #0066cc; margin-top: 8px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* Password Strength Meter */
         .strength-bars { display: flex; gap: 4px; margin-top: 8px; }
@@ -184,7 +184,7 @@
 
         /* ================= MODAL OVERLAYS & SPINNERS ================= */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 24, 39, 0.7); display: flex; justify-content: center; align-items: center; z-index: 999; padding: 20px; backdrop-filter: blur(2px); }
-        .presc-modal { background: #fff; border-radius: 16px; width: 100%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .presc-modal { background: #fff; border-radius: 16px; width: 100%; max-width: 650px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         .presc-header { padding: 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
         .presc-header h2 { font-size: 18px; font-weight: 700; margin: 0; }
         .presc-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; }
@@ -1511,23 +1511,124 @@
                             <input type="text" id="medName_${id}" class="form-control med-name-input" placeholder="e.g. Panadol" autocomplete="off" onkeyup="handleMedSearch(this, ${id})">
                             <div id="medDropdown_${id}" class="autocomplete-list"></div>
                         </div>
-                        <div class="form-group">
-                            <label>Timing</label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="timing_${id}" value="Before meal"> Before meal</label>
-                                <label><input type="radio" name="timing_${id}" value="After meal" checked> After meal</label>
-                            </div>
-                        </div>
                     </div>
+
+                    <!-- Default Prescription Section -->
+                    <div style="font-size: 13px; font-weight: 600; color: #4b5563; margin-top: 12px; margin-bottom: 8px;">Default Prescription:</div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Dose</label>
-                            <input type="text" id="medDose_${id}" class="form-control med-dose-input" placeholder="e.g. 2.5 mg">
+                            <label>Dosage *</label>
+                            <input type="number" step="0.01" id="medDosage_${id}" class="form-control" value="1.00" required>
                         </div>
                         <div class="form-group">
-                            <label>Pills per Day</label>
-                            <input type="number" id="medPills_${id}" class="form-control med-pills-input" placeholder="e.g. 2">
+                            <label>UoM *</label>
+                            <select id="medUom_${id}" class="form-control" onchange="document.getElementById('medDispUom_${id}').value = this.value" required>
+                                <option value="TAB" selected>TAB</option>
+                                <option value="CAPSULE">CAPSULE</option>
+                                <option value="AMPOULE">AMPOULE</option>
+                                <option value="BOTTLE">BOTTLE</option>
+                                <option value="BOX">BOX</option>
+                                <option value="CAP">CAP</option>
+                                <option value="DROP">DROP</option>
+                                <option value="GUMMY">GUMMY</option>
+                                <option value="KIT">KIT</option>
+                                <option value="KUMUR">KUMUR</option>
+                                <option value="MICRO DOSE">MICRO DOSE</option>
+                                <option value="ML">ML</option>
+                                <option value="PACK">PACK</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="PCS">PCS</option>
+                                <option value="PEN">PEN</option>
+                                <option value="PER DOSE">PER DOSE</option>
+                                <option value="PESS">PESS</option>
+                                <option value="PUFF">PUFF</option>
+                                <option value="RESPULES">RESPULES</option>
+                                <option value="SACC">SACC</option>
+                                <option value="SAPU">SAPU</option>
+                                <option value="SPRAY">SPRAY</option>
+                                <option value="STRIP">STRIP</option>
+                                <option value="SUPP">SUPP</option>
+                                <option value="TUB">TUB</option>
+                                <option value="TUBE">TUBE</option>
+                                <option value="UNIT">UNIT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Drug Frequency *</label>
+                            <select id="medFrequency_${id}" class="form-control" required>
+                                <option value="ONCE A DAY" selected>ONCE A DAY</option>
+                                <option value="2 TIMES A DAY">2 TIMES A DAY</option>
+                                <option value="3 TIMES A DAY">3 TIMES A DAY</option>
+                                <option value="4 TIME A DAY">4 TIME A DAY</option>
+                                <option value="4 TIMES A DAY WHEN NECESSARY">4 TIMES A DAY WHEN NECESSARY</option>
+                                <option value="5 TIMES A DAY">5 TIMES A DAY</option>
+                                <option value="AFTER DINNER">AFTER DINNER</option>
+                                <option value="AT BEDTIME">AT BEDTIME</option>
+                                <option value="AT NIGHT">AT NIGHT</option>
+                                <option value="EVERY ALTERNATE DAY">EVERY ALTERNATE DAY</option>
+                                <option value="IN THE MORNING">IN THE MORNING</option>
+                                <option value="ONCE A WEEK">ONCE A WEEK</option>
+                                <option value="STAT">STAT</option>
+                                <option value="TAKE AS PRESCRIBED">TAKE AS PRESCRIBED</option>
+                                <option value="THREE TIMES A WEEK ON MONDAY,WEDNESDAY,FRIDAY">THREE TIMES A WEEK ON MONDAY,WEDNESDAY,FRIDAY</option>
+                                <option value="THREE TIMES A WEEK ON WEDNESDAY,FRIDAY AND SUNDAY">THREE TIMES A WEEK ON WEDNESDAY,FRIDAY AND SUNDAY</option>
+                                <option value="THREE TIMES A WEEK, TUESDAY,THURSDAY AND SATURDAY">THREE TIMES A WEEK, TUESDAY,THURSDAY AND SATURDAY</option>
+                                <option value="WHEN NECESSARY">WHEN NECESSARY</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Drug Duration *</label>
+                            <select id="medDuration_${id}" class="form-control" required>
+                                <option value="1 DAY(S)">1 DAY(S)</option>
+                                <option value="1 DAY">1 DAY</option>
+                                <option value="3 DAY(S)" selected>3 DAY(S)</option>
+                                <option value="5 DAY(S)">5 DAY(S)</option>
+                                <option value="7 DAY">7 DAY</option>
+                                <option value="1 WEEK(S)">1 WEEK(S)</option>
+                                <option value="2 WEEK(S)">2 WEEK(S)</option>
+                                <option value="1 MONTH(S)">1 MONTH(S)</option>
+                                <option value="1 YEAR(S)">1 YEAR(S)</option>
+                                <option value="OTHERS">OTHERS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Drug Reason *</label>
+                            <select id="medReason_${id}" class="form-control" required>
+                                <option value="General Medical Condition" selected>General Medical Condition</option>
+                                <option value="Pain Relief">Pain Relief</option>
+                                <option value="Infection">Infection</option>
+                                <option value="Fever">Fever</option>
+                                <option value="Inflammation">Inflammation</option>
+                                <option value="High Blood Pressure">High Blood Pressure</option>
+                                <option value="Diabetes">Diabetes</option>
+                                <option value="Cough/Cold">Cough/Cold</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <input type="text" id="medNotes_${id}" class="form-control" placeholder="ADD NOTES">
+                        </div>
+                    </div>
+
+                    <!-- Default Billing Quantity Section -->
+                    <div style="font-size: 13px; font-weight: 600; color: #4b5563; margin-top: 12px; margin-bottom: 8px;">Default Billing Quantity:</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Quantity *</label>
+                            <input type="number" step="0.01" id="medQty_${id}" class="form-control" value="10.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Dispensing UoM</label>
+                            <input type="text" id="medDispUom_${id}" class="form-control" value="TAB" readonly>
                         </div>
                     </div>
                 </div>
@@ -1600,15 +1701,30 @@
             medBlocks.forEach(block => {
                 const id = block.id.split('_')[1];
                 const name = document.getElementById(`medName_${id}`).value.trim();
-                const timing = document.querySelector(`input[name="timing_${id}"]:checked`)?.value || "After meal";
-                const dose = document.getElementById(`medDose_${id}`).value.trim();
-                const pills = document.getElementById(`medPills_${id}`).value.trim();
+                const dosage = parseFloat(document.getElementById(`medDosage_${id}`).value) || 1.0;
+                const uom = document.getElementById(`medUom_${id}`).value;
+                const frequency = document.getElementById(`medFrequency_${id}`).value;
+                const duration = document.getElementById(`medDuration_${id}`).value;
+                const quantity = parseFloat(document.getElementById(`medQty_${id}`).value) || 1.0;
+                
+                const reason = document.getElementById(`medReason_${id}`).value;
+                const notesVal = document.getElementById(`medNotes_${id}`).value.trim();
+                
+                let combinedNotes = `Reason: ${reason}`;
+                if (notesVal) {
+                    combinedNotes += ` | Notes: ${notesVal}`;
+                }
 
                 if(name) {
                     medications.push({
-                        name: `${name} (${timing})`,
-                        dose: dose,
-                        pills_per_day: pills
+                        name: name,
+                        dosage: dosage,
+                        uom: uom,
+                        frequency: frequency,
+                        duration: duration,
+                        quantity: quantity,
+                        notes: combinedNotes,
+                        price: 0.0
                     });
                 }
             });
@@ -1649,7 +1765,6 @@
             showGlobalLoader("Authenticating...");
             try { 
                 await signInWithEmailAndPassword(auth, document.getElementById("loginEmail").value.trim(), document.getElementById("loginPass").value.trim()); 
-                // onAuthStateChanged will handle the redirect
             } catch(e) { 
                 hideGlobalLoader();
                 showAlert("Invalid Credentials or User Not Found."); 
@@ -1696,7 +1811,6 @@
             showGlobalLoader("Securing account...");
             try {
                 await updatePassword(auth.currentUser, pass1);
-                // Success! Now force them to Complete Profile via sync logic
                 await triggerSync(auth.currentUser, true); 
             } catch(e) {
                 hideGlobalLoader();
@@ -1760,7 +1874,6 @@
                 
                 const data = await res.json();
 
-                // --- CRITICAL FIX: Fetch availability if missing from sync payload ---
                 if (!data.availability || Object.keys(data.availability).length === 0) {
                     try {
                         const docsRes = await fetch(`${API_BASE}/api/doctors`);
@@ -1771,13 +1884,12 @@
                         }
                     } catch(e) { console.warn("Could not fetch extended availability"); }
                 }
-                // -------------------------------------------------------------------
                 
                 let phoneClean = data.phone || "";
                 if(phoneClean.startsWith("+60")) phoneClean = phoneClean.substring(3).trim();
                 
                 hideGlobalLoader();
-                isProcessingLink = false; // release block
+                isProcessingLink = false;
                 
                 if(data.is_complete || data.status === 'approved') { 
                     if (forceCompleteData && !data.is_complete) {
@@ -1800,10 +1912,9 @@
                         document.getElementById('dashPhone').value = phoneClean;
                         document.getElementById('dashLocation').value = data.location || "";
 
-                        // Inject Schedule UI reading from Backend (data.availability)
                         renderScheduleUI(data.availability || {});
 
-                        setupRealTimeNotifications(data.id);
+                        setupRealTimeNotifications(user.uid);
                         
                         if(data.status === 'approved' && !localStorage.getItem('approved_notified')) {
                             alert("Congratulations! Your Doctor profile has been verified and approved by admins.");
@@ -1830,14 +1941,11 @@
         }
 
         onAuthStateChanged(auth, async (user) => {
-            if (isProcessingLink) return; // Wait for processing the URL intercept logic
+            if (isProcessingLink) return;
             
             if (user) {
-                // I have removed the strict email verification check here. 
-                // Now you can log in immediately with your manually created Firebase accounts!
                 await triggerSync(user);
             } else {
-                // FIX: If there is no user, ALWAYS hide the spinner so it doesn't get stuck!
                 hideGlobalLoader(); 
                 
                 if(document.getElementById('actionStatusModal').style.display !== 'flex') {
@@ -1846,7 +1954,7 @@
             }
         });
 
-        // ================= PASSWORD STRENGTH METER (Updated ID) ================= //
+        // ================= PASSWORD STRENGTH METER ================= //
         document.getElementById('setPass1').addEventListener('input', function(e) {
             const pw = e.target.value;
             const hasLen = pw.length >= 8;
@@ -2021,7 +2129,7 @@
             container.innerHTML = html;
         }
 
-        // Handle Doctor Saving their own schedule (Mock/Alert or Future Backend Sync)
+        // Handle Doctor Saving their own schedule
         document.getElementById("saveScheduleBtn").addEventListener("click", async () => {
             showGlobalLoader("Saving Schedule...");
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -2037,9 +2145,6 @@
             });
 
             try {
-                // If a backend endpoint is added later (e.g. /api/doctor/schedule), this will execute it.
-                // Currently, since main.py doesn't have an endpoint for Doctors to save this directly, 
-                // we will throw an error to trigger the catch block and warn the user.
                 const token = await auth.currentUser.getIdToken(true);
                 const res = await fetch(`${API_BASE}/api/doctor/schedule`, {
                     method: 'PUT',
@@ -2082,7 +2187,7 @@
         async function handleEmailSignIn(email) {
             showGlobalLoader("Verifying your email...");
             try {
-                if (auth.currentUser) await signOut(auth); // Clear stale cache
+                if (auth.currentUser) await signOut(auth);
                 
                 const result = await signInWithEmailLink(auth, email, window.location.href);
                 window.localStorage.removeItem('doctorEmailForSignIn');
@@ -2147,7 +2252,6 @@
             });
         }
 
-        // Fallback Initialization of empty UI
         renderScheduleUI({});
 
     </script>
