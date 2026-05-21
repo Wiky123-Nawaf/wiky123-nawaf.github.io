@@ -263,7 +263,7 @@
         .toast-notification.warning { border-left-color: var(--warning); }
         .toast-close { background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 16px; margin-left: auto;}
         @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
-        @keyframes slideOut { from { transform: translateX(0); } to { transform: translateX(120%); } }
+        @keyframes slideOut { from { transform: translateX(120%); } to { transform: translateX(0); } }
 
         /* ====== RESPONSIVE MEDIA QUERIES ====== */
         @media (max-width: 1100px) {
@@ -355,7 +355,7 @@
         <!-- Overlay for mobile sidebar -->
         <div id="sidebarOverlay" class="modal-overlay" style="display: none; z-index: 1000;" onclick="toggleSidebar()"></div>
 
-        <!-- STANDARDIZED HEADER -->
+        <!-- STANDARDIZED HEADER - Standardized with the Admin Dashboard -->
         <header>
             <div class="header-left">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -366,35 +366,33 @@
             </div>
             
             <div class="header-right">
-                <!-- Notification Bell with explicitly defined separator line -->
-                <div class="notif-wrapper">
-                    <div class="notif-container">
-                        <div class="bell-icon" onclick="toggleNotifications()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
-                            <span id="bellBadge" class="bell-badge" style="display:none;">0</span>
+                <div class="notif-container">
+                    <!-- Standardized Bell Icon with vertical separator line style from dashboard -->
+                    <div class="bell-icon" onclick="toggleNotifications()" style="padding-right: 16px; border-right: 1px solid var(--border);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span id="bellBadge" class="bell-badge" style="display:none; right: 10px;">0</span>
+                    </div>
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>Notifications</span>
+                            <span onclick="clearAllNotifications()" style="color:var(--primary); cursor:pointer;">Clear All</span>
                         </div>
-                        <div class="notif-dropdown" id="notifDropdown">
-                            <div class="notif-header">
-                                <span>Notifications</span>
-                                <span onclick="clearAllNotifications()" style="color:var(--primary); cursor:pointer;">Clear All</span>
-                            </div>
-                            <div class="notif-list" id="notifList">
-                                <div style="text-align:center; padding:20px; color:var(--text-light); font-size:12px;">No unread alerts.</div>
-                            </div>
+                        <div class="notif-list" id="notifList">
+                            <div style="text-align:center; padding:20px; color:var(--text-light); font-size:12px;">No unread alerts.</div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Structured User Account Display -->
-                <div class="user-profile-top">
-                    <div class="user-info-top">
-                        <span class="name">Super Admin</span>
-                        <span class="role">Admin</span>
+                <div class="user-profile-top" style="margin-left: 20px;">
+                    <div class="user-info-sm" style="text-align: right; display: flex; flex-direction: column;">
+                        <span class="name" style="font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.2;">Admin</span>
+                        <span class="email" style="font-size: 12px; color: var(--text-muted); line-height: 1.2;">Super Admin</span>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name=Super+Admin&background=0284c7&color=fff" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
                 </div>
             </div>
         </header>
