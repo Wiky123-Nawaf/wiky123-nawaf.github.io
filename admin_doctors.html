@@ -35,7 +35,7 @@
         .sidebar-bottom { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
         .user-profile-sm { display: flex; align-items: center; gap: 12px; width: 100%; justify-content: space-between;}
         .user-info-wrapper { display: flex; align-items: center; gap: 12px; overflow: hidden; }
-        .user-profile-sm img { width: 36px; height: 36px; border-radius: 8px; }
+        .user-profile-sm img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover;}
         .user-profile-sm .name { font-size: 13px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .user-profile-sm .email { font-size: 11px; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .logout-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; transition: 0.2s; padding: 4px;}
@@ -87,11 +87,10 @@
 
         /* Structured User Profile Area */
         .user-profile-top { display: flex; align-items: center; gap: 12px; cursor: pointer;}
-        .user-info-top { display: flex; flex-direction: column; align-items: flex-end; }
+        .user-info-top { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
         .user-info-top .name { font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.2;}
         .user-info-top .role { font-size: 12px; color: var(--text-muted); line-height: 1.2;}
 
-        /* ====== MAIN BODY CONTENT ====== */
         .dashboard-body { padding: 32px; max-width: 1400px; margin: 0 auto; width: 100%; display: none; }
         .dashboard-body.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -325,7 +324,7 @@
                         Appointments
                     </a></li>
                     <li><a id="nav-settings" href="admin_dashboard.html#/settings" onclick="closeSidebarMobile()">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-1.82-.33l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> 
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> 
                         Settings
                     </a></li>
                 </ul>
@@ -391,10 +390,10 @@
                 <!-- Structured User Account Display -->
                 <div class="user-profile-top">
                     <div class="user-info-top">
-                        <span class="name">Super Admin</span>
-                        <span class="role">Admin</span>
+                        <span class="name">Admin</span>
+                        <span class="role">Super Admin</span>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name=Super+Admin&background=0284c7&color=fff" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" alt="Avatar">
                 </div>
             </div>
         </header>
