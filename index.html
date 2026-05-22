@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="color-scheme" content="light">
-    <title>doktura.ai - AI Medical Assistant</title>
+    <title>Doktura.ai - AI Medical Assistant</title>
 
     <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,58 +119,27 @@
             justify-content: center; 
         }
         .hero-content-top { width: 100%; display: flex; justify-content: center; }
-        .chat-content-bottom { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .chat-content-bottom { width: 100%; display: flex; justify-content: center; }
 
         .hero { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 24px 0 16px 0; 
+            padding: 4px 0 32px 0; 
             text-align: center; 
             position: relative; 
             gap: 0; 
-            max-width: 800px; 
+            max-width: 900px; 
             margin: 0 auto; 
         }
         .hero-fig2 { height: 60px; width: auto; margin-bottom: 24px; object-fit: contain; } 
 
-        .hero h1 { 
-            font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-            font-size: 44px; 
-            line-height: 1.25; 
-            margin-bottom: 20px; 
-            letter-spacing: -0.5px; 
-            color: var(--text-dark); 
-            font-weight: 700; 
-            width: 100%; 
-            text-align: center; 
-        }
+        .hero h1 { font-size: 56px; line-height: 1.1; margin-bottom: 32px; letter-spacing: -1px; color: var(--text-dark); font-weight: 500; width: 100%; text-align: center; }
         .hero h1 strong { font-weight: 800; }
 
-        .hero-description { max-width: 600px; width: 100%; margin: 0 auto; text-align: center; }
-        .hero-description p { font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 16px; text-align: center; }
-        .hero-description p.hero-subtitle { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 20px; }
+        .hero-description { max-width: 760px; width: 100%; margin: 0 auto; text-align: left; }
+        .hero-description p { font-size: 16px; color: #1a1a1a; line-height: 1.6; margin-bottom: 20px; }
         .hero-description p:last-child { margin-bottom: 0; }
-
-        /* Trustpilot rating badge styling */
-        .rating-badge-trustpilot {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background-color: #f1f5f9;
-            padding: 4px 12px;
-            border-radius: 999px;
-            margin-bottom: 16px;
-        }
-        .stars-trustpilot {
-            display: flex;
-            gap: 2px;
-        }
-        .rating-score {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0f172a;
-        }
 
         /* --- Chat Interface --- */
         .chat-section { 
@@ -180,7 +149,7 @@
             align-items: center;
             justify-content: center; 
             padding-bottom: 0; 
-            padding-top: 12px; 
+            padding-top: 24px; 
         }
 
         .chat-container { 
@@ -197,11 +166,10 @@
             flex-direction: column;
         }
 
-        .chat-tabs-wrapper { display: flex; justify-content: center; margin-bottom: 24px; width: 100%; padding: 4px 0; }
-        .chat-tabs { display: inline-flex; align-items: center; justify-content: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 999px; padding: 4px; gap: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); flex-wrap: nowrap; }
-        .tab-btn { border: none; padding: 8px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #64748b; background: transparent; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+        .chat-tabs-wrapper { display: flex; justify-content: center; margin-bottom: 24px; width: 100%; }
+        .chat-tabs { display: inline-flex; align-items: center; background: #ffffff; border: 1px solid #f1f5f9; border-radius: 999px; padding: 4px; gap: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .tab-btn { border: none; padding: 8px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #64748b; background: transparent; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .tab-btn.active { background: #eff6ff; color: var(--primary-blue); }
-        .tab-icon { flex-shrink: 0; }
 
         #chat-history {
             max-height: 450px;
@@ -579,44 +547,6 @@
         .social-icons a { color: #ffffff; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; }
         .social-icons a:hover { opacity: 0.7; }
 
-        /* --- University Logos Trust Section Styling --- */
-        .university-logos-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 32px;
-            width: 100%;
-        }
-        .logos-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #94a3b8;
-            font-weight: 700;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-        .logos-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            opacity: 0.65;
-            filter: grayscale(100%);
-            transition: opacity 0.2s, filter 0.2s;
-        }
-        .logos-row:hover {
-            opacity: 0.9;
-            filter: grayscale(0%);
-        }
-        .logo-img {
-            height: 20px;
-            width: auto;
-            object-fit: contain;
-        }
-
         @media (max-width: 1024px) {
             .join-doctor-section { flex-direction: column-reverse; gap: 50px; }
             .join-doctor-left { flex: auto; width: 100%; max-width: 600px; margin: 0 auto; }
@@ -678,18 +608,7 @@
                 padding-bottom: calc(32px + env(safe-area-inset-bottom, 24px)) !important;
             }
 
-            /* FORCE NATURAL EDITORIAL VERTICAL FLOW ON MOBILE */
-            .hero-chat-wrapper { 
-                display: flex; 
-                width: 100%; 
-                align-items: center; 
-                flex-direction: column; 
-                justify-content: flex-start;
-                min-height: calc(100dvh - 56px); /* Compensate precisely for header height */
-                padding: 32px 16px 24px 16px;
-                box-sizing: border-box;
-                gap: 20px; /* Uniform, balanced vertical gaps */
-            }
+            .hero-chat-wrapper { display: flex; width: 100%; align-items: center; flex-direction: column; min-height: auto; }
             .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 0px; }
             .chat-content-bottom {
                 display: flex;
@@ -699,44 +618,27 @@
                 bottom: auto;
                 z-index: auto;
                 margin: 0; 
-                padding: 0;
+                padding: 0 0 24px 0;
                 background: transparent;
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
                 border-top: none;
                 box-shadow: none;
-                margin-top: auto; /* Forces chat box elegantly towards the bottom of the viewport fold layout */
             }
 
-            .hero { padding: 0; align-items: center; text-align: center; max-width: 100%; margin-bottom: auto; gap: 12px; }
-            .hero-fig2 { height: 48px; margin: 0 auto; display: block; } /* Enlarge avatars slightly */
-            
-            /* Georgian Editorial Heading style matching Doctronics */
-            .hero h1 { 
-                font-family: Georgia, Cambria, "Times New Roman", Times, serif; 
-                font-size: 30px; 
-                margin-bottom: 8px; 
-                text-align: center; 
-                width: 100%; 
-                letter-spacing: -0.5px; 
-                font-weight: 700; 
-                line-height: 1.2; 
-            }
-            
-            /* Normalized Hero Description with Enhanced Sizing and Spacing */
-            .hero-description { padding: 0; width: 100%; text-align: center; display: flex; flex-direction: column; gap: 8px; }
-            .hero-description p.hero-subtitle { font-size: 15px; margin-bottom: 8px; font-weight: 700 !important; color: #111111 !important; text-align: center !important; }
-            .hero-description p { font-size: 14px !important; margin-bottom: 0 !important; line-height: 1.5 !important; color: #475569 !important; text-align: center !important; }
+            .hero { padding: 8px 0; align-items: flex-start; text-align: left; max-width: 100%; }
+            .hero-fig2 { height: 36px; margin: 0 auto 12px auto; display: block; }
+            .hero h1 { font-size: 28px; margin-bottom: 12px; text-align: center; width: 100%; letter-spacing: -0.5px; font-weight: 500; line-height: 1.1; }
+            .hero-description { padding: 0; width: 100%; }
+            .hero-description p { font-size: 14px; margin-bottom: 8px; line-height: 1.4; color: #1a1a1a; }
 
-            .chat-section { width: 100%; padding-top: 8px; padding-bottom: 0; align-items: center; }
+            .chat-section { width: 100%; padding-top: 12px; padding-bottom: 0; align-items: center; }
             .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); }
-            
-            /* Normalized Chat Tabs for Mobile (No scrolling) */
             .chat-tabs-wrapper { margin-bottom: 16px; width: 100%; } 
-            .chat-tabs { width: 100%; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); padding: 4px; border-radius: 999px; display: flex; flex-wrap: nowrap; }
-            .tab-btn { flex: 1; justify-content: center; padding: 8px 4px !important; background: transparent !important; font-size: clamp(11px, 3.5vw, 13px) !important; color: #94a3b8; font-weight: 500; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; }
+            .chat-tabs { width: 100%; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); padding: 4px; border-radius: 999px; }
+            .tab-btn { flex: 1; justify-content: center; padding: 8px 4px !important; background: transparent !important; font-size: clamp(11px, 3.5vw, 13px) !important; color: #94a3b8; font-weight: 500; white-space: nowrap !important; }
             .tab-btn.active { color: var(--primary-blue); font-weight: 600; background: #eff6ff !important; }
-            .tab-icon { margin-right: 4px; width: 14px; height: 14px; flex-shrink: 0; }
+            .tab-icon { margin-right: 6px; width: 14px; height: 14px; }
 
             .input-wrapper { min-height: 110px; padding: 12px; margin-bottom: 0; background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 16px; width: 100%; }
             .input-top-area { gap: 8px; }
@@ -809,18 +711,6 @@
             .footer-links-group { flex-direction: column; gap: 32px; }
             .footer-bottom { flex-direction: column; align-items: flex-start; gap: 24px; text-align: left; padding-top: 24px; }
             .social-area { flex-direction: column; align-items: flex-start; gap: 16px; }
-            
-            /* Trust Badges mobile specific sizing */
-            .university-logos-container {
-                margin-top: 24px;
-                padding-bottom: 32px; /* Keeps layout cozy in iPhone 14 fold view */
-            }
-            .logos-row {
-                gap: 16px;
-            }
-            .logo-img {
-                height: 16px;
-            }
         }
     </style>
 </head>
@@ -847,7 +737,7 @@
                 document.getElementById("userAvatarSidebar").src = user.photoURL || 'https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true';
 
                 const logoutBtn = document.getElementById("logoutBtn");
-                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>`;
+                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>`;
                 logoutBtn.removeAttribute("href");
                 logoutBtn.onclick = (e) => {
                     e.preventDefault();
@@ -862,7 +752,7 @@
     <div id="sidebar" class="fixed inset-y-0 left-0 z-[200] w-[260px] transform -translate-x-full transition duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col h-full shadow-2xl shrink-0">
         <div class="p-6 pb-4 flex justify-between items-center shrink-0">
             <a href="index.html" class="flex-shrink-0">
-                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-8 object-contain" alt="doktura.ai Logo">
+                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-8 object-contain" alt="Doktura Logo">
             </a>
             <button onclick="toggleSidebar()" class="text-gray-400 hover:text-gray-800 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -878,7 +768,7 @@
 
             <p class="px-6 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Explore</p>
             <nav class="space-y-1">
-                <button onclick="switchTab('chat')" id="btn-chat" class="nav-btn w-full flex items-center justify-between px-6 py-3 nav-inactive transition">
+                <button onclick="switchTab('chat')" id="btn-chat" class="nav-btn w-full flex items-center justify-between px-6 py-3 nav-active transition">
                     <div class="flex items-center flex-1 pr-2">
                         <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665227.png?download=true" class="w-6 h-6 mr-3 shrink-0 object-contain" alt="AI">
                         <span class="text-sm block text-left leading-snug">AI Doctor Chat</span>
@@ -950,25 +840,16 @@
                 <div class="hero-content-top hide-in-chat">
                     <!-- Centered Hero -->
                     <section class="hero">
-                        
-                        <!-- Trustpilot Green Stars Row Badge -->
-                        <div class="rating-badge-trustpilot">
-                            <div class="stars-trustpilot">
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                            </div>
-                            <span class="rating-score">4.7</span>
-                        </div>
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="Doktura Avatars" class="hero-fig2">
 
-                        <h1>Hello, I'm <strong>doktura.ai</strong>!</h1>
+                        <h1>Hello, I'm <strong>Dok</strong>tura!</h1>
 
                         <div class="hero-description">
-                            <p class="hero-subtitle">Free. Anonymous. Private.</p>
+                            <p>I’m your private and personal AI doctor. As an AI doctor, my service is <span class="text-blue font-bold typing-cursor" id="typewriter-text">fast and free.</span></p>
                             <p>Describe your symptoms and get a diagnosis and treatment plan in minutes.</p>
-                            <p>Need a prescription, or doctor’s note? Connect with a licensed doctor for just <strong>RM38</strong> (selfpay or insurance).</p>
+                            <p>Powered by peer-reviewed medical research, with recommendations that align with board-certified clinicians over <span class="font-bold">99% of the time.</span></p>
+                            <p>Need a prescription, lab test, or doctor’s note?<br>Connect with a licensed doctor online <span class="font-bold">in under 30 minutes</span> for just <span class="font-bold">RM38 only</span> if treatment is required.</p>
+                            <p>Completely free to use and fully anonymous. No email or credit card needed.</p>
                         </div>
                     </section>
                 </div>
@@ -1030,18 +911,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- University/Institutions Trust Logos Row (Doctronics style) -->
-                        <div class="university-logos-container hide-in-chat">
-                            <h3 class="logos-label">Built by experts from</h3>
-                            <div class="logos-row">
-                                <img alt="Harvard Medical School" src="https://static.doctronic.ai/images/universities/harvard-medical-school.png?format=auto&width=256" class="logo-img">
-                                <img alt="Johns Hopkins University" src="https://static.doctronic.ai/images/universities/johns-hopkins.png?format=auto&width=256" class="logo-img">
-                                <img alt="University of California, San Francisco" src="https://static.doctronic.ai/images/universities/ucsf.png?format=auto&width=96" class="logo-img">
-                                <img alt="UCLA Health" src="https://static.doctronic.ai/images/universities/ucla-health.png?format=auto&width=256" class="logo-img">
-                            </div>
-                        </div>
-
                     </section>
                 </div>
 
@@ -1057,11 +926,7 @@
                     </div>
                     <h2>#1st AI-Powered Healthcare Consult</h2>
                     <p>Get instant health guidance, understand your symptoms, and explore next steps anytime, anywhere.</p>
-                    
-                    <div class="rating-badge-wrapper">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
-                        <span class="rating-text">Help <span id="help-counter-text" class="text-blue font-bold">...</span> times!</span>
-                    </div>
+                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
                 </section>
             </div>
         </div>
@@ -1070,12 +935,15 @@
         <div class="section-grayish hide-in-chat">
             <div class="container">
                 <section class="stats-counter-section">
-                    <div class="counter-boxes" id="visit-counter-boxes">
-                        <div class="digit-box">0</div>
-                        <div class="digit-box">0</div>
-                        <div class="digit-box">0</div>
-                        <div class="digit-box">0</div>
-                        <div class="digit-box">0</div>
+                    <div class="counter-boxes">
+                        <div class="digit-box">2</div>
+                        <div class="digit-box">3</div>
+                        <div class="digit-box">8</div>
+                        <div class="digit-box">1</div>
+                        <div class="digit-box">9</div>
+                        <div class="digit-box">8</div>
+                        <div class="digit-box">9</div>
+                        <div class="digit-box">2</div>
                     </div>
                     <div class="stats-pill">Website visit</div>
                 </section>
@@ -1213,7 +1081,7 @@
                                 </svg>
                             </div>
                             <h3>As an AI doctor, I provide <span class="text-blue">fast and free service</span></h3>
-                            <p>Your privacy is our top priority. All conversations are completely confidential and PDPA compliant. doktura.ai successfully guided countless people to get the health advice they need, whenever they need it. No appointments, no waiting rooms just instant, reliable medical assistance at your fingertips.</p>
+                            <p>Your privacy is our top priority. All conversations are completely confidential and PDPA compliant. Doktura Ai successfully guided countless people to get the health advice they need, whenever they need it. No appointments, no waiting rooms just instant, reliable medical assistance at your fingertips.</p>
                         </div>
 
                         <div class="feature-image-wrapper">
@@ -1224,7 +1092,7 @@
                                             <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" alt="AI">
                                         </div>
                                         <div class="anim-header-info">
-                                            <h4 class="anim-header-title">doktura.ai</h4>
+                                            <h4 class="anim-header-title">Doktura Ai</h4>
                                             <span class="anim-header-status" id="anim-header-status">Typing...</span>
                                         </div>
                                     </div>
@@ -1245,7 +1113,7 @@
                                     <path d="M21 18a5 5 0 0 0-7.2-4.5"></path>
                                 </svg>
                             </div>
-                            <h3>You can talk to <span class="text-blue">doktura.ai</span> just like<br>your regular doctor</h3>
+                            <h3>You can talk to <span class="text-blue">Doktura.AI</span> just like<br>your regular doctor</h3>
                             <p>Share your symptoms, ask questions, and get personalized health insights in a natural conversation. I'm here to provide guidance, suggest next steps, and help you understand your health better all in a friendly, accessible way.</p>
                         </div>
                         <div class="feature-image-wrapper">
@@ -1335,7 +1203,7 @@
                     </div>
                     <div class="join-doctor-right">
                         <div class="pill-label ready-pill">Ready When you are</div>
-                        <h2>Join AI-Powered Healthcare<br>with <span class="text-blue">doktura.ai</span></h2>
+                        <h2>Join AI-Powered Healthcare<br>with <span class="text-blue">Doktura.AI</span></h2>
                         <p>Connect with patients anytime, anywhere.<br>Grow your practice with secure, AI-powered consultations.</p>
                         <ul class="check-list">
                             <li>
@@ -1417,7 +1285,7 @@
             <div class="footer-content">
                 <div class="footer-top">
                     <div class="footer-brand">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665233.png?download=true" alt="doktura.ai Logo">
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665233.png?download=true" alt="Doktura.ai Logo">
                         <p>Providing AI-powered medical insights and<br>seamless doctor bookings 24/7.</p>
                     </div>
 
@@ -1500,6 +1368,41 @@
         });
     </script>
 
+    <!-- Typewriter Backspace Animation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeTarget = document.getElementById('typewriter-text');
+            if (!typeTarget) return;
+
+            const originalText = typeTarget.textContent;
+            let index = originalText.length; 
+            let isDeleting = true;
+
+            function typeLoop() {
+                let speed = isDeleting ? 40 : 80; 
+
+                if (isDeleting) {
+                    index--;
+                    if (index === 0) {
+                        isDeleting = false;
+                        speed = 400;
+                    }
+                } else {
+                    index++;
+                    if (index === originalText.length) {
+                        isDeleting = true;
+                        speed = 2500;
+                    }
+                }
+
+                typeTarget.textContent = originalText.substring(0, index);
+                setTimeout(typeLoop, speed);
+            }
+
+            setTimeout(typeLoop, 2500);
+        });
+    </script>
+
     <!-- Main Chat Implementation & UI Logic -->
     <script>
         // Set / unset UI depending on the chat mode (handles back/forward browser buttons perfectly)
@@ -1519,7 +1422,7 @@
                 
                 const input = document.getElementById('chat-input');
                 if(input && !input.readOnly) {
-                    input.placeholder = "Reply to doktura.ai...";
+                    input.placeholder = "Reply to Doktura...";
                 }
             } else {
                 document.body.classList.remove('chat-mode-active');
@@ -1610,7 +1513,7 @@
                 chatInput.readOnly = false;
                 chatInput.classList.remove("placeholder-red");
                 chatWrapper.classList.remove("warning-active");
-                chatInput.placeholder = "Reply to doktura.ai...";
+                chatInput.placeholder = "Reply to Doktura...";
                 
                 chatInput.focus();
                 
@@ -1773,7 +1676,7 @@
                                 <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Before I can reply, I need your permission to unlock your private AI doctor. <strong>It's fast, safe and free.</strong></p>
                                 <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #64748b; cursor: pointer;">
                                     <input type="checkbox" id="tos-checkbox" style="margin-top: 3px;" onchange="handleTosChange(this)">
-                                    <span style="line-height: 1.5;">I agree to the <a href="https://doktura.ai/terms.html" class="text-blue">Electronic Terms of Service</a> and will discuss all Electronic output with a doctor. doktura.ai is an AI doctor, not a licensed physician, and does not provide medical advice.</span>
+                                    <span style="line-height: 1.5;">I agree to the <a href="https://doktura.ai/terms.html" class="text-blue">Electronic Terms of Service</a> and will discuss all Electronic output with a doctor. Doktura is an AI doctor, not a licensed physician, and does not provide medical advice.</span>
                                 </label>
                             </div>
                         </div>
@@ -1887,7 +1790,7 @@
                 await wait(2500); 
 
                 typingNode.remove();
-                await addMsg('ai', "It might be Influenza.<br>Take rest, stay hydrated, and you can use Paracetamol if needed.<br><br>If your fever gets high or symptoms become serious, you should consult a real doctor by logging in.");
+                await addMsg('ai', "It might be Influenza.<br>Take rest, stay hydrated, and you can use Paracetamol if needed.<br><br>If your fever gets high or symptoms become serious, you should consult a real doctor by logging in Doktura.");
                 headerStatus.classList.remove('show');
 
                 await wait(6000);
@@ -1912,47 +1815,6 @@
                 startFeatureAnimation();
             }
         });
-    </script>
-    
-    <!-- Dynamic Counters Script (Universal Counting) -->
-    <script>
-        async function updateUniversalCounters() {
-            try {
-                // We use a free, open counter API to simulate a universal visit counter
-                // Using a unique namespace so it starts fresh (around 0)
-                const res = await fetch("https://api.counterapi.dev/v1/doktura-ai-live-v1/visits/up");
-                const data = await res.json();
-                const count = data.count || 0;
-
-                // Format it to 5 digits (e.g. 00001)
-                const countStr = count.toString().padStart(5, '0');
-
-                // Update large counter boxes
-                const counterBoxes = document.getElementById('visit-counter-boxes');
-                if (counterBoxes) {
-                    counterBoxes.innerHTML = '';
-                    for (let char of countStr) {
-                        const div = document.createElement('div');
-                        div.className = 'digit-box';
-                        div.textContent = char;
-                        counterBoxes.appendChild(div);
-                    }
-                }
-
-                // Update text next to pill image
-                const textCounter = document.getElementById('help-counter-text');
-                if (textCounter) {
-                    textCounter.textContent = count.toLocaleString();
-                }
-            } catch (err) {
-                console.error("Counter API failed", err);
-                // Fallback to empty 00000 on failure to not break UI
-                const textCounter = document.getElementById('help-counter-text');
-                if (textCounter) textCounter.textContent = "0";
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", updateUniversalCounters);
     </script>
 </body>
 </html>
