@@ -116,9 +116,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center;
-            min-height: calc(100dvh - 70px); /* Push bottom content down initially */
-            padding-bottom: 24px;
+            justify-content: center; 
         }
         .hero-content-top { width: 100%; display: flex; justify-content: center; }
         .chat-content-bottom { width: 100%; display: flex; justify-content: center; }
@@ -134,15 +132,15 @@
             max-width: 800px; 
             margin: 0 auto; 
         }
-        .hero-fig2 { height: 64px; width: auto; margin-bottom: 24px; object-fit: contain; } 
+        .hero-fig2 { height: 60px; width: auto; margin-bottom: 24px; object-fit: contain; } 
 
-        .hero h1 { font-size: 46px; line-height: 1.2; margin-bottom: 28px; letter-spacing: -0.5px; color: var(--text-dark); font-weight: 500; width: 100%; text-align: center; }
+        .hero h1 { font-size: 46px; line-height: 1.2; margin-bottom: 24px; letter-spacing: -0.5px; color: var(--text-dark); font-weight: 500; width: 100%; text-align: center; }
         .hero h1 strong { font-weight: 800; }
 
         .hero-description { max-width: 600px; width: 100%; margin: 0 auto; text-align: center; }
-        .hero-description p { font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 24px; text-align: center; }
-        .hero-description p.hero-subtitle { font-size: 18px; font-weight: 600; color: #111111; margin-bottom: 28px; }
-        .hero-description p:last-child { margin-bottom: 8px; }
+        .hero-description p { font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 16px; text-align: center; }
+        .hero-description p.hero-subtitle { font-size: 17px; font-weight: 600; color: #111111; margin-bottom: 20px; }
+        .hero-description p:last-child { margin-bottom: 0; }
 
         /* --- Chat Interface --- */
         .chat-section { 
@@ -152,7 +150,7 @@
             align-items: center;
             justify-content: center; 
             padding-bottom: 0; 
-            padding-top: 16px; 
+            padding-top: 12px; 
         }
 
         .chat-container { 
@@ -222,15 +220,6 @@
         .chip { background: #ffffff; border: 1px solid #e2e8f0; color: #475569; padding: 8px 20px; font-size: 13px; font-weight: 500; border-radius: 999px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; }
         .chip:hover { background: #f8fafc; border-color: #cbd5e1; }
         .pdpa-text { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 12px; color: #94a3b8; font-weight: 500; }
-
-        /* Animation for shaking the ToS box */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-        }
-        .shake { animation: shake 0.4s ease-in-out; }
 
         /* --- Full Screen Chat Mode Styles --- */
         body.chat-mode-active {
@@ -626,18 +615,18 @@
                 padding-bottom: calc(32px + env(safe-area-inset-bottom, 24px)) !important;
             }
 
-            /* Ensures hero block stretches fully to push '+' below the fold */
+            /* FORCE EXACT SCREEN FOLD DISALLOWING '+' TO BE SEEN INITIALLY ON MOBILE */
             .hero-chat-wrapper { 
                 display: flex; 
                 width: 100%; 
                 align-items: center; 
                 flex-direction: column; 
-                min-height: calc(100dvh - 65px); 
-                justify-content: center; /* Center groups hero and chat, automatically pushing info down */
-                padding-top: 16px;
-                padding-bottom: 32px;
+                justify-content: space-between;
+                min-height: calc(100dvh - 56px); /* Compensate precisely for header height */
+                padding-top: 12px;
+                padding-bottom: 24px;
+                box-sizing: border-box;
             }
-            
             .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 0px; }
             .chat-content-bottom {
                 display: flex;
@@ -647,25 +636,25 @@
                 bottom: auto;
                 z-index: auto;
                 margin: 0; 
-                padding: 0 0 24px 0;
+                padding: 0;
                 background: transparent;
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
                 border-top: none;
                 box-shadow: none;
+                margin-top: auto; /* Forces chat box towards the bottom of the fold layout */
             }
 
-            .hero { padding: 0 0 16px 0; align-items: flex-start; text-align: left; max-width: 100%; }
-            .hero-fig2 { height: 48px; margin: 0 auto 20px auto; display: block; } /* Increased image size */
-            .hero h1 { font-size: 34px; margin-bottom: 24px; text-align: center; width: 100%; letter-spacing: -0.5px; font-weight: 500; line-height: 1.2; }
+            .hero { padding: 0; align-items: center; text-align: center; max-width: 100%; margin-bottom: auto; }
+            .hero-fig2 { height: 48px; margin: 0 auto 14px auto; display: block; } /* Enlarge avatars slightly */
+            .hero h1 { font-size: 32px; margin-bottom: 16px; text-align: center; width: 100%; letter-spacing: -0.5px; font-weight: 500; line-height: 1.2; }
             
-            /* Normalized Hero Description for Mobile with increased spacing and text sizes */
-            .hero-description { padding: 0 16px; width: 100%; text-align: center; }
-            .hero-description p.hero-subtitle { font-size: 16px; margin-bottom: 24px; color: #111; font-weight: 600; }
-            .hero-description p { font-size: 15px; margin-bottom: 20px; line-height: 1.6; color: #475569; text-align: center; }
-            .hero-description p:last-child { margin-bottom: 0; }
+            /* Normalized Hero Description with Enhanced Sizing and Spacing */
+            .hero-description { padding: 0; width: 100%; text-align: center; }
+            .hero-description p.hero-subtitle { font-size: 15px; margin-bottom: 12px; font-weight: 700 !important; color: #111111 !important; }
+            .hero-description p { font-size: 15px !important; margin-bottom: 12px !important; line-height: 1.5 !important; color: #475569 !important; text-align: center !important; }
 
-            .chat-section { width: 100%; padding-top: 16px; padding-bottom: 0; align-items: center; }
+            .chat-section { width: 100%; padding-top: 20px; padding-bottom: 0; align-items: center; }
             .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); }
             
             /* Normalized Chat Tabs for Mobile (No scrolling) */
@@ -688,10 +677,7 @@
             .plus-icon-wrap { margin: 0 auto 20px auto; } 
             .bottom-info h2 { font-size: 28px; text-align: center; margin-bottom: 16px; } 
             .bottom-info p { text-align: center; margin-bottom: 28px; font-size: 15px; } 
-            
-            .rating-badge-wrapper { padding: 4px 16px 4px 4px; gap: 8px; }
-            .rating-badge-wrapper .hero-fig3 { max-height: 44px; }
-            .rating-text { font-size: 13px; }
+            .hero-fig3 { margin: 0 auto; height: auto; max-height: 44px; max-width: 100%; object-fit: contain; object-position: center; }
 
             .stats-counter-section { padding: 32px 0; }
             .counter-boxes { gap: 4px; margin-bottom: 24px; flex-wrap: nowrap; justify-content: center; }
@@ -775,7 +761,7 @@
                 document.getElementById("userAvatarSidebar").src = user.photoURL || 'https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true';
 
                 const logoutBtn = document.getElementById("logoutBtn");
-                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>`;
+                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>`;
                 logoutBtn.removeAttribute("href");
                 logoutBtn.onclick = (e) => {
                     e.preventDefault();
@@ -1562,7 +1548,7 @@
                 extraHtml += `
                 <div style="margin-top: 16px; text-align: left;">
                     <a href="https://doktura.ai/login.html" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
                         Login to Consult a Doctor
                     </a>
                 </div>`;
