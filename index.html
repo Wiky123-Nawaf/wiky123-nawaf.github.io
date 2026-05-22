@@ -374,7 +374,21 @@
         .plus-icon-wrap { width: 48px; height: 48px; background-color: #f8fafc; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; color: #111; }
         .bottom-info h2 { font-size: 42px; font-weight: 800; margin-bottom: 16px; color: var(--text-dark); letter-spacing: -0.5px;}
         .bottom-info p { font-size: 18px; color: var(--text-dark); margin-bottom: 40px; line-height: 1.6; font-weight: 500; }
-        .hero-fig3 { height: 60px; width: auto; object-fit: contain; margin: 0 auto; display: block; } 
+        
+        /* New Wrapper for Dynamic Text & Image Pill */
+        .rating-badge-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+            border-radius: 999px;
+            padding: 4px 24px 4px 4px;
+            margin: 0 auto;
+            gap: 12px;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .rating-badge-wrapper .hero-fig3 { margin: 0; height: 56px; width: auto; object-fit: contain; display: block; } 
+        .rating-text { font-size: 15px; color: #475569; font-weight: 500; }
 
         /* --- Stats Counter Section --- */
         .stats-counter-section { padding: 40px 0 80px 0; text-align: center; background-color: var(--bg-grayish); }
@@ -653,7 +667,10 @@
             .plus-icon-wrap { margin: 0 auto 20px auto; } 
             .bottom-info h2 { font-size: 28px; text-align: center; margin-bottom: 16px; } 
             .bottom-info p { text-align: center; margin-bottom: 28px; font-size: 15px; } 
-            .hero-fig3 { margin: 0 auto; height: auto; max-height: 44px; max-width: 100%; object-fit: contain; object-position: center; }
+            
+            .rating-badge-wrapper { padding: 4px 16px 4px 4px; gap: 8px; }
+            .rating-badge-wrapper .hero-fig3 { max-height: 44px; }
+            .rating-text { font-size: 13px; }
 
             .stats-counter-section { padding: 32px 0; }
             .counter-boxes { gap: 4px; margin-bottom: 24px; flex-wrap: nowrap; justify-content: center; }
@@ -926,7 +943,11 @@
                     </div>
                     <h2>#1st AI-Powered Healthcare Consult</h2>
                     <p>Get instant health guidance, understand your symptoms, and explore next steps anytime, anywhere.</p>
-                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
+                    
+                    <div class="rating-badge-wrapper">
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
+                        <span class="rating-text">Help <span id="help-counter-text" class="text-blue font-bold">19,892</span> times!</span>
+                    </div>
                 </section>
             </div>
         </div>
@@ -935,10 +956,7 @@
         <div class="section-grayish hide-in-chat">
             <div class="container">
                 <section class="stats-counter-section">
-                    <div class="counter-boxes">
-                        <div class="digit-box">2</div>
-                        <div class="digit-box">3</div>
-                        <div class="digit-box">8</div>
+                    <div class="counter-boxes" id="visit-counter-boxes">
                         <div class="digit-box">1</div>
                         <div class="digit-box">9</div>
                         <div class="digit-box">8</div>
@@ -1813,6 +1831,39 @@
                 observer.observe(animBox);
             } else {
                 startFeatureAnimation();
+            }
+        });
+    </script>
+    
+    <!-- Dynamic Counters Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Setup dynamic visit count starting from 19892
+            let count = localStorage.getItem('doktura_visit_count');
+            if (!count) {
+                count = 19892;
+            } else {
+                count = parseInt(count, 10) + 1;
+            }
+            localStorage.setItem('doktura_visit_count', count);
+
+            // Update large counter boxes
+            const counterBoxes = document.getElementById('visit-counter-boxes');
+            if (counterBoxes) {
+                counterBoxes.innerHTML = '';
+                const countStr = count.toString();
+                for (let char of countStr) {
+                    const div = document.createElement('div');
+                    div.className = 'digit-box';
+                    div.textContent = char;
+                    counterBoxes.appendChild(div);
+                }
+            }
+
+            // Update text next to pill image
+            const textCounter = document.getElementById('help-counter-text');
+            if (textCounter) {
+                textCounter.textContent = count.toLocaleString();
             }
         });
     </script>
