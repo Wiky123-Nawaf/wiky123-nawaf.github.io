@@ -119,13 +119,13 @@
             justify-content: center; 
         }
         .hero-content-top { width: 100%; display: flex; justify-content: center; }
-        .chat-content-bottom { width: 100%; display: flex; justify-content: center; }
+        .chat-content-bottom { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         .hero { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 24px 0 32px 0; 
+            padding: 24px 0 16px 0; 
             text-align: center; 
             position: relative; 
             gap: 0; 
@@ -136,9 +136,9 @@
 
         .hero h1 { 
             font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-            font-size: 46px; 
-            line-height: 1.2; 
-            margin-bottom: 24px; 
+            font-size: 44px; 
+            line-height: 1.25; 
+            margin-bottom: 20px; 
             letter-spacing: -0.5px; 
             color: var(--text-dark); 
             font-weight: 700; 
@@ -151,6 +151,26 @@
         .hero-description p { font-size: 16px; color: #475569; line-height: 1.6; margin-bottom: 16px; text-align: center; }
         .hero-description p.hero-subtitle { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 20px; }
         .hero-description p:last-child { margin-bottom: 0; }
+
+        /* Trustpilot rating badge styling */
+        .rating-badge-trustpilot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+        }
+        .stars-trustpilot {
+            display: flex;
+            gap: 2px;
+        }
+        .rating-score {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+        }
 
         /* --- Chat Interface --- */
         .chat-section { 
@@ -386,21 +406,7 @@
         .plus-icon-wrap { width: 48px; height: 48px; background-color: #f8fafc; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; color: #111; }
         .bottom-info h2 { font-size: 42px; font-weight: 800; margin-bottom: 16px; color: var(--text-dark); letter-spacing: -0.5px;}
         .bottom-info p { font-size: 18px; color: var(--text-dark); margin-bottom: 40px; line-height: 1.6; font-weight: 500; }
-        
-        /* Wrapper for Dynamic Text & Image Pill */
-        .rating-badge-wrapper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8fafc;
-            border-radius: 999px;
-            padding: 4px 24px 4px 4px;
-            margin: 0 auto;
-            gap: 12px;
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-        .rating-badge-wrapper .hero-fig3 { margin: 0; height: 56px; width: auto; object-fit: contain; display: block; } 
-        .rating-text { font-size: 15px; color: #475569; font-weight: 500; }
+        .hero-fig3 { height: 60px; width: auto; object-fit: contain; margin: 0 auto; display: block; } 
 
         /* --- Stats Counter Section --- */
         .stats-counter-section { padding: 40px 0 80px 0; text-align: center; background-color: var(--bg-grayish); }
@@ -572,6 +578,44 @@
         .social-icons { display: flex; align-items: center; gap: 16px; }
         .social-icons a { color: #ffffff; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; }
         .social-icons a:hover { opacity: 0.7; }
+
+        /* --- University Logos Trust Section Styling --- */
+        .university-logos-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 32px;
+            width: 100%;
+        }
+        .logos-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .logos-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            opacity: 0.65;
+            filter: grayscale(100%);
+            transition: opacity 0.2s, filter 0.2s;
+        }
+        .logos-row:hover {
+            opacity: 0.9;
+            filter: grayscale(0%);
+        }
+        .logo-img {
+            height: 20px;
+            width: auto;
+            object-fit: contain;
+        }
 
         @media (max-width: 1024px) {
             .join-doctor-section { flex-direction: column-reverse; gap: 50px; }
@@ -765,6 +809,18 @@
             .footer-links-group { flex-direction: column; gap: 32px; }
             .footer-bottom { flex-direction: column; align-items: flex-start; gap: 24px; text-align: left; padding-top: 24px; }
             .social-area { flex-direction: column; align-items: flex-start; gap: 16px; }
+            
+            /* Trust Badges mobile specific sizing */
+            .university-logos-container {
+                margin-top: 24px;
+                padding-bottom: 32px; /* Keeps layout cozy in iPhone 14 fold view */
+            }
+            .logos-row {
+                gap: 16px;
+            }
+            .logo-img {
+                height: 16px;
+            }
         }
     </style>
 </head>
@@ -894,7 +950,18 @@
                 <div class="hero-content-top hide-in-chat">
                     <!-- Centered Hero -->
                     <section class="hero">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="doktura.ai Avatars" class="hero-fig2">
+                        
+                        <!-- Trustpilot Green Stars Row Badge -->
+                        <div class="rating-badge-trustpilot">
+                            <div class="stars-trustpilot">
+                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
+                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
+                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
+                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
+                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
+                            </div>
+                            <span class="rating-score">4.7</span>
+                        </div>
 
                         <h1>Hello, I'm <strong>doktura.ai</strong>!</h1>
 
@@ -963,6 +1030,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- University/Institutions Trust Logos Row (Doctronics style) -->
+                        <div class="university-logos-container hide-in-chat">
+                            <h3 class="logos-label">Built by experts from</h3>
+                            <div class="logos-row">
+                                <img alt="Harvard Medical School" src="https://static.doctronic.ai/images/universities/harvard-medical-school.png?format=auto&width=256" class="logo-img">
+                                <img alt="Johns Hopkins University" src="https://static.doctronic.ai/images/universities/johns-hopkins.png?format=auto&width=256" class="logo-img">
+                                <img alt="University of California, San Francisco" src="https://static.doctronic.ai/images/universities/ucsf.png?format=auto&width=96" class="logo-img">
+                                <img alt="UCLA Health" src="https://static.doctronic.ai/images/universities/ucla-health.png?format=auto&width=256" class="logo-img">
+                            </div>
+                        </div>
+
                     </section>
                 </div>
 
