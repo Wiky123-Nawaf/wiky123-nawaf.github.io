@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="color-scheme" content="light">
-    <title>Doktura.ai - AI Medical Assistant</title>
+    <title>doktura.ai - AI Medical Assistant</title>
 
     <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,16 +116,18 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; 
+            justify-content: flex-start; /* Modified to allow natural scrolling on smaller heights */
+            gap: 24px; /* Maintain safe distance between sections */
+            padding-top: 24px;
         }
-        .hero-content-top { width: 100%; display: flex; justify-content: center; }
-        .chat-content-bottom { width: 100%; display: flex; justify-content: center; }
+        .hero-content-top { width: 100%; display: flex; justify-content: center; flex-shrink: 0; }
+        .chat-content-bottom { width: 100%; display: flex; justify-content: center; flex-shrink: 0; }
 
         .hero { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 4px 0 32px 0; 
+            padding: 4px 0 16px 0; 
             text-align: center; 
             position: relative; 
             gap: 0; 
@@ -149,7 +151,8 @@
             align-items: center;
             justify-content: center; 
             padding-bottom: 0; 
-            padding-top: 24px; 
+            padding-top: 0; 
+            flex-shrink: 0;
         }
 
         .chat-container { 
@@ -164,6 +167,7 @@
             text-align: center; 
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
         }
 
         .chat-tabs-wrapper { display: flex; justify-content: center; margin-bottom: 24px; width: 100%; }
@@ -608,8 +612,15 @@
                 padding-bottom: calc(32px + env(safe-area-inset-bottom, 24px)) !important;
             }
 
-            .hero-chat-wrapper { display: flex; width: 100%; align-items: center; flex-direction: column; min-height: auto; }
-            .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 0px; }
+            .hero-chat-wrapper { 
+                display: flex; 
+                width: 100%; 
+                align-items: center; 
+                flex-direction: column; 
+                min-height: auto; 
+                gap: 16px; /* Reduced gap for small screens */
+            }
+            .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 0px; flex-shrink: 0; }
             .chat-content-bottom {
                 display: flex;
                 width: 100%;
@@ -624,6 +635,7 @@
                 -webkit-backdrop-filter: none;
                 border-top: none;
                 box-shadow: none;
+                flex-shrink: 0;
             }
 
             .hero { padding: 8px 0; align-items: flex-start; text-align: left; max-width: 100%; }
@@ -632,8 +644,8 @@
             .hero-description { padding: 0; width: 100%; }
             .hero-description p { font-size: 14px; margin-bottom: 8px; line-height: 1.4; color: #1a1a1a; }
 
-            .chat-section { width: 100%; padding-top: 12px; padding-bottom: 0; align-items: center; }
-            .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); }
+            .chat-section { width: 100%; padding-top: 12px; padding-bottom: 0; align-items: center; flex-shrink: 0; }
+            .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); flex-shrink: 0; }
             .chat-tabs-wrapper { margin-bottom: 16px; width: 100%; } 
             .chat-tabs { width: 100%; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); padding: 4px; border-radius: 999px; }
             .tab-btn { flex: 1; justify-content: center; padding: 8px 4px !important; background: transparent !important; font-size: clamp(11px, 3.5vw, 13px) !important; color: #94a3b8; font-weight: 500; white-space: nowrap !important; }
@@ -752,7 +764,7 @@
     <div id="sidebar" class="fixed inset-y-0 left-0 z-[200] w-[260px] transform -translate-x-full transition duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col h-full shadow-2xl shrink-0">
         <div class="p-6 pb-4 flex justify-between items-center shrink-0">
             <a href="index.html" class="flex-shrink-0">
-                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-8 object-contain" alt="Doktura Logo">
+                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-8 object-contain" alt="doktura.ai Logo">
             </a>
             <button onclick="toggleSidebar()" class="text-gray-400 hover:text-gray-800 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -840,9 +852,9 @@
                 <div class="hero-content-top hide-in-chat">
                     <!-- Centered Hero -->
                     <section class="hero">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="Doktura Avatars" class="hero-fig2">
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="doktura.ai Avatars" class="hero-fig2">
 
-                        <h1>Hello, I'm <strong>Dok</strong>tura!</h1>
+                        <h1>Hello, I'm <strong>doktura</strong>.ai!</h1>
 
                         <div class="hero-description">
                             <p>I’m your private and personal AI doctor. As an AI doctor, my service is <span class="text-blue font-bold typing-cursor" id="typewriter-text">fast and free.</span></p>
@@ -1081,7 +1093,7 @@
                                 </svg>
                             </div>
                             <h3>As an AI doctor, I provide <span class="text-blue">fast and free service</span></h3>
-                            <p>Your privacy is our top priority. All conversations are completely confidential and PDPA compliant. Doktura Ai successfully guided countless people to get the health advice they need, whenever they need it. No appointments, no waiting rooms just instant, reliable medical assistance at your fingertips.</p>
+                            <p>Your privacy is our top priority. All conversations are completely confidential and PDPA compliant.  <strong>doktura.ai</strong> successfully guided countless people to get the health advice they need, whenever they need it. No appointments, no waiting rooms just instant, reliable medical assistance at your fingertips.</p>
                         </div>
 
                         <div class="feature-image-wrapper">
@@ -1092,7 +1104,7 @@
                                             <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" alt="AI">
                                         </div>
                                         <div class="anim-header-info">
-                                            <h4 class="anim-header-title">Doktura Ai</h4>
+                                            <h4 class="anim-header-title">doktura.ai</h4>
                                             <span class="anim-header-status" id="anim-header-status">Typing...</span>
                                         </div>
                                     </div>
@@ -1113,7 +1125,7 @@
                                     <path d="M21 18a5 5 0 0 0-7.2-4.5"></path>
                                 </svg>
                             </div>
-                            <h3>You can talk to <span class="text-blue">Doktura.AI</span> just like<br>your regular doctor</h3>
+                            <h3>You can talk to <span class="text-blue">doktura.ai</span> just like<br>your regular doctor</h3>
                             <p>Share your symptoms, ask questions, and get personalized health insights in a natural conversation. I'm here to provide guidance, suggest next steps, and help you understand your health better all in a friendly, accessible way.</p>
                         </div>
                         <div class="feature-image-wrapper">
@@ -1203,7 +1215,7 @@
                     </div>
                     <div class="join-doctor-right">
                         <div class="pill-label ready-pill">Ready When you are</div>
-                        <h2>Join AI-Powered Healthcare<br>with <span class="text-blue">Doktura.AI</span></h2>
+                        <h2>Join AI-Powered Healthcare<br>with <span class="text-blue">doktura.ai</span></h2>
                         <p>Connect with patients anytime, anywhere.<br>Grow your practice with secure, AI-powered consultations.</p>
                         <ul class="check-list">
                             <li>
@@ -1285,7 +1297,7 @@
             <div class="footer-content">
                 <div class="footer-top">
                     <div class="footer-brand">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665233.png?download=true" alt="Doktura.ai Logo">
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665233.png?download=true" alt="doktura.ai Logo">
                         <p>Providing AI-powered medical insights and<br>seamless doctor bookings 24/7.</p>
                     </div>
 
@@ -1422,7 +1434,7 @@
                 
                 const input = document.getElementById('chat-input');
                 if(input && !input.readOnly) {
-                    input.placeholder = "Reply to Doktura...";
+                    input.placeholder = "Reply to doktura.ai...";
                 }
             } else {
                 document.body.classList.remove('chat-mode-active');
@@ -1513,7 +1525,7 @@
                 chatInput.readOnly = false;
                 chatInput.classList.remove("placeholder-red");
                 chatWrapper.classList.remove("warning-active");
-                chatInput.placeholder = "Reply to Doktura...";
+                chatInput.placeholder = "Reply to doktura.ai...";
                 
                 chatInput.focus();
                 
@@ -1676,7 +1688,7 @@
                                 <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Before I can reply, I need your permission to unlock your private AI doctor. <strong>It's fast, safe and free.</strong></p>
                                 <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #64748b; cursor: pointer;">
                                     <input type="checkbox" id="tos-checkbox" style="margin-top: 3px;" onchange="handleTosChange(this)">
-                                    <span style="line-height: 1.5;">I agree to the <a href="https://doktura.ai/terms.html" class="text-blue">Electronic Terms of Service</a> and will discuss all Electronic output with a doctor. Doktura is an AI doctor, not a licensed physician, and does not provide medical advice.</span>
+                                    <span style="line-height: 1.5;">I agree to the <a href="https://doktura.ai/terms.html" class="text-blue">Electronic Terms of Service</a> and will discuss all Electronic output with a doctor. doktura.ai is an AI doctor, not a licensed physician, and does not provide medical advice.</span>
                                 </label>
                             </div>
                         </div>
