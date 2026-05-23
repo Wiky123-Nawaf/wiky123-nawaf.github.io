@@ -25,6 +25,8 @@
         html {
             -webkit-text-size-adjust: 100%;
             scroll-behavior: auto;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body {
@@ -36,10 +38,14 @@
             overflow-x: hidden;
             overflow-y: auto;
             overscroll-behavior-y: auto;
+            width: 100%;
+            /* Prevent layout shift from scrollbar appearing/disappearing */
+            scrollbar-gutter: stable;
         }
 
         #main-scroll-area {
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -260,12 +266,12 @@
         /* --- Full Screen Chat Mode Styles (New Page Feel) --- */
         body.chat-mode-active {
             overflow: hidden !important;
-            height: 100dvh !important;
+            height: 100svh !important;
         }
 
         body.chat-mode-active #main-scroll-area {
             overflow: hidden !important;
-            height: 100dvh !important;
+            height: 100svh !important;
             display: flex;
             flex-direction: column;
             background: #ffffff;
@@ -607,7 +613,7 @@
         }
 
         /* ---------------------------------------------------- */
-        /* MOBILE: HERO + CHAT = FULL FIRST SCREEN (100dvh)     */
+        /* MOBILE: HERO + CHAT = FULL FIRST SCREEN (100svh)     */
         /* ---------------------------------------------------- */
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
@@ -659,26 +665,28 @@
 
             /* =====================================================
                MOBILE FIRST-SCREEN LAYOUT:
-               Header (sticky, ~54px) + hero-chat-wrapper = 100dvh
-               So hero-chat-wrapper fills: calc(100dvh - 54px)
-               Content is centered vertically inside.
+               Hero wrapper = 100svh (stable small viewport height)
+               Using svh prevents resize when browser chrome appears.
+               Header is sticky on top, hero is behind it scrollably.
             ===================================================== */
 
-            /* The section-white wrapper must fill remaining height */
+            /* The section-white wrapper must not flex-grow */
             .section-white.flex-1 {
                 flex: none !important;
                 display: block !important;
             }
 
-            /* The hero+chat container fills the screen minus the header */
+            /* The hero+chat container = full stable viewport height */
             .hero-chat-wrapper {
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
                 justify-content: center !important;
                 width: 100% !important;
-                min-height: calc(100dvh - 54px) !important;
-                padding: 16px 16px 20px 16px !important;
+                /* 100svh = always the stable small viewport, no resize on scroll */
+                min-height: 100svh !important;
+                /* Offset top so content clears the sticky header (~54px) */
+                padding: 70px 16px 24px 16px !important;
                 box-sizing: border-box !important;
                 gap: 0 !important;
             }
@@ -726,7 +734,7 @@
             }
             
             .hero-description { 
-                padding: 0; 
+                padding: 0 2px; 
                 width: 100%; 
                 text-align: center; 
                 display: flex; 
@@ -746,7 +754,8 @@
                 line-height: 1.55 !important; 
                 color: #475569 !important; 
                 text-align: center !important; 
-                padding: 0 4px; 
+                padding: 0;
+                max-width: 100%;
             }
 
             /* Chat card */
