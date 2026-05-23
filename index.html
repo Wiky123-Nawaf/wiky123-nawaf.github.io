@@ -134,43 +134,12 @@
         }
         .hero-fig2 { height: 60px; width: auto; margin-bottom: 24px; object-fit: contain; } 
 
-        .hero h1 { 
-            font-family: Georgia, Cambria, "Times New Roman", Times, serif;
-            font-size: 56px; 
-            line-height: 1.1; 
-            margin-bottom: 32px; 
-            letter-spacing: -1px; 
-            color: var(--text-dark); 
-            font-weight: 500; 
-            width: 100%; 
-            text-align: center; 
-        }
+        .hero h1 { font-size: 56px; line-height: 1.1; margin-bottom: 32px; letter-spacing: -1px; color: var(--text-dark); font-weight: 500; width: 100%; text-align: center; }
         .hero h1 strong { font-weight: 800; }
 
         .hero-description { max-width: 760px; width: 100%; margin: 0 auto; text-align: left; }
         .hero-description p { font-size: 16px; color: #1a1a1a; line-height: 1.6; margin-bottom: 20px; }
-        .hero-description p.hero-subtitle { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 20px; text-align: center; }
         .hero-description p:last-child { margin-bottom: 0; }
-
-        /* Trustpilot rating badge styling */
-        .rating-badge-trustpilot {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background-color: #f1f5f9;
-            padding: 4px 12px;
-            border-radius: 999px;
-            margin-bottom: 16px;
-        }
-        .stars-trustpilot {
-            display: flex;
-            gap: 2px;
-        }
-        .rating-score {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0f172a;
-        }
 
         /* --- Chat Interface --- */
         .chat-section { 
@@ -197,11 +166,10 @@
             flex-direction: column;
         }
 
-        .chat-tabs-wrapper { display: flex; justify-content: center; margin-bottom: 24px; width: 100%; padding: 4px 0; }
-        .chat-tabs { display: inline-flex; align-items: center; justify-content: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 999px; padding: 4px; gap: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); flex-wrap: nowrap; }
-        .tab-btn { border: none; padding: 8px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #64748b; background: transparent; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+        .chat-tabs-wrapper { display: flex; justify-content: center; margin-bottom: 24px; width: 100%; }
+        .chat-tabs { display: inline-flex; align-items: center; background: #ffffff; border: 1px solid #f1f5f9; border-radius: 999px; padding: 4px; gap: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .tab-btn { border: none; padding: 8px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #64748b; background: transparent; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .tab-btn.active { background: #eff6ff; color: var(--primary-blue); }
-        .tab-icon { flex-shrink: 0; }
 
         #chat-history {
             max-height: 450px;
@@ -212,7 +180,7 @@
             width: 100%;
         }
 
-        /* Fixed: Changed position from sticky to relative to prevent it from overlapping on page scroll */
+        /* Fixed positioning from sticky to relative to align naturally on scroll */
         .chat-input-area {
             position: relative;
             background: #ffffff;
@@ -558,65 +526,6 @@
         .faq-item.active .faq-body { display: block; }
         .faq-body p { font-size: 15px; color: var(--text-gray); line-height: 1.6; margin: 0; max-width: 580px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Footer Section --- */
-        .footer-section { background-color: #111111; color: #ffffff; padding: 80px 0 40px 0; width: 100%; margin-top: auto; }
-        .footer-content { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; }
-        .footer-top { display: flex; justify-content: space-between; gap: 60px; padding-bottom: 60px; }
-        .footer-brand { max-width: 380px; }
-        .footer-brand img { height: 50px; width: auto; margin-bottom: 24px; display: block; margin-left: -12px;}
-        .footer-brand p { color: #a0aab5; font-size: 16px; line-height: 1.6; }
-        .footer-links-group { display: flex; gap: 120px; }
-        .footer-col h4 { font-size: 16px; font-weight: 600; margin-bottom: 24px; color: #ffffff; }
-        .footer-col a { display: block; color: #a0aab5; font-size: 15px; margin-bottom: 16px; text-decoration: none; transition: color 0.2s; }
-        .footer-col a:hover { color: #ffffff; }
-        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        .footer-bottom p { color: #a0aab5; font-size: 14px; }
-        .social-area { display: flex; align-items: center; gap: 20px; }
-        .social-area span { color: #ffffff; font-weight: 500; font-size: 15px; }
-        .social-icons { display: flex; align-items: center; gap: 16px; }
-        .social-icons a { color: #ffffff; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; }
-        .social-icons a:hover { opacity: 0.7; }
-
-        /* --- University Logos Trust Section Styling --- */
-        .university-logos-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 32px;
-            width: 100%;
-        }
-        .logos-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #94a3b8;
-            font-weight: 700;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-        .logos-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            opacity: 0.65;
-            filter: grayscale(100%);
-            transition: opacity 0.2s, filter 0.2s;
-        }
-        .logos-row:hover {
-            opacity: 0.9;
-            filter: grayscale(0%);
-        }
-        .logo-img {
-            height: 20px;
-            width: auto;
-            object-fit: contain;
-        }
-
         @media (max-width: 1024px) {
             .join-doctor-section { flex-direction: column-reverse; gap: 50px; }
             .join-doctor-left { flex: auto; width: 100%; max-width: 600px; margin: 0 auto; }
@@ -634,6 +543,7 @@
             .container { padding: 0 20px; }
 
             header { padding: 12px 20px; }
+            
 
 			.feature-card h3 br {
                 display: none;
@@ -678,18 +588,7 @@
                 padding-bottom: calc(32px + env(safe-area-inset-bottom, 24px)) !important;
             }
 
-            /* FORCE NATURAL EDITORIAL VERTICAL FLOW ON MOBILE */
-            .hero-chat-wrapper { 
-                display: flex; 
-                width: 100%; 
-                align-items: center; 
-                flex-direction: column; 
-                justify-content: flex-start;
-                min-height: calc(100dvh - 56px); /* Compensate precisely for header height */
-                padding: 32px 16px 24px 16px;
-                box-sizing: border-box;
-                gap: 20px; /* Uniform, balanced vertical gaps */
-            }
+            .hero-chat-wrapper { display: flex; width: 100%; align-items: center; flex-direction: column; min-height: auto; }
             .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 0px; }
             .chat-content-bottom {
                 display: flex;
@@ -705,38 +604,21 @@
                 -webkit-backdrop-filter: none;
                 border-top: none;
                 box-shadow: none;
-                margin-top: auto; /* Forces chat box elegantly towards the bottom of the viewport fold layout */
             }
 
-            .hero { padding: 0; align-items: center; text-align: center; max-width: 100%; margin-bottom: auto; gap: 12px; }
-            .hero-fig2 { height: 48px; margin: 0 auto; display: block; } /* Enlarge avatars slightly */
-            
-            /* Georgian Editorial Heading style matching Doctronics */
-            .hero h1 { 
-                font-family: Georgia, Cambria, "Times New Roman", Times, serif; 
-                font-size: 30px; 
-                margin-bottom: 8px; 
-                text-align: center; 
-                width: 100%; 
-                letter-spacing: -0.5px; 
-                font-weight: 700; 
-                line-height: 1.2; 
-            }
-            
-            /* Normalized Hero Description with Enhanced Sizing and Spacing */
-            .hero-description { padding: 0; width: 100%; text-align: center; display: flex; flex-direction: column; gap: 8px; }
-            .hero-description p.hero-subtitle { font-size: 15px; margin-bottom: 8px; font-weight: 700 !important; color: #111111 !important; text-align: center !important; }
-            .hero-description p { font-size: 14px !important; margin-bottom: 0 !important; line-height: 1.5 !important; color: #475569 !important; text-align: center !important; }
+            .hero { padding: 8px 0; align-items: flex-start; text-align: left; max-width: 100%; }
+            .hero-fig2 { height: 36px; margin: 0 auto 12px auto; display: block; }
+            .hero h1 { font-size: 28px; margin-bottom: 12px; text-align: center; width: 100%; letter-spacing: -0.5px; font-weight: 500; line-height: 1.1; }
+            .hero-description { padding: 0; width: 100%; }
+            .hero-description p { font-size: 14px; margin-bottom: 8px; line-height: 1.4; color: #1a1a1a; }
 
-            .chat-section { width: 100%; padding-top: 8px; padding-bottom: 0; align-items: center; }
+            .chat-section { width: 100%; padding-top: 12px; padding-bottom: 0; align-items: center; }
             .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); }
-            
-            /* Normalized Chat Tabs for Mobile (No scrolling) */
             .chat-tabs-wrapper { margin-bottom: 16px; width: 100%; } 
-            .chat-tabs { width: 100%; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); padding: 4px; border-radius: 999px; display: flex; flex-wrap: nowrap; }
-            .tab-btn { flex: 1; justify-content: center; padding: 8px 4px !important; background: transparent !important; font-size: clamp(11px, 3.5vw, 13px) !important; color: #94a3b8; font-weight: 500; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; }
+            .chat-tabs { width: 100%; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); padding: 4px; border-radius: 999px; }
+            .tab-btn { flex: 1; justify-content: center; padding: 8px 4px !important; background: transparent !important; font-size: clamp(11px, 3.5vw, 13px) !important; color: #94a3b8; font-weight: 500; white-space: nowrap !important; }
             .tab-btn.active { color: var(--primary-blue); font-weight: 600; background: #eff6ff !important; }
-            .tab-icon { margin-right: 4px; width: 14px; height: 14px; flex-shrink: 0; }
+            .tab-icon { margin-right: 6px; width: 14px; height: 14px; }
 
             .input-wrapper { min-height: 110px; padding: 12px; margin-bottom: 0; background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 16px; width: 100%; }
             .input-top-area { gap: 8px; }
@@ -809,18 +691,6 @@
             .footer-links-group { flex-direction: column; gap: 32px; }
             .footer-bottom { flex-direction: column; align-items: flex-start; gap: 24px; text-align: left; padding-top: 24px; }
             .social-area { flex-direction: column; align-items: flex-start; gap: 16px; }
-            
-            /* Trust Badges mobile specific sizing */
-            .university-logos-container {
-                margin-top: 24px;
-                padding-bottom: 32px; /* Keeps layout cozy in iPhone 14 fold view */
-            }
-            .logos-row {
-                gap: 16px;
-            }
-            .logo-img {
-                height: 16px;
-            }
         }
     </style>
 </head>
@@ -950,28 +820,15 @@
                 <div class="hero-content-top hide-in-chat">
                     <!-- Centered Hero -->
                     <section class="hero">
-                        
-                        <!-- Trustpilot Green Stars Row Badge -->
-                        <div class="rating-badge-trustpilot">
-                            <div class="stars-trustpilot">
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                                <svg width="15" height="15" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="4" fill="#00B67A"></rect><path d="M16 22.286 7.583 27 9.5 17.857 3 11.714l8.625-1.143L16 3l4.375 7.571 8.625 1.143-6.5 6.143 1.917 9.143z" fill="#FFFFFF"></path></svg>
-                            </div>
-                            <span class="rating-score">4.7</span>
-                        </div>
                         <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="Doktura Avatars" class="hero-fig2">
 
                         <h1>Hello, I'm <strong>Dok</strong>tura!</h1>
 
                         <div class="hero-description">
-                            <p class="hero-subtitle">Free. Anonymous. Private.</p>
                             <p>I’m your private and personal AI doctor. As an AI doctor, my service is <span class="text-blue font-bold typing-cursor" id="typewriter-text">fast and free.</span></p>
                             <p>Describe your symptoms and get a diagnosis and treatment plan in minutes.</p>
-                            <p>Need a prescription, or doctor’s note? Connect with a licensed doctor for just <strong>RM38</strong> (selfpay or insurance).</p>
                             <p>Powered by peer-reviewed medical research, with recommendations that align with board-certified clinicians over <span class="font-bold">99% of the time.</span></p>
+                            <p>Need a prescription, lab test, or doctor’s note?<br>Connect with a licensed doctor online <span class="font-bold">in under 30 minutes</span> for just <span class="font-bold">RM38 only</span> if treatment is required.</p>
                             <p>Completely free to use and fully anonymous. No email or credit card needed.</p>
                         </div>
                     </section>
@@ -1034,18 +891,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- University/Institutions Trust Logos Row (Doctronics style) -->
-                        <div class="university-logos-container hide-in-chat">
-                            <h3 class="logos-label">Built by experts from</h3>
-                            <div class="logos-row">
-                                <img alt="Harvard Medical School" src="https://static.doctronic.ai/images/universities/harvard-medical-school.png?format=auto&width=256" class="logo-img">
-                                <img alt="Johns Hopkins University" src="https://static.doctronic.ai/images/universities/johns-hopkins.png?format=auto&width=256" class="logo-img">
-                                <img alt="University of California, San Francisco" src="https://static.doctronic.ai/images/universities/ucsf.png?format=auto&width=96" class="logo-img">
-                                <img alt="UCLA Health" src="https://static.doctronic.ai/images/universities/ucla-health.png?format=auto&width=256" class="logo-img">
-                            </div>
-                        </div>
-
                     </section>
                 </div>
 
@@ -1061,11 +906,7 @@
                     </div>
                     <h2>#1st AI-Powered Healthcare Consult</h2>
                     <p>Get instant health guidance, understand your symptoms, and explore next steps anytime, anywhere.</p>
-                    
-                    <div class="rating-badge-wrapper">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
-                        <span class="rating-text">Help <span id="help-counter-text" class="text-blue font-bold">...</span> times!</span>
-                    </div>
+                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
                 </section>
             </div>
         </div>
@@ -1074,7 +915,7 @@
         <div class="section-grayish hide-in-chat">
             <div class="container">
                 <section class="stats-counter-section">
-                    <div class="counter-boxes" id="visit-counter-boxes">
+                    <div class="counter-boxes">
                         <div class="digit-box">2</div>
                         <div class="digit-box">3</div>
                         <div class="digit-box">8</div>
@@ -1954,47 +1795,6 @@
                 startFeatureAnimation();
             }
         });
-    </script>
-    
-    <!-- Dynamic Counters Script (Universal Counting) -->
-    <script>
-        async function updateUniversalCounters() {
-            try {
-                // We use a free, open counter API to simulate a universal visit counter
-                // Using a unique namespace so it starts fresh (around 0)
-                const res = await fetch("https://api.counterapi.dev/v1/doktura-ai-live-v1/visits/up");
-                const data = await res.json();
-                const count = data.count || 0;
-
-                // Format it to 5 digits (e.g. 00001)
-                const countStr = count.toString().padStart(5, '0');
-
-                // Update large counter boxes
-                const counterBoxes = document.getElementById('visit-counter-boxes');
-                if (counterBoxes) {
-                    counterBoxes.innerHTML = '';
-                    for (let char of countStr) {
-                        const div = document.createElement('div');
-                        div.className = 'digit-box';
-                        div.textContent = char;
-                        counterBoxes.appendChild(div);
-                    }
-                }
-
-                // Update text next to pill image
-                const textCounter = document.getElementById('help-counter-text');
-                if (textCounter) {
-                    textCounter.textContent = count.toLocaleString();
-                }
-            } catch (err) {
-                console.error("Counter API failed", err);
-                // Fallback to empty 00000 on failure to not break UI
-                const textCounter = document.getElementById('help-counter-text');
-                if (textCounter) textCounter.textContent = "0";
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", updateUniversalCounters);
     </script>
 </body>
 </html>
