@@ -30,6 +30,12 @@
             background-color: #ffffff !important;
             overflow-x: hidden;
             height: 100dvh !important; /* Force dynamic viewport height */
+            overscroll-behavior-y: none; /* Prevents rubber-banding bounce on mobile */
+        }
+
+        #main-scroll-area {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain; /* Smooth scrolling inside the main area */
         }
 
         @media (prefers-color-scheme: dark) {
@@ -152,6 +158,14 @@
         .hero-description p.hero-subtitle { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 20px; }
         .hero-description p:last-child { margin-bottom: 0; }
 
+        /* Guarantee Trust Text is ALWAYS Blue */
+        .hero-trust-text {
+            font-size: 14px; 
+            font-weight: 600; 
+            color: var(--primary-blue) !important; 
+            margin-top: 8px;
+        }
+
         /* --- Chat Interface --- */
         .chat-section { 
             width: 100%; 
@@ -171,7 +185,7 @@
             width: 100%;
             max-width: 760px; /* Perfectly matched to hero description */
             margin: 0 auto; 
-            padding: 24px 32px; /* Slimmer padding to look compact */
+            padding: 24px 32px; 
             text-align: center; 
             display: flex;
             flex-direction: column;
@@ -239,15 +253,16 @@
         }
         .shake { animation: shake 0.4s ease-in-out; }
 
-        /* --- Full Screen Chat Mode Styles --- */
+        /* --- Full Screen Chat Mode Styles (New Page Feel) --- */
         body.chat-mode-active {
             overflow: hidden !important;
         }
 
         body.chat-mode-active #main-scroll-area {
-            overflow: hidden !important; /* Locks body scroll to keep header pinned */
+            overflow: hidden !important; 
             display: flex;
             flex-direction: column;
+            background: #ffffff;
         }
 
         body.chat-mode-active .hide-in-chat {
@@ -258,7 +273,6 @@
             display: none !important;
         }
 
-        /* Pure Flex chain - avoiding height: 100% overrides */
         body.chat-mode-active .section-white:first-of-type,
         body.chat-mode-active .hero-chat-wrapper,
         body.chat-mode-active .chat-content-bottom,
@@ -269,10 +283,11 @@
             width: 100%;
             flex: 1;
             min-height: 0;
-            height: auto; /* Reverting any strict heights so flex-1 operates cleanly */
+            height: auto; 
             margin: 0 !important;
             padding: 0 !important;
             max-width: 100% !important;
+            background: #ffffff;
         }
 
         body.chat-mode-active .chat-container {
@@ -302,8 +317,8 @@
         }
 
         body.chat-mode-active .chat-input-area {
-            flex-shrink: 0; /* Never collapse input area */
-            padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px)); /* Safe area padding pushes it safely above nav bar */
+            flex-shrink: 0;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px));
             padding-top: 8px;
             width: 100%;
             background: #ffffff;
@@ -314,7 +329,7 @@
             height: auto;
             background-color: #fff;
             border: 1px solid #e2e8f0;
-            margin-bottom: 0 !important; /* Kept flush to boundaries */
+            margin-bottom: 0 !important; 
             padding: 8px 16px;
             border-radius: 24px;
             flex-direction: row;
@@ -627,9 +642,9 @@
             }
 
             body.chat-mode-active .chat-container {
-                /* Ensured plenty of padding at the bottom for mobile safe area & nav bar clearance */
                 padding: 0 16px 0 16px !important;
                 border-radius: 0;
+                max-width: 100% !important; /* expand full width during chat */
             }
 
             body.chat-mode-active .chat-input-area {
@@ -642,8 +657,8 @@
                 width: 100%; 
                 align-items: center; 
                 flex-direction: column; 
-                justify-content: center; /* Center Vertically on Mobile as requested */
-                min-height: calc(100dvh - 60px); /* Compensate precisely for header height */
+                justify-content: center; 
+                min-height: calc(100dvh - 60px); 
                 padding: 16px 16px 40px 16px;
                 box-sizing: border-box;
                 gap: 0; 
@@ -665,8 +680,8 @@
                 box-shadow: none;
             }
 
-            .hero { padding: 0; align-items: center; text-align: center; max-width: 100%; margin-bottom: 20px; gap: 0; }
-            .hero-fig2 { height: 36px; margin: 0 auto 12px auto; display: block; } /* Enlarge avatars slightly */
+            .hero { padding: 0; align-items: center; text-align: center; width: 100%; max-width: 440px; margin: 0 auto 20px auto; gap: 0; }
+            .hero-fig2 { height: 36px; margin: 0 auto 12px auto; display: block; } 
             
             /* Georgian Editorial Heading style */
             .hero h1 { 
@@ -687,7 +702,7 @@
             .hero-description p { font-size: 13.5px !important; margin-bottom: 0 !important; line-height: 1.5 !important; color: #475569 !important; text-align: center !important; padding: 0 8px; }
 
             .chat-section { width: 100%; padding-top: 4px; padding-bottom: 0; align-items: center; }
-            .chat-container { padding: 20px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
+            .chat-container { padding: 20px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 440px; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
             
             /* Normalized Chat Tabs for Mobile */
             .chat-tabs-wrapper { margin-bottom: 12px; width: 100%; overflow: visible; padding: 0; } 
@@ -705,7 +720,7 @@
             .suggestion-chips { display: none !important; }
             .pdpa-text { justify-content: center; font-size: 11px; color: #64748b; margin-top: 12px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
 
-            .bottom-info { padding: 60px 0 32px 0; text-align: center; } 
+            .bottom-info { padding: 60px 0 32px 0; text-align: center; margin-top: 15vh;} 
             .plus-icon-wrap { margin: 0 auto 20px auto; } 
             .bottom-info h2 { font-size: 28px; text-align: center; margin-bottom: 16px; } 
             .bottom-info p { text-align: center; margin-bottom: 28px; font-size: 15px; } 
@@ -773,7 +788,7 @@
     </style>
 </head>
 
-<body class="flex h-[100dvh] h-screen bg-white overflow-hidden relative">
+<body class="flex h-[100dvh] h-screen bg-white relative">
 
     <!-- Firebase Auth & Dynamic Login state -->
     <script>const API_BASE = 'https://api.doktura.ai';</script>
@@ -810,7 +825,7 @@
     <div id="sidebar" class="fixed inset-y-0 left-0 z-[200] w-[260px] transform -translate-x-full transition duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col h-full shadow-2xl shrink-0">
         <div class="p-6 pb-4 flex justify-between items-center shrink-0">
             <a href="index.html" class="flex-shrink-0">
-                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-8 object-contain" alt="doktura.ai Logo">
+                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-8 object-contain" alt="Doktura Logo">
             </a>
             <button onclick="toggleSidebar()" class="text-gray-400 hover:text-gray-800 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -906,7 +921,7 @@
                             <p class="hero-subtitle">Free. Anonymous. Private.</p>
                             <p>Describe your symptoms and get a diagnosis and treatment plan in minutes.<br>
                             Need a prescription, or doctor’s note? Connect with a licensed doctor for just <strong>RM 38</strong>.</p>
-                            <p style="font-size: 14px; font-weight: 500; color: var(--primary-blue); margin-top: 8px;">Available 24/7. Trusted by thousands of Malaysians.</p>
+                            <p class="hero-trust-text">Available 24/7. Trusted by thousands of Malaysians.</p>
                         </div>
                     </section>
                 </div>
@@ -1428,41 +1443,6 @@
         });
     </script>
 
-    <!-- Typewriter Backspace Animation Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const typeTarget = document.getElementById('typewriter-text');
-            if (!typeTarget) return;
-
-            const originalText = typeTarget.textContent;
-            let index = originalText.length; 
-            let isDeleting = true;
-
-            function typeLoop() {
-                let speed = isDeleting ? 40 : 80; 
-
-                if (isDeleting) {
-                    index--;
-                    if (index === 0) {
-                        isDeleting = false;
-                        speed = 400;
-                    }
-                } else {
-                    index++;
-                    if (index === originalText.length) {
-                        isDeleting = true;
-                        speed = 2500;
-                    }
-                }
-
-                typeTarget.textContent = originalText.substring(0, index);
-                setTimeout(typeLoop, speed);
-            }
-
-            setTimeout(typeLoop, 2500);
-        });
-    </script>
-
     <!-- Main Chat Implementation & UI Logic -->
     <script>
         // Set / unset UI depending on the chat mode (handles back/forward browser buttons perfectly)
@@ -1473,7 +1453,8 @@
             if (isChatMode) {
                 document.body.classList.add('chat-mode-active');
 
-                // Force scroll to top so header remains visible
+                // Force scroll to top so header remains visible instantly
+                window.scrollTo(0, 0);
                 const mainScroll = document.getElementById('main-scroll-area');
                 if (mainScroll) mainScroll.scrollTop = 0;
 
@@ -1692,10 +1673,10 @@
             const message = input.value.trim();
             if (!message) return;
 
-            // Activate Full Screen Chat View
+            // Activate Full Screen Chat View flawlessly
             if (!document.body.classList.contains('chat-mode-active')) {
                 window.history.pushState(null, '', window.location.pathname + '?chat=active');
-                syncChatState(); // Call sync state to handle UI changes correctly
+                syncChatState(); 
             }
 
             // Remove any quick-reply buttons before sending new text
