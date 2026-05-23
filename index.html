@@ -116,12 +116,19 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: flex-start; /* Modified to allow natural scrolling on smaller heights */
-            gap: 24px; /* Maintain safe distance between sections */
+            justify-content: flex-start; 
+            gap: 24px; 
             padding-top: 24px;
         }
-        .hero-content-top { width: 100%; display: flex; justify-content: center; flex-shrink: 0; }
-        .chat-content-bottom { width: 100%; display: flex; justify-content: center; flex-shrink: 0; }
+        /* ADDED clearance to repel fixed overlap bugs at end of read */
+        .hero-content-top { 
+            width: 100%; display: flex; justify-content: center; flex-shrink: 0; padding-bottom: 32px; 
+        }
+        /* LOCKED naturally into the document positioning stream */
+        .chat-content-bottom { 
+            width: 100%; display: flex; justify-content: center; flex-shrink: 0; 
+            position: relative !important; z-index: 10 !important; bottom: auto; 
+        }
 
         .hero { 
             display: flex; 
@@ -153,6 +160,7 @@
             padding-bottom: 0; 
             padding-top: 0; 
             flex-shrink: 0;
+            position: relative !important;
         }
 
         .chat-container { 
@@ -168,6 +176,8 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            position: relative !important;  /* Strictly guarantees statically correct spacing constraints below headers */
+            z-index: 5 !important;
         }
 
         .chat-tabs-wrapper { display: flex; justify-content: center; margin-bottom: 24px; width: 100%; }
@@ -238,7 +248,7 @@
         }
 
         body.chat-mode-active #main-scroll-area {
-            overflow: hidden !important; /* Locks body scroll to keep header pinned */
+            overflow: hidden !important; 
             display: flex;
             flex-direction: column;
         }
@@ -251,7 +261,7 @@
             display: none !important;
         }
 
-        /* Pure Flex chain - avoiding height: 100% overrides */
+        /* Pure Flex chain */
         body.chat-mode-active .section-white:first-of-type,
         body.chat-mode-active .hero-chat-wrapper,
         body.chat-mode-active .chat-content-bottom,
@@ -262,7 +272,7 @@
             width: 100%;
             flex: 1;
             min-height: 0;
-            height: auto; /* Reverting any strict heights so flex-1 operates cleanly */
+            height: auto; 
             margin: 0 !important;
             padding: 0 !important;
             max-width: 100% !important;
@@ -295,8 +305,8 @@
         }
 
         body.chat-mode-active .chat-input-area {
-            flex-shrink: 0; /* Never collapse input area */
-            padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px)); /* Safe area padding pushes it safely above nav bar */
+            flex-shrink: 0; 
+            padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px));
             padding-top: 8px;
             width: 100%;
             background: #ffffff;
@@ -307,7 +317,7 @@
             height: auto;
             background-color: #fff;
             border: 1px solid #e2e8f0;
-            margin-bottom: 0 !important; /* Kept flush to boundaries */
+            margin-bottom: 0 !important; 
             padding: 8px 16px;
             border-radius: 24px;
             flex-direction: row;
@@ -620,16 +630,17 @@
                 min-height: auto; 
                 gap: 16px; /* Reduced gap for small screens */
             }
-            .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 0px; flex-shrink: 0; }
+            /* Extra mobile layout clearances mapping to the fixes deployed */
+            .hero-content-top { display: flex; width: 100%; justify-content: center; padding-bottom: 24px; flex-shrink: 0; margin-bottom: 32px; }
             .chat-content-bottom {
                 display: flex;
                 width: 100%;
                 justify-content: center;
-                position: relative; 
-                bottom: auto;
-                z-index: auto;
+                position: relative !important; 
+                bottom: auto !important;
+                z-index: 10;
                 margin: 0; 
-                padding: 0 0 24px 0;
+                padding: 0 0 40px 0; /* Clear widget out further on strict smaller viewport res */
                 background: transparent;
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
@@ -645,7 +656,7 @@
             .hero-description p { font-size: 14px; margin-bottom: 8px; line-height: 1.4; color: #1a1a1a; }
 
             .chat-section { width: 100%; padding-top: 12px; padding-bottom: 0; align-items: center; flex-shrink: 0; }
-            .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); flex-shrink: 0; }
+            .chat-container { padding: 16px; border-radius: 16px; margin: 0 auto; width: 100%; max-width: 100%; background-color: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); flex-shrink: 0; position: relative !important; }
             .chat-tabs-wrapper { margin-bottom: 16px; width: 100%; } 
             .chat-tabs { width: 100%; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); padding: 4px; border-radius: 999px; }
             .tab-btn { flex: 1; justify-content: center; padding: 8px 4px !important; background: transparent !important; font-size: clamp(11px, 3.5vw, 13px) !important; color: #94a3b8; font-weight: 500; white-space: nowrap !important; }
@@ -832,7 +843,7 @@
     </div>
 
     <!-- MAIN SCROLLABLE CONTENT AREA -->
-    <div class="flex-1 flex flex-col relative h-full overflow-y-auto overflow-x-hidden w-full scroll-smooth" id="main-scroll-area">
+    <div class="flex-1 flex flex-col relative h-full overflow-y-auto overflow-x-hidden w-full scroll-smooth pb-8" id="main-scroll-area">
 
         <header class="w-full flex justify-between items-center bg-white px-6 md:px-8 py-2 sticky top-0 z-[100]">
             <div class="flex items-center gap-4">
@@ -869,7 +880,7 @@
                 <div class="chat-content-bottom">
                     <!-- Chat Interface Area -->
                     <section class="chat-section">
-                        <div class="chat-container relative z-20">
+                        <div class="chat-container">
                             <div class="chat-tabs-wrapper">
                                 <div class="chat-tabs">
                                     <button class="tab-btn active">
