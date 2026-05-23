@@ -34,12 +34,12 @@
             -webkit-font-smoothing: antialiased;
             background-color: #ffffff !important;
             overflow-x: hidden;
-            overscroll-behavior-y: none;
+            overflow-y: auto;
+            overscroll-behavior-y: auto;
         }
 
         #main-scroll-area {
             -webkit-overflow-scrolling: touch;
-            overscroll-behavior-y: contain;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -260,11 +260,12 @@
         /* --- Full Screen Chat Mode Styles (New Page Feel) --- */
         body.chat-mode-active {
             overflow: hidden !important;
-            height: 100dvh !important; /* Lock to viewport only when chatting */
+            height: 100dvh !important;
         }
 
         body.chat-mode-active #main-scroll-area {
-            overflow: hidden !important; 
+            overflow: hidden !important;
+            height: 100dvh !important;
             display: flex;
             flex-direction: column;
             background: #ffffff;
@@ -677,7 +678,7 @@
                 justify-content: center !important;
                 width: 100% !important;
                 min-height: calc(100dvh - 54px) !important;
-                padding: 16px 16px 24px 16px !important;
+                padding: 16px 16px 20px 16px !important;
                 box-sizing: border-box !important;
                 gap: 0 !important;
             }
@@ -693,7 +694,7 @@
                 display: flex;
                 width: 100%;
                 justify-content: center;
-                margin: 12px 0 0 0;
+                margin: 14px 0 0 0;
                 padding: 0;
                 background: transparent;
                 border-top: none;
@@ -707,15 +708,15 @@
                 text-align: center; 
                 width: 100%; 
                 max-width: 420px; 
-                margin: 0 auto 0 auto; 
+                margin: 0 auto; 
                 gap: 0; 
             }
-            .hero-fig2 { height: 40px; margin: 0 auto 10px auto; display: block; } 
+            .hero-fig2 { height: 52px; margin: 0 auto 12px auto; display: block; } 
             
             .hero h1 { 
                 font-family: Georgia, Cambria, "Times New Roman", Times, serif; 
-                font-size: clamp(26px, 6.5vw, 34px); 
-                margin-bottom: 8px; 
+                font-size: clamp(28px, 7.5vw, 38px); 
+                margin-bottom: 10px; 
                 text-align: center; 
                 width: 100%; 
                 letter-spacing: -0.5px; 
@@ -730,19 +731,19 @@
                 text-align: center; 
                 display: flex; 
                 flex-direction: column; 
-                gap: 6px; 
+                gap: 7px; 
             }
             .hero-description p.hero-subtitle { 
-                font-size: 13px; 
+                font-size: 14px; 
                 margin-bottom: 0; 
                 font-weight: 600 !important; 
                 color: #1e293b !important; 
                 text-align: center !important; 
             }
             .hero-description p { 
-                font-size: clamp(12px, 3.2vw, 14px) !important; 
+                font-size: clamp(13px, 3.5vw, 15px) !important; 
                 margin-bottom: 0 !important; 
-                line-height: 1.5 !important; 
+                line-height: 1.55 !important; 
                 color: #475569 !important; 
                 text-align: center !important; 
                 padding: 0 4px; 
@@ -844,7 +845,7 @@
     </style>
 </head>
 
-<body class="flex min-h-screen bg-white relative overflow-x-hidden">
+<body class="bg-white relative overflow-x-hidden">
 
     <!-- Firebase Auth & Dynamic Login state -->
     <script>const API_BASE = 'https://api.doktura.ai';</script>
@@ -949,7 +950,7 @@
     </div>
 
     <!-- MAIN SCROLLABLE CONTENT AREA -->
-    <div class="flex-1 flex flex-col relative h-full overflow-y-auto overflow-x-hidden w-full" id="main-scroll-area">
+    <div class="flex-1 flex flex-col relative overflow-x-hidden w-full" id="main-scroll-area">
 
         <header class="w-full flex justify-between items-center bg-white px-6 md:px-8 py-2 sticky top-0 z-[100]">
             <div class="flex items-center gap-4">
