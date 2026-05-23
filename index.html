@@ -180,7 +180,6 @@
             width: 100%;
         }
 
-        /* Fixed positioning from sticky to relative to align naturally on scroll */
         .chat-input-area {
             position: relative;
             background: #ffffff;
@@ -219,7 +218,7 @@
         .chip:hover { background: #f8fafc; border-color: #cbd5e1; }
         .pdpa-text { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 12px; color: #94a3b8; font-weight: 500; }
 
-        /* Animation for shaking the ToS box */
+        /* --- Animation for shaking the ToS box --- */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -717,7 +716,7 @@
                 document.getElementById("userAvatarSidebar").src = user.photoURL || 'https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true';
 
                 const logoutBtn = document.getElementById("logoutBtn");
-                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>`;
+                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>`;
                 logoutBtn.removeAttribute("href");
                 logoutBtn.onclick = (e) => {
                     e.preventDefault();
@@ -1105,7 +1104,7 @@
                         <div class="feature-content">
                             <div class="feature-icon-box">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    <path d="M21 11.5a8.38(8.38) 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
                                     <line x1="9" y1="12" x2="15" y2="12"></line>
                                 </svg>
                             </div>
@@ -1261,7 +1260,7 @@
         </div>
 
         <!-- FULL WIDTH Edge-to-Edge Footer Section -->
-        <footer class="footer-section hide-in-chat">
+        <footer class="footer-section">
             <div class="footer-content">
                 <div class="footer-top">
                     <div class="footer-brand">
@@ -1272,15 +1271,15 @@
                     <div class="footer-links-group">
                         <div class="footer-col">
                             <h4>Company</h4>
-                            <a href="https://doktura.ai/About-us.html">About</a>
+                            <a href="About-us.html">About</a>
                             <a href="#">Careers</a>
-                            <a href="https://doktura.ai/Contact-Us.html">Contact Us</a>
+                            <a href="Contact-Us.html">Contact Us</a>
                         </div>
                         <div class="footer-col">
                             <h4>Legal</h4>
-                            <a href="https://doktura.ai/privacy.html">Privacy Policy</a>
-                            <a href="https://doktura.ai/terms.html">Terms of Service</a>
-                            <a href="#">PDPA</a>
+                            <a href="privacy.html">Privacy Policy</a>
+                            <a href="terms.html">Terms of Service</a>
+                            <a href="pdpa.html">PDPA</a>
                         </div>
                     </div>
                 </div>
