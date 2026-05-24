@@ -330,10 +330,16 @@
 
         body.chat-mode-active .chat-input-area {
             flex-shrink: 0;
-            padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px));
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 8px));
             padding-top: 8px;
+            padding-left: 0;
+            padding-right: 0;
             width: 100%;
             background: #ffffff;
+            position: sticky;
+            bottom: 0;
+            z-index: 200;
+            border-top: 1px solid #f1f5f9;
         }
 
         body.chat-mode-active .input-wrapper {
@@ -459,7 +465,7 @@
 
         .step-1 .step-circle { color: #ef4444; border: 1px solid #ef4444; box-shadow: 0 0 0 6px #fff0f0; }
         .step-2 .step-circle { color: var(--primary-blue); border: 1px solid var(--primary-blue); box-shadow: 0 0 0 6px var(--light-blue-bg); }
-        .step-3 .step-circle { color: var(--text-dark); border: none; background-color: #f8fafc; }
+        .step-3 .step-circle { color: #64748b; border: 1px solid #94a3b8; background-color: #ffffff; box-shadow: 0 0 0 6px #f1f5f9; }
 
         .step h4 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
         .step p { font-size: 14px; color: var(--text-gray); line-height: 1.6; }
@@ -657,10 +663,6 @@
                 padding: 0 16px 0 16px !important;
                 border-radius: 0;
                 max-width: 100% !important;
-            }
-
-            body.chat-mode-active .chat-input-area {
-                padding-bottom: calc(32px + env(safe-area-inset-bottom, 24px)) !important;
             }
 
             /* =====================================================
@@ -1066,8 +1068,8 @@
                     <p>Get instant health guidance, understand your symptoms, and explore next steps anytime, anywhere.</p>
                     
                     <div class="rating-badge-wrapper">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665253.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
-						<span style="opacity: 0.3; margin: 0 4px;">|</span> Help <span id="help-counter-text" class="text-blue font-bold">...</span> times!</span>
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
+                        <span class="rating-text">Help <span class="text-blue font-bold">23,819,892</span> times! <span style="opacity: 0.3; margin: 0 4px;">|</span> Help <span id="help-counter-text" class="text-blue font-bold">...</span> times!</span>
                     </div>
                 </section>
             </div>
@@ -1779,11 +1781,11 @@
                     history.innerHTML += `
                         <div id="tos-blocker" style="display: flex; gap: 12px; margin-top: 16px;">
                             <div style="width: 32px; flex-shrink: 0;"></div>
-                            <div style="background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 16px; border-radius: 12px; text-align: left; max-width: 85%;">
-                                <p style="font-size: 14px; color: #475569; margin-bottom: 12px;">Before I can reply, I need your permission to unlock your private AI doctor. <strong>It's fast, safe and free.</strong></p>
-                                <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #64748b; cursor: pointer;">
-                                    <input type="checkbox" id="tos-checkbox" style="margin-top: 3px;" onchange="handleTosChange(this)">
-                                    <span style="line-height: 1.5;">I agree to the <a href="https://doktura.ai/terms.html" class="text-blue">Electronic Terms of Service</a> and will discuss all Electronic output with a doctor. doktura.ai is an AI doctor, not a licensed physician, and does not provide medical advice.</span>
+                            <div style="background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 14px; border-radius: 12px; text-align: left; max-width: 85%;">
+                                <p style="font-size: 13px; color: #475569; margin-bottom: 10px; line-height: 1.5;">Before I can reply, I need your permission to unlock your private AI doctor. <strong>It's fast, safe and free.</strong></p>
+                                <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="tos-checkbox" style="margin-top: 2px; flex-shrink: 0;" onchange="handleTosChange(this)">
+                                    <span style="font-size: 11.5px; line-height: 1.5; color: #64748b;">I agree to the <a href="https://doktura.ai/terms.html" class="text-blue">Electronic Terms of Service</a> and will discuss all output with a doctor. doktura.ai is an AI, not a licensed physician.</span>
                                 </label>
                             </div>
                         </div>
