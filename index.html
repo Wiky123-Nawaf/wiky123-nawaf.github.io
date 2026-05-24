@@ -426,15 +426,16 @@
             justify-content: center;
             background-color: #f8fafc;
             border-radius: 999px;
-            padding: 8px 28px 8px 8px;
+            padding: 6px 20px 6px 6px;
             margin: 0 auto;
-            gap: 16px;
-            border: 1px solid rgba(0,0,0,0.04);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            flex-wrap: nowrap;
+            white-space: nowrap;
         }
-        .rating-badge-wrapper .hero-fig3 { margin: 0; height: 48px; width: auto; object-fit: contain; display: block; } 
-        .rating-text { font-size: 15px; color: #475569; font-weight: 500; }
+        .rating-badge-wrapper .hero-fig3 { margin: 0; height: 40px; width: auto; object-fit: contain; display: block; flex-shrink: 0; } 
+        .rating-text { font-size: 14px; color: #475569; font-weight: 500; white-space: nowrap; }
 
         /* --- Stats Counter Section --- */
         .stats-counter-section { padding: 50px 0 80px 0; text-align: center; background-color: var(--bg-grayish); display: flex; flex-direction: column; align-items: center; }
@@ -792,9 +793,18 @@
             .plus-icon-wrap { margin: 0 auto 20px auto; } 
             .bottom-info h2 { font-size: 28px; text-align: center; margin-bottom: 16px; } 
             .bottom-info p { text-align: center; margin-bottom: 28px; font-size: 15px; } 
-            .rating-badge-wrapper { padding: 6px 20px 6px 6px; gap: 8px; flex-direction: column; border-radius: 20px; }
-            .rating-badge-wrapper .hero-fig3 { max-height: 40px; }
-            .rating-text { font-size: 13px; }
+            .rating-badge-wrapper { 
+                padding: 5px 14px 5px 5px; 
+                gap: 6px; 
+                flex-direction: row !important; 
+                flex-wrap: nowrap !important;
+                border-radius: 999px; 
+                white-space: nowrap;
+                max-width: calc(100vw - 32px);
+                overflow: hidden;
+            }
+            .rating-badge-wrapper .hero-fig3 { height: 32px; flex-shrink: 0; }
+            .rating-text { font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
             .stats-counter-section { padding: 32px 0 50px 0; }
             .counter-boxes { gap: 8px; margin-bottom: 0; flex-wrap: nowrap; justify-content: center; }
