@@ -263,160 +263,6 @@
         }
         .shake { animation: shake 0.4s ease-in-out; }
 
-        /* --- Full Screen Chat Mode Styles (New Page Feel) --- */
-        body.chat-mode-active {
-            overflow: hidden !important;
-            height: 100svh !important;
-        }
-
-        body.chat-mode-active #main-scroll-area {
-            overflow: hidden !important;
-            height: 100svh !important;
-            max-height: 100svh !important;
-            display: flex;
-            flex-direction: column;
-            background: #ffffff;
-        }
-
-        body.chat-mode-active .hide-in-chat {
-            display: none !important;
-        }
-
-        body.chat-mode-active .chat-tabs-wrapper {
-            display: none !important;
-        }
-
-        body.chat-mode-active .section-white:first-of-type,
-        body.chat-mode-active .hero-chat-wrapper,
-        body.chat-mode-active .chat-content-bottom,
-        body.chat-mode-active .chat-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            width: 100%;
-            flex: 1;
-            min-height: 0;
-            height: auto; 
-            margin: 0 !important;
-            padding: 0 !important;
-            max-width: 100% !important;
-            background: #ffffff;
-        }
-
-        body.chat-mode-active .chat-container {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto !important; 
-            border: none;
-            box-shadow: none;
-            border-radius: 0;
-            background-color: transparent;
-            padding: 0 16px 0 16px !important;
-            min-height: 0;
-            height: auto;
-        }
-
-        body.chat-mode-active #chat-history {
-            flex: 1;
-            max-height: none;
-            overflow-y: auto;
-            overflow-x: hidden;
-            margin-bottom: 0;
-            min-height: 0;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-            padding-right: 4px;
-            scroll-behavior: smooth;
-        }
-
-        body.chat-mode-active .chat-input-area {
-            flex-shrink: 0;
-            padding-bottom: calc(12px + env(safe-area-inset-bottom, 8px));
-            padding-top: 8px;
-            padding-left: 0;
-            padding-right: 0;
-            width: 100%;
-            background: #ffffff;
-            position: sticky;
-            bottom: 0;
-            z-index: 200;
-            border-top: 1px solid #f1f5f9;
-        }
-
-        body.chat-mode-active .input-wrapper {
-            min-height: 50px;
-            height: auto;
-            background-color: #fff;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 0 !important; 
-            padding: 8px 16px;
-            border-radius: 24px;
-            flex-direction: row;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            width: 100%;
-        }
-
-        body.chat-mode-active .input-top-area {
-            flex: 1;
-            align-items: center;
-            gap: 8px;
-        }
-
-        body.chat-mode-active .input-top-area svg {
-            display: none;
-        }
-
-        body.chat-mode-active .input-field {
-            min-height: 24px;
-            height: 24px;
-            font-size: 15px;
-            padding: 0;
-            margin: 0;
-            line-height: 24px;
-            overflow: hidden;
-            resize: none;
-        }
-
-        body.chat-mode-active .input-actions {
-            margin-top: 0;
-            width: auto;
-            margin-left: 12px;
-            display: flex;
-            align-items: center;
-        }
-
-        body.chat-mode-active .btn-get-started {
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: transparent;
-            overflow: hidden;
-            position: relative;
-        }
-
-        body.chat-mode-active .btn-get-started svg {
-            color: #ffffff;
-            margin: 0;
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        body.chat-mode-active .pdpa-text {
-            display: none;
-        }
-
         /* --- Bottom Info Section --- */
         .bottom-info { padding: 80px 0 60px 0; text-align: center; max-width: 800px; margin: 0 auto; }
         .plus-icon-wrap { width: 48px; height: 48px; background-color: #f8fafc; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; color: #111; }
@@ -624,7 +470,7 @@
         }
 
         /* ---------------------------------------------------- */
-        /* MOBILE: HERO + CHAT = FULL FIRST SCREEN (100svh)     */
+        /* MOBILE: HERO + CHAT = FULL FIRST SCREEN              */
         /* ---------------------------------------------------- */
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
@@ -664,38 +510,14 @@
                 white-space: nowrap !important;
             }
 
-            body.chat-mode-active .chat-container {
-                padding: 0 16px 0 16px !important;
-                border-radius: 0;
-                max-width: 100% !important;
-            }
-
             /* =====================================================
                MOBILE FIRST-SCREEN LAYOUT:
-               Hero wrapper = 100svh (stable small viewport height)
-               Using svh prevents resize when browser chrome appears.
-               Header is sticky on top, hero is behind it scrollably.
             ===================================================== */
 
             /* The section-white wrapper must not flex-grow */
             .section-white.flex-1 {
                 flex: none !important;
                 display: block !important;
-            }
-
-            /* The hero+chat container = full stable viewport height */
-            .hero-chat-wrapper {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                /* 100svh = always the stable small viewport, no resize on scroll */
-                min-height: 100svh !important;
-                /* Offset top so content clears the sticky header (~54px) */
-                padding: 70px 16px 24px 16px !important;
-                box-sizing: border-box !important;
-                gap: 0 !important;
             }
 
             .hero-content-top { 
@@ -741,20 +563,12 @@
             }
             
             .hero-description { 
-                padding: 0; 
+                padding: 0 2px; 
                 width: 100%; 
                 text-align: center; 
                 display: flex; 
                 flex-direction: column; 
-                gap: 7px;
-                align-items: center;
-            }
-            .hero-desc-p1,
-            .hero-desc-p2 {
-                width: 100% !important;
-                text-align: center !important;
-                padding: 0 !important;
-                margin: 0 !important;
+                gap: 7px; 
             }
             .hero-description p.hero-subtitle { 
                 font-size: 14px; 
@@ -771,9 +585,6 @@
                 text-align: center !important; 
                 padding: 0;
                 max-width: 100%;
-                word-break: normal;
-                overflow-wrap: break-word;
-                hyphens: none;
             }
 
             /* Chat card */
@@ -877,6 +688,176 @@
             .footer-links-group { flex-direction: column; gap: 32px; }
             .footer-bottom { flex-direction: column; align-items: flex-start; gap: 24px; text-align: left; padding-top: 24px; }
             .social-area { flex-direction: column; align-items: flex-start; gap: 16px; }
+        }
+
+        /* Prevent override conflicts by targeting non-chat mode for mobile viewport sizing */
+        body:not(.chat-mode-active) .hero-chat-wrapper {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            min-height: 100svh !important;
+            padding: 70px 16px 24px 16px !important;
+            box-sizing: border-box !important;
+            gap: 0 !important;
+        }
+
+        /* =====================================================
+           FULL SCREEN CHAT MODE OVERRIDES (Placed at end to override all)
+           ===================================================== */
+        body.chat-mode-active {
+            overflow: hidden !important;
+            height: 100dvh !important;
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100% !important;
+        }
+
+        body.chat-mode-active #main-scroll-area {
+            overflow: hidden !important;
+            height: 100dvh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: #ffffff !important;
+            position: absolute !important;
+            inset: 0 !important;
+        }
+
+        body.chat-mode-active .hide-in-chat {
+            display: none !important;
+        }
+
+        body.chat-mode-active .chat-tabs-wrapper {
+            display: none !important;
+        }
+
+        body.chat-mode-active .section-white:first-of-type,
+        body.chat-mode-active .hero-chat-wrapper,
+        body.chat-mode-active .chat-content-bottom,
+        body.chat-mode-active .chat-section {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important; 
+            width: 100% !important;
+            flex: 1 !important;
+            min-height: 0 !important;
+            height: auto !important; 
+            margin: 0 !important;
+            padding: 0 !important;
+            max-width: 100% !important;
+            background: #ffffff !important;
+        }
+
+        body.chat-mode-active .chat-container {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 !important;
+            width: 100% !important;
+            max-width: 800px !important;
+            margin: 0 auto !important; 
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background-color: transparent !important;
+            padding: 0 16px 0 16px !important;
+            min-height: 0 !important;
+            height: auto !important;
+        }
+
+        body.chat-mode-active #chat-history {
+            flex: 1 !important;
+            max-height: none !important;
+            overflow-y: auto !important;
+            margin-bottom: 12px !important;
+            min-height: 0 !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding-right: 4px !important;
+            width: 100% !important;
+        }
+
+        body.chat-mode-active .chat-input-area {
+            flex-shrink: 0 !important;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 8px)) !important;
+            padding-top: 8px !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            width: 100% !important;
+            background: #ffffff !important;
+            position: relative !important;
+            z-index: 200 !important;
+            border-top: 1px solid #f1f5f9 !important;
+        }
+
+        body.chat-mode-active .input-wrapper {
+            min-height: 50px !important;
+            height: auto !important;
+            background-color: #fff !important;
+            border: 1px solid #e2e8f0 !important;
+            margin-bottom: 0 !important; 
+            padding: 8px 16px !important;
+            border-radius: 24px !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+            width: 100% !important;
+        }
+
+        body.chat-mode-active .input-top-area {
+            flex: 1 !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        body.chat-mode-active .input-top-area svg {
+            display: none !important;
+        }
+
+        body.chat-mode-active .input-field {
+            min-height: 24px !important;
+            height: 24px !important;
+            font-size: 15px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 24px !important;
+            overflow: hidden !important;
+            resize: none !important;
+        }
+
+        body.chat-mode-active .input-actions {
+            margin-top: 0 !important;
+            width: auto !important;
+            margin-left: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        body.chat-mode-active .btn-get-started {
+            border-radius: 50% !important;
+            width: 36px !important;
+            height: 36px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: transparent !important;
+            overflow: hidden !important;
+            position: relative !important;
+        }
+
+        body.chat-mode-active .btn-get-started svg {
+            color: #ffffff !important;
+            margin: 0 !important;
+            position: absolute !important;
+            width: 16px !important;
+            height: 16px !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+
+        body.chat-mode-active .pdpa-text {
+            display: none !important;
         }
     </style>
 </head>
@@ -1012,8 +993,8 @@
 
                         <div class="hero-description">
                             <p class="hero-subtitle">Free. Anonymous. Private.</p>
-                            <p class="hero-desc-p1">Describe your symptoms and get a diagnosis along with a personalized treatment plan in minutes.</p>
-                            <p class="hero-desc-p2">Need a prescription, or doctor’s note? Connect with a licensed doctor for just <strong>RM 38</strong>.</p>
+                            <p>Share your symptoms and simply get diagnosis along with a personalised treatment plan in minutes.<br>
+                            Need a prescription, or doctor’s note? Connect with a licensed doctor for just <strong>RM 38</strong>.</p>
                             <p class="hero-trust-text">Available 24/7. Trusted by thousands of Malaysians.</p>
                         </div>
                     </section>
@@ -1093,8 +1074,8 @@
                     <p>Get instant health guidance, understand your symptoms, and explore next steps anytime, anywhere.</p>
                     
                     <div class="rating-badge-wrapper">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665243.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
-                        <span class="rating-text">Help <span class="text-blue font-bold">23,819,892</span> times! <span style="opacity: 0.3; margin: 0 4px;">|</span> Help <span id="help-counter-text" class="text-blue font-bold">...</span> times!</span>
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665253.png?download=true" alt="Ratings and usage statistics" class="hero-fig3">
+                        <span class="rating-text">Help <span id="help-counter-text" class="text-blue font-bold">...</span> times!</span>
                     </div>
                 </section>
             </div>
