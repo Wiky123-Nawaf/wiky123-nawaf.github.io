@@ -520,8 +520,8 @@
             
             try {
                 const token = await user.getIdToken();
-                const res = await fetch(`${API_BASE}/api/user/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email }) });
-                
+                const res = await fetch(`${API_BASE}/api/user/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email, anon_session_id: localStorage.getItem("anon_session_id") }) });
+                if (res.ok) { localStorage.removeItem("anon_session_id"); }
                 if (res.status === 401 || res.status === 403) { await signOut(auth); window.location.href = "login.html"; return; }
                 const data = await res.json();
                 
@@ -891,6 +891,109 @@
             loadHistory();
         }
 
+        function formatAiMessage(content, isDashboard = false) {
+            if (content.includes("[EMERGENCY]")) {
+                return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
+                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            }
+
+            if (content.includes("[ESCALATE]")) {
+                // Safe extraction using Regex
+                let summaryMatch = content.match(/(?:\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|###|$))/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Plan of Action:\*\*|Plan of Action:|---|###|$))/i);
+                let planMatch = content.match(/(?:\*\*Plan of Action:\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|$)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note for Physician:\*\*|SOAP Note for Physician:|SOAP Note:)\s*([\s\S]*?)$/i);
+
+                let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
+                let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
+                let plan = planMatch ? planMatch[1].trim() : "";
+                let soap = soapMatch ? soapMatch[1].trim() : "";
+
+                let formatClinicalText = (text) => {
+                    if (!text) return "";
+                    return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900">$1</strong>')
+                               .replace(/(\d+[\)\.])\s/g, '<br><br><strong class="text-gray-900">$1</strong> ') // spacing before numbers e.g. 1) or 1.
+                               .replace(/\n-/g, '<br>&bull; ')
+                               .replace(/^\s*<br><br>/, '') // clean leading breaks
+                               .replace(/\n/g, '<br>');
+                };
+
+                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                
+                if (isDashboard) {
+                    window.generatedClinicalReport = content; // Store it globally for the booking payload
+                }
+                
+                const btnAction = isDashboard 
+                    ? `switchTab('book'); document.getElementById('book-symptoms').value = 'AI Triage Complete'; suggestDoctor();`
+                    : `window.location.href='login.html';`;
+                    
+                const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
+
+                let reportHtml = `
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
+                    <div class="p-5 border-b border-gray-100">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doctronic Report</h2>
+                        <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
+                    </div>
+                    
+                    <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
+                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                        <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gray-50 font-sans">
+                        <h3 class="font-bold text-gray-900 text-lg mb-3">Continue to a licensed doctor</h3>
+                        <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
+                        </ul>
+                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                            ${btnText}
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 divide-y divide-gray-100 font-sans">
+                        <details class="group">
+                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
+                                Assessment & Plan
+                                <span class="transition group-open:rotate-180">
+                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                                </span>
+                            </summary>
+                            <div class="px-5 pb-5 text-sm text-gray-700">
+                                <p class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
+                                ${diffDiag ? `<div class="font-bold text-gray-900 mb-1">Differential Diagnosis:</div><div class="mb-4">${formatClinicalText(diffDiag)}</div>` : ''}
+                                ${plan ? `<div class="font-bold text-gray-900 mb-1">Plan of Action:</div><div>${formatClinicalText(plan)}</div>` : ''}
+                            </div>
+                        </details>
+                        
+                        <details class="group">
+                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
+                                SOAP Note (for Physicians)
+                                <span class="transition group-open:rotate-180">
+                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                                </span>
+                            </summary>
+                            <div class="px-5 pb-5">
+                                <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider font-bold">A clinical summary to share with your doctor</p>
+                                <div class="text-xs text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-200 font-mono whitespace-pre-wrap leading-relaxed shadow-inner">${soap}</div>
+                            </div>
+                        </details>
+                    </div>
+                </div>`;
+
+                let conversationalIntro = content.split("[ESCALATE]")[0].trim();
+                if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
+
+                return `<div class="mb-2">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+            }
+
+            return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
+
         async function loadHistory() {
             const el = document.getElementById('chat-history');
             const r = await fetch(API_BASE+'/api/history',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid, session_id:window.currentSessionId})});
@@ -904,7 +1007,7 @@
                     if(m.role === 'system') return;
                     let isUser = m.role === 'user';
                     if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed">${m.content}</div></div>`;
-                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${m.content.replace(/\n/g,'<br>')}</div></div>`;
+                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(m.content, true)}</div></div>`;
                 });
             }
             el.scrollTo(0, el.scrollHeight);
@@ -968,7 +1071,7 @@
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
-                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${data.reply.replace(/\n/g,'<br>')}</div></div>`;
+                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(data.reply, true)}</div></div>`;
                 history.scrollTo(0, history.scrollHeight);
                 
                 if(isVoiceActive) speakOut(data.reply);
@@ -1408,61 +1511,62 @@
         }
 
         window.submitBooking = async (e) => {
-    e.preventDefault(); 
-    
-    const doctorId = document.getElementById('book-doctor').value;
-    if (!doctorId) return showInlineMessage("Please select a doctor.", "error");
-    
-    const preferredTime = document.getElementById('selected-slot').value;
-    if (window.bookingUrgency === 'regular' && !preferredTime) {
-        return showInlineMessage("Please select an available time slot.", "error");
-    }
+            e.preventDefault(); 
+            
+            const doctorId = document.getElementById('book-doctor').value;
+            if (!doctorId) return showInlineMessage("Please select a doctor.", "error");
+            
+            const preferredTime = document.getElementById('selected-slot').value;
+            if (window.bookingUrgency === 'regular' && !preferredTime) {
+                return showInlineMessage("Please select an available time slot.", "error");
+            }
 
-    if (!document.getElementById('pdpa-agree').checked) return showInlineMessage("You must agree to the PDPA to proceed.", "error");
-    const symptomsText = document.getElementById('book-symptoms').value;
-    
-    const btn = document.getElementById('book-btn'); 
-    btn.innerText = "Processing...";
-    
-    let finalDateTime = preferredTime;
-    if (window.bookingUrgency === 'immediate') {
-        // Must send exactly YYYY-MM-DDTHH:MM for the backend to parse
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        finalDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-    
-    try {
-        const r = await fetch(API_BASE + '/api/book_appointment', { 
-            method:'POST', 
-            headers:await getAuthHeaders(), 
-            body:JSON.stringify({ 
-                doctor_id: doctorId, 
-                visit_type: "online", 
-                preferred_datetime: finalDateTime,
-                symptoms: symptomsText
-            }) 
-        });
-        const d = await r.json(); 
-        
-        if (d.error || !r.ok) {
-            showInlineMessage(d.message || d.detail || "Booking failed", "error"); 
-        } else if (d.stripe_url) {
-            window.location.href = d.stripe_url; 
-        } else { 
-            showInlineMessage("Booking Confirmed Successfully!", "success"); 
-            fetchAppointments(); 
-            switchTab('schedule'); 
+            if (!document.getElementById('pdpa-agree').checked) return showInlineMessage("You must agree to the PDPA to proceed.", "error");
+            const symptomsText = document.getElementById('book-symptoms').value;
+            
+            const btn = document.getElementById('book-btn'); 
+            btn.innerText = "Processing...";
+            
+            let finalDateTime = preferredTime;
+            if (window.bookingUrgency === 'immediate') {
+                // Must send exactly YYYY-MM-DDTHH:MM for the backend to parse
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                finalDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+            
+            try {
+                const r = await fetch(API_BASE + '/api/book_appointment', { 
+                    method:'POST', 
+                    headers:await getAuthHeaders(), 
+                    body:JSON.stringify({ 
+                        doctor_id: doctorId, 
+                        visit_type: "online", 
+                        preferred_datetime: finalDateTime,
+                        symptoms: symptomsText,
+                        ai_report: window.generatedClinicalReport || null // Passes the beautifully generated report to the backend!
+                    }) 
+                });
+                const d = await r.json(); 
+                
+                if (d.error || !r.ok) {
+                    showInlineMessage(d.message || d.detail || "Booking failed", "error"); 
+                } else if (d.stripe_url) {
+                    window.location.href = d.stripe_url; 
+                } else { 
+                    showInlineMessage("Booking Confirmed Successfully!", "success"); 
+                    fetchAppointments(); 
+                    switchTab('schedule'); 
+                }
+            } catch(e) { 
+                showInlineMessage("Booking Failed. Please try again.", "error"); 
+            } 
+            btn.innerText = "Pay Now";
         }
-    } catch(e) { 
-        showInlineMessage("Booking Failed. Please try again.", "error"); 
-    } 
-    btn.innerText = "Pay Now";
-}
 
         window.checkUpcomingReminders = (appointments) => {
             if (!appointments || !appointments.length) return;
