@@ -1992,7 +1992,24 @@
 
                 const loader = document.getElementById(loadId);
                 if(loader) loader.remove();
-                history.innerHTML += createAiBubble(data.reply);
+                
+                // --- NEW TRIAGE LOGIC START ---
+                let replyText = data.reply;
+
+                if (replyText.includes("[EMERGENCY]")) {
+                    replyText = replyText.replace("[EMERGENCY]", "🚨 <strong style='color: #ef4444;'>URGENT:</strong>");
+                } 
+                else if (replyText.includes("[ESCALATE]")) {
+                    let parts = replyText.split("### Doctronic Report");
+                    replyText = parts[0].replace("[ESCALATE]", "").trim();
+                    if (!replyText) {
+                        replyText = "Based on your symptoms, I highly recommend consulting a doctor. I have prepared your clinical summary.";
+                    }
+                    replyText += "\n\n**Clinical Summary Ready**\nPlease **log in** to book a consultation and forward your summary to a licensed doctor.";
+                }
+                // --- NEW TRIAGE LOGIC END ---
+
+                history.innerHTML += createAiBubble(replyText);
                 history.scrollTop = history.scrollHeight;
             } catch (e) {
                 console.error(e);
