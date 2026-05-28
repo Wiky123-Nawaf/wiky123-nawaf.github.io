@@ -1803,9 +1803,86 @@
             }
         };
 
-        // Formatting Helpers
-        function formatMarkdown(text) {
-            return text.replace(/\*\*([\s\S]*?)\*\*/g, '<strong style="font-weight: 700; color: #111111;">$1</strong>');
+        // --- NEW CENTRALIZED AI MESSAGE FORMATTING ---
+        function formatAiMessage(content, isDashboard = false) {
+            if (content.includes("[EMERGENCY]")) {
+                return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
+                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            }
+
+            if (content.includes("[ESCALATE]")) {
+                let summaryMatch = content.match(/(?:\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|###|$))/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Plan of Action:\*\*|Plan of Action:|---|###|$))/i);
+                let planMatch = content.match(/(?:\*\*Plan of Action:\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|$)/i);
+
+                let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
+                let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
+                let plan = planMatch ? planMatch[1].trim() : "";
+
+                let formatClinicalText = (text) => {
+                    if (!text) return "";
+                    return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900">$1</strong>')
+                               .replace(/(\d+\.)\s/g, '<div class="mt-3"></div>$1 ')
+                               .replace(/<\/strong>\s*[-:]\s*/g, '</strong> &bull; ') 
+                               .replace(/\n\s*-\s*<strong/g, '<div class="mt-4"></div>&bull; <strong')
+                               .replace(/\n\s*-\s*/g, '<div class="mt-1"></div>&bull; ')
+                               .replace(/\n/g, '<br>');
+                };
+
+                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                
+                const btnAction = `window.location.href='login.html';`;
+                const btnText = "Login to Connect With a Doctor &rarr;";
+
+                let reportHtml = `
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
+                    <div class="p-5 border-b border-gray-100">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
+                        <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
+                    </div>
+                    
+                    <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
+                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                        <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gray-50 font-sans">
+                        <h3 class="font-bold text-gray-900 text-lg mb-3">Continue to a licensed doctor</h3>
+                        <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
+                        </ul>
+                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                            ${btnText}
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 font-sans">
+                        <details class="group" open>
+                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
+                                Assessment & Plan
+                                <span class="transition group-open:rotate-180">
+                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                                </span>
+                            </summary>
+                            <div class="px-5 pb-5 text-sm text-gray-700">
+                                <p class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
+                                ${diffDiag ? `<div class="font-bold text-gray-900 mb-1">Differential Diagnosis:</div><div class="mb-4">${formatClinicalText(diffDiag)}</div>` : ''}
+                                ${plan ? `<div class="font-bold text-gray-900 mb-1 mt-4">Plan of Action:</div><div>${formatClinicalText(plan)}</div>` : ''}
+                            </div>
+                        </details>
+                    </div>
+                </div>`;
+
+                let conversationalIntro = content.split("[ESCALATE]")[0].trim();
+                if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
+
+                return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+            }
+
+            return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         }
 
         // 2. Chat Bubble Helpers
@@ -1819,22 +1896,14 @@
         }
 
         function createAiBubble(text) {
+            let formattedText = formatAiMessage(text, false);
+            
             let extraHtml = '';
-
-            // Format Markdown (Bold)
-            const formattedText = formatMarkdown(text);
             const lowerText = text.toLowerCase();
-
-            // Detect Login Trigger
-            const showLogin = lowerText.includes("log in") || 
-                              lowerText.includes("login") || 
-                              lowerText.includes("logging into") ||
-                              lowerText.includes("consult a professional licensed doctor") || 
-                              lowerText.includes("consult a real doctor");
-
+            
+            const showLogin = !text.includes("[ESCALATE]") && (lowerText.includes("log in") || lowerText.includes("login") || lowerText.includes("consult a real doctor"));
             if (showLogin) {
-                extraHtml += `
-                <div style="margin-top: 16px; text-align: left;">
+                extraHtml += `<div style="margin-top: 16px; text-align: left;">
                     <a href="https://doktura.ai/login.html" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
                         Login to Consult a Doctor
@@ -1842,12 +1911,9 @@
                 </div>`;
             }
 
-            // Detect Gender Question Trigger
-            const showGender = (lowerText.includes("biological sex") || lowerText.includes("male or female")) && !showLogin;
-
+            const showGender = !text.includes("[ESCALATE]") && (lowerText.includes("biological sex") || lowerText.includes("male or female")) && !showLogin;
             if (showGender) {
-                extraHtml += `
-                <div class="quick-reply-chips" style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+                extraHtml += `<div class="quick-reply-chips" style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
                     <button class="chip" style="background: #fff; border: 1px solid var(--primary-blue); color: var(--primary-blue); font-weight: 600;" onclick="submitQuickReply('Male')">Male</button>
                     <button class="chip" style="background: #fff; border: 1px solid var(--primary-blue); color: var(--primary-blue); font-weight: 600;" onclick="submitQuickReply('Female')">Female</button>
                 </div>`;
@@ -1856,9 +1922,9 @@
             return `
                 <div style="display: flex; gap: 12px; margin-top: 16px;">
                     <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
-                    <div style="display: flex; flex-direction: column; max-width: 85%;">
-                        <div style="background: #f0f7ff; border: 1px solid rgba(0, 102, 204, 0.1); color: var(--text-dark); padding: 12px 16px; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6;">
-                            ${formattedText.replace(/\n/g, '<br>')}
+                    <div style="display: flex; flex-direction: column; max-width: 85%; width: 100%;">
+                        <div style="background: ${text.includes('[ESCALATE]') ? 'transparent' : '#f0f7ff'}; border: ${text.includes('[ESCALATE]') ? 'none' : '1px solid rgba(0, 102, 204, 0.1)'}; color: var(--text-dark); padding: ${text.includes('[ESCALATE]') ? '0' : '12px 16px'}; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6; width: 100%;">
+                            ${formattedText}
                         </div>
                         ${extraHtml}
                     </div>
@@ -1993,23 +2059,7 @@
                 const loader = document.getElementById(loadId);
                 if(loader) loader.remove();
                 
-                // --- NEW TRIAGE LOGIC START ---
-                let replyText = data.reply;
-
-                if (replyText.includes("[EMERGENCY]")) {
-                    replyText = replyText.replace("[EMERGENCY]", "🚨 <strong style='color: #ef4444;'>URGENT:</strong>");
-                } 
-                else if (replyText.includes("[ESCALATE]")) {
-                    let parts = replyText.split("### Doctronic Report");
-                    replyText = parts[0].replace("[ESCALATE]", "").trim();
-                    if (!replyText) {
-                        replyText = "Based on your symptoms, I highly recommend consulting a doctor. I have prepared your clinical summary.";
-                    }
-                    replyText += "\n\n**Clinical Summary Ready**\nPlease **log in** to book a consultation and forward your summary to a licensed doctor.";
-                }
-                // --- NEW TRIAGE LOGIC END ---
-
-                history.innerHTML += createAiBubble(replyText);
+                history.innerHTML += createAiBubble(data.reply);
                 history.scrollTop = history.scrollHeight;
             } catch (e) {
                 console.error(e);
