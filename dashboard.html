@@ -1409,48 +1409,61 @@
         }
 
         window.submitBooking = async (e) => {
-            e.preventDefault(); 
-            
-            const doctorId = document.getElementById('book-doctor').value;
-            if (!doctorId) return showInlineMessage("Please select a doctor.", "error");
-            
-            const preferredTime = document.getElementById('selected-slot').value;
-            if (!preferredTime) {
-                return showInlineMessage("Please select an available time slot.", "error");
-            }
+    e.preventDefault(); 
+    
+    const doctorId = document.getElementById('book-doctor').value;
+    if (!doctorId) return showInlineMessage("Please select a doctor.", "error");
+    
+    const preferredTime = document.getElementById('selected-slot').value;
+    if (window.bookingUrgency === 'regular' && !preferredTime) {
+        return showInlineMessage("Please select an available time slot.", "error");
+    }
 
-            if (!document.getElementById('pdpa-agree').checked) return showInlineMessage("You must agree to the PDPA to proceed.", "error");
-            const symptomsText = document.getElementById('book-symptoms').value;
-            
-            const btn = document.getElementById('book-btn'); 
-            btn.innerText = "Processing...";
-            try {
-                const r = await fetch(API_BASE + '/api/book_appointment', { 
-                    method:'POST', 
-                    headers:await getAuthHeaders(), 
-                    body:JSON.stringify({ 
-                        doctor_id: doctorId, 
-                        visit_type: "online", 
-                        preferred_datetime: preferredTime,
-                        symptoms: symptomsText
-                    }) 
-                });
-                const d = await r.json(); 
-                
-                if (d.error || !r.ok) {
-                    showInlineMessage(d.message || d.detail || "Booking failed", "error"); 
-                } else if (d.stripe_url) {
-                    window.location.href = d.stripe_url; 
-                } else { 
-                    showInlineMessage("Booking Confirmed Successfully!", "success"); 
-                    fetchAppointments(); 
-                    switchTab('schedule'); 
-                }
-            } catch(e) { 
-                showInlineMessage("Booking Failed. Please try again.", "error"); 
-            } 
-            btn.innerText = "Pay Now";
+    if (!document.getElementById('pdpa-agree').checked) return showInlineMessage("You must agree to the PDPA to proceed.", "error");
+    const symptomsText = document.getElementById('book-symptoms').value;
+    
+    const btn = document.getElementById('book-btn'); 
+    btn.innerText = "Processing...";
+    
+    let finalDateTime = preferredTime;
+    if (window.bookingUrgency === 'immediate') {
+        // Must send exactly YYYY-MM-DDTHH:MM for the backend to parse
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        finalDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+    
+    try {
+        const r = await fetch(API_BASE + '/api/book_appointment', { 
+            method:'POST', 
+            headers:await getAuthHeaders(), 
+            body:JSON.stringify({ 
+                doctor_id: doctorId, 
+                visit_type: "online", 
+                preferred_datetime: finalDateTime,
+                symptoms: symptomsText
+            }) 
+        });
+        const d = await r.json(); 
+        
+        if (d.error || !r.ok) {
+            showInlineMessage(d.message || d.detail || "Booking failed", "error"); 
+        } else if (d.stripe_url) {
+            window.location.href = d.stripe_url; 
+        } else { 
+            showInlineMessage("Booking Confirmed Successfully!", "success"); 
+            fetchAppointments(); 
+            switchTab('schedule'); 
         }
+    } catch(e) { 
+        showInlineMessage("Booking Failed. Please try again.", "error"); 
+    } 
+    btn.innerText = "Pay Now";
+}
 
         window.checkUpcomingReminders = (appointments) => {
             if (!appointments || !appointments.length) return;
