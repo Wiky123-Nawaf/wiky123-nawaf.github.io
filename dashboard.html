@@ -895,15 +895,29 @@
                 
                 let summary = "I have reviewed your symptoms and prepared a clinical summary for you.";
                 let fullAssessmentPlan = "";
+                let soapNote = "";
                 let conversationalIntro = "";
 
-                if (content.includes("~~~SUMMARY~~~") && content.includes("~~~ASSESSMENT~~~")) {
+                if (content.includes("~~~SUMMARY~~~")) {
                     let parts = content.split("~~~SUMMARY~~~");
                     conversationalIntro = parts[0].trim();
                     
-                    let subParts = parts[1].split("~~~ASSESSMENT~~~");
-                    summary = subParts[0].trim();
-                    fullAssessmentPlan = subParts[1].trim();
+                    let remainder = parts[1] || "";
+                    if (remainder.includes("~~~ASSESSMENT~~~")) {
+                        let subParts = remainder.split("~~~ASSESSMENT~~~");
+                        summary = subParts[0].trim();
+                        
+                        let assessRemainder = subParts[1] || "";
+                        if (assessRemainder.includes("~~~SOAP~~~")) {
+                            let soapParts = assessRemainder.split("~~~SOAP~~~");
+                            fullAssessmentPlan = soapParts[0].trim();
+                            soapNote = soapParts[1].trim();
+                        } else {
+                            fullAssessmentPlan = assessRemainder.trim();
+                        }
+                    } else {
+                        summary = remainder.trim();
+                    }
                 } else {
                     summary = content; 
                 }
@@ -926,6 +940,26 @@
                     : `window.location.href='login.html';`;
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
+
+                let soapHtml = soapNote ? `
+                    <div class="bg-gray-50 font-sans border-t border-gray-200">
+                        <details class="group">
+                            <summary class="flex justify-between items-center cursor-pointer list-none p-6 hover:bg-gray-100 transition">
+                                <div>
+                                    <div class="font-bold text-[#0066FF] text-base mb-1">SOAP Note (for Physicians)</div>
+                                    <div class="text-xs text-gray-500 font-normal">A clinical summary to share with your doctor</div>
+                                </div>
+                                <span class="transition group-open:rotate-180 text-[#0066FF]">
+                                    <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M6 9l6 6 6-6"></path></svg>
+                                </span>
+                            </summary>
+                            <div class="px-6 pb-6 text-sm text-gray-700">
+                                <div class="mb-2 leading-relaxed text-gray-800">
+                                    ${formatClinicalText(soapNote)}
+                                </div>
+                            </div>
+                        </details>
+                    </div>` : "";
 
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: 'Inter', sans-serif;">
@@ -981,20 +1015,23 @@
 
                     <div class="bg-gray-50 font-sans">
                         <details class="group" open>
-                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-6 text-base hover:bg-gray-100 transition">
-                                Assessment & Plan
+                            <summary class="flex justify-between items-center cursor-pointer list-none p-6 hover:bg-gray-100 transition">
+                                <div>
+                                    <div class="font-bold text-[#0066FF] text-base mb-1">Assessment & Plan</div>
+                                    <div class="text-xs text-gray-500 font-normal">A clinical overview of possible causes considered</div>
+                                </div>
                                 <span class="transition group-open:rotate-180 text-[#0066FF]">
                                     <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M6 9l6 6 6-6"></path></svg>
                                 </span>
                             </summary>
                             <div class="px-6 pb-6 text-sm text-gray-700">
-                                <p class="text-[11px] text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
                                 <div class="mb-2 leading-relaxed text-gray-800">
                                     ${formatClinicalText(fullAssessmentPlan)}
                                 </div>
                             </div>
                         </details>
                     </div>
+                    ${soapHtml}
 
                 </div>`;
 
