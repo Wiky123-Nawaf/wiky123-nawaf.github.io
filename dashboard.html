@@ -52,7 +52,7 @@
     <script>const API_BASE = 'https://api.doktura.ai';</script>
 
     <!-- PREMIUM UNLOCK MODAL -->
-    <div id="premium-modal" class="fixed inset-0 bg-gray-900/60 z-[300] hidden items-center justify-center backdrop-blur-sm px-4">
+    <div id="premium-modal" class="fixed inset-0 bg-gray-900:/60 z-[300] hidden items-center justify-center backdrop-blur-sm px-4">
         <div class="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full text-center relative shadow-2xl">
             <button onclick="document.getElementById('premium-modal').classList.remove('flex'); document.getElementById('premium-modal').classList.add('hidden')" class="absolute top-4 right-5 text-gray-400 hover:text-gray-800 active:scale-95 text-xl font-bold">✕</button>
             <h2 class="text-2xl font-extrabold text-gray-900 mb-3">Unlock Doktura Premium</h2>
@@ -420,7 +420,9 @@
                               <!-- Blue section (Bottom) -->
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
                               <!-- Dark Blue bottom-left joint -->
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
+                              <!-- Dark Blue bottom-left joint -->
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <!-- Red bottom-right joint -->
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
@@ -912,30 +914,68 @@
             }
 
             if (content.includes("[ESCALATE]")) {
-                // Safe extraction using Regex
-                let summaryMatch = content.match(/(?:\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|###|$))/i);
-                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Plan of Action:\*\*|Plan of Action:|---|###|$))/i);
-                let planMatch = content.match(/(?:\*\*Plan of Action:\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|$)/i);
-                let soapMatch = content.match(/(?:\*\*SOAP Note for Physician:\*\*|SOAP Note for Physician:|SOAP Note:)\s*([\s\S]*?)$/i);
+                // Programmatic parsing for robust content separation
+                let reportBody = content;
+                let reportIndex = content.indexOf("### Doctronic Report");
+                if (reportIndex !== -1) {
+                    reportBody = content.substring(reportIndex);
+                }
 
-                let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
-                let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
-                let plan = planMatch ? planMatch[1].trim() : "";
-                let soap = soapMatch ? soapMatch[1].trim() : "";
+                // 1. Extract the Summary (the paragraph right after "### Doctronic Report")
+                let summary = "";
+                let summaryStartIndex = reportBody.indexOf("### Doctronic Report");
+                if (summaryStartIndex !== -1) {
+                    summaryStartIndex += "### Doctronic Report".length;
+                    let summaryEndIndex = reportBody.indexOf("### Assessment & Plan");
+                    if (summaryEndIndex === -1) {
+                        summaryEndIndex = reportBody.indexOf("Differential Diagnosis:");
+                    }
+                    if (summaryEndIndex !== -1) {
+                        summary = reportBody.substring(summaryStartIndex, summaryEndIndex).trim();
+                    } else {
+                        summary = reportBody.substring(summaryStartIndex).trim();
+                    }
+                }
 
+                // Clean out standard footer transitions if repeated in summary
+                summary = summary.replace(/Given your symptoms, a doctor can give you personalized guidance — and peace of mind\./gi, "").trim();
+
+                // 2. Extract the Assessment & Plan section
+                let assessmentPlan = "";
+                let assessmentStartIndex = reportBody.indexOf("### Assessment & Plan");
+                if (assessmentStartIndex !== -1) {
+                    let assessmentEndIndex = reportBody.indexOf("---");
+                    if (assessmentEndIndex !== -1) {
+                        assessmentPlan = reportBody.substring(assessmentStartIndex, assessmentEndIndex).trim();
+                    } else {
+                        assessmentPlan = reportBody.substring(assessmentStartIndex).trim();
+                    }
+                }
+
+                // Clean the sub-headers to prevent duplicate rendering
+                assessmentPlan = assessmentPlan.replace(/### Assessment & Plan/gi, "").trim();
+                assessmentPlan = assessmentPlan.replace(/A clinical overview of possible causes considered/gi, "").trim();
+
+                // Format clinical markdown text cleanly
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900">$1</strong>')
-                               .replace(/(\d+\.)\s/g, '<div class="mt-4"></div>$1 ') // Spacing for numbers
-                               .replace(/<\/strong>\s*[-:]\s*/g, '</strong> &bull; ') // Changing dash to bullet after bold titles
-                               .replace(/\n\s*[-•]\s*/g, '<div class="mt-2"></div>&bull; ')
-                               .replace(/\n/g, '<br>');
+                               .replace(/(\d+\.)\s/g, '<div class="mt-4"></div>$1 ') 
+                               .replace(/<\/strong>\s*[-:]\s*/g, '</strong> &bull; ') 
+                               .replace(/<\/strong>\s*•\s*/g, '</strong> &bull; ') 
+                               .replace(/\n\s*[-•]\s*/g, '<div class="mt-2 flex items-start"><span class="mr-2 text-gray-400">&bull;</span><span>')
+                               .replace(/\n/g, '</span></div>')
+                               .replace(/<div class="mt-2 flex items-start"><span><\/span><\/div>/g, '');
                 };
 
-                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                // Generate exact date & time styling matching: "May 28, 2026 • 01:33 AM"
+                const currentDate = new Date();
+                const datePart = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const timePart = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                const dateStr = `${datePart} • ${timePart}`;
                 
                 if (isDashboard) {
-                    window.generatedClinicalReport = content; // Store it globally for the booking payload
+                    window.generatedClinicalReport = content; // Keep globally for backend payloads
                 }
                 
                 const btnAction = isDashboard 
@@ -948,7 +988,7 @@
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: 'Inter', sans-serif;">
                     
                     <div class="p-5 border-b border-gray-100" style="font-family: Georgia, serif;">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doctronic Report</h2>
                         <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
                     </div>
                     
@@ -957,7 +997,7 @@
                         <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                     </div>
 
-                    <!-- Assessment & Plan Block (MOVED UP) -->
+                    <!-- Assessment & Plan Block -->
                     <div class="border-b border-gray-100 font-sans">
                         <details class="group" open>
                             <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
@@ -968,13 +1008,12 @@
                             </summary>
                             <div class="px-5 pb-5 text-sm text-gray-700">
                                 <p class="text-[11px] text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
-                                ${diffDiag ? `<div class="font-bold text-gray-900 mb-1">Differential Diagnosis:</div><div class="mb-5 leading-relaxed">${formatClinicalText(diffDiag)}</div>` : ''}
-                                ${plan ? `<div class="font-bold text-gray-900 mb-1 mt-6">Plan of Action:</div><div class="leading-relaxed">${formatClinicalText(plan)}</div>` : ''}
+                                <div class="leading-relaxed font-sans">${formatClinicalText(assessmentPlan)}</div>
                             </div>
                         </details>
                     </div>
                     
-                    <!-- Continue to Licensed Doctor Block (MOVED DOWN) -->
+                    <!-- Continue to Licensed Doctor Block -->
                     <div class="p-5 bg-white font-sans">
                         <h3 class="font-bold text-gray-900 text-lg mb-4">Continue to a licensed doctor</h3>
                         <ul class="text-sm text-gray-600 space-y-3 mb-6">
