@@ -9,15 +9,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        
-        /* Main scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
-        /* Custom scrollbar for inner report sections */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 
         .nav-active { background-color: #eff6ff; color: #0066FF; font-weight: 700; border-left: 4px solid #0066FF; }
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
@@ -190,7 +183,7 @@
                 <!-- Notification Bell -->
                 <div class="relative">
                     <button onclick="toggleNotifications()" class="p-2 text-gray-400 border border-gray-200 rounded-lg hover:bg-gray-50 transition active:scale-95 relative">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 optionv.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         <span id="notif-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
                     </button>
                     <!-- Notification Dropdown -->
@@ -213,7 +206,7 @@
             </div>
         </div>
 
-        <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS -->
+        <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS (Fixed Absolute Layout) -->
         <div id="global-message-container" class="hidden absolute top-16 left-0 right-0 px-4 sm:px-8 pt-6 pb-2 z-[150] bg-transparent pointer-events-none transition-opacity">
             <div id="global-message-box" class="max-w-4xl mx-auto p-4 rounded-xl text-sm font-bold border flex items-center justify-between shadow-lg pointer-events-auto backdrop-blur-md">
                 <div class="flex items-center">
@@ -230,6 +223,7 @@
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
+                <!-- Central Interactive Orb -->
                 <button onclick="toggleVoiceMic()" id="voice-orb-btn" class="relative w-40 h-40 sm:w-44 sm:h-44 rounded-full flex items-center justify-center mb-8 transition-all duration-300 shadow-2xl focus:outline-none bg-gradient-to-br from-blue-400 to-[#0066FF] hover:scale-105 orb-pulse-blue">
                     <svg id="orb-icon-mic" class="w-14 h-14 sm:w-16 sm:h-16 text-white transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                     <svg id="orb-icon-stop" class="w-12 h-12 sm:w-14 sm:h-14 text-white hidden transition-opacity duration-200" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"></path></svg>
@@ -264,6 +258,7 @@
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Book a Consultant</h2>
                 <p class="text-gray-500 mb-8 text-sm leading-relaxed">Schedule a follow-up video call with one of our licensed human doctors.</p>
 
+                <!-- Toggle Form Type -->
                 <div class="flex bg-gray-100 p-1 rounded-xl mb-8 border border-gray-200 max-w-lg">
                     <label class="flex-1 text-center cursor-pointer relative">
                         <input type="radio" name="v_type_toggle" value="online" checked class="peer sr-only" onchange="toggleBookingType('online')">
@@ -278,6 +273,7 @@
                     </label>
                 </div>
 
+                <!-- ONLINE FORM -->
                 <form id="booking-online-section" onsubmit="submitBooking(event)" class="block">
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -293,6 +289,7 @@
                             </div>
                         </div>
 
+                        <!-- NEW: Regular vs Immediate Toggle -->
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Booking Urgency</label>
                             <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-200">
@@ -309,6 +306,7 @@
                             </div>
                         </div>
 
+                        <!-- UPDATED DOCTOR CUSTOM DROPDOWN -->
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Doctor</label>
                             <div class="relative">
@@ -323,12 +321,15 @@
                                     <div class="sticky top-0 bg-gray-50 p-2 border-b border-gray-100 z-10">
                                         <input type="text" id="doctor-search-input" onkeyup="filterDoctors()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0066FF]" placeholder="Search by name or specialty...">
                                     </div>
-                                    <div id="doctor-list" class="flex flex-col"></div>
+                                    <div id="doctor-list" class="flex flex-col">
+                                        <!-- Doctor options will be injected here via JS -->
+                                    </div>
                                 </div>
                             </div>
                             <input type="hidden" id="book-doctor" required>
                         </div>
 
+                        <!-- SLOTS WRAPPER -->
                         <div id="slots-wrapper" class="hidden">
                             <label class="block text-sm font-bold text-gray-700 mb-3">Date of Appointment</label>
                             <div id="available-slots-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
@@ -354,6 +355,7 @@
                     <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-lg shadow-md transition text-sm">Pay Now</button>
                 </form>
 
+                <!-- IN-CLINIC COMING SOON -->
                 <div id="booking-clinic-section" class="hidden">
                     <div class="bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] rounded-3xl p-8 sm:p-16 text-center max-w-2xl mx-auto flex flex-col items-center">
                         <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mb-6">
@@ -400,6 +402,7 @@
         <!-- ================= MEDICAL REPORTS VIEW ================= -->
         <div id="view-reports" class="app-view flex-1 flex-col overflow-y-auto relative">
             <div class="max-w-5xl mx-auto p-5 sm:p-10 w-full pt-4">
+                <!-- Header -->
                 <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 sm:mb-8 space-y-4 sm:space-y-0">
                     <div>
                         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Your Medical Documents</h2>
@@ -408,11 +411,18 @@
                     <div class="flex items-center space-x-3 w-full sm:w-auto">
                         <button onclick="linkGoogleDrive()" class="flex-1 sm:flex-none flex justify-center items-center border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 text-gray-700 text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-lg shadow-sm transition">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <!-- Green section (Left) -->
                               <path d="M16.0019 12.4507L12.541 6.34297C12.6559 6.22598 12.7881 6.09766 12.9203 6.09766C11.8998 6.43355 11.4315 7.57961 11.4315 7.57961L5.10895 18.7345C5.01999 19.0843 4.99528 19.4 5.0064 19.6781H11.9072L16.0019 12.4507Z" fill="#34A853"/>
+                              <!-- Yellow section (Right) -->
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
+                              <!-- Dark Green top joint -->
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
-                              <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
+                              <!-- Blue section (Bottom) -->
+                              <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
+                              <!-- Dark Blue bottom-left joint -->
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
+                              <!-- Red bottom-right joint -->
+                              <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
                         </button>
@@ -420,6 +430,7 @@
                     </div>
                 </div>
 
+                <!-- Empty State -->
                 <div id="reports-empty" class="bg-white border border-gray-200 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-12 sm:p-24 flex flex-col items-center justify-center text-center">
                     <svg class="w-16 h-16 sm:w-20 sm:h-20 mb-6 text-gray-300 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM18 20H6V4h5v6h6v10z"/></svg>
                     <h3 class="text-lg font-extrabold text-gray-900 mb-1">No medical documents found</h3>
@@ -427,6 +438,7 @@
                     <button onclick="openUploadModal()" class="bg-[#f59e0b] hover:bg-yellow-600 active:scale-95 text-white font-bold py-2.5 px-8 rounded-lg shadow-sm transition">Add Document</button>
                 </div>
 
+                <!-- Reports Table List -->
                 <div id="reports-container" class="hidden bg-transparent sm:bg-white sm:border border-gray-200 sm:rounded-xl overflow-hidden shadow-none sm:shadow-sm w-full">
                     <div class="overflow-x-hidden sm:overflow-x-auto w-full pb-2 sm:pb-0">
                         <table class="w-full text-left border-collapse sm:min-w-[600px]">
@@ -446,6 +458,7 @@
                 </div>
             </div>
 
+            <!-- Upload Modal -->
             <div id="upload-modal" class="fixed inset-0 bg-gray-900/50 z-[250] hidden items-center justify-center backdrop-blur-sm px-4">
                 <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
                     <div class="flex justify-between items-center mb-6">
@@ -507,19 +520,12 @@
 
             try {
                 const token = await user.getIdToken();
-                const res = await fetch(`${API_BASE}/api/user/sync`, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, 
-                    body: JSON.stringify({ 
-                        email: user.email, 
-                        anon_session_id: localStorage.getItem("anon_session_id") 
-                    }) 
-                });
-
+                const res = await fetch(`${API_BASE}/api/user/sync`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ email: user.email, anon_session_id: localStorage.getItem("anon_session_id") }) });
                 if (res.ok) { localStorage.removeItem("anon_session_id"); }
                 if (res.status === 401 || res.status === 403) { await signOut(auth); window.location.href = "login.html"; return; }
                 const data = await res.json();
 
+                // --- EXPLICITLY SET THE NEWLY MERGED SESSION ---
                 if (data.merged_session_id) {
                     window.currentSessionId = data.merged_session_id;
                 }
@@ -875,67 +881,55 @@
 
         window.startNewSession = () => { window.currentSessionId = Date.now().toString(); loadSessions(); switchTab('chat'); }
 
-        // --- ENHANCED BACKWARD-COMPATIBLE PARSING ---
-        // This function supports BOTH old `~~~` generated formats and the new `[]` structured format
+        async function loadSessions() {
+            const r = await fetch(API_BASE+'/api/sessions',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid})});
+            const sess = (await r.json()).sessions ||[];
+            if(!window.currentSessionId) window.currentSessionId = sess.length ? sess[0] : Date.now().toString();
+
+            const list = document.getElementById('sidebar-sessions'); 
+            list.innerHTML = '';
+
+            sess.forEach(id => {
+                const bg = id === window.currentSessionId ? 'bg-blue-50 text-blue-600 font-bold border-l-4 border-blue-600' : 'text-gray-500 hover:bg-gray-50 border-l-4 border-transparent';
+                list.innerHTML += `<button onclick="window.currentSessionId='${id}';loadSessions();switchTab('chat');" class="w-full text-left px-3 py-2.5 text-[11px] rounded active:scale-[0.98] transition ${bg} mb-1 flex items-center"><svg class="w-3 h-3 mr-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg><span class="truncate">Session ${id.slice(-4)}</span></button>`;
+            });
+            loadHistory();
+        }
+
+        // --- NEW CENTRALIZED AI MESSAGE FORMATTING ---
         function formatAiMessage(content, isDashboard = false) {
             if (content.includes("[EMERGENCY]")) {
                 return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
                               .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             }
 
-            const hasNewTags = content.includes("[SUMMARY]");
-            const hasOldTags = content.includes("~~~SUMMARY~~~");
-            
-            if (hasNewTags || hasOldTags || content.includes("[ESCALATE]")) {
-                content = content.replace("[ESCALATE]", "").trim();
-                
-                let summary = "I have reviewed your symptoms and prepared a clinical summary for you.";
-                let diffDiagnosis = "";
-                let planOfAction = "";
-                let soapNote = "";
+            if (content.includes("[ESCALATE]")) {
+                // Safe extraction using Regex
+                let summaryMatch = content.match(/(?:\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|###|$))/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Plan of Action:\*\*|Plan of Action:|---|###|$))/i);
+                let planMatch = content.match(/(?:\*\*Plan of Action:\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|$)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note for Physician:\*\*|SOAP Note for Physician:|SOAP Note:)\s*([\s\S]*?)$/i);
 
-                try {
-                    // Try parsing new exact structured delimiters first
-                    if (hasNewTags) {
-                        let textAfterSummary = content.split("[SUMMARY]")[1] || "";
-                        summary = textAfterSummary.split("[DIFFERENTIAL_DIAGNOSIS]")[0].trim() || summary;
-                        
-                        let textAfterDiff = content.split("[DIFFERENTIAL_DIAGNOSIS]")[1] || "";
-                        diffDiagnosis = textAfterDiff.split("[PLAN_OF_ACTION]")[0].trim();
-                        
-                        let textAfterPlan = content.split("[PLAN_OF_ACTION]")[1] || "";
-                        planOfAction = textAfterPlan.split("[SOAP]")[0].trim();
-                        
-                        soapNote = (content.split("[SOAP]")[1] || "").trim();
-                    } 
-                    // Fallback to older RegEx parsing for old session histories
-                    else if (hasOldTags) {
-                        let summaryMatch = content.match(/~~~SUMMARY~~~([\s\S]*?)(?=~~~DIFFERENTIAL_DIAGNOSIS~~~|~~~PLAN_OF_ACTION~~~|~~~SOAP~~~|$)/i);
-                        let diffMatch = content.match(/~~~DIFFERENTIAL_DIAGNOSIS~~~([\s\S]*?)(?=~~~PLAN_OF_ACTION~~~|~~~SOAP~~~|$)/i);
-                        let planMatch = content.match(/~~~PLAN_OF_ACTION~~~([\s\S]*?)(?=~~~SOAP~~~|$)/i);
-                        let soapMatch = content.match(/~~~SOAP~~~([\s\S]*?)$/i);
-
-                        if (summaryMatch && summaryMatch[1].trim()) summary = summaryMatch[1].trim();
-                        if (diffMatch && diffMatch[1]) diffDiagnosis = diffMatch[1].trim();
-                        if (planMatch && planMatch[1]) planOfAction = planMatch[1].trim();
-                        if (soapMatch && soapMatch[1]) soapNote = soapMatch[1].trim();
-                    }
-                } catch (e) {
-                    console.error("Historical format parsing error:", e);
-                }
+                let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
+                let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
+                let plan = planMatch ? planMatch[1].trim() : "";
+                let soap = soapMatch ? soapMatch[1].trim() : "";
 
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900">$1</strong>')
-                               .replace(/(\d+\.)\s<strong/g, '<div class="mt-4"></div>$1 <strong') 
-                               .replace(/\n\s*•\s*/g, '<div class="mt-3"></div>&bull; ') 
-                               .replace(/\n\s*-\s*/g, '<div class="mt-2 ml-4"></div><span class="text-gray-400 mr-2">-</span> ') 
+                               .replace(/(\d+\.)\s/g, '<div class="mt-3"></div>$1 ')
+                               .replace(/<\/strong>\s*[-:]\s*/g, '</strong> &bull; ') 
+                               .replace(/\n\s*-\s*<strong/g, '<div class="mt-4"></div>&bull; <strong')
+                               .replace(/\n\s*-\s*/g, '<div class="mt-1"></div>&bull; ')
                                .replace(/\n/g, '<br>');
                 };
 
-                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) + ' • ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-                if (isDashboard) { window.generatedClinicalReport = content; }
+                if (isDashboard) {
+                    window.generatedClinicalReport = content; // Store it globally for the booking payload
+                }
 
                 const btnAction = isDashboard 
                     ? `switchTab('book'); document.getElementById('book-symptoms').value = 'AI Triage Complete'; suggestDoctor();`
@@ -943,127 +937,75 @@
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
-                // Re-design output into beautifully distinct scrollable components
                 let reportHtml = `
-                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: 'Inter', sans-serif;">
-                    
-                    <!-- HEADER -->
-                    <div class="p-5 border-b border-gray-100 bg-white flex justify-between items-center">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900 tracking-tight flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-[#0066FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Clinical Report
-                            </h2>
-                            <p class="text-[11px] text-gray-500 mt-1 uppercase font-semibold tracking-wider">${dateStr}</p>
-                        </div>
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
+                    <div class="p-5 border-b border-gray-100">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doctronic Report</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
+                        <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
                     </div>
                     
-                    <!-- SUMMARY -->
-                    ${summary ? `
-                    <div class="p-5 border-b border-gray-100 bg-blue-50/40">
-                        <h4 class="font-bold text-[#0066FF] text-xs uppercase tracking-wider mb-3">Patient Summary</h4>
-                        <div class="max-h-40 overflow-y-auto pr-3 text-sm text-gray-800 leading-relaxed custom-scrollbar">
-                            ${formatClinicalText(summary)}
-                        </div>
-                    </div>` : ''}
-
-                    <!-- DIFFERENTIAL DIAGNOSIS -->
-                    ${diffDiagnosis ? `
-                    <div class="p-5 border-b border-gray-100 bg-white">
-                        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-3 flex items-center">
-                            <span class="w-2 h-2 rounded-full bg-amber-400 mr-2"></span>
-                            Differential Diagnosis
-                        </h4>
-                        <div class="max-h-48 overflow-y-auto pr-3 text-sm text-gray-700 leading-relaxed custom-scrollbar">
-                            ${formatClinicalText(diffDiagnosis)}
-                        </div>
-                    </div>` : ''}
-
-                    <!-- PLAN OF ACTION -->
-                    ${planOfAction ? `
-                    <div class="p-5 border-b border-gray-100 bg-gray-50/80">
-                        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-3 flex items-center">
-                            <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-                            Plan of Action
-                        </h4>
-                        <div class="max-h-48 overflow-y-auto pr-3 text-sm text-gray-700 leading-relaxed custom-scrollbar">
-                            ${formatClinicalText(planOfAction)}
-                        </div>
-                    </div>` : ''}
-
-                    <!-- SOAP NOTE (Expandable) -->
-                    ${soapNote ? `
-                    <div class="p-5 border-b border-gray-100 bg-white">
-                        <details class="group">
-                            <summary class="flex justify-between items-center cursor-pointer list-none hover:text-[#0066FF] transition text-gray-900">
-                                <h4 class="font-bold text-xs uppercase tracking-wider flex items-center">
-                                    <span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
-                                    SOAP Note (Physician View)
-                                </h4>
-                                <span class="transition group-open:rotate-180 text-gray-400 group-hover:text-[#0066FF]">
-                                    <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-                                </span>
-                            </summary>
-                            <div class="mt-4 max-h-64 overflow-y-auto pr-3 text-xs text-gray-700 font-mono bg-gray-50 p-4 rounded-lg border border-gray-100 custom-scrollbar leading-relaxed">
-                                ${formatClinicalText(soapNote)}
-                            </div>
-                        </details>
-                    </div>` : ''}
-
-                    <!-- FOOTER ACTION -->
-                    <div class="p-6 bg-white font-sans">
-                        <p class="font-medium text-gray-900 mb-4 text-sm text-center">Share this report directly with a physician for a formal diagnosis and prescription.</p>
-                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex justify-center items-center">
+                    <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
+                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                        <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gray-50 font-sans">
+                        <h3 class="font-bold text-gray-900 text-lg mb-3">Continue to a licensed doctor</h3>
+                        <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
+                        </ul>
+                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
                             ${btnText}
                         </button>
                     </div>
+                    
+                    <div class="border-t border-gray-200 font-sans">
+                        <details class="group" open>
+                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
+                                Assessment & Plan
+                                <span class="transition group-open:rotate-180">
+                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                                </span>
+                            </summary>
+                            <div class="px-5 pb-5 text-sm text-gray-700">
+                                <p class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
+                                ${diffDiag ? `<div class="font-bold text-gray-900 mb-1">Differential Diagnosis:</div><div class="mb-4">${formatClinicalText(diffDiag)}</div>` : ''}
+                                ${plan ? `<div class="font-bold text-gray-900 mb-1 mt-4">Plan of Action:</div><div>${formatClinicalText(plan)}</div>` : ''}
+                            </div>
+                        </details>
+                    </div>
                 </div>`;
 
-                return reportHtml;
+                let conversationalIntro = content.split("[ESCALATE]")[0].trim();
+                if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
+
+                return `<div class="mb-2">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
             }
 
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         }
 
-        async function loadSessions() {
-            try {
-                const r = await fetch(API_BASE+'/api/sessions',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid})});
-                const sess = (await r.json()).sessions ||[];
-                if(!window.currentSessionId) window.currentSessionId = sess.length ? sess[0] : Date.now().toString();
-
-                const list = document.getElementById('sidebar-sessions'); 
-                list.innerHTML = '';
-
-                sess.forEach(id => {
-                    const bg = id === window.currentSessionId ? 'bg-blue-50 text-blue-600 font-bold border-l-4 border-blue-600' : 'text-gray-500 hover:bg-gray-50 border-l-4 border-transparent';
-                    list.innerHTML += `<button onclick="window.currentSessionId='${id}';loadSessions();switchTab('chat');" class="w-full text-left px-3 py-2.5 text-[11px] rounded active:scale-[0.98] transition ${bg} mb-1 flex items-center"><svg class="w-3 h-3 mr-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg><span class="truncate">Session ${id.slice(-4)}</span></button>`;
-                });
-                
-                loadHistory();
-            } catch(e) { console.error("Error loading sessions", e); }
-        }
-
         async function loadHistory() {
             const el = document.getElementById('chat-history');
-            try {
-                const r = await fetch(API_BASE+'/api/history',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid, session_id:window.currentSessionId})});
-                const data = await r.json(); 
-                el.innerHTML = '';
+            const r = await fetch(API_BASE+'/api/history',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid, session_id:window.currentSessionId})});
+            const data = await r.json(); 
+            el.innerHTML = '';
 
-                if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                    el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
-                } else {
-                    data.history.forEach(m => {
-                        if(m.role === 'system') return;
-                        let isUser = m.role === 'user';
-                        if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed">${m.content}</div></div>`;
-                        else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(m.content, true)}</div></div>`;
-                    });
-                }
-                el.scrollTo(0, el.scrollHeight);
-            } catch(e) {
-                console.error("Error loading chat history", e);
+            if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
+                el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
+            } else {
+                data.history.forEach(m => {
+                    if(m.role === 'system') return;
+                    let isUser = m.role === 'user';
+                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed">${m.content}</div></div>`;
+                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(m.content, true)}</div></div>`;
+                });
             }
+            el.scrollTo(0, el.scrollHeight);
         }
 
         function setVoiceState(state) {
@@ -1678,7 +1620,7 @@
                         setTimeout(() => { openReviewModal(reviewApptId, appt.doctor_name); }, 400);
                     }
                 }
-            } catch (e) { console.error("Appointments fetch error:", e); }
+            } catch (e) { console.error(e); }
         }
 
         window.renderAppointments = () => {
@@ -1766,7 +1708,7 @@
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${reviewDesktop}</td>
                     </tr>`;
             });
-            
+
             window.renderPaginationControls(window.cachedAppointments.length, window.apptsPerPage, window.currentApptPage, 'appt-pagination', 'changeApptPage');
         };
 
@@ -1774,12 +1716,12 @@
             try {
                 const r = await fetch(API_BASE+'/api/reports', { headers: await getAuthHeaders() });
                 const data = await r.json();
-                
+
                 if (data.reports && data.reports.length > 0) {
                     document.getElementById('reports-empty').classList.add('hidden');
                     document.getElementById('reports-empty').classList.remove('flex');
                     document.getElementById('reports-container').classList.remove('hidden');
-                    
+
                     window.cachedReports = data.reports;
                     window.currentReportPage = 1;
                     window.renderReports();
@@ -1795,11 +1737,11 @@
         window.renderReports = () => {
             const tbody = document.getElementById('reports-table-body');
             tbody.innerHTML = '';
-            
+
             const start = (window.currentReportPage - 1) * window.reportsPerPage;
             const end = start + window.reportsPerPage;
             const pageData = window.cachedReports.slice(start, end);
-            
+
             pageData.forEach(rep => {
                 let statColor = rep.status === 'Processing' ? 'bg-yellow-50 text-yellow-600 border border-yellow-200' : (rep.status === 'Failed' ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-green-50 text-green-600 border border-green-200');
                 let safeId = rep.id ? `'${rep.id}'` : `null`;
