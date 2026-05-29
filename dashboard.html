@@ -11,7 +11,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        
+
         .nav-active { background-color: #eff6ff; color: #0066FF; font-weight: 700; border-left: 4px solid #0066FF; }
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
         .nav-inactive:hover { background-color: #f8fafc; color: #0f172a; }
@@ -52,7 +52,7 @@
     <script>const API_BASE = 'https://api.doktura.ai';</script>
 
     <!-- PREMIUM UNLOCK MODAL -->
-    <div id="premium-modal" class="fixed inset-0 bg-gray-900:/60 z-[300] hidden items-center justify-center backdrop-blur-sm px-4">
+    <div id="premium-modal" class="fixed inset-0 bg-gray-900/60 z-[300] hidden items-center justify-center backdrop-blur-sm px-4">
         <div class="bg-white rounded-3xl p-8 sm:p-10 max-w-lg w-full text-center relative shadow-2xl">
             <button onclick="document.getElementById('premium-modal').classList.remove('flex'); document.getElementById('premium-modal').classList.add('hidden')" class="absolute top-4 right-5 text-gray-400 hover:text-gray-800 active:scale-95 text-xl font-bold">✕</button>
             <h2 class="text-2xl font-extrabold text-gray-900 mb-3">Unlock Doktura Premium</h2>
@@ -79,7 +79,7 @@
     <div id="review-modal" class="fixed inset-0 bg-gray-900/60 z-[500] hidden items-center justify-center backdrop-blur-sm px-4">
         <div class="bg-white rounded-3xl p-8 sm:p-10 max-w-md w-full text-center relative shadow-2xl">
             <button onclick="closeReviewModal()" class="absolute top-4 right-5 text-gray-400 hover:text-gray-800 active:scale-95 text-xl font-bold transition">✕</button>
-            
+
             <h2 class="text-2xl font-extrabold text-gray-900 mb-1">Your session has ended</h2>
             <p class="text-gray-500 text-sm mb-6">How was your consultation?</p>
 
@@ -116,7 +116,7 @@
             <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-11 object-contain">
             <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-gray-800 active:scale-95 p-2 -mr-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
         </div>
-        
+
         <div class="px-5 py-4">
             <button onclick="startNewSession()" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-2.5 rounded-xl sm:rounded-lg shadow-sm flex items-center justify-center transition hover:bg-blue-700 active:scale-95 text-sm">
                 <!-- Pencil / Compose Icon -->
@@ -169,7 +169,7 @@
 
     <!-- MAIN CONTENT AREA -->
     <div class="flex-1 flex flex-col relative h-full bg-[#f8fafc] overflow-hidden">
-        
+
         <!-- HEADER -->
         <div class="h-16 border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 bg-white shrink-0 shadow-sm z-10">
             <div class="flex items-center space-x-3">
@@ -179,7 +179,7 @@
                 <h1 class="text-lg font-bold text-gray-800 truncate" id="header-title">Consultation AI</h1>
             </div>
             <div class="flex items-center space-x-2 sm:space-x-4">
-                
+
                 <!-- Notification Bell -->
                 <div class="relative">
                     <button onclick="toggleNotifications()" class="p-2 text-gray-400 border border-gray-200 rounded-lg hover:bg-gray-50 transition active:scale-95 relative">
@@ -206,7 +206,7 @@
             </div>
         </div>
 
-        <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS (Fixed Absolute Layout) -->
+        <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS -->
         <div id="global-message-container" class="hidden absolute top-16 left-0 right-0 px-4 sm:px-8 pt-6 pb-2 z-[150] bg-transparent pointer-events-none transition-opacity">
             <div id="global-message-box" class="max-w-4xl mx-auto p-4 rounded-xl text-sm font-bold border flex items-center justify-between shadow-lg pointer-events-auto backdrop-blur-md">
                 <div class="flex items-center">
@@ -216,14 +216,13 @@
                 <button onclick="document.getElementById('global-message-container').classList.add('hidden')" class="ml-4 opacity-70 hover:opacity-100 active:scale-95 transition shrink-0 text-lg p-1">✕</button>
             </div>
         </div>
-        
+
         <!-- ================= CHAT VIEW ================= -->
         <div id="view-chat" class="app-view active flex-1 flex-col h-full overflow-hidden relative">
             <div id="chat-history" class="flex-1 overflow-y-auto p-4 sm:p-8 max-w-4xl w-full mx-auto pb-4"></div>
-            
+
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
-                <!-- Central Interactive Orb -->
                 <button onclick="toggleVoiceMic()" id="voice-orb-btn" class="relative w-40 h-40 sm:w-44 sm:h-44 rounded-full flex items-center justify-center mb-8 transition-all duration-300 shadow-2xl focus:outline-none bg-gradient-to-br from-blue-400 to-[#0066FF] hover:scale-105 orb-pulse-blue">
                     <svg id="orb-icon-mic" class="w-14 h-14 sm:w-16 sm:h-16 text-white transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                     <svg id="orb-icon-stop" class="w-12 h-12 sm:w-14 sm:h-14 text-white hidden transition-opacity duration-200" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"></path></svg>
@@ -238,7 +237,7 @@
                     <button onclick="exitVoiceMode()" class="px-8 py-3.5 rounded-xl font-bold text-gray-500 bg-gray-200 hover:bg-gray-300 active:scale-95 transition uppercase text-sm shadow-sm">Close Voice</button>
                 </div>
             </div>
-            
+
             <!-- Input Area -->
             <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-4 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
@@ -257,8 +256,7 @@
             <div class="max-w-4xl mx-auto p-6 sm:p-10 w-full pt-4">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Book a Consultant</h2>
                 <p class="text-gray-500 mb-8 text-sm leading-relaxed">Schedule a follow-up video call with one of our licensed human doctors.</p>
-                
-                <!-- Toggle Form Type -->
+
                 <div class="flex bg-gray-100 p-1 rounded-xl mb-8 border border-gray-200 max-w-lg">
                     <label class="flex-1 text-center cursor-pointer relative">
                         <input type="radio" name="v_type_toggle" value="online" checked class="peer sr-only" onchange="toggleBookingType('online')">
@@ -273,7 +271,6 @@
                     </label>
                 </div>
 
-                <!-- ONLINE FORM -->
                 <form id="booking-online-section" onsubmit="submitBooking(event)" class="block">
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -289,7 +286,6 @@
                             </div>
                         </div>
 
-                        <!-- NEW: Regular vs Immediate Toggle -->
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Booking Urgency</label>
                             <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-200">
@@ -305,8 +301,7 @@
                                 </label>
                             </div>
                         </div>
-                        
-                        <!-- UPDATED DOCTOR CUSTOM DROPDOWN -->
+
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Doctor</label>
                             <div class="relative">
@@ -316,27 +311,24 @@
                                     </div>
                                     <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </div>
-                                
+
                                 <div id="doctor-dropdown-menu" class="hidden absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 sm:max-h-72 overflow-y-auto">
                                     <div class="sticky top-0 bg-gray-50 p-2 border-b border-gray-100 z-10">
                                         <input type="text" id="doctor-search-input" onkeyup="filterDoctors()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0066FF]" placeholder="Search by name or specialty...">
                                     </div>
-                                    <div id="doctor-list" class="flex flex-col">
-                                        <!-- Doctor options will be injected here via JS -->
-                                    </div>
+                                    <div id="doctor-list" class="flex flex-col"></div>
                                 </div>
                             </div>
                             <input type="hidden" id="book-doctor" required>
                         </div>
-                        
-                        <!-- SLOTS WRAPPER -->
+
                         <div id="slots-wrapper" class="hidden">
                             <label class="block text-sm font-bold text-gray-700 mb-3">Date of Appointment</label>
                             <div id="available-slots-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
                             <input type="hidden" id="selected-slot">
                         </div>
                     </div>
-                    
+
                     <div class="mt-8 pt-6 border-t border-gray-200">
                         <p class="text-sm font-bold text-gray-700 mb-2">Payment (FEE: RM 38.00)</p>
                         <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg text-xs text-gray-600 font-medium flex items-center leading-relaxed">
@@ -355,7 +347,6 @@
                     <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-lg shadow-md transition text-sm">Pay Now</button>
                 </form>
 
-                <!-- IN-CLINIC COMING SOON -->
                 <div id="booking-clinic-section" class="hidden">
                     <div class="bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] rounded-3xl p-8 sm:p-16 text-center max-w-2xl mx-auto flex flex-col items-center">
                         <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mb-6">
@@ -375,7 +366,7 @@
             <div class="max-w-6xl mx-auto p-5 sm:p-10 w-full pt-4">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">Schedule Appointment</h2>
                 <p class="text-gray-500 text-sm mb-6 sm:mb-8">Manage your upcoming consultations and prescriptions with ease.</p>
-                
+
                 <div class="bg-transparent sm:bg-white sm:border border-gray-200 sm:rounded-xl shadow-none sm:shadow-sm overflow-hidden w-full">
                     <div class="overflow-x-hidden sm:overflow-x-auto w-full pb-2 sm:pb-0">
                         <table class="w-full text-left border-collapse sm:min-w-[750px]">
@@ -402,7 +393,6 @@
         <!-- ================= MEDICAL REPORTS VIEW ================= -->
         <div id="view-reports" class="app-view flex-1 flex-col overflow-y-auto relative">
             <div class="max-w-5xl mx-auto p-5 sm:p-10 w-full pt-4">
-                <!-- Header -->
                 <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 sm:mb-8 space-y-4 sm:space-y-0">
                     <div>
                         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Your Medical Documents</h2>
@@ -411,19 +401,11 @@
                     <div class="flex items-center space-x-3 w-full sm:w-auto">
                         <button onclick="linkGoogleDrive()" class="flex-1 sm:flex-none flex justify-center items-center border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 text-gray-700 text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-lg shadow-sm transition">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <!-- Green section (Left) -->
                               <path d="M16.0019 12.4507L12.541 6.34297C12.6559 6.22598 12.7881 6.09766 12.9203 6.09766C11.8998 6.43355 11.4315 7.57961 11.4315 7.57961L5.10895 18.7345C5.01999 19.0843 4.99528 19.4 5.0064 19.6781H11.9072L16.0019 12.4507Z" fill="#34A853"/>
-                              <!-- Yellow section (Right) -->
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
-                              <!-- Dark Green top joint -->
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
-                              <!-- Blue section (Bottom) -->
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <!-- Dark Blue bottom-left joint -->
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <!-- Dark Blue bottom-left joint -->
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
-                              <!-- Red bottom-right joint -->
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
@@ -432,7 +414,6 @@
                     </div>
                 </div>
 
-                <!-- Empty State -->
                 <div id="reports-empty" class="bg-white border border-gray-200 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-12 sm:p-24 flex flex-col items-center justify-center text-center">
                     <svg class="w-16 h-16 sm:w-20 sm:h-20 mb-6 text-gray-300 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM18 20H6V4h5v6h6v10z"/></svg>
                     <h3 class="text-lg font-extrabold text-gray-900 mb-1">No medical documents found</h3>
@@ -440,7 +421,6 @@
                     <button onclick="openUploadModal()" class="bg-[#f59e0b] hover:bg-yellow-600 active:scale-95 text-white font-bold py-2.5 px-8 rounded-lg shadow-sm transition">Add Document</button>
                 </div>
 
-                <!-- Reports Table List -->
                 <div id="reports-container" class="hidden bg-transparent sm:bg-white sm:border border-gray-200 sm:rounded-xl overflow-hidden shadow-none sm:shadow-sm w-full">
                     <div class="overflow-x-hidden sm:overflow-x-auto w-full pb-2 sm:pb-0">
                         <table class="w-full text-left border-collapse sm:min-w-[600px]">
@@ -460,7 +440,6 @@
                 </div>
             </div>
 
-            <!-- Upload Modal -->
             <div id="upload-modal" class="fixed inset-0 bg-gray-900/50 z-[250] hidden items-center justify-center backdrop-blur-sm px-4">
                 <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
                     <div class="flex justify-between items-center mb-6">
@@ -510,16 +489,16 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-        
+
         const app = initializeApp({ apiKey: "AIzaSyCrx9BPS8ficDzgVZMbJIb4b3PQ9IqEHLw", authDomain: "doktura-ai-907d8.firebaseapp.com", projectId: "doktura-ai-907d8" });
         const auth = getAuth(app); 
-        
+
         window.userData = { name: "", phone: "", photo_url: "", is_subscribed: false, is_drive_linked: false };
         window.currentUser = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
-            
+
             try {
                 const token = await user.getIdToken();
                 const res = await fetch(`${API_BASE}/api/user/sync`, { 
@@ -530,12 +509,11 @@
                         anon_session_id: localStorage.getItem("anon_session_id") 
                     }) 
                 });
-                
+
                 if (res.ok) { localStorage.removeItem("anon_session_id"); }
                 if (res.status === 401 || res.status === 403) { await signOut(auth); window.location.href = "login.html"; return; }
                 const data = await res.json();
-                
-                // --- EXPLICITLY SET THE NEWLY MERGED SESSION ---
+
                 if (data.merged_session_id) {
                     window.currentSessionId = data.merged_session_id;
                 }
@@ -544,16 +522,16 @@
                 window.currentUser = user;
 
                 if(!data.is_complete) { window.location.href = "login.html"; return; }
-                
+
                 document.getElementById('appBody').classList.remove('hidden');
-                
+
                 document.getElementById('userNameSidebar').innerText = window.userData.name;
                 document.getElementById('userNameHeader').innerText = window.userData.name; 
                 document.getElementById('set-name').value = window.userData.name; 
                 document.getElementById('set-phone').value = window.userData.phone || "";
                 document.getElementById('book-name').value = window.userData.name; 
                 document.getElementById('book-email').value = user.email;
-                
+
                 let avatar = window.userData.photo_url || user.photoURL || `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#0066FF"/><text x="50%" y="50%" fill="#fff" font-size="32" font-family="sans-serif" font-weight="bold" text-anchor="middle" dy=".35em">${window.userData.name.charAt(0).toUpperCase()}</text></svg>`)}`;
                 document.getElementById('userAvatarSidebar').src = avatar;
                 document.getElementById('userAvatarHeader').src = avatar; 
@@ -562,7 +540,7 @@
 
                 const params = new URLSearchParams(window.location.search);
                 const urlTab = params.get('tab');
-                
+
                 const deliverySuccess = params.get('delivery');
                 if (deliverySuccess === 'success') {
                     setTimeout(() => {
@@ -575,7 +553,7 @@
 
                 const lastTab = urlTab || localStorage.getItem('doktura_active_tab') || 'chat';
                 switchTab(lastTab);
-                
+
                 loadSessions(); 
                 fetchDoctors(); 
                 fetchAppointments(); 
@@ -619,10 +597,10 @@
             const container = document.getElementById(containerId);
             if (!container) return;
             container.innerHTML = '';
-            
+
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             if (totalPages <= 1) return; 
-            
+
             let html = `<div class="flex items-center justify-between border-t border-gray-200 sm:border-gray-100 bg-white sm:bg-white px-4 sm:px-6 py-4 rounded-xl sm:rounded-b-xl sm:rounded-t-none mt-4 sm:mt-0 shadow-sm sm:shadow-none">
                 <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                     <div>
@@ -638,7 +616,7 @@
                                     <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>`;
-                            
+
             for (let i = 1; i <= totalPages; i++) {
                 if (i === currentPage) {
                     html += `<button aria-current="page" class="relative z-10 inline-flex items-center bg-[#0066FF] px-3.5 py-1.5 text-xs font-bold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0066FF] transition">${i}</button>`;
@@ -646,7 +624,7 @@
                     html += `<button onclick="${changePageFunc}(${i})" class="relative inline-flex items-center px-3.5 py-1.5 text-xs font-semibold text-gray-900 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 transition">${i}</button>`;
                 }
             }
-                            
+
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -662,7 +640,7 @@
                     <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative ml-3 inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 active:scale-95 disabled:opacity-50 shadow-sm transition">Next</button>
                 </div>
             </div>`;
-            
+
             container.innerHTML = html;
         };
 
@@ -687,7 +665,7 @@
             document.getElementById('review-doc-name').innerText = doctorName || "your doctor";
             document.getElementById('review-comment').value = "";
             window.setRating(0);
-            
+
             const modal = document.getElementById('review-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -773,7 +751,7 @@
             const box = document.getElementById('global-message-box');
             const text = document.getElementById('global-message-text');
             const icon = document.getElementById('global-message-icon');
-            
+
             text.innerText = msg;
             if(type === 'error') {
                 box.className = 'max-w-4xl mx-auto p-4 rounded-xl text-sm font-bold border flex items-center justify-between bg-red-50/90 border-red-200 text-red-600 shadow-xl pointer-events-auto backdrop-blur-md';
@@ -798,9 +776,9 @@
             document.getElementById('notif-badge').classList.remove('hidden');
             const list = document.getElementById('notif-list');
             if(list.innerText.includes('No new notifications')) list.innerHTML = '';
-            
+
             const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
+
             let bgClass = 'hover:bg-blue-50 border-gray-100 hover:border-blue-200';
             let dotColor = 'bg-blue-500';
             let iconColor = 'text-blue-500';
@@ -835,7 +813,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">${iconSvg}</svg>
                 </div>
             </div>`;
-            
+
             list.insertAdjacentHTML('afterbegin', html);
         };
 
@@ -864,18 +842,18 @@
                 document.getElementById('premium-modal').classList.add('flex'); 
                 return; 
             }
-            
+
             localStorage.setItem('doktura_active_tab', tab);
-            
+
             document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('nav-active'); b.classList.add('nav-inactive'); });
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
-            
+
             const activeBtn = document.getElementById('btn-'+tab);
             if(activeBtn) { activeBtn.classList.add('nav-active'); activeBtn.classList.remove('nav-inactive'); }
-            
+
             const activeView = document.getElementById('view-'+tab);
             if(activeView) activeView.classList.add('active');
-            
+
             let headerName = tab.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
             if (tab === 'chat') headerName = 'Consultation AI';
             document.getElementById('header-title').innerText = headerName;
@@ -895,10 +873,10 @@
             const r = await fetch(API_BASE+'/api/sessions',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid})});
             const sess = (await r.json()).sessions ||[];
             if(!window.currentSessionId) window.currentSessionId = sess.length ? sess[0] : Date.now().toString();
-            
+
             const list = document.getElementById('sidebar-sessions'); 
             list.innerHTML = '';
-            
+
             sess.forEach(id => {
                 const bg = id === window.currentSessionId ? 'bg-blue-50 text-blue-600 font-bold border-l-4 border-blue-600' : 'text-gray-500 hover:bg-gray-50 border-l-4 border-transparent';
                 list.innerHTML += `<button onclick="window.currentSessionId='${id}';loadSessions();switchTab('chat');" class="w-full text-left px-3 py-2.5 text-[11px] rounded active:scale-[0.98] transition ${bg} mb-1 flex items-center"><svg class="w-3 h-3 mr-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg><span class="truncate">Session ${id.slice(-4)}</span></button>`;
@@ -914,93 +892,53 @@
             }
 
             if (content.includes("[ESCALATE]")) {
-                // Programmatic parsing for robust content separation
-                let reportBody = content;
-                let reportIndex = content.indexOf("### Doctronic Report");
-                if (reportIndex !== -1) {
-                    reportBody = content.substring(reportIndex);
-                }
+                // Extract Intro / Summary
+                let introMatch = content.match(/###\s*Doctronic Report\s*([\s\S]*?)(?=Given your symptoms|###\s*Assessment & Plan|---|$)/i);
+                let summary = introMatch ? introMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
 
-                // 1. Extract the Summary (the paragraph right after "### Doctronic Report")
-                let summary = "";
-                let summaryStartIndex = reportBody.indexOf("### Doctronic Report");
-                if (summaryStartIndex !== -1) {
-                    summaryStartIndex += "### Doctronic Report".length;
-                    let summaryEndIndex = reportBody.indexOf("### Assessment & Plan");
-                    if (summaryEndIndex === -1) {
-                        summaryEndIndex = reportBody.indexOf("Differential Diagnosis:");
-                    }
-                    if (summaryEndIndex !== -1) {
-                        summary = reportBody.substring(summaryStartIndex, summaryEndIndex).trim();
-                    } else {
-                        summary = reportBody.substring(summaryStartIndex).trim();
-                    }
-                }
+                // Extract combined Assessment & Plan
+                let assessmentPlanMatch = content.match(/###\s*Assessment & Plan\s*(?:\*A clinical overview of possible causes considered\*)?\s*([\s\S]*?)(?=---|###\s*SOAP|$)/i);
+                let fullAssessmentPlan = assessmentPlanMatch ? assessmentPlanMatch[1].trim() : "";
 
-                // Clean out standard footer transitions if repeated in summary
-                summary = summary.replace(/Given your symptoms, a doctor can give you personalized guidance — and peace of mind\./gi, "").trim();
-
-                // 2. Extract the Assessment & Plan section
-                let assessmentPlan = "";
-                let assessmentStartIndex = reportBody.indexOf("### Assessment & Plan");
-                if (assessmentStartIndex !== -1) {
-                    let assessmentEndIndex = reportBody.indexOf("---");
-                    if (assessmentEndIndex !== -1) {
-                        assessmentPlan = reportBody.substring(assessmentStartIndex, assessmentEndIndex).trim();
-                    } else {
-                        assessmentPlan = reportBody.substring(assessmentStartIndex).trim();
-                    }
-                }
-
-                // Clean the sub-headers to prevent duplicate rendering
-                assessmentPlan = assessmentPlan.replace(/### Assessment & Plan/gi, "").trim();
-                assessmentPlan = assessmentPlan.replace(/A clinical overview of possible causes considered/gi, "").trim();
-
-                // Format clinical markdown text cleanly
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900">$1</strong>')
-                               .replace(/(\d+\.)\s/g, '<div class="mt-4"></div>$1 ') 
-                               .replace(/<\/strong>\s*[-:]\s*/g, '</strong> &bull; ') 
-                               .replace(/<\/strong>\s*•\s*/g, '</strong> &bull; ') 
-                               .replace(/\n\s*[-•]\s*/g, '<div class="mt-2 flex items-start"><span class="mr-2 text-gray-400">&bull;</span><span>')
-                               .replace(/\n/g, '</span></div>')
-                               .replace(/<div class="mt-2 flex items-start"><span><\/span><\/div>/g, '');
+                               .replace(/(\d+\.)\s<strong/g, '<div class="mt-4"></div>$1 <strong') 
+                               .replace(/\n\s*•\s*/g, '<div class="mt-5"></div>&bull; ') // Main bullets
+                               .replace(/\n\s*-\s*/g, '<div class="mt-2 ml-4"></div><span class="text-gray-400 mr-2">-</span> ') // Sub bullets
+                               .replace(/\n/g, '<br>');
                 };
 
-                // Generate exact date & time styling matching: "May 28, 2026 • 01:33 AM"
-                const currentDate = new Date();
-                const datePart = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                const timePart = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-                const dateStr = `${datePart} • ${timePart}`;
-                
+                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
                 if (isDashboard) {
-                    window.generatedClinicalReport = content; // Keep globally for backend payloads
+                    window.generatedClinicalReport = content;
                 }
-                
+
                 const btnAction = isDashboard 
                     ? `switchTab('book'); document.getElementById('book-symptoms').value = 'AI Triage Complete'; suggestDoctor();`
                     : `window.location.href='login.html';`;
-                    
+
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
+                // Cleaned up UI structure
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: 'Inter', sans-serif;">
                     
                     <div class="p-5 border-b border-gray-100" style="font-family: Georgia, serif;">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doctronic Report</h2>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-1 tracking-tight">Doctronic Report</h2>
                         <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
                     </div>
                     
                     <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
-                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
                         <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                     </div>
 
                     <!-- Assessment & Plan Block -->
                     <div class="border-b border-gray-100 font-sans">
                         <details class="group" open>
-                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
+                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-base hover:bg-gray-50 transition">
                                 Assessment & Plan
                                 <span class="transition group-open:rotate-180 text-[#0066FF]">
                                     <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M6 9l6 6 6-6"></path></svg>
@@ -1008,38 +946,46 @@
                             </summary>
                             <div class="px-5 pb-5 text-sm text-gray-700">
                                 <p class="text-[11px] text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
-                                <div class="leading-relaxed font-sans">${formatClinicalText(assessmentPlan)}</div>
+                                <div class="mb-5 leading-relaxed text-gray-800">
+                                    ${formatClinicalText(fullAssessmentPlan)}
+                                </div>
                             </div>
                         </details>
                     </div>
                     
                     <!-- Continue to Licensed Doctor Block -->
-                    <div class="p-5 bg-white font-sans">
+                    <div class="p-5 bg-gray-50 font-sans">
                         <h3 class="font-bold text-gray-900 text-lg mb-4">Continue to a licensed doctor</h3>
                         <ul class="text-sm text-gray-600 space-y-3 mb-6">
                             <li class="flex items-start">
-                                <div class="bg-blue-50 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
+                                <div class="bg-blue-100 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
                                 <span>Talk to a doctor now or schedule a time</span>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-blue-50 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
+                                <div class="bg-blue-100 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
-                                <span>A doctor can review your concerns and advise on treatment</span>
+                                <span>A doctor can review your concerns and advise on treatment and next steps</span>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-blue-50 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
+                                <div class="bg-blue-100 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
-                                <span>Get prescriptions, referrals, and more in as little as 30 mins</span>
+                                <span>Get prescriptions, referrals, and more in as little as 30 minutes</span>
                             </li>
                             <li class="flex items-start">
-                                <div class="bg-blue-50 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
+                                <div class="bg-blue-100 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
-                                <span>RM 38 self-pay</span>
+                                <span>$39 self-pay or insurance accepted</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-blue-100 text-blue-600 rounded mr-3 mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span>Full refund if you're not 100% satisfied</span>
                             </li>
                         </ul>
                         <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex justify-center items-center">
@@ -1062,7 +1008,7 @@
             const r = await fetch(API_BASE+'/api/history',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid, session_id:window.currentSessionId})});
             const data = await r.json(); 
             el.innerHTML = '';
-            
+
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
                 el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
             } else {
@@ -1083,11 +1029,11 @@
             const iStop = document.getElementById('orb-icon-stop');
             const iProc = document.getElementById('orb-icon-processing');
             const iSpeak = document.getElementById('orb-icon-speaking');
-            
+
             btn.className = "relative w-40 h-40 sm:w-44 sm:h-44 rounded-full flex items-center justify-center mb-8 transition-all duration-300 shadow-2xl focus:outline-none";
             [iMic, iStop, iProc, iSpeak].forEach(el => el.classList.add('hidden'));
             btn.disabled = false;
-            
+
             if (state === 'IDLE') {
                 btn.classList.add('bg-gradient-to-br', 'from-blue-400', 'to-[#0066FF]', 'hover:scale-105', 'orb-pulse-blue');
                 statusText.innerText = "Tap mic to speak";
@@ -1116,7 +1062,7 @@
             const msg = voiceInput || input.value.trim(); 
             if(!msg) return; 
             input.value = '';
-            
+
             const history = document.getElementById('chat-history');
             history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed">${msg}</div></div>`;
             history.scrollTo(0, history.scrollHeight);
@@ -1130,13 +1076,13 @@
             try {
                 const r = await fetch(API_BASE+'/api/chat',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({message:msg, session_id:window.currentSessionId || "default", user_name:window.userData.name})});
                 const data = await r.json();
-                
+
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
                 history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(data.reply, true)}</div></div>`;
                 history.scrollTo(0, history.scrollHeight);
-                
+
                 if(isVoiceActive) speakOut(data.reply);
             } catch(e) {
                 if(isVoiceActive) {
@@ -1149,7 +1095,7 @@
         function speakOut(text) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            
+
             if (isVoiceActive) setVoiceState('SPEAKING'); 
 
             utterance.onend = () => { 
@@ -1168,7 +1114,7 @@
             isVoiceActive = true;
             isRecording = false;
             setVoiceState('IDLE');
-            
+
             if(!voiceRec) {
                 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (!SR) { 
@@ -1179,14 +1125,14 @@
                 voiceRec = new SR();
                 voiceRec.continuous = true; 
                 voiceRec.interimResults = true; 
-                
+
                 voiceRec.onresult = (e) => {
                     let finalTxt = '';
                     for(let i=0; i<e.results.length; i++){ finalTxt += e.results[i][0].transcript; }
                     document.getElementById('voice-transcript').innerText = finalTxt;
                     document.getElementById('chat-input').value = finalTxt;
                 };
-                
+
                 voiceRec.onend = () => {
                     if (isRecording) { try { voiceRec.start(); } catch(e) {} }
                 };
@@ -1205,7 +1151,7 @@
             if (isRecording) {
                 isRecording = false; 
                 try { voiceRec.stop(); } catch(e) {}
-                
+
                 let msg = document.getElementById('chat-input').value.trim();
                 if (msg) {
                     setVoiceState('PROCESSING'); 
@@ -1241,7 +1187,7 @@
                 showInlineMessage("Please link your Google Drive first to securely upload and store medical documents.", "error");
                 return;
             }
-            
+
             const modal = document.getElementById('upload-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex'); 
@@ -1265,7 +1211,7 @@
         window.toggleBookingType = (type) => {
             const onlineSection = document.getElementById('booking-online-section');
             const clinicSection = document.getElementById('booking-clinic-section');
-            
+
             if (type === 'online') {
                 onlineSection.classList.remove('hidden');
                 onlineSection.classList.add('block');
@@ -1279,16 +1225,16 @@
 
         window.toggleUrgency = (type) => {
             window.bookingUrgency = type;
-            
+
             // Reset doctor selection
             document.getElementById('book-doctor').value = '';
             document.getElementById('doctor-selected-content').innerHTML = '<span class="text-gray-500">-- Search or Select a Doctor --</span>';
-            
+
             // Handle slots visibility
             const slotsWrapper = document.getElementById('slots-wrapper');
             slotsWrapper.classList.add('hidden');
             document.getElementById('selected-slot').value = '';
-            
+
             // Update Doctor list
             if(type === 'immediate') {
                 fetchDoctorsAvailableNow();
@@ -1301,12 +1247,12 @@
             const docDisplay = document.getElementById('doctor-select-display');
             docDisplay.classList.add('animate-pulse', 'border-blue-400');
             document.getElementById('doctor-selected-content').innerHTML = '<span class="text-blue-500 font-bold">Checking who is available right now...</span>';
-            
+
             try {
                 const r = await fetch(API_BASE+'/api/doctors/available_now', {headers: await getAuthHeaders()});
                 const data = await r.json();
                 window.allDoctors = data.doctors || [];
-                
+
                 if (window.allDoctors.length === 0) {
                     document.getElementById('doctor-selected-content').innerHTML = '<span class="text-red-500 font-bold">No doctors available immediately</span>';
                     // User requested specific empty state wording
@@ -1349,14 +1295,14 @@
             list.innerHTML = '';
             docs.forEach(d => {
                 let avatar = d.photo_url || `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#e2e8f0"/><path d="M32 32c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0 4c-5.333 0-16 2.667-16 8v4h32v-4c0-5.333-10.667-8-16-8z" fill="#94a3b8"/></svg>`)}`;
-                
+
                 let starsHtml = '';
                 let rating = parseFloat(d.rating) || 0;
                 for(let i=1; i<=5; i++) {
                     if(i <= rating) starsHtml += `<svg class="w-3.5 h-3.5 text-yellow-400 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`;
                     else starsHtml += `<svg class="w-3.5 h-3.5 text-gray-200" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`;
                 }
-                
+
                 // Add the immediate pulse badge
                 let extraBadge = window.bookingUrgency === 'immediate' 
                     ? `<span class="bg-red-50 border border-red-200 text-red-600 text-[10px] px-2 py-0.5 rounded-md font-bold whitespace-nowrap ml-2 shadow-sm flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1 animate-pulse"></span>Available Now</span>` 
@@ -1401,28 +1347,28 @@
             if(!d) return;
 
             document.getElementById('book-doctor').value = d.id;
-            
+
             let avatar = d.photo_url || `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#e2e8f0"/><path d="M32 32c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0 4c-5.333 0-16 2.667-16 8v4h32v-4c0-5.333-10.667-8-16-8z" fill="#94a3b8"/></svg>`)}`;
 
             document.getElementById('doctor-selected-content').innerHTML = `
                 <img src="${avatar}" class="w-7 h-7 rounded-full object-cover border border-gray-200 shadow-sm shrink-0">
                 <span class="font-bold text-gray-900 truncate">${d.name} <span class="font-normal text-gray-500 ml-1 hidden sm:inline-block">- ${d.specialty}</span></span>
             `;
-            
+
             document.getElementById('doctor-dropdown-menu').classList.add('hidden');
-            
+
             if (window.bookingUrgency === 'regular') {
                 fetchDoctorSlots(d.id);
             } else {
                 // Immediate Consultation visual timetable block
                 const wrapper = document.getElementById('slots-wrapper');
                 const container = document.getElementById('available-slots-container');
-                
+
                 const now = new Date();
                 const oneHourLater = new Date(now.getTime() + 60*60*1000);
-                
+
                 const formatTime = (d) => d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                
+
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const day = String(now.getDate()).padStart(2, '0');
@@ -1468,11 +1414,11 @@
             const wrapper = document.getElementById('slots-wrapper');
             const container = document.getElementById('available-slots-container');
             const selectedSlotInput = document.getElementById('selected-slot');
-            
+
             selectedSlotInput.value = ''; 
-            
+
             if (!doctorId) { wrapper.classList.add('hidden'); return; }
-            
+
             // Pulsing modern slot skeleton loader instead of plain text loading indicators
             container.innerHTML = `
                 <div class="col-span-1 sm:col-span-2 md:col-span-3 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 w-full">
@@ -1494,16 +1440,16 @@
                 </div>
             `;
             wrapper.classList.remove('hidden');
-            
+
             try {
                 const res = await fetch(`${API_BASE}/api/doctor_slots?doctor_id=${doctorId}`, { headers: await getAuthHeaders() });
                 const data = await res.json();
-                
+
                 if (!data.slots || data.slots.length === 0) {
                     container.innerHTML = `<div class="col-span-1 sm:col-span-2 md:col-span-3 text-center py-6 text-red-500 bg-red-50 rounded-xl text-sm font-bold border border-red-100">Fully booked. No slots available right now.</div>`;
                     return;
                 }
-                
+
                 container.innerHTML = '';
                 data.slots.forEach(s => {
                     const html = `
@@ -1530,10 +1476,10 @@
         window.suggestDoctor = async () => { 
             const sym = document.getElementById('book-symptoms').value; 
             if(!sym) { showInlineMessage("Please type your symptoms to find a doctor.", "error"); return; }
-            
+
             const btn = document.getElementById('find-doctor-btn'); 
             const originalText = btn.innerHTML;
-            
+
             // AI Suggestion Loader starts
             btn.disabled = true;
             btn.innerHTML = `
@@ -1545,10 +1491,10 @@
                     <span>Matching...</span>
                 </span>
             `;
-            
+
             const docDisplay = document.getElementById('doctor-select-display');
             docDisplay.classList.add('animate-pulse', 'border-blue-400');
-            
+
             try {
                 const r = await fetch(API_BASE+'/api/suggest_doctor', {method:'POST',headers:await getAuthHeaders(), body:JSON.stringify({symptoms:sym})}); 
                 const d = await r.json(); 
@@ -1567,7 +1513,7 @@
                     }
                 } else { showInlineMessage(d.message || "Failed to find a matching doctor.", "error"); }
             } catch(e) { showInlineMessage("Failed to connect to AI suggestion.", "error"); }
-            
+
             btn.disabled = false;
             btn.innerHTML = originalText;
             docDisplay.classList.remove('animate-pulse', 'border-blue-400');
@@ -1575,10 +1521,10 @@
 
         window.submitBooking = async (e) => {
             e.preventDefault(); 
-            
+
             const doctorId = document.getElementById('book-doctor').value;
             if (!doctorId) return showInlineMessage("Please select a doctor.", "error");
-            
+
             const preferredTime = document.getElementById('selected-slot').value;
             if (window.bookingUrgency === 'regular' && !preferredTime) {
                 return showInlineMessage("Please select an available time slot.", "error");
@@ -1586,10 +1532,10 @@
 
             if (!document.getElementById('pdpa-agree').checked) return showInlineMessage("You must agree to the PDPA to proceed.", "error");
             const symptomsText = document.getElementById('book-symptoms').value;
-            
+
             const btn = document.getElementById('book-btn'); 
             btn.innerText = "Processing...";
-            
+
             let finalDateTime = preferredTime;
             if (window.bookingUrgency === 'immediate') {
                 // Must send exactly YYYY-MM-DDTHH:MM for the backend to parse
@@ -1601,7 +1547,7 @@
                 const minutes = String(now.getMinutes()).padStart(2, '0');
                 finalDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
             }
-            
+
             try {
                 const r = await fetch(API_BASE + '/api/book_appointment', { 
                     method:'POST', 
@@ -1615,7 +1561,7 @@
                     }) 
                 });
                 const d = await r.json(); 
-                
+
                 if (d.error || !r.ok) {
                     showInlineMessage(d.message || d.detail || "Booking failed", "error"); 
                 } else if (d.stripe_url) {
@@ -1664,23 +1610,23 @@
             try {
                 const r = await fetch(API_BASE + '/api/appointments', { method: 'GET', headers: await getAuthHeaders() });
                 const data = await r.json(); 
-                
+
                 if(!data.appointments || data.appointments.length === 0) { 
                     const tbody = document.getElementById('schedule-table-body');
                     tbody.innerHTML = `<tr><td colspan="8" class="py-12 text-center text-gray-400 font-medium bg-white sm:bg-transparent rounded-2xl border border-gray-200 sm:border-0 shadow-sm sm:shadow-none">No appointments scheduled.</td></tr>`; 
                     document.getElementById('appt-pagination').innerHTML = '';
                     return; 
                 }
-                
+
                 window.cachedAppointments = data.appointments;
                 window.currentApptPage = 1;
                 window.renderAppointments();
-                
+
                 checkUpcomingReminders(data.appointments);
 
                 const params = new URLSearchParams(window.location.search);
                 const reviewApptId = params.get('review_appt');
-                
+
                 if (reviewApptId) {
                     const appt = window.cachedAppointments.find(a => a.id.replace('ID', '') === reviewApptId);
                     if (appt && !appt.review_submitted) {
@@ -1694,19 +1640,19 @@
         window.renderAppointments = () => {
             const tbody = document.getElementById('schedule-table-body');
             tbody.innerHTML = '';
-            
+
             const start = (window.currentApptPage - 1) * window.apptsPerPage;
             const end = start + window.apptsPerPage;
             const pageData = window.cachedAppointments.slice(start, end);
-            
+
             pageData.forEach(a => {
                 let sColor = a.status === 'Done' ? 'text-green-700 bg-green-50 border border-green-200' : 'text-blue-700 bg-blue-50 border border-blue-200';
-                
+
                 let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-2 py-2.5 rounded-lg uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
                 let btnDesktop = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-300">--</span>`;
-                
+
                 let numericId = a.id.replace('ID', '');
-                
+
                 let erxMobile = a.consultation_completed 
                     ? `<a href="prescription.html?id=${numericId}" class="w-full bg-teal-600 hover:bg-teal-700 active:scale-95 transition text-white text-[10px] font-bold px-2 py-2.5 rounded-lg uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">
                          <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -1869,7 +1815,7 @@
                         </td>
                     </tr>`;
             });
-            
+
             window.renderPaginationControls(window.cachedReports.length, window.reportsPerPage, window.currentReportPage, 'report-pagination', 'changeReportPage');
         };
 
@@ -1890,7 +1836,7 @@
             if (!window.pendingDeleteId) return;
             const id = window.pendingDeleteId;
             const btn = document.getElementById('confirm-action-btn');
-            
+
             btn.innerText = "Deleting...";
             try {
                 const r = await fetch(`${API_BASE}/api/reports/${id}`, { method: 'DELETE', headers: await getAuthHeaders() });
@@ -1920,15 +1866,15 @@
                 const name = document.getElementById('set-name').value;
                 const phone = document.getElementById('set-phone').value;
                 const photoInput = document.getElementById('set-photo');
-                
+
                 const fd = new FormData();
                 fd.append('name', name || "");
                 fd.append('phone', phone || "");
-                
+
                 if (photoInput.files.length > 0) {
                     fd.append('file', photoInput.files[0]);
                 }
-                
+
                 const res = await fetch(`${API_BASE}/api/user/profile`, { 
                     method: 'PUT', 
                     headers: { 'Authorization': `Bearer ${await window.currentUser.getIdToken()}` }, 
@@ -1938,7 +1884,7 @@
                 if (res.ok) {
                     const data = await res.json();
                     showInlineMessage("Profile successfully updated.", "success");
-                    
+
                     if(data.photo_url) {
                         window.userData.photo_url = data.photo_url;
                         window.currentAvatar = data.photo_url;
@@ -1962,7 +1908,7 @@
             e.preventDefault(); 
             const btn = document.getElementById('upload-btn'); 
             btn.innerText = "Working..."; 
-            
+
             const repName = document.getElementById('rep-name').value;
             const repType = document.getElementById('rep-type').value;
 
@@ -1975,14 +1921,14 @@
             try { 
                 const r = await fetch(API_BASE+'/api/upload_medical_report', { method:'POST', headers: {'Authorization': `Bearer ${await window.currentUser.getIdToken()}`}, body:fd }); 
                 const d = await r.json(); 
-                
+
                 closeUploadModal();
                 document.getElementById('file-name-display').innerText = "Click to upload or drag and drop";
                 document.getElementById('file-name-display').classList.remove('text-[#0066FF]');
                 e.target.reset(); 
-                
+
                 fetchReports(); 
-                
+
                 addNotification("Upload Complete", `"${repName}" (${repType}) was uploaded successfully and is ready for AI review.`, "switchTab('chat')", 'success');
             } catch(e) { showInlineMessage("Upload failed. Please check your connection and try again.", "error"); } 
             btn.innerText = "Add";
