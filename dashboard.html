@@ -597,11 +597,11 @@
         const chatLogoUrl = "https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true";
 
         // ---- PAGINATION STATE ----
-        window.cachedAppointments =[];
+        window.cachedAppointments = [];
         window.currentApptPage = 1;
         window.apptsPerPage = 6;
 
-        window.cachedReports =[];
+        window.cachedReports = [];
         window.currentReportPage = 1;
         window.reportsPerPage = 6;
 
@@ -904,11 +904,11 @@
             }
 
             if (content.includes("[ESCALATE]")) {
-                // Safe extraction using Regex
-                let summaryMatch = content.match(/(?:\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|###|$))/i);
-                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Plan of Action:\*\*|Plan of Action:|---|###|$))/i);
-                let planMatch = content.match(/(?:\*\*Plan of Action:\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|$)/i);
-                let soapMatch = content.match(/(?:\*\*SOAP Note for Physician:\*\*|SOAP Note for Physician:|SOAP Note:)\s*([\s\S]*?)$/i);
+                // Safe extraction using Regex accounting for possible bolded prompt names
+                let summaryMatch = content.match(/(?:\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis|Differential Diagnosis:|###|$))/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis[^\*]*\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action:|---|###|$))/i);
+                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=(?:\*\*SOAP Note|---|###|$))/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:)\s*([\s\S]*?)$/i);
 
                 let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
                 let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
@@ -937,21 +937,31 @@
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
+                // Reorganized HTML Layout (Assessment and SOAP explicitly visible, Booking option at the bottom)
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
+                    <!-- Header -->
                     <div class="p-5 border-b border-gray-100">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doctronic Report</h2>
                         <h2 class="text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
                         <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
                     </div>
                     
+                    <!-- Summary -->
                     <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
-                        <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                     </div>
                     
-                    <div class="p-5 bg-gray-50 font-sans">
-                        <h3 class="font-bold text-gray-900 text-lg mb-3">Continue to a licensed doctor</h3>
+                    <!-- Clinical Assessment, Plan, and SOAP (Explicitly visible) -->
+                    <div class="p-5 font-sans border-b border-gray-100 bg-gray-50 text-sm text-gray-700 space-y-6">
+                        ${diffDiag ? `<div><div class="font-bold text-gray-900 mb-2 uppercase tracking-wider text-xs">Differential Diagnosis</div><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
+                        ${plan ? `<div><div class="font-bold text-gray-900 mb-2 uppercase tracking-wider text-xs">Plan of Action</div><div>${formatClinicalText(plan)}</div></div>` : ''}
+                        ${soap ? `<div><div class="font-bold text-gray-900 mb-2 uppercase tracking-wider text-xs">SOAP Note for Physician</div><div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800">${formatClinicalText(soap)}</div></div>` : ''}
+                    </div>
+                    
+                    <!-- Booking CTA (Moved to bottom) -->
+                    <div class="p-5 font-sans bg-white">
+                        <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
+                        <p class="text-sm text-gray-600 mb-4">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
@@ -961,22 +971,6 @@
                         <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
                             ${btnText}
                         </button>
-                    </div>
-                    
-                    <div class="border-t border-gray-200 font-sans">
-                        <details class="group" open>
-                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
-                                Assessment & Plan
-                                <span class="transition group-open:rotate-180">
-                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
-                                </span>
-                            </summary>
-                            <div class="px-5 pb-5 text-sm text-gray-700">
-                                <p class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
-                                ${diffDiag ? `<div class="font-bold text-gray-900 mb-1">Differential Diagnosis:</div><div class="mb-4">${formatClinicalText(diffDiag)}</div>` : ''}
-                                ${plan ? `<div class="font-bold text-gray-900 mb-1 mt-4">Plan of Action:</div><div>${formatClinicalText(plan)}</div>` : ''}
-                            </div>
-                        </details>
                     </div>
                 </div>`;
 
@@ -1260,7 +1254,7 @@
             docDisplay.classList.remove('animate-pulse', 'border-blue-400');
         };
 
-        window.allDoctors =[];
+        window.allDoctors = [];
         async function fetchDoctors() { 
             try {
                 const r = await fetch(API_BASE+'/api/doctors'); 
