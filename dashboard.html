@@ -890,36 +890,37 @@
                               .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             }
 
-            if (content.includes("[ESCALATE]")) {
-                content = content.replace("[ESCALATE]", "").trim();
+            if (content.includes("[ESCALATE]") || content.includes("~~~SUMMARY~~~") || content.includes("### Doctronic Report") || content.includes("Summary:")) {
+                content = content.replace("[ESCALATE]", "").replace("### Doctronic Report", "").replace("---", "").trim();
                 
                 let summary = "I have reviewed your symptoms and prepared a clinical summary for you.";
-                let fullAssessmentPlan = "";
+                let diffDiagnosis = "";
+                let planOfAction = "";
                 let soapNote = "";
                 let conversationalIntro = "";
 
-                if (content.includes("~~~SUMMARY~~~")) {
-                    let parts = content.split("~~~SUMMARY~~~");
-                    conversationalIntro = parts[0].trim();
-                    
-                    let remainder = parts[1] || "";
-                    if (remainder.includes("~~~ASSESSMENT~~~")) {
-                        let subParts = remainder.split("~~~ASSESSMENT~~~");
-                        summary = subParts[0].trim();
-                        
-                        let assessRemainder = subParts[1] || "";
-                        if (assessRemainder.includes("~~~SOAP~~~")) {
-                            let soapParts = assessRemainder.split("~~~SOAP~~~");
-                            fullAssessmentPlan = soapParts[0].trim();
-                            soapNote = soapParts[1].trim();
-                        } else {
-                            fullAssessmentPlan = assessRemainder.trim();
-                        }
-                    } else {
-                        summary = remainder.trim();
-                    }
+                // Robust regex parsing for both ~~~ tags and standard Markdown headers
+                let summaryMatch = content.match(/(?:~~~SUMMARY~~~|Summary:)([\s\S]*?)(?=~~~DIFFERENTIAL_DIAGNOSIS~~~|Differential Diagnosis:|~~~ASSESSMENT~~~|Assessment:|~~~PLAN_OF_ACTION~~~|Plan of Action:|~~~SOAP~~~|SOAP Note for Physician:|$)/i);
+                let diffMatch = content.match(/(?:~~~DIFFERENTIAL_DIAGNOSIS~~~|Differential Diagnosis:|~~~ASSESSMENT~~~|Assessment:)([\s\S]*?)(?=~~~PLAN_OF_ACTION~~~|Plan of Action:|~~~SOAP~~~|SOAP Note for Physician:|$)/i);
+                let planMatch = content.match(/(?:~~~PLAN_OF_ACTION~~~|Plan of Action:)([\s\S]*?)(?=~~~SOAP~~~|SOAP Note for Physician:|$)/i);
+                let soapMatch = content.match(/(?:~~~SOAP~~~|SOAP Note for Physician:)([\s\S]*?)$/i);
+
+                if (summaryMatch) {
+                    let intro = content.substring(0, summaryMatch.index).trim();
+                    if (intro) conversationalIntro = intro;
+                    summary = summaryMatch[1].trim();
                 } else {
-                    summary = content; 
+                    summary = content.replace("~~~SUMMARY~~~", "").trim();
+                }
+
+                if (diffMatch) diffDiagnosis = diffMatch[1].trim();
+                if (planMatch) planOfAction = planMatch[1].trim();
+                if (soapMatch) soapNote = soapMatch[1].trim();
+
+                // If differential and plan are combined in the old ASSESSMENT tag format:
+                if (!diffDiagnosis && !planOfAction && summaryMatch) {
+                   let assessMatch = content.match(/(?:~~~ASSESSMENT~~~)([\s\S]*?)(?=~~~SOAP~~~|$)/i);
+                   if (assessMatch) diffDiagnosis = assessMatch[1].trim();
                 }
 
                 let formatClinicalText = (text) => {
@@ -940,6 +941,41 @@
                     : `window.location.href='login.html';`;
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
+
+                // Create Assessment & Plan HTML (Combining Diff Diagnosis and Plan of Action if they exist)
+                let assessmentPlanContent = "";
+                if (diffDiagnosis) {
+                    assessmentPlanContent += `<div class="mb-4">
+                        <h4 class="font-bold text-gray-900 mb-2">Differential Diagnosis</h4>
+                        ${formatClinicalText(diffDiagnosis)}
+                    </div>`;
+                }
+                if (planOfAction) {
+                    assessmentPlanContent += `<div class="mb-2">
+                        <h4 class="font-bold text-gray-900 mb-2">Plan of Action</h4>
+                        ${formatClinicalText(planOfAction)}
+                    </div>`;
+                }
+
+                let assessmentHtml = assessmentPlanContent ? `
+                    <div class="bg-gray-50 font-sans border-t border-gray-100">
+                        <details class="group">
+                            <summary class="flex justify-between items-center cursor-pointer list-none p-6 hover:bg-gray-100 transition">
+                                <div>
+                                    <div class="font-bold text-[#0066FF] text-base mb-1">Assessment & Plan</div>
+                                    <div class="text-xs text-gray-500 font-normal">A clinical overview of possible causes considered</div>
+                                </div>
+                                <span class="transition group-open:rotate-180 text-[#0066FF]">
+                                    <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M6 9l6 6 6-6"></path></svg>
+                                </span>
+                            </summary>
+                            <div class="px-6 pb-6 text-sm text-gray-700">
+                                <div class="leading-relaxed text-gray-800">
+                                    ${assessmentPlanContent}
+                                </div>
+                            </div>
+                        </details>
+                    </div>` : "";
 
                 let soapHtml = soapNote ? `
                     <div class="bg-gray-50 font-sans border-t border-gray-200">
@@ -971,10 +1007,13 @@
                     
                     <div class="p-6 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
-                        <p class="mt-6 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                     </div>
 
-                    <div class="p-6 bg-white border-b border-gray-100 font-sans">
+                    ${assessmentHtml}
+                    ${soapHtml}
+
+                    <div class="p-6 bg-white border-t border-gray-100 font-sans">
+                        <p class="font-medium text-gray-900 mb-4">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <h3 class="font-bold text-gray-900 text-lg mb-4">Continue to a licensed doctor</h3>
                         <ul class="text-sm text-gray-600 space-y-3 mb-6">
                             <li class="flex items-start">
@@ -1012,27 +1051,6 @@
                             ${btnText}
                         </button>
                     </div>
-
-                    <div class="bg-gray-50 font-sans">
-                        <details class="group" open>
-                            <summary class="flex justify-between items-center cursor-pointer list-none p-6 hover:bg-gray-100 transition">
-                                <div>
-                                    <div class="font-bold text-[#0066FF] text-base mb-1">Assessment & Plan</div>
-                                    <div class="text-xs text-gray-500 font-normal">A clinical overview of possible causes considered</div>
-                                </div>
-                                <span class="transition group-open:rotate-180 text-[#0066FF]">
-                                    <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M6 9l6 6 6-6"></path></svg>
-                                </span>
-                            </summary>
-                            <div class="px-6 pb-6 text-sm text-gray-700">
-                                <div class="mb-2 leading-relaxed text-gray-800">
-                                    ${formatClinicalText(fullAssessmentPlan)}
-                                </div>
-                            </div>
-                        </details>
-                    </div>
-                    ${soapHtml}
-
                 </div>`;
 
                 if(conversationalIntro) {
