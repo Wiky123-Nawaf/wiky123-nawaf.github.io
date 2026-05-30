@@ -24,11 +24,20 @@
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
         .nav-inactive:hover { background-color: #f8fafc; color: #0f172a; }
 
-        /* Text Wrapping Utility */
-        .chat-bubble-text {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
+        /* --- Dynamic Chat Bubble Widths --- */
+        .ai-bubble-container { max-width: 85%; width: 100%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+        .user-bubble-container { max-width: 80%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+        @media (max-width: 768px) {
+            .ai-bubble-container { max-width: 96%; }
+            .user-bubble-container { max-width: 92%; }
+        }
+
+        /* --- Input Field Multi-line Fix --- */
+        .input-field { 
+            width: 100%; border: none; background: transparent; outline: none; font-size: 15px; 
+            color: #111111 !important; 
+            font-family: inherit; resize: none; 
+            min-height: 24px; height: 24px; max-height: 120px; overflow-y: auto; line-height: 1.5;
         }
 
         /* Typing Indicator Animation */
@@ -233,7 +242,7 @@
 
         <!-- ================= CHAT VIEW ================= -->
         <div id="view-chat" class="app-view active flex-1 flex-col h-full overflow-hidden relative">
-            <div id="chat-history" class="flex-1 overflow-y-auto px-4 sm:px-8 pt-4 pb-2 max-w-4xl w-full mx-auto custom-scrollbar"></div>
+            <div id="chat-history" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 max-w-4xl w-full mx-auto pb-4"></div>
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
@@ -256,8 +265,8 @@
             <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-4 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
                     <button onclick="enterVoiceMode()" class="p-3 text-gray-400 hover:text-blue-500 active:scale-95 transition shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
-                    <textarea id="chat-input" class="flex-1 bg-transparent px-2 sm:px-3 py-2 sm:py-1.5 focus:outline-none text-gray-800 text-sm resize-none custom-scrollbar min-h-[36px] max-h-[120px] self-center" rows="1" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '36px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
-                    <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white w-9 h-9 sm:w-auto sm:h-auto sm:px-6 sm:py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center justify-center self-center">
+                    <textarea id="chat-input" class="input-field custom-scrollbar" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '24px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
+                    <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white px-4 sm:px-6 py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center">
                         <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> 
                         <span class="hidden sm:inline-block">Send</span>
                     </button>
@@ -421,7 +430,7 @@
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
@@ -945,12 +954,14 @@
                     window.generatedClinicalReport = content; 
                 }
 
+                // Dynamic Action Button fetching the exact booking symptom keywords
                 const btnAction = isDashboard 
                     ? `switchTab('book'); document.getElementById('book-symptoms').value = '${bookingSymp}'; suggestDoctor();`
                     : `window.location.href='login.html';`;
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
+                // Completely continuous accordion without internal scrolling
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="font-family: Georgia, serif; max-width: 100%;">
                     <!-- Header -->
@@ -960,17 +971,17 @@
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify chat-bubble-text">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Expandable Assessment & Plan Accordion -->
-                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors">
+                    <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
+                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors" open>
                         <summary class="p-4 sm:p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
                             Assessment & Plan
-                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-4 sm:p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 border-t border-gray-100 text-justify chat-bubble-text">
+                        <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 font-sans text-sm text-gray-700 border-t border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
                             ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
                             ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">${formatClinicalText(soap)}</div></div>` : ''}
@@ -978,7 +989,7 @@
                     </details>
                     
                     <!-- Booking CTA -->
-                    <div class="p-4 sm:p-5 font-sans bg-white">
+                    <div class="p-4 sm:p-5 font-sans bg-white text-left">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
                         <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
@@ -996,10 +1007,36 @@
                 let conversationalIntro = content.split("[ESCALATE]")[0].trim();
                 if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
-                return `<div class="mb-2 text-justify chat-bubble-text">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+                return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
             }
 
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
+
+        function createUserBubble(text) {
+            return `
+            <div class="flex flex-col items-end mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span>
+                    <img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover border border-gray-200 bg-white">
+                </div>
+                <div class="bg-[#0066FF] text-white px-4 sm:px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed user-bubble-container text-left">
+                    ${text}
+                </div>
+            </div>`;
+        }
+
+        function createAiBubble(text) {
+            return `
+            <div class="flex flex-col items-start mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                </div>
+                <div class="bg-white border shadow-sm px-4 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed ai-bubble-container text-left">
+                    ${formatAiMessage(text, true)}
+                </div>
+            </div>`;
         }
 
         async function loadHistory() {
@@ -1009,13 +1046,13 @@
             el.innerHTML = '';
 
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full sm:max-w-[85%] text-justify chat-bubble-text">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
+                el.innerHTML = `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 ai-bubble-container text-left">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
             } else {
                 data.history.forEach(m => {
                     if(m.role === 'system') return;
                     let isUser = m.role === 'user';
-                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[90%] sm:max-w-[80%] text-left chat-bubble-text">${m.content}</div></div>`;
-                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(m.content, true)}</div></div>`;
+                    if(isUser) el.innerHTML += createUserBubble(m.content);
+                    else el.innerHTML += createAiBubble(m.content);
                 });
             }
             el.scrollTo(0, el.scrollHeight);
@@ -1061,14 +1098,23 @@
             const msg = voiceInput || input.value.trim(); 
             if(!msg) return; 
             input.value = '';
-            input.style.height = '36px'; 
+            input.style.height = '24px'; 
 
             const history = document.getElementById('chat-history');
-            history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[90%] sm:max-w-[80%] text-left chat-bubble-text">${msg}</div></div>`;
+            history.innerHTML += createUserBubble(msg);
             history.scrollTo(0, history.scrollHeight);
 
             const typeId = 'typing-' + Date.now();
-            history.innerHTML += `<div id="${typeId}" class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+            history.innerHTML += `
+            <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                </div>
+                <div class="bg-white border shadow-sm px-4 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center ai-bubble-container text-left" style="width: auto;">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                </div>
+            </div>`;
             history.scrollTo(0, history.scrollHeight);
 
             if (isVoiceActive) setVoiceState('PROCESSING');
@@ -1080,7 +1126,7 @@
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
-                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(data.reply, true)}</div></div>`;
+                history.innerHTML += createAiBubble(data.reply);
                 history.scrollTo(0, history.scrollHeight);
 
                 if(isVoiceActive) speakOut(data.reply);
@@ -1113,6 +1159,7 @@
             document.getElementById('voice-transcript').innerText = "Ready to listen... Press the mic to begin.";
             isVoiceActive = true;
             isRecording = false;
+            window.recognizedText = '';
             setVoiceState('IDLE');
 
             if(!voiceRec) {
@@ -1126,11 +1173,29 @@
                 voiceRec.continuous = true; 
                 voiceRec.interimResults = true; 
 
+                voiceRec.onstart = () => {
+                    // Do nothing on start. Initialization is handled outside.
+                };
+
                 voiceRec.onresult = (e) => {
-                    let finalTxt = '';
-                    for(let i=0; i<e.results.length; i++){ finalTxt += e.results[i][0].transcript; }
-                    document.getElementById('voice-transcript').innerText = finalTxt;
-                    document.getElementById('chat-input').value = finalTxt;
+                    let currentInterim = '';
+                    let currentFinal = '';
+                    
+                    for (let i = e.resultIndex; i < e.results.length; ++i) {
+                        if (e.results[i].isFinal) {
+                            currentFinal += e.results[i][0].transcript;
+                        } else {
+                            currentInterim += e.results[i][0].transcript;
+                        }
+                    }
+                    
+                    if (currentFinal) {
+                        window.recognizedText += currentFinal;
+                    }
+                    
+                    let displayTxt = window.recognizedText + currentInterim;
+                    document.getElementById('voice-transcript').innerText = displayTxt || 'Listening...';
+                    document.getElementById('chat-input').value = displayTxt;
                 };
 
                 voiceRec.onend = () => {
@@ -1157,6 +1222,7 @@
                     setVoiceState('PROCESSING'); 
                     sendChat(msg);
                     document.getElementById('chat-input').value = '';
+                    window.recognizedText = '';
                 } else {
                     setVoiceState('IDLE');
                     document.getElementById('voice-transcript').innerText = "Didn't catch that. Tap the mic to try again.";
@@ -1164,6 +1230,7 @@
             } else {
                 isRecording = true;
                 document.getElementById('chat-input').value = '';
+                window.recognizedText = '';
                 document.getElementById('voice-transcript').innerText = 'Listening...';
                 setVoiceState('LISTENING');
                 try { voiceRec.start(); } catch(e) {}
@@ -1282,7 +1349,7 @@
         window.renderDoctorDropdown = (docs) => {
             const list = document.getElementById('doctor-list');
             if(docs.length === 0) {
-                if (!list.innerHTML.includes("No doctor that are available at this hour")) {
+                if (!list.innerHTML.includes("No matching doctor is available immediately")) {
                     list.innerHTML = '<div class="p-4 text-sm text-gray-500 text-center font-bold">No doctors found matching your search.</div>';
                 }
                 return;
@@ -1633,13 +1700,15 @@
             const pageData = window.cachedAppointments.slice(start, end);
 
             pageData.forEach(a => {
-                let sColor = a.status === 'Done' ? 'text-green-700 bg-green-50 border border-green-200' : 'text-blue-700 bg-blue-50 border border-blue-200';
+                let sColor = a.status === 'Done' ? 'text-green-600 border border-green-200 bg-green-50' : 'text-[#0066FF] border border-[#0066FF] bg-blue-50/50';
 
                 let numericId = a.id.replace('ID', '');
 
-                let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-full bg-[#0066FF] text-white text-[11px] font-bold py-2.5 rounded-lg text-center shadow-sm active:scale-95 transition uppercase">Call</a>` : `<div class="w-full bg-gray-100 text-gray-400 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">--</div>`;
-                let erxMobile = a.consultation_completed ? `<a href="prescription.html?id=${numericId}" class="w-full bg-teal-600 text-white text-[11px] font-bold py-2.5 rounded-lg text-center shadow-sm active:scale-95 transition uppercase">E-Rx</a>` : `<div class="w-full bg-gray-100 text-gray-400 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">--</div>`;
-                let reviewMobile = a.review_submitted ? `<div class="w-full bg-green-50 text-green-600 border border-green-200 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">Done</div>` : (a.consultation_completed ? `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="w-full bg-[#f59e0b] text-white text-[11px] font-bold py-2.5 rounded-lg text-center shadow-sm active:scale-95 transition uppercase">Review</button>` : `<div class="w-full bg-gray-100 text-gray-400 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">--</div>`);
+                let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-12 h-12 shrink-0 bg-[#0066FF] text-white rounded-xl flex flex-col items-center justify-center font-bold text-[9px] uppercase shadow-sm"><svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>Call</a>` : `<div class="flex-1 h-12 bg-gray-100 text-gray-400 rounded-xl flex items-center justify-center font-bold text-xs uppercase">--</div>`;
+                
+                let erxMobile = a.consultation_completed ? `<a href="prescription.html?id=${numericId}" class="w-12 h-12 shrink-0 bg-[#059669] text-white rounded-xl flex flex-col items-center justify-center font-bold text-[9px] uppercase shadow-sm"><svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>E-Rx</a>` : `<div class="flex-1 h-12 bg-gray-100 text-gray-400 rounded-xl flex items-center justify-center font-bold text-xs uppercase">--</div>`;
+                
+                let reviewMobile = a.review_submitted ? `<div class="flex-1 h-12 bg-green-50 text-green-600 border border-green-200 rounded-xl flex items-center justify-center font-extrabold text-[11px] uppercase tracking-wider">Done</div>` : (a.consultation_completed ? `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="flex-1 h-12 bg-[#F59E0B] text-white rounded-xl flex items-center justify-center font-extrabold text-[11px] uppercase tracking-wider shadow-sm">Review</button>` : `<div class="flex-1 h-12 bg-gray-100 text-gray-400 rounded-xl flex items-center justify-center font-bold text-xs uppercase">--</div>`);
 
                 let btnDesktop = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-300">--</span>`;
                 let erxDesktop = a.consultation_completed 
@@ -1651,34 +1720,32 @@
                 let reviewDesktop = a.review_submitted ? `<span class="text-green-500 font-bold text-[10px] inline-flex items-center justify-center uppercase"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reviewed</span>` : (a.consultation_completed ? `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm"><svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Review</button>` : `<span class="text-gray-300">--</span>`);
 
                 tbody.innerHTML += `
-                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
-                        <td class="p-4 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3">
+                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-3xl sm:rounded-none shadow-sm sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden">
+                        <td class="py-3.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">ID</span>
                             <span class="font-extrabold text-gray-900">${a.id}</span>
                         </td>
-                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="py-3.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
-                            <span class="font-bold text-gray-700">${a.type}</span>
+                            <span class="font-bold text-gray-800">${a.type}</span>
                         </td>
-                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="py-3.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Doctor</span>
                             <span class="text-right sm:text-left font-bold text-gray-900 truncate max-w-[150px]">${a.doctor_name || '--'}</span>
                         </td>
-                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="py-3.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date</span>
-                            <span class="text-right sm:text-left whitespace-nowrap text-gray-800 font-semibold">${a.date}<span class="text-[10px] font-bold text-gray-400 ml-1.5 sm:block sm:ml-0">${a.time}</span></span>
+                            <span class="text-right sm:text-left whitespace-nowrap text-gray-800 font-semibold">${a.date} <span class="text-[10px] font-bold text-gray-400 ml-1 sm:block sm:ml-0">${a.time}</span></span>
                         </td>
-                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-3 sm:mb-0">
+                        <td class="py-3.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-1 sm:mb-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
-                            <span class="font-bold"><span class="${sColor} px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider shadow-xs">${a.status}</span></span>
+                            <span class="font-bold"><span class="${sColor} px-2.5 py-1 rounded text-[9px] font-extrabold uppercase tracking-widest">${a.status}</span></span>
                         </td>
                         <!-- Mobile Actions Row -->
-                        <td class="p-4 bg-gray-50/50 flex flex-col sm:hidden border-t border-gray-100 rounded-b-2xl">
-                             <div class="flex gap-2 w-full">
-                                <div class="flex-1">${btnMobile}</div>
-                                <div class="flex-1">${erxMobile}</div>
-                                <div class="flex-1">${reviewMobile}</div>
-                             </div>
+                        <td class="pt-5 pb-1 flex sm:hidden items-center gap-3 w-full">
+                            ${btnMobile}
+                            ${erxMobile}
+                            ${reviewMobile}
                         </td>
                         <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${btnDesktop}</td>
@@ -1741,8 +1808,8 @@
                        </span>`;
 
                 tbody.innerHTML += `
-                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
-                        <td class="p-4 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
+                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-3xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden">
+                        <td class="py-2 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Report Name</span>
                             <span class="font-extrabold text-gray-900 whitespace-nowrap text-right sm:text-left">${rep.name}</span>
                         </td>
@@ -1758,8 +1825,7 @@
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="${statColor} px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm">${rep.status}</span>
                         </td>
-                        <!-- Mobile Actions Row -->
-                        <td class="p-4 bg-gray-50/50 flex flex-col sm:hidden border-t border-gray-100 rounded-b-2xl">
+                        <td class="p-4 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-3xl border-t border-gray-100">
                              <div class="flex justify-between items-center w-full">
                                 <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Actions</span>
                                 <div class="flex items-center gap-2">
@@ -1770,7 +1836,6 @@
                                 </div>
                              </div>
                         </td>
-                        <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">
                             <div class="flex justify-center items-center">
                                 ${driveBtnDesktop}
