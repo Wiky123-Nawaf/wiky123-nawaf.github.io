@@ -267,7 +267,7 @@
 
         <!-- ================= BOOK CONSULTANT VIEW ================= -->
         <div id="view-book" class="app-view flex-1 flex-col overflow-y-auto">
-            <div class="max-w-4xl mx-auto p-6 sm:p-10 w-full pt-4">
+            <div class="max-w-4xl mx-auto px-4 pb-8 sm:p-10 w-full pt-4 sm:pt-8">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Book a Consultant</h2>
                 <p class="text-gray-500 mb-8 text-sm leading-relaxed">Schedule a follow-up video call with one of our licensed human doctors.</p>
 
@@ -286,31 +286,33 @@
                 </div>
 
                 <form id="booking-online-section" onsubmit="submitBooking(event)" class="block">
-                    <div class="space-y-6">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block text-xs font-semibold text-gray-500 mb-1">Name & Age</label><input type="text" id="book-name" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF]" placeholder="e.g John Doe, 35"></div>
-                            <div><label class="block text-xs font-semibold text-gray-500 mb-1">Email</label><input type="email" id="book-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF]" placeholder="e.g john@gmail.com"></div>
+                    <div class="space-y-5 sm:space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Name & Age</label><input type="text" id="book-name" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g John Doe, 35"></div>
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Email</label><input type="email" id="book-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g john@gmail.com"></div>
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Symptoms</label>
                             <div class="relative">
-                                <input type="text" id="book-symptoms" placeholder="e.g skin rash, headache..." class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF] pr-20 sm:pr-24">
-                                <button type="button" id="find-doctor-btn" onclick="suggestDoctor()" class="absolute right-2 top-2 bottom-2 bg-white border border-gray-200 hover:bg-gray-50 active:scale-95 text-gray-700 px-3 sm:px-4 rounded-md text-xs font-bold shadow-sm transition">Find Doctor</button>
+                                <input type="text" id="book-symptoms" placeholder="e.g skin rash, headache..." class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm focus:ring-2 focus:ring-[#0066FF] pr-[105px] sm:pr-[120px] shadow-sm">
+                                <button type="button" id="find-doctor-btn" onclick="suggestDoctor()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-gray-50 border border-gray-200 hover:bg-gray-100 active:scale-95 text-[#0066FF] px-3 sm:px-4 rounded-md text-xs font-bold shadow-sm transition flex items-center justify-center">Find Doctor</button>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Booking Urgency</label>
-                            <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-200">
+                            <div class="flex bg-gray-50 p-1.5 rounded-xl border border-gray-200 shadow-sm">
                                 <label class="flex-1 text-center cursor-pointer relative">
                                     <input type="radio" name="urgency_toggle" value="regular" checked class="peer sr-only" onchange="toggleUrgency('regular')">
-                                    <div class="py-2.5 rounded-lg text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:border-blue-200 peer-checked:border peer-checked:shadow-sm transition">📅 Schedule for Later</div>
+                                    <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:border-blue-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center">
+                                        <span class="mr-1.5 text-sm sm:text-base">📅</span> <span>Schedule <span class="hidden sm:inline">for Later</span></span>
+                                    </div>
                                 </label>
                                 <label class="flex-1 text-center cursor-pointer relative">
                                     <input type="radio" name="urgency_toggle" value="immediate" class="peer sr-only" onchange="toggleUrgency('immediate')">
-                                    <div class="py-2.5 rounded-lg text-sm font-bold text-gray-500 peer-checked:bg-red-50 peer-checked:text-red-600 peer-checked:border-red-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center space-x-1 sm:space-x-2">
-                                        <span>⚡ <span class="hidden sm:inline">Immediate (Within 1h)</span></span>
+                                    <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-red-50 peer-checked:text-red-600 peer-checked:border-red-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center">
+                                        <span>Immediate <span class="hidden md:inline">(Within 1h)</span></span> <span class="ml-1.5 text-sm sm:text-base">⚡</span>
                                     </div>
                                 </label>
                             </div>
@@ -319,9 +321,9 @@
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Doctor</label>
                             <div class="relative">
-                                <div id="doctor-select-display" onclick="toggleDoctorDropdown()" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm bg-white cursor-pointer flex items-center justify-between focus-within:ring-2 focus-within:ring-[#0066FF] transition hover:bg-gray-50">
+                                <div id="doctor-select-display" onclick="toggleDoctorDropdown()" class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white cursor-pointer flex items-center justify-between focus-within:ring-2 focus-within:ring-[#0066FF] transition hover:bg-gray-50 shadow-sm">
                                     <div class="flex items-center space-x-3 truncate" id="doctor-selected-content">
-                                        <span class="text-gray-500">-- Search or Select a Doctor --</span>
+                                        <span class="text-gray-500 font-medium">-- Search or Select a Doctor --</span>
                                     </div>
                                     <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </div>
@@ -345,20 +347,20 @@
 
                     <div class="mt-8 pt-6 border-t border-gray-200">
                         <p class="text-sm font-bold text-gray-700 mb-2">Payment (FEE: RM 38.00)</p>
-                        <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg text-xs text-gray-600 font-medium flex items-center leading-relaxed">
-                            <svg class="w-4 h-4 mr-2 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div class="bg-gray-50 p-4 border border-gray-200 rounded-xl text-xs text-gray-600 font-medium flex items-center leading-relaxed shadow-sm">
+                            <svg class="w-5 h-5 mr-3 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             Kindly be informed that cancellations will not be eligible for a refund.
                         </div>
                     </div>
 
-                    <div class="mt-6 mb-6 flex items-start cursor-pointer">
+                    <div class="mt-6 mb-8 flex items-start cursor-pointer bg-blue-50/50 p-4 rounded-xl border border-blue-100">
                         <input type="checkbox" id="pdpa-agree" required class="mt-0.5 mr-3 h-4 w-4 text-[#0066FF] border-gray-300 rounded focus:ring-[#0066FF] cursor-pointer shrink-0">
                         <label for="pdpa-agree" class="text-xs text-gray-600 leading-relaxed font-medium cursor-pointer">
                             By submitting, you agree to the processing of your personal data in accordance with the Personal Data Protection Act (PDPA) and our Privacy Policy.
                         </label>
                     </div>
 
-                    <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-lg shadow-md transition text-sm">Pay Now</button>
+                    <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-4 rounded-xl shadow-lg transition text-sm">Pay Now</button>
                 </form>
 
                 <div id="booking-clinic-section" class="hidden">
@@ -377,7 +379,7 @@
 
         <!-- ================= SCHEDULE APPOINTMENT VIEW ================= -->
         <div id="view-schedule" class="app-view flex-1 flex-col overflow-y-auto">
-            <div class="max-w-6xl mx-auto p-5 sm:p-10 w-full pt-4 font-sans">
+            <div class="max-w-6xl mx-auto px-4 pb-8 sm:p-10 w-full pt-4 sm:pt-8 font-sans">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">Schedule Appointment</h2>
                 <p class="text-gray-500 text-sm mb-6 sm:mb-8">Manage your upcoming consultations and prescriptions with ease.</p>
 
@@ -406,7 +408,7 @@
 
         <!-- ================= MEDICAL REPORTS VIEW ================= -->
         <div id="view-reports" class="app-view flex-1 flex-col overflow-y-auto relative">
-            <div class="max-w-5xl mx-auto p-5 sm:p-10 w-full pt-4">
+            <div class="max-w-5xl mx-auto px-4 pb-8 sm:p-10 w-full pt-4 sm:pt-8">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 sm:mb-8 space-y-4 sm:space-y-0">
                     <div>
                         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Your Medical Documents</h2>
@@ -418,7 +420,7 @@
                               <path d="M16.0019 12.4507L12.541 6.34297C12.6559 6.22598 12.7881 6.09766 12.9203 6.09766C11.8998 6.43355 11.4315 7.57961 11.4315 7.57961L5.10895 18.7345C5.01999 19.0843 4.99528 19.4 5.0064 19.6781H11.9072L16.0019 12.4507Z" fill="#34A853"/>
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
-                              <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
+                              <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5168 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
                               <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
@@ -482,7 +484,7 @@
 
         <!-- ================= PROFILE SETTINGS VIEW ================= -->
         <div id="view-settings" class="app-view flex-1 flex-col overflow-y-auto">
-            <div class="max-w-2xl mx-auto p-6 sm:p-10 w-full pt-4">
+            <div class="max-w-2xl mx-auto px-4 pb-8 sm:p-10 w-full pt-4 sm:pt-8">
                 <div class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
                     <h2 class="text-2xl font-extrabold text-gray-900 mb-6 sm:mb-8 border-b pb-4">Profile Settings</h2>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
@@ -1205,7 +1207,7 @@
             window.bookingUrgency = type;
 
             document.getElementById('book-doctor').value = '';
-            document.getElementById('doctor-selected-content').innerHTML = '<span class="text-gray-500">-- Search or Select a Doctor --</span>';
+            document.getElementById('doctor-selected-content').innerHTML = '<span class="text-gray-500 font-medium">-- Search or Select a Doctor --</span>';
 
             const slotsWrapper = document.getElementById('slots-wrapper');
             slotsWrapper.classList.add('hidden');
@@ -1238,7 +1240,7 @@
                         </div>
                     `;
                 } else {
-                    document.getElementById('doctor-selected-content').innerHTML = '<span class="text-gray-500">-- Select an Available Doctor --</span>';
+                    document.getElementById('doctor-selected-content').innerHTML = '<span class="text-gray-500 font-medium">-- Select an Available Doctor --</span>';
                     renderDoctorDropdown(window.allDoctors);
                 }
             } catch(e) {
@@ -1351,19 +1353,18 @@
                 container.innerHTML = `
                     <label class="block cursor-pointer relative group col-span-1 sm:col-span-2 md:col-span-3">
                         <input type="radio" name="slot_selection" value="${localDateTime}" checked class="peer sr-only" onchange="document.getElementById('selected-slot').value = this.value">
-                        <div class="border border-red-200 rounded-xl p-5 bg-red-50 peer-checked:bg-red-50 peer-checked:border-red-500 active:scale-95 transition flex flex-row items-center justify-between shadow-sm relative z-10">
+                        <div class="border border-red-200 rounded-xl p-4 sm:p-5 bg-red-50 peer-checked:bg-red-50 peer-checked:border-red-500 active:scale-95 transition flex flex-col sm:flex-row sm:items-center justify-between shadow-sm relative z-10 gap-3">
                             <div>
                                 <div class="font-extrabold text-red-700 text-sm mb-1 flex items-center">
-                                    <span class="relative flex h-3 w-3 mr-2">
+                                    <span class="relative flex h-3 w-3 mr-2 shrink-0">
                                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                                       <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                                     </span>
                                     Immediate Consultation
                                 </div>
-                                <span class="text-xs text-red-500 font-bold block pr-12 sm:pr-0">Doctor is on standby right now</span>
+                                <span class="text-xs text-red-500 font-bold block">Doctor is on standby right now</span>
                             </div>
-                            <!-- time slot styled beautifully as red pill -->
-                            <div class="text-[10px] font-bold text-red-600 bg-red-100 inline-block px-2.5 py-1.5 rounded-lg text-center tracking-wide shadow-xs whitespace-nowrap">
+                            <div class="text-xs sm:text-sm font-bold text-red-600 bg-red-100 inline-flex px-3 py-2 rounded-lg text-center tracking-wide whitespace-nowrap self-start sm:self-auto border border-red-200">
                                 ${formatTime(now)} – ${formatTime(oneHourLater)}
                             </div>
                         </div>
@@ -1393,20 +1394,20 @@
 
             container.innerHTML = `
                 <div class="col-span-1 sm:col-span-2 md:col-span-3 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 w-full">
-                    <div class="animate-pulse border border-gray-200 rounded-xl p-5 bg-gray-50/50 h-32 flex flex-col justify-between">
-                        <div class="h-3.5 w-1/3 bg-gray-200 rounded"></div>
-                        <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
-                        <div class="h-6 w-24 bg-gray-200 rounded"></div>
+                    <div class="animate-pulse border border-gray-200 rounded-xl p-4 bg-gray-50/50 h-28 flex flex-col justify-center gap-2">
+                        <div class="h-3 w-1/3 bg-gray-200 rounded mx-auto"></div>
+                        <div class="h-4 w-1/2 bg-gray-200 rounded mx-auto"></div>
+                        <div class="h-6 w-full bg-gray-200 rounded mt-1"></div>
                     </div>
-                    <div class="animate-pulse border border-gray-200 rounded-xl p-5 bg-gray-50/50 h-32 flex flex-col justify-between">
-                        <div class="h-3.5 w-1/4 bg-gray-200 rounded"></div>
-                        <div class="h-4 w-2/3 bg-gray-200 rounded"></div>
-                        <div class="h-6 w-24 bg-gray-200 rounded"></div>
+                    <div class="animate-pulse border border-gray-200 rounded-xl p-4 bg-gray-50/50 h-28 flex flex-col justify-center gap-2">
+                        <div class="h-3 w-1/4 bg-gray-200 rounded mx-auto"></div>
+                        <div class="h-4 w-2/3 bg-gray-200 rounded mx-auto"></div>
+                        <div class="h-6 w-full bg-gray-200 rounded mt-1"></div>
                     </div>
-                    <div class="animate-pulse border border-gray-200 rounded-xl p-5 bg-gray-50/50 h-32 flex flex-col justify-between hidden md:flex">
-                        <div class="h-3.5 w-1/2 bg-gray-200 rounded"></div>
-                        <div class="h-4 w-1/3 bg-gray-200 rounded"></div>
-                        <div class="h-6 w-24 bg-gray-200 rounded"></div>
+                    <div class="animate-pulse border border-gray-200 rounded-xl p-4 bg-gray-50/50 h-28 flex flex-col justify-center gap-2 hidden md:flex">
+                        <div class="h-3 w-1/2 bg-gray-200 rounded mx-auto"></div>
+                        <div class="h-4 w-1/3 bg-gray-200 rounded mx-auto"></div>
+                        <div class="h-6 w-full bg-gray-200 rounded mt-1"></div>
                     </div>
                 </div>
             `;
@@ -1426,16 +1427,14 @@
                     const html = `
                     <label class="block cursor-pointer relative group">
                         <input type="radio" name="slot_selection" value="${s.datetime}" class="peer sr-only" onchange="document.getElementById('selected-slot').value = this.value">
-                        <div class="border border-gray-200 rounded-xl p-5 bg-white hover:bg-gray-50 peer-checked:bg-blue-50/50 peer-checked:border-[#0066FF] active:scale-95 transition h-full flex flex-col justify-between shadow-sm relative z-10">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-xs text-gray-500 font-bold">${s.date_display}</span>
-                            </div>
-                            <div class="font-extrabold text-gray-900 text-sm mb-4">${s.day_display}</div>
-                            <div class="text-[10px] font-bold text-[#0066FF] bg-blue-100 inline-block px-2.5 py-1.5 rounded text-center self-start tracking-wide uppercase">
+                        <div class="border border-gray-200 rounded-xl p-3 sm:p-4 bg-white hover:border-[#0066FF] peer-checked:bg-blue-50/40 peer-checked:border-[#0066FF] active:scale-95 transition h-full flex flex-col justify-center items-center shadow-sm relative z-10 text-center">
+                            <span class="text-[10px] sm:text-xs text-gray-500 font-bold mb-0.5">${s.date_display}</span>
+                            <span class="font-extrabold text-gray-900 text-sm sm:text-base mb-2">${s.day_display}</span>
+                            <div class="text-[10px] sm:text-xs font-bold text-[#0066FF] bg-blue-50 border border-blue-100 py-1.5 px-1 rounded-lg text-center tracking-tight sm:tracking-wide uppercase whitespace-nowrap w-full overflow-hidden text-ellipsis">
                                 ${s.time_display}
                             </div>
                         </div>
-                        <div class="absolute top-5 right-5 w-4 h-4 rounded-full border border-gray-300 peer-checked:border-4 peer-checked:border-[#0066FF] transition-all z-20 pointer-events-none"></div>
+                        <div class="absolute top-2.5 right-2.5 w-3.5 h-3.5 rounded-full border border-gray-300 peer-checked:border-[4px] peer-checked:border-[#0066FF] transition-all z-20 pointer-events-none"></div>
                     </label>`;
                     container.innerHTML += html;
                 });
@@ -1453,12 +1452,11 @@
 
             btn.disabled = true;
             btn.innerHTML = `
-                <span class="flex items-center space-x-1.5">
-                    <svg class="animate-spin h-3 w-3 text-gray-600" fill="none" viewBox="0 0 24 24">
+                <span class="flex items-center justify-center">
+                    <svg class="animate-spin h-5 w-5 text-[#0066FF]" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Matching...</span>
                 </span>
             `;
 
