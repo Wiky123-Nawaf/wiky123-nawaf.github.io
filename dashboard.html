@@ -256,8 +256,8 @@
             <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-2 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
                     <button onclick="enterVoiceMode()" class="p-3 text-gray-400 hover:text-blue-500 active:scale-95 transition shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
-                    <textarea id="chat-input" class="input-field custom-scrollbar" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '24px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
-                    <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white px-4 sm:px-6 py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center">
+                    <textarea id="chat-input" class="flex-1 bg-transparent px-2 sm:px-3 py-1.5 focus:outline-none text-gray-800 text-sm resize-none custom-scrollbar min-h-[36px] max-h-[120px] self-center" rows="1" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '36px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
+                    <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white w-9 h-9 sm:w-auto sm:h-auto sm:px-6 sm:py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center justify-center self-center">
                         <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> 
                         <span class="hidden sm:inline-block">Send</span>
                     </button>
@@ -377,7 +377,7 @@
 
         <!-- ================= SCHEDULE APPOINTMENT VIEW ================= -->
         <div id="view-schedule" class="app-view flex-1 flex-col overflow-y-auto">
-            <div class="max-w-6xl mx-auto p-5 sm:p-10 w-full pt-4">
+            <div class="max-w-6xl mx-auto p-5 sm:p-10 w-full pt-4 font-sans">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">Schedule Appointment</h2>
                 <p class="text-gray-500 text-sm mb-6 sm:mb-8">Manage your upcoming consultations and prescriptions with ease.</p>
 
@@ -419,7 +419,7 @@
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
@@ -619,7 +619,7 @@
                             <button onclick="${changePageFunc}(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="relative inline-flex items-center rounded-l-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Previous</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>`;
 
@@ -910,7 +910,7 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text
-                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-bold text-[15px]">$1. $2</strong></div>')
+                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1. $2</strong></div>')
                         .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
                                  '<div class="mt-6 mb-2 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1</strong></div>')
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[15px]">$1</strong>')
@@ -950,8 +950,8 @@
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
                         <div class="p-4 sm:p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 border-t border-gray-100 text-justify chat-bubble-text">
-                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
+                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
+                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
                             ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">${formatClinicalText(soap)}</div></div>` : ''}
                         </div>
                     </details>
@@ -1040,7 +1040,7 @@
             const msg = voiceInput || input.value.trim(); 
             if(!msg) return; 
             input.value = '';
-            input.style.height = '24px'; 
+            input.style.height = '36px'; 
 
             const history = document.getElementById('chat-history');
             history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${msg}</div></div>`;
@@ -1261,7 +1261,7 @@
         window.renderDoctorDropdown = (docs) => {
             const list = document.getElementById('doctor-list');
             if(docs.length === 0) {
-                if (!list.innerHTML.includes("No matching doctor is available immediately")) {
+                if (!list.innerHTML.includes("No doctor that are available at this hour")) {
                     list.innerHTML = '<div class="p-4 text-sm text-gray-500 text-center font-bold">No doctors found matching your search.</div>';
                 }
                 return;
@@ -1362,7 +1362,8 @@
                                 </div>
                                 <span class="text-xs text-red-500 font-bold block pr-12 sm:pr-0">Doctor is on standby right now</span>
                             </div>
-                            <div class="text-[11px] font-bold text-white bg-red-500 inline-block px-3 py-2 rounded-lg text-center tracking-wide shadow-sm whitespace-nowrap">
+                            <!-- time slot styled beautifully as red pill -->
+                            <div class="text-[10px] font-bold text-red-600 bg-red-100 inline-block px-2.5 py-1.5 rounded-lg text-center tracking-wide shadow-xs whitespace-nowrap">
                                 ${formatTime(now)} – ${formatTime(oneHourLater)}
                             </div>
                         </div>
@@ -1616,14 +1617,13 @@
             pageData.forEach(a => {
                 let sColor = a.status === 'Done' ? 'text-green-700 bg-green-50 border border-green-200' : 'text-blue-700 bg-blue-50 border border-blue-200';
 
-                let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-2 py-2.5 rounded-lg uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
+                let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[9px] font-bold px-1 py-2 rounded-md uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
                 let btnDesktop = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-300">--</span>`;
 
                 let numericId = a.id.replace('ID', '');
 
                 let erxMobile = a.consultation_completed 
-                    ? `<a href="prescription.html?id=${numericId}" class="w-full bg-teal-600 hover:bg-teal-700 active:scale-95 transition text-white text-[10px] font-bold px-2 py-2.5 rounded-lg uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">
-                         <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    ? `<a href="prescription.html?id=${numericId}" class="w-full bg-teal-600 hover:bg-teal-700 active:scale-95 transition text-white text-[9px] font-bold px-1 py-2 rounded-md uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">
                          E-Rx
                        </a>` 
                     : `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
@@ -1638,51 +1638,53 @@
                 let reviewDesktop = `<span class="text-gray-300">--</span>`;
 
                 if (a.review_submitted) {
-                    reviewMobile = `<span class="text-green-600 font-bold text-[10px] py-1 inline-flex items-center justify-center uppercase w-full bg-green-50 rounded-lg border border-green-100"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reviewed</span>`;
+                    reviewMobile = `<span class="text-green-600 font-bold text-[9px] py-2 inline-flex items-center justify-center uppercase w-full bg-green-50 rounded-md border border-green-100">Done</span>`;
                     reviewDesktop = `<span class="text-green-500 font-bold text-[10px] inline-flex items-center justify-center uppercase"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reviewed</span>`;
                 } else if (a.consultation_completed) {
-                    reviewMobile = `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="w-full bg-[#f59e0b] hover:bg-yellow-600 active:scale-95 transition text-white text-[10px] font-bold px-2 py-2.5 rounded-lg uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm"><svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Review</button>`;
+                    reviewMobile = `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="w-full bg-[#f59e0b] hover:bg-yellow-600 active:scale-95 transition text-white text-[9px] font-bold px-1 py-2 rounded-md uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Review</button>`;
                     reviewDesktop = `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm"><svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Review</button>`;
                 }
 
                 tbody.innerHTML += `
-                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden">
-                        <td class="py-2 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
-                            <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">ID</span>
+                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-4 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
+                        <td class="py-2 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3">
+                            <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">ID</span>
                             <span class="font-extrabold text-gray-900">${a.id}</span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
-                            <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
+                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                            <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
                             <span class="font-bold text-gray-700">${a.type}</span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
-                            <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Doctor</span>
-                            <span class="text-right sm:text-left font-bold text-gray-900">${a.doctor_name || '--'}</span>
+                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                            <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Doctor</span>
+                            <span class="text-right sm:text-left font-bold text-gray-900 truncate max-w-[150px]">${a.doctor_name || '--'}</span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
-                            <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Date</span>
-                            <span class="text-right sm:text-left whitespace-nowrap text-gray-800 font-medium">${a.date}<span class="text-xs font-bold text-gray-400 ml-2 sm:block sm:ml-0">${a.time}</span></span>
+                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                            <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date</span>
+                            <span class="text-right sm:text-left whitespace-nowrap text-gray-800 font-semibold">${a.date}<span class="text-[10px] font-bold text-gray-400 ml-1.5 sm:block sm:ml-0">${a.time}</span></span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
-                            <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
-                            <span class="font-bold"><span class="${sColor} px-3 py-1.5 rounded-md text-[10px] uppercase tracking-wider shadow-sm">${a.status}</span></span>
+                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-4 sm:mb-0">
+                            <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
+                            <span class="font-bold"><span class="${sColor} px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider shadow-xs">${a.status}</span></span>
                         </td>
-                        <td class="py-4 px-5 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-2xl border-t border-gray-100">
-                             <div class="grid grid-cols-3 gap-2 w-full">
+                        <!-- Mobile Actions Row -->
+                        <td class="py-3 px-3 bg-gray-50/70 flex flex-col sm:hidden -mx-4 -mb-4 border-t border-gray-100">
+                             <div class="grid grid-cols-3 gap-1 w-full text-center">
                                 <div class="flex flex-col items-center justify-center">
-                                    <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">Call</span>
-                                    ${btnMobile}
+                                    <span class="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">Call</span>
+                                    <div class="w-full px-1">${btnMobile}</div>
                                 </div>
-                                <div class="flex flex-col items-center justify-center border-l border-r border-gray-200 px-2">
-                                    <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">E-Rx</span>
-                                    ${erxMobile}
+                                <div class="flex flex-col items-center justify-center border-l border-r border-gray-200">
+                                    <span class="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">E-Rx</span>
+                                    <div class="w-full px-1">${erxMobile}</div>
                                 </div>
                                 <div class="flex flex-col items-center justify-center">
-                                    <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">Review</span>
-                                    ${reviewMobile}
+                                    <span class="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">Review</span>
+                                    <div class="w-full px-1">${reviewMobile}</div>
                                 </div>
                              </div>
                         </td>
+                        <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${btnDesktop}</td>
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${erxDesktop}</td>
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${reviewDesktop}</td>
@@ -1743,7 +1745,7 @@
                        </span>`;
 
                 tbody.innerHTML += `
-                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden">
+                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
                         <td class="py-2 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Report Name</span>
                             <span class="font-extrabold text-gray-900 whitespace-nowrap text-right sm:text-left">${rep.name}</span>
@@ -1760,6 +1762,7 @@
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="${statColor} px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm">${rep.status}</span>
                         </td>
+                        <!-- Mobile Actions Row -->
                         <td class="py-4 px-5 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-2xl border-t border-gray-100">
                              <div class="flex justify-between items-center w-full">
                                 <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Actions</span>
@@ -1771,6 +1774,7 @@
                                 </div>
                              </div>
                         </td>
+                        <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">
                             <div class="flex justify-center items-center">
                                 ${driveBtnDesktop}
