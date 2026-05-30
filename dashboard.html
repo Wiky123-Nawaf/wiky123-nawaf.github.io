@@ -13,8 +13,6 @@
         /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
 
         /* Accordion specific overrides */
         summary { list-style: none; }
@@ -903,15 +901,17 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text
-                        // FIX: Bold the numbers (1., 2., 3.) specifically by checking the start of lines or breaks
-                        .replace(/(^|\n)\s*(\d+)\.\s/g, '$1<strong class="text-gray-900 font-extrabold text-lg">$2.</strong> ')
-                        // Replace standard **Text** with strong tags
+                        // 1. Group the number (1., 2., 3.) and the Condition Name perfectly. 
+                        // Absorbs preceding and trailing newlines so spacing is perfectly controlled by mt-5 mb-1
+                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-5 mb-1"><strong class="text-gray-900 font-extrabold text-[15px]">$1. $2</strong></div>')
+                        // 2. Replace standard **Text** with strong tags
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 text-[15px]">$1</strong>')
-                        // Inject Custom Blue Bullets for specific sub-categories in the Plan of Action
-                        .replace(/<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications and Conservative Management|Red Flag Warnings)<\/strong>/gi, 
+                        // 3. Plan of Action Bulleted Headings - Absorb surrounding newlines to completely eliminate the huge gap
+                        .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
                                  '<div class="mt-6 mb-1 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 text-[15px] uppercase tracking-wide">$1</strong></div>')
-                        // Standard line break handling
-                        .replace(/\n\s*-\s*/g, '<div class="mt-2"></div>&bull; ')
+                        // 4. Standard bullet points
+                        .replace(/\n\s*-\s*/g, '<br>&bull; ')
+                        // 5. Standard line breaks
                         .replace(/\n/g, '<br>');
                 };
 
@@ -928,7 +928,7 @@
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
-                // Removed max-h, overflow, custom scrollbar from accordion
+                // Completely continuous accordion without internal scrolling
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
                     <!-- Header -->
@@ -949,7 +949,7 @@
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
                         <div class="p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 border-t border-gray-100">
-                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Differential Diagnosis</h4><div class="space-y-4">${formatClinicalText(diffDiag)}</div></div>` : ''}
+                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
                             ${plan ? `<div class="pt-4 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
                             ${soap ? `<div class="pt-4 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800">${formatClinicalText(soap)}</div></div>` : ''}
                         </div>
@@ -1231,7 +1231,7 @@
                     document.getElementById('doctor-list').innerHTML = `
                         <div class="p-6 text-center flex flex-col items-center justify-center">
                             <svg class="w-10 h-10 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span class="text-sm font-bold text-gray-800">No doctor that are available at this hour or immediately.</span>
+                            <span class="text-sm font-bold text-gray-800">No matching doctor is available immediately.</span>
                             <span class="text-xs text-gray-500 mt-1">Please select 'Schedule for Later' to book a future slot.</span>
                         </div>
                     `;
@@ -1259,7 +1259,7 @@
         window.renderDoctorDropdown = (docs) => {
             const list = document.getElementById('doctor-list');
             if(docs.length === 0) {
-                if (!list.innerHTML.includes("No doctor that are available at this hour")) {
+                if (!list.innerHTML.includes("No matching doctor is available immediately")) {
                     list.innerHTML = '<div class="p-4 text-sm text-gray-500 text-center font-bold">No doctors found matching your search.</div>';
                 }
                 return;
