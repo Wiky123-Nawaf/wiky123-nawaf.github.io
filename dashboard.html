@@ -24,6 +24,22 @@
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
         .nav-inactive:hover { background-color: #f8fafc; color: #0f172a; }
 
+        /* --- Dynamic Chat Bubble Widths --- */
+        .ai-bubble-container { max-width: 85%; width: 100%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+        .user-bubble-container { max-width: 80%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+        @media (max-width: 768px) {
+            .ai-bubble-container { max-width: 96%; }
+            .user-bubble-container { max-width: 92%; }
+        }
+
+        /* --- Input Field Multi-line Fix --- */
+        .input-field { 
+            width: 100%; border: none; background: transparent; outline: none; font-size: 15px; 
+            color: #111111 !important; 
+            font-family: inherit; resize: none; 
+            min-height: 24px; height: 24px; max-height: 120px; overflow-y: auto; line-height: 1.5;
+        }
+
         /* Typing Indicator Animation */
         .typing-dot { width: 6px; height: 6px; background: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out; }
         .typing-dot:nth-child(2) { animation-delay: 0.2s; }
@@ -226,7 +242,7 @@
 
         <!-- ================= CHAT VIEW ================= -->
         <div id="view-chat" class="app-view active flex-1 flex-col h-full overflow-hidden relative">
-            <div id="chat-history" class="flex-1 overflow-y-auto p-4 sm:p-8 max-w-4xl w-full mx-auto pb-4"></div>
+            <div id="chat-history" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 max-w-4xl w-full mx-auto pb-4"></div>
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
@@ -249,7 +265,7 @@
             <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-4 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
                     <button onclick="enterVoiceMode()" class="p-3 text-gray-400 hover:text-blue-500 active:scale-95 transition shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
-                    <input type="text" id="chat-input" class="flex-1 bg-transparent px-2 sm:px-3 py-2 focus:outline-none text-gray-800 text-sm" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendChat()">
+                    <textarea id="chat-input" class="input-field custom-scrollbar" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '24px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
                     <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white px-4 sm:px-6 py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center">
                         <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> 
                         <span class="hidden sm:inline-block">Send</span>
@@ -903,21 +919,11 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text
-                        // 1. Group the number (1., 2., 3.) and the Condition Name perfectly. 
-                        // Matches Plan of Action style identically: font-extrabold text-[15px] uppercase tracking-wide, and exact same top/bottom margins (mt-6 mb-2).
-                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-bold text-[15px]">$1. $2</strong></div>')
-                        
-                        // 2. Plan of Action Bulleted Headings - Exact same classes as above
+                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1. $2</strong></div>')
                         .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
                                  '<div class="mt-6 mb-2 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1</strong></div>')
-                        
-                        // 3. Replace standard **Text** with strong tags
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[15px]">$1</strong>')
-                        
-                        // 4. Standard bullet points
                         .replace(/\n\s*-\s*/g, '<br>&bull; ')
-                        
-                        // 5. Standard line breaks
                         .replace(/\n/g, '<br>');
                 };
 
@@ -927,44 +933,42 @@
                     window.generatedClinicalReport = content; 
                 }
 
-                // Dynamic Action Button fetching the exact booking symptom keywords
                 const btnAction = isDashboard 
                     ? `switchTab('book'); document.getElementById('book-symptoms').value = '${bookingSymp}'; suggestDoctor();`
                     : `window.location.href='login.html';`;
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
-                // Completely continuous accordion without internal scrolling
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
                     <!-- Header -->
-                    <div class="p-5 border-b border-gray-100">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
+                    <div class="p-4 sm:p-5 border-b border-gray-100">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
                         <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
                     <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
-                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors">
-                        <summary class="p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
+                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors" open>
+                        <summary class="p-4 sm:p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
                             Assessment & Plan
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-5 pt-2 font-sans text-sm text-gray-700 border-t border-gray-100">
-                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF]">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF]">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
-                            ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800">${formatClinicalText(soap)}</div></div>` : ''}
+                        <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 font-sans text-sm text-gray-700 border-t border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
+                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
+                            ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">${formatClinicalText(soap)}</div></div>` : ''}
                         </div>
                     </details>
                     
                     <!-- Booking CTA -->
-                    <div class="p-5 font-sans bg-white">
+                    <div class="p-4 sm:p-5 font-sans bg-white text-left">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
-                        <p class="text-sm text-gray-600 mb-4">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                        <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
@@ -980,10 +984,36 @@
                 let conversationalIntro = content.split("[ESCALATE]")[0].trim();
                 if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
-                return `<div class="mb-2">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+                return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
             }
 
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
+
+        function createUserBubble(text) {
+            return `
+            <div class="flex flex-col items-end mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span>
+                    <img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover border border-gray-200 bg-white">
+                </div>
+                <div class="bg-[#0066FF] text-white px-4 sm:px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed user-bubble-container text-left">
+                    ${text}
+                </div>
+            </div>`;
+        }
+
+        function createAiBubble(text) {
+            return `
+            <div class="flex flex-col items-start mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                </div>
+                <div class="bg-white border shadow-sm px-3 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed ai-bubble-container text-left">
+                    ${formatAiMessage(text, true)}
+                </div>
+            </div>`;
         }
 
         async function loadHistory() {
@@ -993,13 +1023,13 @@
             el.innerHTML = '';
 
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
+                el.innerHTML = `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 ai-bubble-container text-left">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
             } else {
                 data.history.forEach(m => {
                     if(m.role === 'system') return;
                     let isUser = m.role === 'user';
-                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed">${m.content}</div></div>`;
-                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(m.content, true)}</div></div>`;
+                    if(isUser) el.innerHTML += createUserBubble(m.content);
+                    else el.innerHTML += createAiBubble(m.content);
                 });
             }
             el.scrollTo(0, el.scrollHeight);
@@ -1045,13 +1075,23 @@
             const msg = voiceInput || input.value.trim(); 
             if(!msg) return; 
             input.value = '';
+            input.style.height = '24px'; 
 
             const history = document.getElementById('chat-history');
-            history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed">${msg}</div></div>`;
+            history.innerHTML += createUserBubble(msg);
             history.scrollTo(0, history.scrollHeight);
 
             const typeId = 'typing-' + Date.now();
-            history.innerHTML += `<div id="${typeId}" class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+            history.innerHTML += `
+            <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                </div>
+                <div class="bg-white border shadow-sm px-4 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center ai-bubble-container text-left" style="width: auto;">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                </div>
+            </div>`;
             history.scrollTo(0, history.scrollHeight);
 
             if (isVoiceActive) setVoiceState('PROCESSING');
@@ -1063,7 +1103,7 @@
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
-                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 max-w-[85%] leading-relaxed">${formatAiMessage(data.reply, true)}</div></div>`;
+                history.innerHTML += createAiBubble(data.reply);
                 history.scrollTo(0, history.scrollHeight);
 
                 if(isVoiceActive) speakOut(data.reply);
