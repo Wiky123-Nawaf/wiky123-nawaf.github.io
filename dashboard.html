@@ -24,20 +24,11 @@
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
         .nav-inactive:hover { background-color: #f8fafc; color: #0f172a; }
 
-        /* --- Dynamic Chat Bubble Widths --- */
-        .ai-bubble-container { max-width: 85%; width: 100%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-        .user-bubble-container { max-width: 80%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-        @media (max-width: 768px) {
-            .ai-bubble-container { max-width: 96%; }
-            .user-bubble-container { max-width: 92%; }
-        }
-
-        /* --- Input Field Multi-line Fix --- */
-        .input-field { 
-            width: 100%; border: none; background: transparent; outline: none; font-size: 15px; 
-            color: #111111 !important; 
-            font-family: inherit; resize: none; 
-            min-height: 24px; height: 24px; max-height: 120px; overflow-y: auto; line-height: 1.5;
+        /* Text Wrapping Utility */
+        .chat-bubble-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
 
         /* Typing Indicator Animation */
@@ -242,7 +233,7 @@
 
         <!-- ================= CHAT VIEW ================= -->
         <div id="view-chat" class="app-view active flex-1 flex-col h-full overflow-hidden relative">
-            <div id="chat-history" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 max-w-4xl w-full mx-auto pb-4"></div>
+            <div id="chat-history" class="flex-1 overflow-y-auto p-2 sm:p-8 max-w-4xl w-full mx-auto pb-4 custom-scrollbar"></div>
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
@@ -262,11 +253,11 @@
             </div>
 
             <!-- Input Area -->
-            <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-4 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
+            <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-2 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
                     <button onclick="enterVoiceMode()" class="p-3 text-gray-400 hover:text-blue-500 active:scale-95 transition shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
-                    <textarea id="chat-input" class="input-field custom-scrollbar" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '24px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
-                    <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white px-4 sm:px-6 py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center">
+                    <textarea id="chat-input" class="flex-1 bg-transparent px-2 sm:px-3 py-1.5 focus:outline-none text-gray-800 text-sm resize-none custom-scrollbar min-h-[36px] max-h-[120px] self-center" rows="1" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '36px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
+                    <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white w-9 h-9 sm:w-auto sm:h-auto sm:px-6 sm:py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center justify-center self-center">
                         <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> 
                         <span class="hidden sm:inline-block">Send</span>
                     </button>
@@ -1013,32 +1004,6 @@
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         }
 
-        function createUserBubble(text) {
-            return `
-            <div class="flex flex-col items-end mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span>
-                    <img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover border border-gray-200 bg-white">
-                </div>
-                <div class="bg-[#0066FF] text-white px-4 sm:px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed user-bubble-container text-left">
-                    ${text}
-                </div>
-            </div>`;
-        }
-
-        function createAiBubble(text) {
-            return `
-            <div class="flex flex-col items-start mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
-                </div>
-                <div class="bg-white border shadow-sm px-4 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed ai-bubble-container text-left">
-                    ${formatAiMessage(text, true)}
-                </div>
-            </div>`;
-        }
-
         async function loadHistory() {
             const el = document.getElementById('chat-history');
             const r = await fetch(API_BASE+'/api/history',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({user_id:window.currentUser.uid, session_id:window.currentSessionId})});
@@ -1046,13 +1011,13 @@
             el.innerHTML = '';
 
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                el.innerHTML = `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 ai-bubble-container text-left">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
+                el.innerHTML = `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] text-justify chat-bubble-text">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
             } else {
                 data.history.forEach(m => {
                     if(m.role === 'system') return;
                     let isUser = m.role === 'user';
-                    if(isUser) el.innerHTML += createUserBubble(m.content);
-                    else el.innerHTML += createAiBubble(m.content);
+                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${m.content}</div></div>`;
+                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(m.content, true)}</div></div>`;
                 });
             }
             el.scrollTo(0, el.scrollHeight);
@@ -1098,23 +1063,14 @@
             const msg = voiceInput || input.value.trim(); 
             if(!msg) return; 
             input.value = '';
-            input.style.height = '24px'; 
+            input.style.height = '36px'; 
 
             const history = document.getElementById('chat-history');
-            history.innerHTML += createUserBubble(msg);
+            history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${msg}</div></div>`;
             history.scrollTo(0, history.scrollHeight);
 
             const typeId = 'typing-' + Date.now();
-            history.innerHTML += `
-            <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
-                </div>
-                <div class="bg-white border shadow-sm px-4 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center ai-bubble-container text-left" style="width: auto;">
-                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
-                </div>
-            </div>`;
+            history.innerHTML += `<div id="${typeId}" class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
             history.scrollTo(0, history.scrollHeight);
 
             if (isVoiceActive) setVoiceState('PROCESSING');
@@ -1126,7 +1082,7 @@
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
-                history.innerHTML += createAiBubble(data.reply);
+                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(data.reply, true)}</div></div>`;
                 history.scrollTo(0, history.scrollHeight);
 
                 if(isVoiceActive) speakOut(data.reply);
@@ -1159,7 +1115,6 @@
             document.getElementById('voice-transcript').innerText = "Ready to listen... Press the mic to begin.";
             isVoiceActive = true;
             isRecording = false;
-            window.recognizedText = '';
             setVoiceState('IDLE');
 
             if(!voiceRec) {
@@ -1170,36 +1125,19 @@
                     return null; 
                 }
                 voiceRec = new SR();
-                voiceRec.continuous = true; 
+                voiceRec.continuous = false; 
                 voiceRec.interimResults = true; 
 
-                voiceRec.onstart = () => {
-                    // Do nothing on start. Initialization is handled outside.
-                };
-
                 voiceRec.onresult = (e) => {
-                    let currentInterim = '';
-                    let currentFinal = '';
-                    
-                    for (let i = e.resultIndex; i < e.results.length; ++i) {
-                        if (e.results[i].isFinal) {
-                            currentFinal += e.results[i][0].transcript;
-                        } else {
-                            currentInterim += e.results[i][0].transcript;
-                        }
-                    }
-                    
-                    if (currentFinal) {
-                        window.recognizedText += currentFinal;
-                    }
-                    
-                    let displayTxt = window.recognizedText + currentInterim;
-                    document.getElementById('voice-transcript').innerText = displayTxt || 'Listening...';
-                    document.getElementById('chat-input').value = displayTxt;
+                    let text = Array.from(e.results).map(r => r[0].transcript).join('');
+                    document.getElementById('voice-transcript').innerText = text || 'Listening...';
+                    document.getElementById('chat-input').value = text;
                 };
 
                 voiceRec.onend = () => {
-                    if (isRecording) { try { voiceRec.start(); } catch(e) {} }
+                    if (isRecording) {
+                        toggleVoiceMic();
+                    }
                 };
             }
         };
@@ -1222,7 +1160,6 @@
                     setVoiceState('PROCESSING'); 
                     sendChat(msg);
                     document.getElementById('chat-input').value = '';
-                    window.recognizedText = '';
                 } else {
                     setVoiceState('IDLE');
                     document.getElementById('voice-transcript').innerText = "Didn't catch that. Tap the mic to try again.";
@@ -1230,7 +1167,6 @@
             } else {
                 isRecording = true;
                 document.getElementById('chat-input').value = '';
-                window.recognizedText = '';
                 document.getElementById('voice-transcript').innerText = 'Listening...';
                 setVoiceState('LISTENING');
                 try { voiceRec.start(); } catch(e) {}
