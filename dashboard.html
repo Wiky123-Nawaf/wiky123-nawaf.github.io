@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Dashboard - Doktura AI</title>
     <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,20 +24,11 @@
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
         .nav-inactive:hover { background-color: #f8fafc; color: #0f172a; }
 
-        /* --- Dynamic Chat Bubble Widths --- */
-        .ai-bubble-container { max-width: 85%; width: 100%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-        .user-bubble-container { max-width: 80%; word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-        @media (max-width: 768px) {
-            .ai-bubble-container { max-width: 96%; }
-            .user-bubble-container { max-width: 92%; }
-        }
-
-        /* --- Input Field Multi-line Fix --- */
-        .input-field { 
-            width: 100%; border: none; background: transparent; outline: none; font-size: 15px; 
-            color: #111111 !important; 
-            font-family: inherit; resize: none; 
-            min-height: 24px; height: 24px; max-height: 120px; overflow-y: auto; line-height: 1.5;
+        /* Text Wrapping Utility */
+        .chat-bubble-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
 
         /* Typing Indicator Animation */
@@ -242,7 +233,7 @@
 
         <!-- ================= CHAT VIEW ================= -->
         <div id="view-chat" class="app-view active flex-1 flex-col h-full overflow-hidden relative">
-            <div id="chat-history" class="flex-1 overflow-y-auto px-3 sm:px-8 py-4 sm:py-8 max-w-4xl w-full mx-auto pb-4"></div>
+            <div id="chat-history" class="flex-1 overflow-y-auto p-2 sm:p-8 max-w-4xl w-full mx-auto pb-4 custom-scrollbar"></div>
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
@@ -262,7 +253,7 @@
             </div>
 
             <!-- Input Area -->
-            <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-4 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
+            <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-2 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
                     <button onclick="enterVoiceMode()" class="p-3 text-gray-400 hover:text-blue-500 active:scale-95 transition shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
                     <textarea id="chat-input" class="input-field custom-scrollbar" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '24px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
@@ -940,7 +931,7 @@
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
                 let reportHtml = `
-                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="font-family: Georgia, serif; max-width: 100%;">
                     <!-- Header -->
                     <div class="p-4 sm:p-5 border-b border-gray-100">
                         <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
@@ -948,25 +939,25 @@
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify chat-bubble-text">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
-                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors" open>
+                    <!-- Expandable Assessment & Plan Accordion -->
+                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors">
                         <summary class="p-4 sm:p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
                             Assessment & Plan
-                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 font-sans text-sm text-gray-700 border-t border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
-                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
+                        <div class="p-4 sm:p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 border-t border-gray-100 text-justify chat-bubble-text">
+                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
+                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
                             ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">${formatClinicalText(soap)}</div></div>` : ''}
                         </div>
                     </details>
                     
                     <!-- Booking CTA -->
-                    <div class="p-4 sm:p-5 font-sans bg-white text-left">
+                    <div class="p-4 sm:p-5 font-sans bg-white">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
                         <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
@@ -984,36 +975,10 @@
                 let conversationalIntro = content.split("[ESCALATE]")[0].trim();
                 if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
-                return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+                return `<div class="mb-2 text-justify chat-bubble-text">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
             }
 
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-        }
-
-        function createUserBubble(text) {
-            return `
-            <div class="flex flex-col items-end mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span>
-                    <img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover border border-gray-200 bg-white">
-                </div>
-                <div class="bg-[#0066FF] text-white px-4 sm:px-5 py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed user-bubble-container text-left">
-                    ${text}
-                </div>
-            </div>`;
-        }
-
-        function createAiBubble(text) {
-            return `
-            <div class="flex flex-col items-start mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
-                </div>
-                <div class="bg-white border shadow-sm px-3 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed ai-bubble-container text-left">
-                    ${formatAiMessage(text, true)}
-                </div>
-            </div>`;
         }
 
         async function loadHistory() {
@@ -1023,13 +988,13 @@
             el.innerHTML = '';
 
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                el.innerHTML = `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 ai-bubble-container text-left">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
+                el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] text-justify chat-bubble-text">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
             } else {
                 data.history.forEach(m => {
                     if(m.role === 'system') return;
                     let isUser = m.role === 'user';
-                    if(isUser) el.innerHTML += createUserBubble(m.content);
-                    else el.innerHTML += createAiBubble(m.content);
+                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${m.content}</div></div>`;
+                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(m.content, true)}</div></div>`;
                 });
             }
             el.scrollTo(0, el.scrollHeight);
@@ -1078,20 +1043,11 @@
             input.style.height = '24px'; 
 
             const history = document.getElementById('chat-history');
-            history.innerHTML += createUserBubble(msg);
+            history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${msg}</div></div>`;
             history.scrollTo(0, history.scrollHeight);
 
             const typeId = 'typing-' + Date.now();
-            history.innerHTML += `
-            <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
-                </div>
-                <div class="bg-white border shadow-sm px-4 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center ai-bubble-container text-left" style="width: auto;">
-                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
-                </div>
-            </div>`;
+            history.innerHTML += `<div id="${typeId}" class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-5 py-4 rounded-2xl rounded-tl-sm flex space-x-1 items-center"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
             history.scrollTo(0, history.scrollHeight);
 
             if (isVoiceActive) setVoiceState('PROCESSING');
@@ -1103,7 +1059,7 @@
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
-                history.innerHTML += createAiBubble(data.reply);
+                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(data.reply, true)}</div></div>`;
                 history.scrollTo(0, history.scrollHeight);
 
                 if(isVoiceActive) speakOut(data.reply);
