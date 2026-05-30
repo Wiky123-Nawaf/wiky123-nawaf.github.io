@@ -770,7 +770,7 @@
                                     <th>Patient Details</th>
                                     <th>Patient ID</th>
                                     <th>Visit Type</th>
-                                    <th>Symptoms</th>
+                                    <th>Symptoms / AI Report</th>
                                     <th>Appointment Date</th>
                                     <th>Appointment Time</th>
                                     <th>Action</th>
@@ -908,15 +908,15 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: PATIENT SYMPTOMS ================= -->
+    <!-- ================= MODAL: PATIENT SYMPTOMS / AI REPORT ================= -->
     <div id="symptomModal" class="modal-overlay" style="display: none;">
-        <div class="email-modal-box" style="max-width: 500px; text-align: left;">
+        <div class="email-modal-box" style="max-width: 600px; text-align: left;">
             <button class="email-modal-close" onclick="closeSymptomModal()">✕</button>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; color: #0066cc;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                <h2 style="font-size: 18px; font-weight: 700; margin: 0; color: #111827;">Patient Symptoms</h2>
+                <h2 id="symptomModalTitle" style="font-size: 18px; font-weight: 700; margin: 0; color: #111827;">Patient Symptoms</h2>
             </div>
-            <div id="fullSymptomText" style="font-size: 15px; color: #4b5563; line-height: 1.6; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; white-space: pre-wrap; max-height: 400px; overflow-y: auto;">
+            <div id="fullSymptomText" style="font-size: 14px; color: #4b5563; line-height: 1.6; background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; white-space: pre-wrap; max-height: 500px; overflow-y: auto;">
                 <!-- Full text will appear here -->
             </div>
             <button class="btn btn-primary" style="margin-top: 24px; width: 100%;" onclick="closeSymptomModal()">Close</button>
@@ -1116,9 +1116,24 @@
             document.getElementById('actionStatusModal').style.display = 'none';
         }
 
-        window.openSymptomModal = function(text) {
+        window.openSymptomModal = function(text, isReport = false) {
             if(!text || text === 'null' || text === 'None') return;
-            document.getElementById('fullSymptomText').innerText = text;
+            
+            const titleEl = document.getElementById('symptomModalTitle');
+            if (titleEl) {
+                titleEl.innerText = isReport ? "AI Medical Report" : "Patient Symptoms";
+            }
+            
+            const contentEl = document.getElementById('fullSymptomText');
+            if (isReport) {
+                // Escape HTML tags to prevent XSS, then convert markdown bold to HTML strong tags
+                let safeHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                safeHTML = safeHTML.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #111827;">$1</strong>');
+                contentEl.innerHTML = safeHTML;
+            } else {
+                contentEl.innerText = text;
+            }
+            
             document.getElementById('symptomModal').style.display = 'flex';
             document.body.classList.add('modal-open');
         };
@@ -1403,9 +1418,12 @@
                        </button>`;
 
                 let symptomsContent;
-                if (appt.symptoms && appt.symptoms !== 'null' && appt.symptoms !== 'None') {
-                    const safeText = appt.symptoms.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
-                    symptomsContent = `<button onclick="openSymptomModal('${safeText}')" style="background: #f8fafc; color: #0ea5e9; border: 1px solid #e0f2fe; border-radius: 12px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap;" onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#f8fafc'">View</button>`;
+                if (appt.ai_report && appt.ai_report !== 'null' && appt.ai_report !== 'None') {
+                    const safeText = appt.ai_report.replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
+                    symptomsContent = `<button onclick="openSymptomModal('${safeText}', true)" style="background: #eff6ff; color: #0066cc; border: 1px solid #bfdbfe; border-radius: 12px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">View Report</button>`;
+                } else if (appt.symptoms && appt.symptoms !== 'null' && appt.symptoms !== 'None') {
+                    const safeText = appt.symptoms.replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
+                    symptomsContent = `<button onclick="openSymptomModal('${safeText}', false)" style="background: #f8fafc; color: #0ea5e9; border: 1px solid #e0f2fe; border-radius: 12px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap;" onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='#f8fafc'">View</button>`;
                 } else {
                     symptomsContent = `<span style="color: #9ca3af; font-style: italic; font-size: 12px;">None</span>`;
                 }
@@ -1418,7 +1436,7 @@
                         </td>
                         <td data-label="Patient ID" style="color:#6b7280;">${appt.patient_id}</td>
                         <td data-label="Visit Type">${typeTag}</td>
-                        <td data-label="Symptoms">${symptomsContent}</td>
+                        <td data-label="Symptoms / AI Report">${symptomsContent}</td>
                         <td data-label="Appointment Date" style="font-weight:500;">${dateStr}</td>
                         <td data-label="Appointment Time">${timeStr}</td>
                         <td data-label="Action" class="desktop-action-center">${callBtn}</td>
