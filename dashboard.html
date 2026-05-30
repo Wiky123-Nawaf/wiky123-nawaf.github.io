@@ -9,8 +9,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+
+        /* Accordion specific overrides */
+        summary { list-style: none; }
+        summary::-webkit-details-marker { display: none; }
 
         .nav-active { background-color: #eff6ff; color: #0066FF; font-weight: 700; border-left: 4px solid #0066FF; }
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
@@ -119,7 +127,6 @@
 
         <div class="px-5 py-4">
             <button onclick="startNewSession()" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-2.5 rounded-xl sm:rounded-lg shadow-sm flex items-center justify-center transition hover:bg-blue-700 active:scale-95 text-sm">
-                <!-- Pencil / Compose Icon -->
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.586-9.414a2 2 0 112.828 2.828L12 14l-4 1 1-4 8.414-8.414z">
@@ -206,7 +213,7 @@
             </div>
         </div>
 
-        <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS (Fixed Absolute Layout) -->
+        <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS -->
         <div id="global-message-container" class="hidden absolute top-16 left-0 right-0 px-4 sm:px-8 pt-6 pb-2 z-[150] bg-transparent pointer-events-none transition-opacity">
             <div id="global-message-box" class="max-w-4xl mx-auto p-4 rounded-xl text-sm font-bold border flex items-center justify-between shadow-lg pointer-events-auto backdrop-blur-md">
                 <div class="flex items-center">
@@ -223,7 +230,6 @@
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
-                <!-- Central Interactive Orb -->
                 <button onclick="toggleVoiceMic()" id="voice-orb-btn" class="relative w-40 h-40 sm:w-44 sm:h-44 rounded-full flex items-center justify-center mb-8 transition-all duration-300 shadow-2xl focus:outline-none bg-gradient-to-br from-blue-400 to-[#0066FF] hover:scale-105 orb-pulse-blue">
                     <svg id="orb-icon-mic" class="w-14 h-14 sm:w-16 sm:h-16 text-white transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                     <svg id="orb-icon-stop" class="w-12 h-12 sm:w-14 sm:h-14 text-white hidden transition-opacity duration-200" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"></path></svg>
@@ -258,7 +264,6 @@
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Book a Consultant</h2>
                 <p class="text-gray-500 mb-8 text-sm leading-relaxed">Schedule a follow-up video call with one of our licensed human doctors.</p>
 
-                <!-- Toggle Form Type -->
                 <div class="flex bg-gray-100 p-1 rounded-xl mb-8 border border-gray-200 max-w-lg">
                     <label class="flex-1 text-center cursor-pointer relative">
                         <input type="radio" name="v_type_toggle" value="online" checked class="peer sr-only" onchange="toggleBookingType('online')">
@@ -273,7 +278,6 @@
                     </label>
                 </div>
 
-                <!-- ONLINE FORM -->
                 <form id="booking-online-section" onsubmit="submitBooking(event)" class="block">
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -289,7 +293,6 @@
                             </div>
                         </div>
 
-                        <!-- NEW: Regular vs Immediate Toggle -->
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Booking Urgency</label>
                             <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-200">
@@ -306,7 +309,6 @@
                             </div>
                         </div>
 
-                        <!-- UPDATED DOCTOR CUSTOM DROPDOWN -->
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Doctor</label>
                             <div class="relative">
@@ -321,15 +323,12 @@
                                     <div class="sticky top-0 bg-gray-50 p-2 border-b border-gray-100 z-10">
                                         <input type="text" id="doctor-search-input" onkeyup="filterDoctors()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0066FF]" placeholder="Search by name or specialty...">
                                     </div>
-                                    <div id="doctor-list" class="flex flex-col">
-                                        <!-- Doctor options will be injected here via JS -->
-                                    </div>
+                                    <div id="doctor-list" class="flex flex-col"></div>
                                 </div>
                             </div>
                             <input type="hidden" id="book-doctor" required>
                         </div>
 
-                        <!-- SLOTS WRAPPER -->
                         <div id="slots-wrapper" class="hidden">
                             <label class="block text-sm font-bold text-gray-700 mb-3">Date of Appointment</label>
                             <div id="available-slots-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
@@ -355,7 +354,6 @@
                     <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-lg shadow-md transition text-sm">Pay Now</button>
                 </form>
 
-                <!-- IN-CLINIC COMING SOON -->
                 <div id="booking-clinic-section" class="hidden">
                     <div class="bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] rounded-3xl p-8 sm:p-16 text-center max-w-2xl mx-auto flex flex-col items-center">
                         <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mb-6">
@@ -402,7 +400,6 @@
         <!-- ================= MEDICAL REPORTS VIEW ================= -->
         <div id="view-reports" class="app-view flex-1 flex-col overflow-y-auto relative">
             <div class="max-w-5xl mx-auto p-5 sm:p-10 w-full pt-4">
-                <!-- Header -->
                 <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 sm:mb-8 space-y-4 sm:space-y-0">
                     <div>
                         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Your Medical Documents</h2>
@@ -411,17 +408,11 @@
                     <div class="flex items-center space-x-3 w-full sm:w-auto">
                         <button onclick="linkGoogleDrive()" class="flex-1 sm:flex-none flex justify-center items-center border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 text-gray-700 text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-lg shadow-sm transition">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <!-- Green section (Left) -->
                               <path d="M16.0019 12.4507L12.541 6.34297C12.6559 6.22598 12.7881 6.09766 12.9203 6.09766C11.8998 6.43355 11.4315 7.57961 11.4315 7.57961L5.10895 18.7345C5.01999 19.0843 4.99528 19.4 5.0064 19.6781H11.9072L16.0019 12.4507Z" fill="#34A853"/>
-                              <!-- Yellow section (Right) -->
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
-                              <!-- Dark Green top joint -->
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
-                              <!-- Blue section (Bottom) -->
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <!-- Dark Blue bottom-left joint -->
                               <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
-                              <!-- Red bottom-right joint -->
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
@@ -430,7 +421,6 @@
                     </div>
                 </div>
 
-                <!-- Empty State -->
                 <div id="reports-empty" class="bg-white border border-gray-200 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-12 sm:p-24 flex flex-col items-center justify-center text-center">
                     <svg class="w-16 h-16 sm:w-20 sm:h-20 mb-6 text-gray-300 opacity-60" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM18 20H6V4h5v6h6v10z"/></svg>
                     <h3 class="text-lg font-extrabold text-gray-900 mb-1">No medical documents found</h3>
@@ -438,7 +428,6 @@
                     <button onclick="openUploadModal()" class="bg-[#f59e0b] hover:bg-yellow-600 active:scale-95 text-white font-bold py-2.5 px-8 rounded-lg shadow-sm transition">Add Document</button>
                 </div>
 
-                <!-- Reports Table List -->
                 <div id="reports-container" class="hidden bg-transparent sm:bg-white sm:border border-gray-200 sm:rounded-xl overflow-hidden shadow-none sm:shadow-sm w-full">
                     <div class="overflow-x-hidden sm:overflow-x-auto w-full pb-2 sm:pb-0">
                         <table class="w-full text-left border-collapse sm:min-w-[600px]">
@@ -458,7 +447,6 @@
                 </div>
             </div>
 
-            <!-- Upload Modal -->
             <div id="upload-modal" class="fixed inset-0 bg-gray-900/50 z-[250] hidden items-center justify-center backdrop-blur-sm px-4">
                 <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
                     <div class="flex justify-between items-center mb-6">
@@ -525,7 +513,6 @@
                 if (res.status === 401 || res.status === 403) { await signOut(auth); window.location.href = "login.html"; return; }
                 const data = await res.json();
 
-                // --- EXPLICITLY SET THE NEWLY MERGED SESSION ---
                 if (data.merged_session_id) {
                     window.currentSessionId = data.merged_session_id;
                 }
@@ -646,7 +633,6 @@
                         </nav>
                     </div>
                 </div>
-                <!-- Mobile View -->
                 <div class="flex flex-1 justify-between sm:hidden">
                     <button onclick="${changePageFunc}(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="relative inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 active:scale-95 disabled:opacity-50 shadow-sm transition">Previous</button>
                     <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative ml-3 inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 active:scale-95 disabled:opacity-50 shadow-sm transition">Next</button>
@@ -668,7 +654,6 @@
             document.getElementById('view-reports').scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // ---- REVIEW LOGIC ----
         window.activeReviewApptId = null;
         window.currentRating = 0;
 
@@ -896,7 +881,6 @@
             loadHistory();
         }
 
-        // --- NEW CENTRALIZED AI MESSAGE FORMATTING ---
         function formatAiMessage(content, isDashboard = false) {
             if (content.includes("[EMERGENCY]")) {
                 return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
@@ -904,44 +888,46 @@
             }
 
             if (content.includes("[ESCALATE]")) {
-                // Safe extraction using Regex accounting for possible bolded prompt names
-                let summaryMatch = content.match(/(?:\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis|Differential Diagnosis:|###|$))/i);
-                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis[^\*]*\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action:|---|###|$))/i);
-                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=(?:\*\*SOAP Note|---|###|$))/i);
-                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:)\s*([\s\S]*?)$/i);
+                let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=\*\*Differential Diagnosis)/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action)/i);
+                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms)/i);
+                let bookingMatch = content.match(/(?:\*\*Booking Symptoms:\*\*|\*\*Booking Symptoms\*\*|Booking Symptoms:)\s*([\s\S]*?)$/i);
 
                 let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
                 let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
                 let plan = planMatch ? planMatch[1].trim() : "";
                 let soap = soapMatch ? soapMatch[1].trim() : "";
+                let bookingSymp = bookingMatch ? bookingMatch[1].trim().replace(/['"]/g, "") : "AI Triage Complete";
 
                 let formatClinicalText = (text) => {
                     if (!text) return "";
-                    return text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 text-[15px]">$1</strong>')
-                               // 1. Add nice spacing above numbered items
-                               .replace(/(\d+\.)\s*<strong/g, '<div class="mt-5"></div>$1 <strong')
-                               // 2. THIS WAS THE BUG! Replace hyphen with a line break instead of a bullet point
-                               .replace(/<\/strong>\s*[-:]\s*/g, '</strong><div class="mt-1 text-gray-700 leading-relaxed"></div>') 
-                               // 3. Keep bullets only for the Plan of Action section
-                               .replace(/\n\s*-\s*<strong/g, '<div class="mt-4"></div>&bull; <strong')
-                               .replace(/\n\s*-\s*/g, '<div class="mt-2"></div>&bull; ')
-                               // 4. Handle standard line breaks
-                               .replace(/\n/g, '<br>');
+                    return text
+                        // Bold the numbers (1., 2., 3.) specifically
+                        .replace(/(^|<br>|<div[^>]*>)\s*(\d+)\.\s/g, '$1<strong class="text-gray-900 font-extrabold text-base">$2.</strong> ')
+                        // Replace standard **Text** with strong tags
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 text-[15px]">$1</strong>')
+                        // Inject Custom Blue Bullets for specific sub-categories in the Plan of Action
+                        .replace(/<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications and Conservative Management|Red Flag Warnings)<\/strong>/gi, 
+                                 '<div class="mt-6 mb-1 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 text-[15px] uppercase tracking-wide">$1</strong></div>')
+                        // Standard line break handling
+                        .replace(/\n\s*-\s*/g, '<div class="mt-2"></div>&bull; ')
+                        .replace(/\n/g, '<br>');
                 };
 
                 const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
                 if (isDashboard) {
-                    window.generatedClinicalReport = content; // Store it globally for the booking payload
+                    window.generatedClinicalReport = content; 
                 }
 
+                // Dynamic Action Button fetching the exact booking symptom keywords
                 const btnAction = isDashboard 
-                    ? `switchTab('book'); document.getElementById('book-symptoms').value = 'AI Triage Complete'; suggestDoctor();`
+                    ? `switchTab('book'); document.getElementById('book-symptoms').value = '${bookingSymp}'; suggestDoctor();`
                     : `window.location.href='login.html';`;
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
-                // Reorganized HTML Layout (Assessment and SOAP explicitly visible, Booking option at the bottom)
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
                     <!-- Header -->
@@ -951,18 +937,24 @@
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
+                    <div class="p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Clinical Assessment, Plan, and SOAP (Explicitly visible) -->
-                    <div class="p-5 font-sans border-b border-gray-100 bg-gray-50 text-sm text-gray-700 space-y-6">
-                        ${diffDiag ? `<div><div class="font-bold text-gray-900 mb-2 uppercase tracking-wider text-xs">Differential Diagnosis</div><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                        ${plan ? `<div><div class="font-bold text-gray-900 mb-2 uppercase tracking-wider text-xs">Plan of Action</div><div>${formatClinicalText(plan)}</div></div>` : ''}
-                        ${soap ? `<div><div class="font-bold text-gray-900 mb-2 uppercase tracking-wider text-xs">SOAP Note for Physician</div><div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800">${formatClinicalText(soap)}</div></div>` : ''}
-                    </div>
+                    <!-- Scrollable Assessment & Plan Accordion -->
+                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors">
+                        <summary class="p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
+                            Assessment & Plan
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 max-h-[400px] overflow-y-auto custom-scrollbar border-t border-gray-100">
+                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Differential Diagnosis</h4><div class="space-y-4">${formatClinicalText(diffDiag)}</div></div>` : ''}
+                            ${plan ? `<div class="pt-4 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
+                            ${soap ? `<div class="pt-4 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800">${formatClinicalText(soap)}</div></div>` : ''}
+                        </div>
+                    </details>
                     
-                    <!-- Booking CTA (Moved to bottom) -->
+                    <!-- Booking CTA -->
                     <div class="p-5 font-sans bg-white">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
                         <p class="text-sm text-gray-600 mb-4">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
@@ -1210,16 +1202,13 @@
         window.toggleUrgency = (type) => {
             window.bookingUrgency = type;
 
-            // Reset doctor selection
             document.getElementById('book-doctor').value = '';
             document.getElementById('doctor-selected-content').innerHTML = '<span class="text-gray-500">-- Search or Select a Doctor --</span>';
 
-            // Handle slots visibility
             const slotsWrapper = document.getElementById('slots-wrapper');
             slotsWrapper.classList.add('hidden');
             document.getElementById('selected-slot').value = '';
 
-            // Update Doctor list
             if(type === 'immediate') {
                 fetchDoctorsAvailableNow();
             } else {
@@ -1239,7 +1228,6 @@
 
                 if (window.allDoctors.length === 0) {
                     document.getElementById('doctor-selected-content').innerHTML = '<span class="text-red-500 font-bold">No doctors available immediately</span>';
-                    // User requested specific empty state wording
                     document.getElementById('doctor-list').innerHTML = `
                         <div class="p-6 text-center flex flex-col items-center justify-center">
                             <svg class="w-10 h-10 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -1287,7 +1275,6 @@
                     else starsHtml += `<svg class="w-3.5 h-3.5 text-gray-200" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>`;
                 }
 
-                // Add the immediate pulse badge
                 let extraBadge = window.bookingUrgency === 'immediate' 
                     ? `<span class="bg-red-50 border border-red-200 text-red-600 text-[10px] px-2 py-0.5 rounded-md font-bold whitespace-nowrap ml-2 shadow-sm flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1 animate-pulse"></span>Available Now</span>` 
                     : '';
@@ -1344,7 +1331,6 @@
             if (window.bookingUrgency === 'regular') {
                 fetchDoctorSlots(d.id);
             } else {
-                // Immediate Consultation visual timetable block
                 const wrapper = document.getElementById('slots-wrapper');
                 const container = document.getElementById('available-slots-container');
 
@@ -1358,7 +1344,6 @@
                 const day = String(now.getDate()).padStart(2, '0');
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
-                // Creating a valid backend datetime string representing NOW
                 const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
                 container.innerHTML = `
@@ -1403,7 +1388,6 @@
 
             if (!doctorId) { wrapper.classList.add('hidden'); return; }
 
-            // Pulsing modern slot skeleton loader instead of plain text loading indicators
             container.innerHTML = `
                 <div class="col-span-1 sm:col-span-2 md:col-span-3 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 w-full">
                     <div class="animate-pulse border border-gray-200 rounded-xl p-5 bg-gray-50/50 h-32 flex flex-col justify-between">
@@ -1464,7 +1448,6 @@
             const btn = document.getElementById('find-doctor-btn'); 
             const originalText = btn.innerHTML;
 
-            // AI Suggestion Loader starts
             btn.disabled = true;
             btn.innerHTML = `
                 <span class="flex items-center space-x-1.5">
@@ -1522,7 +1505,6 @@
 
             let finalDateTime = preferredTime;
             if (window.bookingUrgency === 'immediate') {
-                // Must send exactly YYYY-MM-DDTHH:MM for the backend to parse
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -1541,7 +1523,7 @@
                         visit_type: "online", 
                         preferred_datetime: finalDateTime,
                         symptoms: symptomsText,
-                        ai_report: window.generatedClinicalReport || null // Passes the beautifully generated report to the backend!
+                        ai_report: window.generatedClinicalReport || null 
                     }) 
                 });
                 const d = await r.json(); 
@@ -1683,7 +1665,6 @@
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="font-bold"><span class="${sColor} px-3 py-1.5 rounded-md text-[10px] uppercase tracking-wider shadow-sm">${a.status}</span></span>
                         </td>
-                        <!-- Mobile Actions Row (Hidden on Desktop) -->
                         <td class="py-4 px-5 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-2xl border-t border-gray-100">
                              <div class="grid grid-cols-3 gap-2 w-full">
                                 <div class="flex flex-col items-center justify-center">
@@ -1700,7 +1681,6 @@
                                 </div>
                              </div>
                         </td>
-                        <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${btnDesktop}</td>
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${erxDesktop}</td>
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${reviewDesktop}</td>
@@ -1778,7 +1758,6 @@
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="${statColor} px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm">${rep.status}</span>
                         </td>
-                        <!-- Mobile Actions Row (Hidden on Desktop) -->
                         <td class="py-4 px-5 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-2xl border-t border-gray-100">
                              <div class="flex justify-between items-center w-full">
                                 <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Actions</span>
@@ -1790,7 +1769,6 @@
                                 </div>
                              </div>
                         </td>
-                        <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">
                             <div class="flex justify-center items-center">
                                 ${driveBtnDesktop}
