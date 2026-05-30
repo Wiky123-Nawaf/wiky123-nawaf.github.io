@@ -905,7 +905,7 @@
                     return text
                         // 1. Group the number (1., 2., 3.) and the Condition Name perfectly. 
                         // Matches Plan of Action style identically: font-extrabold text-[15px] uppercase tracking-wide, and exact same top/bottom margins (mt-6 mb-2).
-                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1. $2</strong></div>')
+                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-bold text-[15px]">$1. $2</strong></div>')
                         
                         // 2. Plan of Action Bulleted Headings - Exact same classes as above
                         .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
