@@ -636,7 +636,7 @@
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </nav>
@@ -911,12 +911,29 @@
 
                 let formatClinicalText = (text) => {
                     if (!text) return "";
+                    
+                    text = text.replace(/\n{3,}/g, '\n\n').trim();
+
                     return text
-                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1. $2</strong></div>')
-                        .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
-                                 '<div class="mt-6 mb-2 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1</strong></div>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[15px]">$1</strong>')
-                        .replace(/\n\s*-\s*/g, '<br>&bull; ')
+                        // Numbered subheadings (e.g., Differential Diagnosis)
+                        .replace(/(?:^|\n)\s*(\d+)\.\s*\*\*([^*]+)\*\*[:]*\s*/g, 
+                            '<div class="mt-6 mb-2 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] mt-[1px]">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+                        
+                        // Bulleted / Category subheadings (e.g., Plan of Action) - Catches bold lines ending in newline
+                        .replace(/(?:^|\n)\s*\*\*([^*]+)\*\*[:]*\s*(?=\n|$)/g, 
+                            '<div class="mt-6 mb-2 flex items-start"><span class="text-[#0066FF] mr-2 text-xl leading-none mt-0">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                            
+                        // Hardcoded fallback for specific clinical categories to ensure they always get subheading style
+                        .replace(/(?:^|\n)\s*\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*\s*/gi, 
+                            '<div class="mt-6 mb-2 flex items-start"><span class="text-[#0066FF] mr-2 text-xl leading-none mt-0">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+
+                        // General Bold Text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
+                        
+                        // List items
+                        .replace(/(?:^|\n)\s*-\s+/g, '<br><span class="text-[#0066FF] mr-2 font-bold">&bull;</span>')
+                        
+                        // Newlines
                         .replace(/\n/g, '<br>');
                 };
 
@@ -1429,7 +1446,7 @@
                     <label class="block cursor-pointer relative group">
                         <input type="radio" name="slot_selection" value="${s.datetime}" class="peer sr-only" onchange="document.getElementById('selected-slot').value = this.value">
                         <div class="border border-gray-200 rounded-xl p-3 sm:p-4 bg-white hover:border-[#0066FF] peer-checked:bg-blue-50/40 peer-checked:border-[#0066FF] active:scale-95 transition h-full flex flex-col justify-center items-center shadow-sm relative z-10 text-center gap-1.5">
-                            <span class="text-[10px] sm:text-xs text-gray-500 font-bold">${s.date_display}</span>
+                            <span class="text-[10px] sm:text-xs text-gray-500 font-bold mb-0.5">${s.date_display}</span>
                             <span class="font-extrabold text-gray-900 text-sm sm:text-base">${s.day_display}</span>
                             <div class="mt-1 text-[11px] font-semibold text-[#0066FF] bg-blue-50 border border-blue-100 py-1.5 px-2.5 rounded-md text-center tracking-wide uppercase whitespace-nowrap w-full">
                                 ${s.time_display}
