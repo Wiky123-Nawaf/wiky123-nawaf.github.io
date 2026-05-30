@@ -84,6 +84,9 @@
         #chat-history::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
         #chat-history::-webkit-scrollbar-track { background: transparent; }
 
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
         .sidebar-scroll::-webkit-scrollbar { width: 4px; }
         .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
         .sidebar-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
@@ -92,6 +95,14 @@
         .nav-active { background-color: #eff6ff; color: #0066FF; font-weight: 700; border-left: 4px solid #0066FF; }
         .nav-inactive { color: #64748b; font-weight: 500; border-left: 4px solid transparent; }
         .nav-inactive:hover { background-color: #eff6ff; color: #0066FF; }
+
+        /* --- Dynamic Chat Bubble Widths --- */
+        .ai-bubble-container { max-width: 85%; width: 100%; }
+        .user-bubble-container { max-width: 80%; }
+        @media (max-width: 768px) {
+            .ai-bubble-container { max-width: 96%; }
+            .user-bubble-container { max-width: 92%; }
+        }
 
         /* --- Layout Containers --- */
         .section-white { 
@@ -147,7 +158,7 @@
             text-align: center; 
             position: relative; 
             gap: 0; 
-            max-width: 760px; /* Aligned exactly with chatbar width */
+            max-width: 760px;
             margin: 0 auto; 
         }
         .hero-fig2 { height: 60px; width: auto; margin-bottom: 24px; object-fit: contain; } 
@@ -170,7 +181,6 @@
         .hero-description p.hero-subtitle { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 20px; }
         .hero-description p:last-child { margin-bottom: 0; }
 
-        /* Guarantee Trust Text is ALWAYS Blue */
         .hero-trust-text {
             font-size: 14px; 
             font-weight: 600; 
@@ -207,7 +217,6 @@
         .chat-tabs { display: inline-flex; align-items: center; justify-content: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 999px; padding: 4px; gap: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); flex-wrap: nowrap; }
         .tab-btn { border: none; padding: 8px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #64748b; background: transparent; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .tab-btn.active { background: #eff6ff; color: var(--primary-blue); }
-        .tab-icon { flex-shrink: 0; }
 
         #chat-history {
             max-height: 450px;
@@ -237,15 +246,8 @@
         }
         .input-field::placeholder { color: #94a3b8; }
         
-        /* Error state styles for Chat Bar */
-        .input-wrapper.warning-active {
-            border: 1px solid #ef4444 !important;
-            background-color: #fef2f2 !important;
-        }
-        .input-field.placeholder-red::placeholder {
-            color: #ef4444 !important;
-            opacity: 1;
-        }
+        .input-wrapper.warning-active { border: 1px solid #ef4444 !important; background-color: #fef2f2 !important; }
+        .input-field.placeholder-red::placeholder { color: #ef4444 !important; opacity: 1; }
 
         .input-actions { display: flex; justify-content: flex-end; width: 100%; margin-top: 12px; }
         .btn-get-started { background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: opacity 0.2s; }
@@ -256,7 +258,6 @@
         .chip:hover { background: #f8fafc; border-color: #cbd5e1; }
         .pdpa-text { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 12px; color: #94a3b8; font-weight: 500; }
 
-        /* Animation for shaking the ToS box */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -271,20 +272,10 @@
         .bottom-info h2 { font-size: 42px; font-weight: 800; margin-bottom: 16px; color: var(--text-dark); letter-spacing: -0.5px;}
         .bottom-info p { font-size: 18px; color: var(--text-dark); margin-bottom: 40px; line-height: 1.6; font-weight: 500; }
         
-        /* Wrapper for Dynamic Text & Image Pill */
         .rating-badge-wrapper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8fafc;
-            border-radius: 999px;
-            padding: 6px 20px 6px 6px;
-            margin: 0 auto;
-            gap: 8px;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            flex-wrap: nowrap;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center; background-color: #f8fafc;
+            border-radius: 999px; padding: 6px 20px 6px 6px; margin: 0 auto; gap: 8px; border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-wrap: nowrap; white-space: nowrap;
         }
         .rating-badge-wrapper .hero-fig3 { margin: 0; height: 40px; width: auto; object-fit: contain; display: block; flex-shrink: 0; } 
         .rating-text { font-size: 14px; color: #475569; font-weight: 500; white-space: nowrap; }
@@ -304,22 +295,15 @@
 
         .steps-container { display: flex; justify-content: space-between; align-items: flex-start; position: relative; max-width: 1000px; margin: 0 auto; }
         .steps-container::before { 
-            content: ''; 
-            position: absolute; 
-            top: 30px; 
-            left: 15%; 
-            right: 15%; 
-            height: 1.5px; 
+            content: ''; position: absolute; top: 30px; left: 15%; right: 15%; height: 1.5px; 
             background: linear-gradient(90deg, rgba(255,255,255,0) 0%, #ef4444 25%, #0066cc 50%, #0066cc 75%, rgba(255,255,255,0) 100%); 
             z-index: 0; 
         }
         .step { flex: 1; padding: 0 20px; position: relative; z-index: 1; }
         .step-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; font-size: 20px; font-weight: 700; background-color: #ffffff; }
-
         .step-1 .step-circle { color: #ef4444; border: 1px solid #ef4444; box-shadow: 0 0 0 6px #fff0f0; }
         .step-2 .step-circle { color: var(--primary-blue); border: 1px solid var(--primary-blue); box-shadow: 0 0 0 6px var(--light-blue-bg); }
         .step-3 .step-circle { color: #64748b; border: 1px solid #94a3b8; background-color: #ffffff; box-shadow: 0 0 0 6px #f1f5f9; }
-
         .step h4 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
         .step p { font-size: 14px; color: var(--text-gray); line-height: 1.6; }
 
@@ -479,277 +463,90 @@
 
             header { padding: 12px 16px; }
 
-			.feature-card h3 br {
-                display: none;
-            }
+			.feature-card h3 br { display: none; }
             
-            /* --- UPDATED HAMBURGER MENU BUTTON --- */
             header button[onclick="toggleSidebar()"] {
-                background-color: transparent;
-                border-radius: 50%;
-                padding: 8px;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #111;
-                margin-left: -8px; 
+                background-color: transparent; border-radius: 50%; padding: 8px; width: 40px; height: 40px;
+                display: flex; align-items: center; justify-content: center; color: #111; margin-left: -8px; 
             }
             header button[onclick="toggleSidebar()"] svg { width: 24px; height: 24px; }
 
-            /* --- UPDATED MOBILE LOGIN BUTTON TO MATCH IMAGE EXACTLY --- */
             #navLoginBtn {
-                background-color: #0066cc !important; 
-                color: #ffffff !important;           
-                font-weight: 600 !important;
-                padding: 8px 16px !important; 
-                height: auto !important; 
-                font-size: 14px !important; 
-                border-radius: 8px !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                white-space: nowrap !important;
-                border: none !important;
+                background-color: #0066cc !important; color: #ffffff !important; font-weight: 600 !important;
+                padding: 8px 16px !important; height: auto !important; font-size: 14px !important; 
+                border-radius: 8px !important; display: inline-flex !important; align-items: center !important;
+                justify-content: center !important; white-space: nowrap !important; border: none !important;
             }
 
-            /* =====================================================
-               MOBILE FIRST-SCREEN LAYOUT OVERRIDES:
-               Dynamically scaling and centered to eliminate awkward spacing
-            ===================================================== */
-
-            .section-white.flex-1 {
-                flex: none !important;
-                display: block !important;
-            }
+            .section-white.flex-1 { flex: none !important; display: block !important; }
 
             body:not(.chat-mode-active) .hero-chat-wrapper {
-                display: flex !important;
-                flex-direction: column !important;
-                min-height: calc(100svh - 64px) !important; 
-                padding: 8px 16px 24px 16px !important; /* Specifically reduced only the top padding to pull hero up */
-                justify-content: center !important; 
-                align-items: center !important;
-                gap: clamp(24px, 4vh, 40px) !important; /* Restored healthy gap so content breathes naturally */
-                box-sizing: border-box !important;
+                display: flex !important; flex-direction: column !important; min-height: calc(100svh - 64px) !important; 
+                padding: 8px 16px 24px 16px !important; justify-content: center !important; align-items: center !important;
+                gap: clamp(24px, 4vh, 40px) !important; box-sizing: border-box !important;
             }
 
-            /* TOP BLOCK (Avatars, Stars, Text) */
-            .hero-content-top { 
-                flex: 0 0 auto;
-                width: 100%; 
-                display: flex; 
-                justify-content: center; 
-                margin: 0 !important;
-                padding: 0 !important;
-            }
+            .hero-content-top { flex: 0 0 auto; width: 100%; display: flex; justify-content: center; margin: 0 !important; padding: 0 !important; }
 
-            .hero { 
-                padding: 0 !important; 
-                align-items: center; 
-                text-align: center; 
-                width: 100%; 
-                max-width: 100%; 
-                margin: 0 auto; 
-                gap: 0; 
-            }
+            .hero { padding: 0 !important; align-items: center; text-align: center; width: 100%; max-width: 100%; margin: 0 auto; gap: 0; }
 
-            .hero-fig2 { 
-                height: clamp(42px, 7vh, 56px) !important; 
-                margin: 0 auto clamp(6px, 1.5vh, 12px) auto !important; 
-                display: block; 
-                object-fit: contain;
-            } 
+            .hero-fig2 { height: clamp(42px, 7vh, 56px) !important; margin: 0 auto clamp(6px, 1.5vh, 12px) auto !important; display: block; object-fit: contain; } 
             
-            .mobile-rating { 
-                margin: 0 auto clamp(8px, 1.5vh, 16px) auto !important; 
-            }
-            .mobile-rating svg {
-                width: clamp(18px, 4.5vw, 22px) !important; 
-                height: clamp(18px, 4.5vw, 22px) !important;
-            }
-            .mobile-rating span {
-                font-size: clamp(15px, 4.5vw, 19px) !important; 
-            }
+            .mobile-rating { margin: 0 auto clamp(8px, 1.5vh, 16px) auto !important; }
+            .mobile-rating svg { width: clamp(18px, 4.5vw, 22px) !important; height: clamp(18px, 4.5vw, 22px) !important; }
+            .mobile-rating span { font-size: clamp(15px, 4.5vw, 19px) !important; }
 
             .hero h1.mobile-title { 
                 font-family: Georgia, Cambria, "Times New Roman", Times, serif !important; 
-                font-size: clamp(30px, 8.5vw, 42px) !important; 
-                margin-bottom: clamp(6px, 1.5vh, 12px) !important; 
-                text-align: center; 
-                width: 100%; 
-                letter-spacing: normal !important; 
-                font-weight: 400 !important; 
-                line-height: 1.15; 
-                color: #111 !important;
+                font-size: clamp(30px, 8.5vw, 42px) !important; margin-bottom: clamp(6px, 1.5vh, 12px) !important; 
+                text-align: center; width: 100%; letter-spacing: normal !important; font-weight: 400 !important; 
+                line-height: 1.15; color: #111 !important;
             }
             
-            .hero-description.mobile-desc { 
-                padding: 0; 
-                width: 100%; 
-                text-align: center; 
-                display: flex; 
-                flex-direction: column; 
-            }
+            .hero-description.mobile-desc { padding: 0; width: 100%; text-align: center; display: flex; flex-direction: column; }
             
             .hero-description.mobile-desc p.hero-subtitle { 
-                font-family: 'Inter', sans-serif !important;
-                font-size: clamp(14px, 4vw, 17px) !important; /* Slightly smaller than last iteration, closer to original */
-                margin-bottom: clamp(6px, 1.5vh, 10px) !important; 
-                font-weight: 400 !important; 
-                color: #111 !important; 
-                text-align: center !important; 
+                font-family: 'Inter', sans-serif !important; font-size: clamp(14px, 4vw, 17px) !important; 
+                margin-bottom: clamp(6px, 1.5vh, 10px) !important; font-weight: 400 !important; color: #111 !important; text-align: center !important; 
             }
             
             .hero-description.mobile-desc p { 
-                font-size: clamp(13px, 3.5vw, 15px) !important; /* Reduced unbold text to closely match "first view" proportion */
-                margin-bottom: clamp(6px, 1.5vh, 10px) !important; 
-                line-height: 1.45 !important; 
-                color: #111 !important; 
-                text-align: center !important; 
-                padding: 0;
-                max-width: 100%;
+                font-size: clamp(13px, 3.5vw, 15px) !important; margin-bottom: clamp(6px, 1.5vh, 10px) !important; 
+                line-height: 1.45 !important; color: #111 !important; text-align: center !important; padding: 0; max-width: 100%;
             }
 
-            /* MIDDLE BLOCK (Chatbox) */
-            .chat-content-bottom {
-                flex: 0 0 auto; 
-                display: flex;
-                width: 100%;
-                justify-content: center;
-                align-items: center; 
-                margin: 0 !important; 
-                padding: 0;
-                background: transparent;
-                border-top: none;
-                box-shadow: none;
-            }
-
+            .chat-content-bottom { flex: 0 0 auto; display: flex; width: 100%; justify-content: center; align-items: center; margin: 0 !important; padding: 0; background: transparent; border-top: none; box-shadow: none; }
             .chat-section { width: 100%; padding: 0; align-items: center; }
             
-            .chat-container { 
-                padding: clamp(16px, 4vw, 24px) !important; 
-                border-radius: clamp(12px, 3vw, 16px) !important; 
-                margin: 0 auto !important; 
-                width: 100%; 
-                max-width: 100%; 
-                background-color: #ffffff; 
-                border: none !important; 
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important; 
-            }
+            .chat-container { padding: clamp(16px, 4vw, 24px) !important; border-radius: clamp(12px, 3vw, 16px) !important; margin: 0 auto !important; width: 100%; max-width: 100%; background-color: #ffffff; border: none !important; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important; }
             
             .chat-tabs-wrapper { display: none !important; } 
 
-            body:not(.chat-mode-active) .input-wrapper { 
-                min-height: clamp(80px, 12vh, 110px) !important; 
-                padding: 0 !important; 
-                margin-bottom: 0; 
-                background-color: transparent !important; 
-                border: none !important; 
-                border-radius: 0; 
-                width: 100%; 
-                box-shadow: none !important; 
-                display: flex; 
-                flex-direction: column; 
-                justify-content: space-between; 
-            }
+            body:not(.chat-mode-active) .input-wrapper { min-height: clamp(80px, 12vh, 110px) !important; padding: 0 !important; margin-bottom: 0; background-color: transparent !important; border: none !important; border-radius: 0; width: 100%; box-shadow: none !important; display: flex; flex-direction: column; justify-content: space-between; }
             .input-top-area { gap: 8px; flex: 1; }
             .input-top-area svg { display: none;}
-            .input-field { 
-                font-size: clamp(14px, 4vw, 16px) !important; 
-                min-height: 44px; 
-                height: auto; 
-            }
+            .input-field { font-size: clamp(14px, 4vw, 16px) !important; min-height: 44px; height: auto; }
             
             .input-actions { margin-top: clamp(8px, 2vh, 16px) !important; display: flex; justify-content: flex-end !important; }
-            .btn-get-started { 
-                background-color: #0066cc !important; 
-                padding: clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 24px) !important; 
-                font-size: clamp(14px, 4vw, 16px) !important; 
-                border-radius: 8px !important; 
-                width: auto !important;
-            }
-            .btn-get-started svg {
-                width: clamp(14px, 3.5vw, 16px) !important;
-                height: clamp(14px, 3.5vw, 16px) !important;
-            }
+            .btn-get-started { background-color: #0066cc !important; padding: clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 24px) !important; font-size: clamp(14px, 4vw, 16px) !important; border-radius: 8px !important; width: auto !important; }
+            .btn-get-started svg { width: clamp(14px, 3.5vw, 16px) !important; height: clamp(14px, 3.5vw, 16px) !important; }
             
             .suggestion-chips { display: none !important; }
             
-            .mobile-private-tag { 
-                display: flex !important; 
-                align-items: center; 
-                justify-content: flex-end; 
-                gap: 6px; 
-                font-size: clamp(11px, 3vw, 13px) !important; 
-                color: #94a3b8; 
-                margin-top: clamp(8px, 2vh, 12px) !important; 
-                width: 100%;
-                padding-right: 4px;
-            }
-            .mobile-private-tag svg {
-                width: clamp(12px, 3vw, 14px) !important;
-                height: clamp(12px, 3vw, 14px) !important;
-            }
+            .mobile-private-tag { display: flex !important; align-items: center; justify-content: flex-end; gap: 6px; font-size: clamp(11px, 3vw, 13px) !important; color: #94a3b8; margin-top: clamp(8px, 2vh, 12px) !important; width: 100%; padding-right: 4px; }
+            .mobile-private-tag svg { width: clamp(12px, 3vw, 14px) !important; height: clamp(12px, 3vw, 14px) !important; }
 
-            /* BOTTOM BLOCK (Logos) */
-            .mobile-logos-section {
-                flex: 0 0 auto; 
-                width: 100%;
-                text-align: center;
-                padding-bottom: 0 !important; 
-                padding-top: 0 !important; 
-                margin-top: 0 !important; /* Reset to 0 so it stays securely anchored without pulling up */
-            }
-            
-            .mobile-logos-section p {
-                font-size: clamp(12px, 3.5vw, 15px) !important; 
-                color: #64748b;
-                margin-bottom: clamp(6px, 1.5vh, 12px) !important;
-            }
-            
-            .AffiliationsRow-module__csBNVG__logos {
-                display: flex;
-                justify-content: space-evenly; 
-                align-items: center;
-                gap: clamp(8px, 2vw, 16px);
-                flex-wrap: nowrap; 
-                padding: 0;
-                margin: 0;
-                list-style: none;
-                width: 100%;
-            }
-            
-            .AffiliationsRow-module__csBNVG__logoItem {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex: 1; 
-            }
-            
-            .AffiliationsRow-module__csBNVG__logoItem img {
-                height: clamp(32px, 9vw, 52px) !important; /* Considerably enlarged to confidently balance bottom layout */
-                max-width: 100%; 
-                width: auto !important;
-                object-fit: contain;
-            }
+            .mobile-logos-section { flex: 0 0 auto; width: 100%; text-align: center; padding-bottom: 0 !important; padding-top: 0 !important; margin-top: 0 !important; }
+            .mobile-logos-section p { font-size: clamp(12px, 3.5vw, 15px) !important; color: #64748b; margin-bottom: clamp(6px, 1.5vh, 12px) !important; }
+            .AffiliationsRow-module__csBNVG__logos { display: flex; justify-content: space-evenly; align-items: center; gap: clamp(8px, 2vw, 16px); flex-wrap: nowrap; padding: 0; margin: 0; list-style: none; width: 100%; }
+            .AffiliationsRow-module__csBNVG__logoItem { display: flex; align-items: center; justify-content: center; flex: 1; }
+            .AffiliationsRow-module__csBNVG__logoItem img { height: clamp(32px, 9vw, 52px) !important; max-width: 100%; width: auto !important; object-fit: contain; }
 
-            /* Remaining non-hero mobile CSS from original... */
             .bottom-info { padding: 40px 0 24px 0; text-align: center; margin-top: 0;} 
             .plus-icon-wrap { margin: 0 auto 20px auto; } 
             .bottom-info h2 { font-size: 28px; text-align: center; margin-bottom: 16px; } 
             .bottom-info p { text-align: center; margin-bottom: 28px; font-size: 15px; } 
-            .rating-badge-wrapper { 
-                padding: 5px 14px 5px 5px; 
-                gap: 6px; 
-                flex-direction: row !important; 
-                flex-wrap: nowrap !important;
-                border-radius: 999px; 
-                white-space: nowrap;
-                max-width: calc(100vw - 32px);
-                overflow: hidden;
-            }
+            .rating-badge-wrapper { padding: 5px 14px 5px 5px; gap: 6px; flex-direction: row !important; flex-wrap: nowrap !important; border-radius: 999px; white-space: nowrap; max-width: calc(100vw - 32px); overflow: hidden; }
             .rating-badge-wrapper .hero-fig3 { height: 32px; flex-shrink: 0; }
             .rating-text { font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -815,165 +612,57 @@
            FULL SCREEN CHAT MODE OVERRIDES (Placed at end to override all)
            ===================================================== */
         body.chat-mode-active {
-            overflow: hidden !important;
-            height: 100dvh !important;
-            position: fixed !important;
-            inset: 0 !important;
-            width: 100% !important;
+            overflow: hidden !important; height: 100dvh !important; position: fixed !important; inset: 0 !important; width: 100% !important;
         }
 
         body.chat-mode-active #main-scroll-area {
-            overflow: hidden !important;
-            height: 100dvh !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #ffffff !important;
-            position: absolute !important;
-            inset: 0 !important;
+            overflow: hidden !important; height: 100dvh !important; display: flex !important; flex-direction: column !important; background: #ffffff !important; position: absolute !important; inset: 0 !important;
         }
 
-        body.chat-mode-active .hide-in-chat {
-            display: none !important;
-        }
+        body.chat-mode-active .hide-in-chat { display: none !important; }
+        body.chat-mode-active .chat-tabs-wrapper { display: none !important; }
 
-        body.chat-mode-active .chat-tabs-wrapper {
-            display: none !important;
-        }
-
-        body.chat-mode-active .section-white:first-of-type,
-        body.chat-mode-active .hero-chat-wrapper,
-        body.chat-mode-active .chat-content-bottom,
-        body.chat-mode-active .chat-section {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important; 
-            width: 100% !important;
-            flex: 1 !important;
-            min-height: 0 !important;
-            height: auto !important; 
-            margin: 0 !important;
-            padding: 0 !important;
-            max-width: 100% !important;
-            background: #ffffff !important;
+        body.chat-mode-active .section-white:first-of-type, body.chat-mode-active .hero-chat-wrapper, body.chat-mode-active .chat-content-bottom, body.chat-mode-active .chat-section {
+            display: flex !important; flex-direction: column !important; align-items: center !important; width: 100% !important; flex: 1 !important; min-height: 0 !important; height: auto !important; margin: 0 !important; padding: 0 !important; max-width: 100% !important; background: #ffffff !important;
         }
 
         body.chat-mode-active .chat-container {
-            display: flex !important;
-            flex-direction: column !important;
-            flex: 1 !important;
-            width: 100% !important;
-            max-width: 800px !important;
-            margin: 0 auto !important; 
-            border: none !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            background-color: transparent !important;
-            padding: 0 16px 0 16px !important;
-            min-height: 0 !important;
-            height: auto !important;
+            display: flex !important; flex-direction: column !important; flex: 1 !important; width: 100% !important; max-width: 800px !important; margin: 0 auto !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; background-color: transparent !important; padding: 0 16px 0 16px !important; min-height: 0 !important; height: auto !important;
         }
 
         body.chat-mode-active #chat-history {
-            flex: 1 !important;
-            max-height: none !important;
-            overflow-y: auto !important;
-            margin-bottom: 12px !important;
-            min-height: 0 !important;
-            -webkit-overflow-scrolling: touch !important;
-            padding-right: 4px !important;
-            width: 100% !important;
+            flex: 1 !important; max-height: none !important; overflow-y: auto !important; margin-bottom: 12px !important; min-height: 0 !important; -webkit-overflow-scrolling: touch !important; padding-right: 4px !important; width: 100% !important;
         }
 
         body.chat-mode-active .chat-input-area {
-            flex-shrink: 0 !important;
-            padding-bottom: calc(12px + env(safe-area-inset-bottom, 8px)) !important;
-            padding-top: 8px !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            width: 100% !important;
-            background: #ffffff !important;
-            position: relative !important;
-            z-index: 200 !important;
-            border-top: 1px solid #f1f5f9 !important;
+            flex-shrink: 0 !important; padding-bottom: calc(12px + env(safe-area-inset-bottom, 8px)) !important; padding-top: 8px !important; padding-left: 0 !important; padding-right: 0 !important; width: 100% !important; background: #ffffff !important; position: relative !important; z-index: 200 !important; border-top: 1px solid #f1f5f9 !important;
         }
 
         body.chat-mode-active .input-wrapper {
-            min-height: 50px !important;
-            height: auto !important;
-            background-color: #fff !important;
-            border: 1px solid #e2e8f0 !important;
-            margin-bottom: 0 !important; 
-            padding: 8px 16px !important;
-            border-radius: 24px !important;
-            flex-direction: row !important;
-            align-items: center !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
-            width: 100% !important;
+            min-height: 50px !important; height: auto !important; background-color: #fff !important; border: 1px solid #e2e8f0 !important; margin-bottom: 0 !important; padding: 8px 16px !important; border-radius: 24px !important; flex-direction: row !important; align-items: center !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important; width: 100% !important;
         }
 
-        body.chat-mode-active .input-top-area {
-            flex: 1 !important;
-            align-items: center !important;
-            gap: 8px !important;
-        }
-
-        body.chat-mode-active .input-top-area svg {
-            display: none !important;
-        }
+        body.chat-mode-active .input-top-area { flex: 1 !important; align-items: center !important; gap: 8px !important; }
+        body.chat-mode-active .input-top-area svg { display: none !important; }
 
         body.chat-mode-active .input-field {
-            min-height: 24px !important;
-            height: 24px !important;
-            font-size: 15px !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            line-height: 24px !important;
-            overflow: hidden !important;
-            resize: none !important;
+            min-height: 24px !important; height: 24px; max-height: 120px !important; font-size: 15px !important; padding: 0 !important; margin: 0 !important; line-height: 24px !important; overflow-y: auto !important; resize: none !important;
         }
 
-        body.chat-mode-active .input-actions {
-            margin-top: 0 !important;
-            width: auto !important;
-            margin-left: 12px !important;
-            display: flex !important;
-            align-items: center !important;
-        }
+        body.chat-mode-active .input-actions { margin-top: 0 !important; width: auto !important; margin-left: 12px !important; display: flex !important; align-items: center !important; }
 
         body.chat-mode-active .btn-get-started {
-            border-radius: 50% !important;
-            width: 36px !important;
-            height: 36px !important;
-            padding: 0 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: transparent !important;
-            overflow: hidden !important;
-            position: relative !important;
+            border-radius: 50% !important; width: 36px !important; height: 36px !important; padding: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; color: transparent !important; overflow: hidden !important; position: relative !important;
         }
 
-        body.chat-mode-active .btn-get-started svg {
-            color: #ffffff !important;
-            margin: 0 !important;
-            position: absolute !important;
-            width: 16px !important;
-            height: 16px !important;
-            left: 50% !important;
-            top: 50% !important;
-            transform: translate(-50%, -50%) !important;
-        }
+        body.chat-mode-active .btn-get-started svg { color: #ffffff !important; margin: 0 !important; position: absolute !important; width: 16px !important; height: 16px !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; }
 
-        body.chat-mode-active .pdpa-text,
-        body.chat-mode-active .mobile-private-tag {
-            display: none !important;
-        }
+        body.chat-mode-active .pdpa-text, body.chat-mode-active .mobile-private-tag { display: none !important; }
     </style>
 </head>
 
 <body class="bg-white relative overflow-x-hidden">
 
-    <!-- Firebase Auth & Dynamic Login state -->
     <script>const API_BASE = 'https://api.doktura.ai';</script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
@@ -987,13 +676,13 @@
                 navBtn.href = "https://doktura.ai/dashboard.html";
                 navBtn.className = "btn-primary";
                 navBtn.style = "padding: 8px 16px; font-size: 13px;";
-                navBtn.innerHTML = `Log in`;
+                navBtn.innerHTML = `Dashboard`;
 
                 document.getElementById("userNameSidebar").innerText = user.displayName || user.email.split('@')[0];
                 document.getElementById("userAvatarSidebar").src = user.photoURL || 'https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true';
 
                 const logoutBtn = document.getElementById("logoutBtn");
-                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>`;
+                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>`;
                 logoutBtn.removeAttribute("href");
                 logoutBtn.onclick = (e) => {
                     e.preventDefault();
@@ -1098,7 +787,7 @@
                     <section class="hero">
                         <!-- Desktop Avatars -->
                         <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="doktura.ai Avatars" class="hero-fig2 desktop-only">
-                        <!-- Mobile Avatars (restored per prompt requirement, specifically scaled to fit) -->
+                        <!-- Mobile Avatars -->
                         <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665246.png?download=true" alt="doktura.ai Avatars" class="hero-fig2 mobile-only flex">
 
                         <!-- Mobile Blue Star Rating -->
@@ -1165,7 +854,7 @@
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="#0066cc" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
                                         </svg>
-                                        <textarea id="chat-input" class="input-field" placeholder="Describe symptoms or ask any health question..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendGuestChat(); }"></textarea>
+                                        <textarea id="chat-input" class="input-field custom-scrollbar" placeholder="Describe symptoms or ask any health question..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendGuestChat(); }" oninput="this.style.height = '24px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
                                     </div>
                                     <div class="input-actions">
                                         <button class="btn-get-started shadow-md" onclick="sendGuestChat()" aria-label="Send message">
@@ -1192,7 +881,7 @@
                                     Data protected under PDPA
                                 </div>
                                 
-                                <!-- Mobile Specific Private Tag to strictly match image -->
+                                <!-- Mobile Specific Private Tag -->
                                 <div class="mobile-private-tag mobile-only">
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                                     HIPAA • Private
@@ -1202,7 +891,7 @@
                     </section>
                 </div>
 
-                <!-- Mobile Specific Logos Section (Appended as required below chatbox on mobile) -->
+                <!-- Mobile Specific Logos Section -->
                 <div class="mobile-logos-section mobile-only hide-in-chat">
                     <p>Built by experts from</p>
                     <ul class="AffiliationsRow-module__csBNVG__logos">
@@ -1220,7 +909,6 @@
 
             </div>
 
-            <!-- This section remains visible on mobile, appearing right after scrolling past the first fold -->
             <div class="container relative z-10 hide-in-chat">
                 <section class="bottom-info">
                     <div class="plus-icon-wrap">
@@ -1678,15 +1366,12 @@
 
     <!-- Main Chat Implementation & UI Logic -->
     <script>
-        // Set / unset UI depending on the chat mode (handles back/forward browser buttons perfectly)
         function syncChatState() {
             const urlParams = new URLSearchParams(window.location.search);
             const isChatMode = urlParams.get('chat') === 'active';
 
             if (isChatMode) {
                 document.body.classList.add('chat-mode-active');
-
-                // Force scroll to top so header remains visible instantly
                 window.scrollTo(0, 0);
                 const mainScroll = document.getElementById('main-scroll-area');
                 if (mainScroll) mainScroll.scrollTop = 0;
@@ -1700,8 +1385,6 @@
                 }
             } else {
                 document.body.classList.remove('chat-mode-active');
-
-                // Re-apply display block for desktop only since mobile is hidden entirely
                 const chips = document.getElementById('suggestion-chips');
                 if (chips && window.innerWidth > 768) {
                     chips.style.display = 'flex';
@@ -1714,14 +1397,11 @@
             }
         }
 
-        // Listen for history changes (Back/Forward arrows)
         window.addEventListener('popstate', () => {
             syncChatState();
         });
 
-        // Initial State & Deep Linking checks
         document.addEventListener("DOMContentLoaded", () => {
-            // Clear session and state on page hard reload, return to standard view
             const perfEntries = performance.getEntriesByType("navigation");
             if (perfEntries.length > 0 && perfEntries[0].type === "reload") {
                 localStorage.removeItem("tos_accepted");
@@ -1739,7 +1419,6 @@
                 loadGuestHistory();
             }
 
-            // Setup ToS Warning listeners
             const chatInput = document.getElementById('chat-input');
             const chatWrapper = document.getElementById('chat-input-wrapper');
 
@@ -1753,7 +1432,7 @@
                     const tosBox = document.getElementById('tos-blocker');
                     if (tosBox) {
                         tosBox.classList.remove('shake');
-                        void tosBox.offsetWidth; // trigger reflow
+                        void tosBox.offsetWidth; 
                         tosBox.classList.add('shake');
                     }
                 }
@@ -1781,7 +1460,7 @@
                             Terms accepted
                         </div>
                     `;
-                    tosBlocker.id = "tos-accepted-msg"; // Remove blocker ID to free up input
+                    tosBlocker.id = "tos-accepted-msg"; 
                 }
 
                 const chatInput = document.getElementById('chat-input');
@@ -1796,13 +1475,12 @@
 
                 let sessionId = localStorage.getItem("anon_session_id");
                 if (!sessionId) {
-                    sessionId = Date.now().toString(); // FIX: Set session as Timestamp to match perfectly on login
+                    sessionId = Date.now().toString(); 
                     localStorage.setItem("anon_session_id", sessionId);
                 }
             }
         };
 
-        // --- NEW CENTRALIZED AI MESSAGE FORMATTING ---
         function formatAiMessage(content, isDashboard = false) {
             if (content.includes("[EMERGENCY]")) {
                 return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
@@ -1823,21 +1501,34 @@
                 const btnAction = `window.location.href='login.html';`;
                 const btnText = "Login to Connect With a Doctor &rarr;";
 
-                // Beautifully locked index.html guest report
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
-                    <div class="p-5 border-b border-gray-100">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
+                    <div class="p-4 sm:p-5 border-b border-gray-100">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
                         <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
                     </div>
                     
-                    <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans text-justify">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
+
+                    <div class="font-sans bg-white border-b border-gray-100">
+                        <a href="login.html" class="block p-4 sm:p-5 hover:bg-gray-50 transition cursor-pointer" style="text-decoration: none;">
+                            <div class="flex justify-between items-center font-bold text-[#0066FF] text-sm mb-2">
+                                Assessment & Plan
+                                <svg class="w-5 h-5 text-[#0066FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            </div>
+                            <p class="text-[11px] sm:text-xs text-gray-500 uppercase tracking-wider font-bold mb-4">A clinical overview of possible causes considered</p>
+                            <div class="bg-blue-50 text-blue-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center shadow-sm border border-blue-100">
+                                <svg class="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Log in to view your detailed assessment & plan.
+                            </div>
+                        </a>
+                    </div>
                     
-                    <div class="p-5 bg-gray-50 font-sans border-b border-gray-100">
-                        <h3 class="font-bold text-gray-900 text-lg mb-3">Continue to a licensed doctor</h3>
-                        <p class="text-sm text-gray-600 mb-4">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                    <div class="p-4 sm:p-5 bg-gray-50 font-sans">
+                        <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
+                        <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
@@ -1847,20 +1538,6 @@
                         <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
                             ${btnText}
                         </button>
-                    </div>
-                    
-                    <div class="font-sans bg-white">
-                        <a href="login.html" class="block p-5 hover:bg-gray-50 transition cursor-pointer" style="text-decoration: none;">
-                            <div class="flex justify-between items-center font-bold text-[#0066FF] text-sm mb-2">
-                                Assessment & Plan
-                                <svg class="w-5 h-5 text-[#0066FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            </div>
-                            <p class="text-xs text-gray-500 uppercase tracking-wider font-bold mb-4">A clinical overview of possible causes considered</p>
-                            <div class="bg-blue-50 text-blue-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center shadow-sm border border-blue-100">
-                                <svg class="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Log in to view your detailed assessment & plan.
-                            </div>
-                        </a>
                     </div>
                 </div>`;
 
@@ -1873,11 +1550,10 @@
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         }
 
-        // 2. Chat Bubble Helpers
         function createUserBubble(text) {
             return `
                 <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
-                    <div style="background: var(--primary-blue); color: white; padding: 12px 16px; border-radius: 16px 16px 4px 16px; max-width: 80%; text-align: left; font-size: 14px; box-shadow: 0 4px 12px rgba(0,102,204,0.15);">
+                    <div class="user-bubble-container" style="background: var(--primary-blue); color: white; padding: 12px 16px; border-radius: 16px 16px 4px 16px; text-align: left; font-size: 14px; box-shadow: 0 4px 12px rgba(0,102,204,0.15);">
                         ${text}
                     </div>
                 </div>`;
@@ -1908,9 +1584,9 @@
             }
 
             return `
-                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                <div style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
                     <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
-                    <div style="display: flex; flex-direction: column; max-width: 85%; width: 100%;">
+                    <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
                         <div style="background: ${text.includes('[ESCALATE]') ? 'transparent' : '#f0f7ff'}; border: ${text.includes('[ESCALATE]') ? 'none' : '1px solid rgba(0, 102, 204, 0.1)'}; color: var(--text-dark); padding: ${text.includes('[ESCALATE]') ? '0' : '12px 16px'}; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6; width: 100%;">
                             ${formattedText}
                         </div>
@@ -1925,7 +1601,6 @@
             sendGuestChat();
         };
 
-        // 3. Load Short-Term History
         async function loadGuestHistory() {
             let sessionId = localStorage.getItem("anon_session_id");
             if (!sessionId) return;
@@ -1938,6 +1613,19 @@
                 const data = await res.json();
 
                 if (data.history && data.history.length > 0) {
+                    const hasReport = data.history.some(m => m.content.includes("[ESCALATE]"));
+                    
+                    if (hasReport && !window.currentUser) {
+                        localStorage.removeItem("anon_session_id");
+                        localStorage.removeItem("tos_accepted");
+                        if (window.location.search.includes("chat=active")) {
+                            window.location.href = window.location.pathname;
+                        } else {
+                            window.location.reload();
+                        }
+                        return;
+                    }
+
                     const historyDiv = document.getElementById('chat-history');
                     historyDiv.innerHTML = ''; 
 
@@ -1955,31 +1643,28 @@
             }
         }
 
-        // 4. Send Message Logic & Full Screen Transition
         window.sendGuestChat = async function() {
             const input = document.getElementById('chat-input');
             const history = document.getElementById('chat-history');
             const message = input.value.trim();
             if (!message) return;
 
-            // Activate Full Screen Chat View flawlessly
             if (!document.body.classList.contains('chat-mode-active')) {
                 window.history.pushState(null, '', window.location.pathname + '?chat=active');
                 syncChatState(); 
             }
 
-            // Remove any quick-reply buttons before sending new text
             const existingChips = history.querySelectorAll('.quick-reply-chips');
             existingChips.forEach(chip => chip.remove());
 
             history.innerHTML += createUserBubble(message);
             input.value = ''; 
+            input.style.height = '24px'; 
             history.scrollTop = history.scrollHeight;
 
             const tosAccepted = localStorage.getItem("tos_accepted");
             if (tosAccepted !== "true") {
                 if (document.getElementById('tos-blocker')) {
-                    // Already waiting for ToS, show warning
                     window.showTosWarning();
                     return;
                 }
@@ -1999,9 +1684,9 @@
                     history.innerHTML += createAiBubble("If this is an emergency, call **999** or your local emergency number.<br><br>Hello! How can I assist you with your health today?");
 
                     history.innerHTML += `
-                        <div id="tos-blocker" style="display: flex; gap: 12px; margin-top: 16px;">
+                        <div id="tos-blocker" style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
                             <div style="width: 32px; flex-shrink: 0;"></div>
-                            <div style="background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 14px; border-radius: 12px; text-align: left; max-width: 85%;">
+                            <div class="ai-bubble-container" style="background: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 14px; border-radius: 12px; text-align: left;">
                                 <p style="font-size: 13px; color: #475569; margin-bottom: 10px; line-height: 1.5;">Before I can reply, I need your permission to unlock your private AI doctor. <strong>It's fast, safe and free.</strong></p>
                                 <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
                                     <input type="checkbox" id="tos-checkbox" style="margin-top: 2px; flex-shrink: 0;" onchange="handleTosChange(this)">
@@ -2012,7 +1697,6 @@
                     `;
                     history.scrollTop = history.scrollHeight;
 
-                    // Disable input immediately
                     const chatInput = document.getElementById('chat-input');
                     chatInput.readOnly = true;
                     chatInput.placeholder = "Please check the box above";
@@ -2032,7 +1716,7 @@
             try {
                 let sessionId = localStorage.getItem("anon_session_id");
                 if (!sessionId) {
-                    sessionId = Date.now().toString(); // FIX: Generated as Timestamp
+                    sessionId = Date.now().toString(); 
                     localStorage.setItem("anon_session_id", sessionId);
                 }
 
@@ -2058,7 +1742,6 @@
         }
     </script>
 
-    <!-- Animated Feature Chat Widget Script -->
     <script>
         function startFeatureAnimation() {
             const chatbox = document.getElementById('anim-chatbox');
@@ -2147,20 +1830,15 @@
         });
     </script>
     
-    <!-- Dynamic Counters Script (Universal Counting) -->
     <script>
         async function updateUniversalCounters() {
             try {
-                // We use a free, open counter API to simulate a universal visit counter
-                // Using a unique namespace so it starts fresh (around 0)
                 const res = await fetch("https://api.counterapi.dev/v1/doktura-ai-live-v1/visits/up");
                 const data = await res.json();
                 const count = data.count || 0;
 
-                // Format it to 5 digits (e.g. 00001)
                 const countStr = count.toString().padStart(5, '0');
 
-                // Update large counter boxes
                 const counterBoxes = document.getElementById('visit-counter-boxes');
                 if (counterBoxes) {
                     counterBoxes.innerHTML = '';
@@ -2172,7 +1850,6 @@
                     }
                 }
 
-                // Update text next to pill image
                 const textCounter = document.getElementById('help-counter-text');
                 if (textCounter) {
                     textCounter.textContent = count.toLocaleString();
