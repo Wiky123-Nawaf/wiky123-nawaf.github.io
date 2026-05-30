@@ -915,25 +915,27 @@
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
                     return text
-                        // Numbered subheadings (e.g., Differential Diagnosis)
-                        .replace(/(?:^|\n)\s*(\d+)\.\s*\*\*([^*]+)\*\*[:]*\s*/g, 
-                            '<div class="mt-6 mb-2 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] mt-[1px]">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+                        // 1. Numbered subheadings
+                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
                         
-                        // Bulleted / Category subheadings (e.g., Plan of Action) - Catches bold lines ending in newline
-                        .replace(/(?:^|\n)\s*\*\*([^*]+)\*\*[:]*\s*(?=\n|$)/g, 
-                            '<div class="mt-6 mb-2 flex items-start"><span class="text-[#0066FF] mr-2 text-xl leading-none mt-0">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
-                            
-                        // Hardcoded fallback for specific clinical categories to ensure they always get subheading style
-                        .replace(/(?:^|\n)\s*\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*\s*/gi, 
-                            '<div class="mt-6 mb-2 flex items-start"><span class="text-[#0066FF] mr-2 text-xl leading-none mt-0">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                        // 2. Specific Fallback Categories
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
-                        // General Bold Text
+                        // 3. Bulleted / Category subheadings
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+
+                        // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
                         
-                        // List items
-                        .replace(/(?:^|\n)\s*-\s+/g, '<br><span class="text-[#0066FF] mr-2 font-bold">&bull;</span>')
+                        // 5. Standard bullet points
+                        .replace(/(^|\n+)[ \t]*-[ \t]+/g, function(match, p1) {
+                            return (p1 ? '<br>' : '') + '<span class="text-[#0066FF] mr-2 font-bold">&bull;</span>';
+                        })
                         
-                        // Newlines
+                        // 6. Convert remaining newlines
                         .replace(/\n/g, '<br>');
                 };
 
