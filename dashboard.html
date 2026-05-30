@@ -903,8 +903,8 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text
-                        // Bold the numbers (1., 2., 3.) specifically
-                        .replace(/(^|<br>|<div[^>]*>)\s*(\d+)\.\s/g, '$1<strong class="text-gray-900 font-extrabold text-base">$2.</strong> ')
+                        // FIX: Bold the numbers (1., 2., 3.) specifically by checking the start of lines or breaks
+                        .replace(/(^|\n)\s*(\d+)\.\s/g, '$1<strong class="text-gray-900 font-extrabold text-lg">$2.</strong> ')
                         // Replace standard **Text** with strong tags
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 text-[15px]">$1</strong>')
                         // Inject Custom Blue Bullets for specific sub-categories in the Plan of Action
@@ -928,6 +928,7 @@
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
+                // Removed max-h, overflow, custom scrollbar from accordion
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
                     <!-- Header -->
@@ -941,13 +942,13 @@
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Scrollable Assessment & Plan Accordion -->
+                    <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
                     <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors">
                         <summary class="p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
                             Assessment & Plan
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 max-h-[400px] overflow-y-auto custom-scrollbar border-t border-gray-100">
+                        <div class="p-5 pt-2 font-sans text-sm text-gray-700 space-y-8 border-t border-gray-100">
                             ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Differential Diagnosis</h4><div class="space-y-4">${formatClinicalText(diffDiag)}</div></div>` : ''}
                             ${plan ? `<div class="pt-4 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
                             ${soap ? `<div class="pt-4 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF]">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800">${formatClinicalText(soap)}</div></div>` : ''}
@@ -1181,8 +1182,7 @@
             window.location.href = `${API_BASE}/api/auth/google?user_id=${window.currentUser.uid}`;
         };
 
-        // --- BOOKING LOGIC ENHANCEMENTS ---
-        window.bookingUrgency = 'regular'; // Default state
+        window.bookingUrgency = 'regular'; 
 
         window.toggleBookingType = (type) => {
             const onlineSection = document.getElementById('booking-online-section');
@@ -1472,7 +1472,7 @@
                             selectDoctor(d.doctor_id);
                             showInlineMessage(`Match Found: ${d.doctor} is available right now!`, "success");
                         } else {
-                            showInlineMessage(`Match Found: ${d.doctor}, but they are currently unavailable. Switch to Regular booking.`, "warning");
+                            showInlineMessage(`No matching doctor is available immediately. Please select "Schedule for Later" to book a future slot.`, "warning");
                         }
                     } else {
                         selectDoctor(d.doctor_id);
