@@ -993,7 +993,7 @@
                 document.getElementById("userAvatarSidebar").src = user.photoURL || 'https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true';
 
                 const logoutBtn = document.getElementById("logoutBtn");
-                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>`;
+                logoutBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>`;
                 logoutBtn.removeAttribute("href");
                 logoutBtn.onclick = (e) => {
                     e.preventDefault();
@@ -1794,10 +1794,9 @@
 
                 chatInput.focus();
 
-                // Initialize unique guest session ID
                 let sessionId = localStorage.getItem("anon_session_id");
                 if (!sessionId) {
-                    sessionId = "anon_" + Math.random().toString(36).substring(2, 15);
+                    sessionId = Date.now().toString(); // FIX: Set session as Timestamp to match perfectly on login
                     localStorage.setItem("anon_session_id", sessionId);
                 }
             }
@@ -1811,30 +1810,20 @@
             }
 
             if (content.includes("[ESCALATE]")) {
-                let summaryMatch = content.match(/(?:\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|###|$))/i);
-                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=(?:\*\*Plan of Action:\*\*|Plan of Action:|---|###|$))/i);
-                let planMatch = content.match(/(?:\*\*Plan of Action:\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|$)/i);
+                let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=\*\*Differential Diagnosis)/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action)/i);
+                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note)/i);
 
                 let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
                 let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
                 let plan = planMatch ? planMatch[1].trim() : "";
-
-                let formatClinicalText = (text) => {
-                    if (!text) return "";
-                    return text
-                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1. $2</strong></div>')
-                        .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
-                                 '<div class="mt-6 mb-2 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1</strong></div>')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[15px]">$1</strong>')
-                        .replace(/\n\s*-\s*/g, '<br>&bull; ')
-                        .replace(/\n/g, '<br>');
-                };
 
                 const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 
                 const btnAction = `window.location.href='login.html';`;
                 const btnText = "Login to Connect With a Doctor &rarr;";
 
+                // Beautifully locked index.html guest report
                 let reportHtml = `
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
                     <div class="p-5 border-b border-gray-100">
@@ -1844,11 +1833,11 @@
                     
                     <div class="p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
-                        <p class="mt-5 font-medium text-gray-900">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                     </div>
                     
-                    <div class="p-5 bg-gray-50 font-sans">
+                    <div class="p-5 bg-gray-50 font-sans border-b border-gray-100">
                         <h3 class="font-bold text-gray-900 text-lg mb-3">Continue to a licensed doctor</h3>
+                        <p class="text-sm text-gray-600 mb-4">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
@@ -1860,20 +1849,18 @@
                         </button>
                     </div>
                     
-                    <div class="border-t border-gray-200 font-sans">
-                        <details class="group" open>
-                            <summary class="flex justify-between items-center font-bold text-[#0066FF] cursor-pointer list-none p-5 text-sm hover:bg-gray-50 transition">
+                    <div class="font-sans bg-white">
+                        <a href="login.html" class="block p-5 hover:bg-gray-50 transition cursor-pointer" style="text-decoration: none;">
+                            <div class="flex justify-between items-center font-bold text-[#0066FF] text-sm mb-2">
                                 Assessment & Plan
-                                <span class="transition group-open:rotate-180">
-                                    <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
-                                </span>
-                            </summary>
-                            <div class="px-5 pb-5 text-sm text-gray-700">
-                                <p class="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">A clinical overview of possible causes considered</p>
-                                ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF]">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                                ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF]">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
+                                <svg class="w-5 h-5 text-[#0066FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             </div>
-                        </details>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-bold mb-4">A clinical overview of possible causes considered</p>
+                            <div class="bg-blue-50 text-blue-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center shadow-sm border border-blue-100">
+                                <svg class="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Log in to view your detailed assessment & plan.
+                            </div>
+                        </a>
                     </div>
                 </div>`;
 
@@ -2045,7 +2032,7 @@
             try {
                 let sessionId = localStorage.getItem("anon_session_id");
                 if (!sessionId) {
-                    sessionId = "anon_" + Math.random().toString(36).substring(2, 15);
+                    sessionId = Date.now().toString(); // FIX: Generated as Timestamp
                     localStorage.setItem("anon_session_id", sessionId);
                 }
 
