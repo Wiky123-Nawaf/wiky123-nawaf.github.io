@@ -910,7 +910,7 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     return text
-                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1. $2</strong></div>')
+                        .replace(/\n*\s*(\d+)\.\s*\*\*(.*?)\*\*\n*/g, '<div class="mt-6 mb-2"><strong class="text-gray-900 font-bold text-[15px]">$1. $2</strong></div>')
                         .replace(/\n*<strong[^>]*>(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings)<\/strong>\n*/gi, 
                                  '<div class="mt-6 mb-2 flex items-center"><span class="text-[#0066FF] mr-2 text-2xl leading-none">&bull;</span><strong class="text-gray-900 font-extrabold text-[15px] uppercase tracking-wide">$1</strong></div>')
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[15px]">$1</strong>')
