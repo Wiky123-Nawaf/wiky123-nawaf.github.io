@@ -233,7 +233,7 @@
 
         <!-- ================= CHAT VIEW ================= -->
         <div id="view-chat" class="app-view active flex-1 flex-col h-full overflow-hidden relative">
-            <div id="chat-history" class="flex-1 overflow-y-auto p-2 sm:p-8 max-w-4xl w-full mx-auto pb-4 custom-scrollbar"></div>
+            <div id="chat-history" class="flex-1 overflow-y-auto px-4 sm:px-8 pt-4 pb-2 max-w-4xl w-full mx-auto custom-scrollbar"></div>
 
             <!-- Voice View Overlay -->
             <div id="voice-overlay" class="absolute inset-0 bg-[#f8fafc]/95 z-[50] hidden flex-col items-center justify-center backdrop-blur-sm px-4">
@@ -253,10 +253,10 @@
             </div>
 
             <!-- Input Area -->
-            <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-2 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
+            <div class="w-full shrink-0 bg-[#f8fafc] sm:bg-gradient-to-t from-[#f8fafc] via-[#f8fafc] to-transparent pt-2 pb-4 sm:pb-8 px-4 sm:px-8 flex justify-center z-40 border-t border-gray-200 sm:border-0">
                 <div class="max-w-4xl w-full bg-white border border-gray-200 rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.06)] p-1.5 sm:p-2 flex items-center">
                     <button onclick="enterVoiceMode()" class="p-3 text-gray-400 hover:text-blue-500 active:scale-95 transition shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg></button>
-                    <textarea id="chat-input" class="flex-1 bg-transparent px-2 sm:px-3 py-1.5 focus:outline-none text-gray-800 text-sm resize-none custom-scrollbar min-h-[36px] max-h-[120px] self-center" rows="1" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '36px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
+                    <textarea id="chat-input" class="flex-1 bg-transparent px-2 sm:px-3 py-2 sm:py-1.5 focus:outline-none text-gray-800 text-sm resize-none custom-scrollbar min-h-[36px] max-h-[120px] self-center" rows="1" placeholder="Type a message..." onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChat(); }" oninput="this.style.height = '36px'; this.style.height = Math.min(this.scrollHeight, 120) + 'px';"></textarea>
                     <button onclick="sendChat()" class="bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white w-9 h-9 sm:w-auto sm:h-auto sm:px-6 sm:py-2.5 rounded-lg font-bold text-sm shadow-sm transition shrink-0 flex items-center justify-center self-center">
                         <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> 
                         <span class="hidden sm:inline-block">Send</span>
@@ -294,9 +294,9 @@
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Symptoms</label>
-                            <div class="relative">
-                                <input type="text" id="book-symptoms" placeholder="e.g skin rash, headache..." class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm focus:ring-2 focus:ring-[#0066FF] pr-[105px] sm:pr-[120px] shadow-sm">
-                                <button type="button" id="find-doctor-btn" onclick="suggestDoctor()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-gray-50 border border-gray-200 hover:bg-gray-100 active:scale-95 text-[#0066FF] px-3 sm:px-4 rounded-md text-xs font-bold shadow-sm transition flex items-center justify-center">Find Doctor</button>
+                            <div class="relative flex items-center">
+                                <input type="text" id="book-symptoms" placeholder="e.g skin rash, headache..." class="w-full border border-gray-300 rounded-lg pl-4 pr-[110px] py-3.5 text-sm focus:ring-2 focus:ring-[#0066FF] shadow-sm">
+                                <button type="button" id="find-doctor-btn" onclick="suggestDoctor()" class="absolute right-1.5 bg-gray-50 border border-gray-200 hover:bg-gray-100 active:scale-95 text-[#0066FF] px-3.5 py-2 rounded-md text-xs font-bold shadow-sm transition flex items-center justify-center">Find Doctor</button>
                             </div>
                         </div>
 
@@ -305,14 +305,14 @@
                             <div class="flex bg-gray-50 p-1.5 rounded-xl border border-gray-200 shadow-sm">
                                 <label class="flex-1 text-center cursor-pointer relative">
                                     <input type="radio" name="urgency_toggle" value="regular" checked class="peer sr-only" onchange="toggleUrgency('regular')">
-                                    <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:border-blue-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center">
-                                        <span class="mr-1.5 text-sm sm:text-base">📅</span> <span>Schedule <span class="hidden sm:inline">for Later</span></span>
+                                    <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-blue-600 peer-checked:border-blue-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center gap-1.5">
+                                        <span class="text-sm sm:text-base">📅</span> <span>Schedule <span class="hidden sm:inline">for Later</span></span>
                                     </div>
                                 </label>
                                 <label class="flex-1 text-center cursor-pointer relative">
                                     <input type="radio" name="urgency_toggle" value="immediate" class="peer sr-only" onchange="toggleUrgency('immediate')">
-                                    <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-red-50 peer-checked:text-red-600 peer-checked:border-red-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center">
-                                        <span>Immediate <span class="hidden md:inline">(Within 1h)</span></span> <span class="ml-1.5 text-sm sm:text-base">⚡</span>
+                                    <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-red-50 peer-checked:text-red-600 peer-checked:border-red-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center gap-1">
+                                        <span>Immediate <span class="hidden lg:inline">(Within 1h)</span></span> <span class="text-sm sm:text-base">⚡</span>
                                     </div>
                                 </label>
                             </div>
@@ -330,7 +330,7 @@
 
                                 <div id="doctor-dropdown-menu" class="hidden absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 sm:max-h-72 overflow-y-auto">
                                     <div class="sticky top-0 bg-gray-50 p-2 border-b border-gray-100 z-10">
-                                        <input type="text" id="doctor-search-input" onkeyup="filterDoctors()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0066FF]" placeholder="Search by name or specialty...">
+                                        <input type="text" id="doctor-search-input" onkeyup="filterDoctors()" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0066FF]" placeholder="Search by name or specialty...">
                                     </div>
                                     <div id="doctor-list" class="flex flex-col"></div>
                                 </div>
@@ -340,7 +340,7 @@
 
                         <div id="slots-wrapper" class="hidden">
                             <label class="block text-sm font-bold text-gray-700 mb-3">Date of Appointment</label>
-                            <div id="available-slots-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
+                            <div id="available-slots-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4"></div>
                             <input type="hidden" id="selected-slot">
                         </div>
                     </div>
@@ -414,19 +414,19 @@
                         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Your Medical Documents</h2>
                         <p class="text-gray-500 text-sm">Securely store and manage your health records.</p>
                     </div>
-                    <div class="flex items-center space-x-3 w-full sm:w-auto">
-                        <button onclick="linkGoogleDrive()" class="flex-1 sm:flex-none flex justify-center items-center border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 text-gray-700 text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-lg shadow-sm transition">
+                    <div class="flex flex-col sm:flex-row items-center gap-3 sm:space-x-3 w-full sm:w-auto">
+                        <button onclick="linkGoogleDrive()" class="w-full sm:w-auto flex justify-center items-center border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 text-gray-700 text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-lg shadow-sm transition">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M16.0019 12.4507L12.541 6.34297C12.6559 6.22598 12.7881 6.09766 12.9203 6.09766C11.8998 6.43355 11.4315 7.57961 11.4315 7.57961L5.10895 18.7345C5.01999 19.0843 4.99528 19.4 5.0064 19.6781H11.9072L16.0019 12.4507Z" fill="#34A853"/>
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
-                              <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5168 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
+                              <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
                               <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
                         </button>
-                        <button onclick="openUploadModal()" class="flex-1 sm:flex-none flex justify-center items-center bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-blue-800 active:scale-95 text-white text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-6 rounded-xl sm:rounded-lg shadow-sm transition">Add Doc</button>
+                        <button onclick="openUploadModal()" class="w-full sm:w-auto flex justify-center items-center bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-blue-800 active:scale-95 text-white text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-6 rounded-xl sm:rounded-lg shadow-sm transition">Add Doc</button>
                     </div>
                 </div>
 
@@ -636,7 +636,7 @@
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </nav>
@@ -990,13 +990,13 @@
             el.innerHTML = '';
 
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] text-justify chat-bubble-text">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
+                el.innerHTML = `<div class="flex flex-col items-start mb-6"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full sm:max-w-[85%] text-justify chat-bubble-text">Hello ${window.userData.name}! How can I assist you today?</div></div>`;
             } else {
                 data.history.forEach(m => {
                     if(m.role === 'system') return;
                     let isUser = m.role === 'user';
-                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${m.content}</div></div>`;
-                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(m.content, true)}</div></div>`;
+                    if(isUser) el.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[90%] sm:max-w-[80%] text-left chat-bubble-text">${m.content}</div></div>`;
+                    else el.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(m.content, true)}</div></div>`;
                 });
             }
             el.scrollTo(0, el.scrollHeight);
@@ -1045,7 +1045,7 @@
             input.style.height = '36px'; 
 
             const history = document.getElementById('chat-history');
-            history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[92%] sm:max-w-[80%] text-left chat-bubble-text">${msg}</div></div>`;
+            history.innerHTML += `<div class="flex flex-col items-end mb-6 w-full"><div class="flex items-center mb-1"><span class="text-xs text-gray-500 mr-2">${window.userData.name} (You)</span><img src="${window.currentAvatar}" class="w-6 h-6 rounded-full object-cover"></div><div class="bg-[#0066FF] text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-tr-sm text-sm shadow-sm leading-relaxed max-w-[90%] sm:max-w-[80%] text-left chat-bubble-text">${msg}</div></div>`;
             history.scrollTo(0, history.scrollHeight);
 
             const typeId = 'typing-' + Date.now();
@@ -1061,7 +1061,7 @@
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
-                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full max-w-[98%] sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(data.reply, true)}</div></div>`;
+                history.innerHTML += `<div class="flex flex-col items-start mb-6 w-full"><div class="flex items-center mb-1"><img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain"><span class="text-xs font-bold text-gray-800">doktura.ai</span></div><div class="bg-white border shadow-sm px-3 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 w-full sm:max-w-[85%] leading-relaxed text-justify chat-bubble-text">${formatAiMessage(data.reply, true)}</div></div>`;
                 history.scrollTo(0, history.scrollHeight);
 
                 if(isVoiceActive) speakOut(data.reply);
@@ -1362,9 +1362,10 @@
                                     </span>
                                     Immediate Consultation
                                 </div>
-                                <span class="text-xs text-red-500 font-bold block">Doctor is on standby right now</span>
+                                <span class="text-xs text-red-500 font-medium block">Doctor is on standby right now</span>
                             </div>
-                            <div class="text-xs sm:text-sm font-bold text-red-600 bg-red-100 inline-flex px-3 py-2 rounded-lg text-center tracking-wide whitespace-nowrap self-start sm:self-auto border border-red-200">
+                            <div class="mt-1 sm:mt-0 text-xs font-semibold text-red-600 bg-red-100/80 border border-red-200 py-2 px-3 rounded-md inline-flex items-center justify-center text-center">
+                                <svg class="w-3.5 h-3.5 mr-1.5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 ${formatTime(now)} – ${formatTime(oneHourLater)}
                             </div>
                         </div>
@@ -1427,10 +1428,10 @@
                     const html = `
                     <label class="block cursor-pointer relative group">
                         <input type="radio" name="slot_selection" value="${s.datetime}" class="peer sr-only" onchange="document.getElementById('selected-slot').value = this.value">
-                        <div class="border border-gray-200 rounded-xl p-3 sm:p-4 bg-white hover:border-[#0066FF] peer-checked:bg-blue-50/40 peer-checked:border-[#0066FF] active:scale-95 transition h-full flex flex-col justify-center items-center shadow-sm relative z-10 text-center">
-                            <span class="text-[10px] sm:text-xs text-gray-500 font-bold mb-0.5">${s.date_display}</span>
-                            <span class="font-extrabold text-gray-900 text-sm sm:text-base mb-2">${s.day_display}</span>
-                            <div class="text-[10px] sm:text-xs font-bold text-[#0066FF] bg-blue-50 border border-blue-100 py-1.5 px-1 rounded-lg text-center tracking-tight sm:tracking-wide uppercase whitespace-nowrap w-full overflow-hidden text-ellipsis">
+                        <div class="border border-gray-200 rounded-xl p-3 sm:p-4 bg-white hover:border-[#0066FF] peer-checked:bg-blue-50/40 peer-checked:border-[#0066FF] active:scale-95 transition h-full flex flex-col justify-center items-center shadow-sm relative z-10 text-center gap-1.5">
+                            <span class="text-[10px] sm:text-xs text-gray-500 font-bold">${s.date_display}</span>
+                            <span class="font-extrabold text-gray-900 text-sm sm:text-base">${s.day_display}</span>
+                            <div class="mt-1 text-[11px] font-semibold text-[#0066FF] bg-blue-50 border border-blue-100 py-1.5 px-2.5 rounded-md text-center tracking-wide uppercase whitespace-nowrap w-full">
                                 ${s.time_display}
                             </div>
                         </div>
@@ -1615,71 +1616,49 @@
             pageData.forEach(a => {
                 let sColor = a.status === 'Done' ? 'text-green-700 bg-green-50 border border-green-200' : 'text-blue-700 bg-blue-50 border border-blue-200';
 
-                let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[9px] font-bold px-1 py-2 rounded-md uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
-                let btnDesktop = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-300">--</span>`;
-
                 let numericId = a.id.replace('ID', '');
 
-                let erxMobile = a.consultation_completed 
-                    ? `<a href="prescription.html?id=${numericId}" class="w-full bg-teal-600 hover:bg-teal-700 active:scale-95 transition text-white text-[9px] font-bold px-1 py-2 rounded-md uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">
-                         E-Rx
-                       </a>` 
-                    : `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
+                let btnMobile = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="w-full bg-[#0066FF] text-white text-[11px] font-bold py-2.5 rounded-lg text-center shadow-sm active:scale-95 transition uppercase">Call</a>` : `<div class="w-full bg-gray-100 text-gray-400 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">--</div>`;
+                let erxMobile = a.consultation_completed ? `<a href="prescription.html?id=${numericId}" class="w-full bg-teal-600 text-white text-[11px] font-bold py-2.5 rounded-lg text-center shadow-sm active:scale-95 transition uppercase">E-Rx</a>` : `<div class="w-full bg-gray-100 text-gray-400 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">--</div>`;
+                let reviewMobile = a.review_submitted ? `<div class="w-full bg-green-50 text-green-600 border border-green-200 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">Done</div>` : (a.consultation_completed ? `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="w-full bg-[#f59e0b] text-white text-[11px] font-bold py-2.5 rounded-lg text-center shadow-sm active:scale-95 transition uppercase">Review</button>` : `<div class="w-full bg-gray-100 text-gray-400 text-[11px] font-bold py-2.5 rounded-lg text-center uppercase">--</div>`);
+
+                let btnDesktop = a.action_url ? `<a href="${API_BASE}${a.action_url}" target="_blank" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Start Call</a>` : `<span class="text-gray-300">--</span>`;
                 let erxDesktop = a.consultation_completed 
                     ? `<a href="prescription.html?id=${numericId}" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">
                          <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                          View E-Rx
                        </a>` 
                     : `<span class="text-gray-300">--</span>`;
-
-                let reviewMobile = `<span class="text-gray-400 text-[10px] font-medium py-1 w-full text-center block">--</span>`;
-                let reviewDesktop = `<span class="text-gray-300">--</span>`;
-
-                if (a.review_submitted) {
-                    reviewMobile = `<span class="text-green-600 font-bold text-[9px] py-2 inline-flex items-center justify-center uppercase w-full bg-green-50 rounded-md border border-green-100">Done</span>`;
-                    reviewDesktop = `<span class="text-green-500 font-bold text-[10px] inline-flex items-center justify-center uppercase"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reviewed</span>`;
-                } else if (a.consultation_completed) {
-                    reviewMobile = `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="w-full bg-[#f59e0b] hover:bg-yellow-600 active:scale-95 transition text-white text-[9px] font-bold px-1 py-2 rounded-md uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm">Review</button>`;
-                    reviewDesktop = `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm"><svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Review</button>`;
-                }
+                let reviewDesktop = a.review_submitted ? `<span class="text-green-500 font-bold text-[10px] inline-flex items-center justify-center uppercase"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Reviewed</span>` : (a.consultation_completed ? `<button onclick="openReviewModal('${numericId}', '${a.doctor_name}')" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase whitespace-nowrap inline-flex items-center justify-center shadow-sm"><svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>Review</button>` : `<span class="text-gray-300">--</span>`);
 
                 tbody.innerHTML += `
-                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-4 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
-                        <td class="py-2 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3">
+                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
+                        <td class="p-4 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">ID</span>
                             <span class="font-extrabold text-gray-900">${a.id}</span>
                         </td>
-                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
                             <span class="font-bold text-gray-700">${a.type}</span>
                         </td>
-                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Doctor</span>
                             <span class="text-right sm:text-left font-bold text-gray-900 truncate max-w-[150px]">${a.doctor_name || '--'}</span>
                         </td>
-                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date</span>
                             <span class="text-right sm:text-left whitespace-nowrap text-gray-800 font-semibold">${a.date}<span class="text-[10px] font-bold text-gray-400 ml-1.5 sm:block sm:ml-0">${a.time}</span></span>
                         </td>
-                        <td class="py-2.5 sm:py-5 px-0 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-4 sm:mb-0">
+                        <td class="px-4 py-2.5 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-3 sm:mb-0">
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="font-bold"><span class="${sColor} px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider shadow-xs">${a.status}</span></span>
                         </td>
                         <!-- Mobile Actions Row -->
-                        <td class="py-3 px-3 bg-gray-50/70 flex flex-col sm:hidden -mx-4 -mb-4 border-t border-gray-100">
-                             <div class="grid grid-cols-3 gap-1 w-full text-center">
-                                <div class="flex flex-col items-center justify-center">
-                                    <span class="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">Call</span>
-                                    <div class="w-full px-1">${btnMobile}</div>
-                                </div>
-                                <div class="flex flex-col items-center justify-center border-l border-r border-gray-200">
-                                    <span class="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">E-Rx</span>
-                                    <div class="w-full px-1">${erxMobile}</div>
-                                </div>
-                                <div class="flex flex-col items-center justify-center">
-                                    <span class="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">Review</span>
-                                    <div class="w-full px-1">${reviewMobile}</div>
-                                </div>
+                        <td class="p-4 bg-gray-50/50 flex flex-col sm:hidden border-t border-gray-100 rounded-b-2xl">
+                             <div class="flex gap-2 w-full">
+                                <div class="flex-1">${btnMobile}</div>
+                                <div class="flex-1">${erxMobile}</div>
+                                <div class="flex-1">${reviewMobile}</div>
                              </div>
                         </td>
                         <!-- Desktop Actions (Hidden on Mobile) -->
@@ -1735,39 +1714,39 @@
                        </span>`;
 
                 let driveBtnMobile = rep.drive_url 
-                    ? `<a href="${rep.drive_url}" target="_blank" class="text-blue-600 hover:text-blue-800 transition bg-white border border-gray-200 p-2.5 rounded-lg shadow-sm active:scale-95 flex items-center justify-center" title="View Document">
-                         <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    ? `<a href="${rep.drive_url}" target="_blank" class="text-blue-600 bg-blue-50 border border-blue-100 transition p-2.5 rounded-lg shadow-sm active:scale-95 flex items-center justify-center" title="View Document">
+                         <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                        </a>` 
-                    : `<span class="text-gray-300 transition bg-white border border-gray-100 p-2.5 rounded-lg shadow-sm flex items-center justify-center cursor-not-allowed" title="Document view unavailable">
-                         <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+                    : `<span class="text-gray-400 bg-gray-100 border border-gray-200 transition p-2.5 rounded-lg flex items-center justify-center cursor-not-allowed" title="Document view unavailable">
+                         <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
                        </span>`;
 
                 tbody.innerHTML += `
-                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
-                        <td class="py-2 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
+                    <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-2xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none hover:bg-gray-50 transition relative overflow-hidden chat-bubble-text">
+                        <td class="p-4 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Report Name</span>
                             <span class="font-extrabold text-gray-900 whitespace-nowrap text-right sm:text-left">${rep.name}</span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="px-4 py-3 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
                             <span class="font-bold text-gray-700 whitespace-nowrap">${rep.type}</span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="px-4 py-3 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Date</span>
                             <span class="text-gray-600 font-medium whitespace-nowrap">${rep.date}</span>
                         </td>
-                        <td class="py-3 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                        <td class="px-4 py-3 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-3 sm:mb-0">
                             <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="${statColor} px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm">${rep.status}</span>
                         </td>
                         <!-- Mobile Actions Row -->
-                        <td class="py-4 px-5 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-2xl border-t border-gray-100">
+                        <td class="p-4 bg-gray-50/50 flex flex-col sm:hidden border-t border-gray-100 rounded-b-2xl">
                              <div class="flex justify-between items-center w-full">
                                 <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Actions</span>
-                                <div class="flex items-center space-x-3">
+                                <div class="flex items-center gap-2">
                                     ${driveBtnMobile}
-                                    <button onclick="deleteReport(${safeId})" class="text-gray-400 hover:text-red-500 active:scale-95 transition bg-white border border-gray-200 p-2.5 rounded-lg shadow-sm" title="Delete">
-                                        <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    <button onclick="deleteReport(${safeId})" class="text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 active:scale-95 transition p-2.5 rounded-lg shadow-sm" title="Delete">
+                                        <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </div>
                              </div>
