@@ -1230,7 +1230,7 @@ if (!res.ok) throw new Error("Sync failed");
 const data = await res.json();
 
 if(data.is_complete) { 
-window.location.href = "dashboard.html"; 
+window.location.href = "dashboard.html?tab=chat";
 } else { 
 // Do not interrupt if we are currently handling the email link
 if(!isEmailLinkSignIn) {
@@ -1313,7 +1313,7 @@ throw new Error(errTxt || `Server error: ${response.status}`);
 }
 
 // Immediately Redirect to Dashboard if successfully saved
-window.location.href = "dashboard.html";
+window.location.href = "dashboard.html?tab=chat";
 
 } catch(error) { 
 console.error(error);
