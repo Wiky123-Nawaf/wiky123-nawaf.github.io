@@ -595,7 +595,10 @@
             }
         });
 
-        document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            localStorage.removeItem('doktura_active_tab'); // Clears the saved tab memory
+            signOut(auth);
+        });
     </script>
 
     <!-- App Scripts -->
