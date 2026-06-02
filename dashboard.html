@@ -1187,38 +1187,27 @@
             if (isReportEscalation) {
                 // Show the complex revolving brain loader immediately
                 history.innerHTML += `
-                    <div id="${loadId}" style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
-                        <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
-                            <div style="background: #ffffff; border: 1px solid #e2e8f0; color: var(--text-dark); padding: 20px; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 340px;">
-                                <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
-                                    <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
-                                    <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
-									     viewBox="0 0 24 24"
-									     fill="none"
-									     stroke="#111827"
-									     stroke-width="1.8"
-									     stroke-linecap="round"
-									     stroke-linejoin="round">
-									
-									    <!-- Brain outline -->
-									    <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
-									
-									    <!-- Internal folds -->
-									    <path d="M12 5v14"/>
-									    <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
-									    <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
-									</svg>
-                                </div>
-                                <h3 id="${loadId}-text" style="font-size: 15px; font-weight: 700; color: #111827; margin: 0 0 6px 0;">Reviewing the latest medical data...</h3>
-                                <p style="font-size: 13px; color: #9ca3af; margin: 0;">This can take a couple of minutes.</p>
+                <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
+                    <div class="flex items-center mb-1">
+                        <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                        <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                    </div>
+                    <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
+                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text animate-fade" style="max-width: 340px;">
+                            <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
+                                <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
+                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9.5 2h5M12 2v20M17.5 4.5c2 1.5 3.5 4 3.5 7.5s-1.5 6-3.5 7.5M6.5 4.5c-2 1.5-3.5 4-3.5 7.5s1.5 6 3.5 7.5"></path>
+                                    <path d="M12 4.5c1.5-1 3.5-1 5 0M12 19.5c1.5 1 3.5 1 5 0M7 4.5c-1.5-1-3.5-1-5 0M7 19.5c-1.5 1-3.5 1-5 0"></path>
+                                </svg>
                             </div>
+                            <h3 id="${typeId}-text" class="text-gray-900 font-extrabold text-[15px] leading-snug mb-1.5">Reviewing the latest medical data...</h3>
+                            <p class="text-xs text-gray-400 font-medium">This can take a couple of minutes.</p>
                         </div>
-                    </div>`;
-                history.scrollTop = history.scrollHeight;
-                startLoaderAnimation(loadId);
+                    </div>
+                </div>`;
+                history.scrollTo(0, history.scrollHeight);
+                startLoaderAnimation(typeId);
             } else {
                 // Show the standard, classic fast "Thinking..." bubble
                 history.innerHTML += `
