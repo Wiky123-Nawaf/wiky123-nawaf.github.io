@@ -653,39 +653,42 @@
         }
 
         window.willTriggerReport = function(userMessage) {
-            // Count existing AI assistant messages rendered in history
-            const aiBubbleCount = document.querySelectorAll('#chat-history img[src*="Vector%20(4).png"]').length;
-            const msgLower = userMessage.toLowerCase();
-            
-            // 1. Emergency Bypass
-            const emergencyKeywords = [
-                "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
-                "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
-            ];
-            if (emergencyKeywords.some(k => msgLower.includes(k))) {
-                return false;
-            }
+    // Count existing AI assistant messages rendered in history
+    const aiBubbleCount = document.querySelectorAll('#chat-history img[src*="Vector%20(4).png"]').length;
+    const msgLower = userMessage.toLowerCase();
+    
+    // 1. Emergency Bypass
+    const emergencyKeywords = [
+        "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
+        "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
+    ];
+    if (emergencyKeywords.some(k => msgLower.includes(k))) {
+        return false;
+    }
 
-            // 2. Turns check
-            if (aiBubbleCount >= 11) {
-                return true;
-            }
+    // 2. Absolute Turn Check (at turn 12, backend will escalate regardless of keywords)
+    if (aiBubbleCount >= 11) {
+        return true;
+    }
 
-            // 3. Pain/Swelling thresholds
-            const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
-            const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
+    // 3. Pain/Swelling thresholds (Only check if we are 7+ turns deep)
+    if (aiBubbleCount >= 7) {
+        const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
+        const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
+        const negationWords = ["no", "not", "don't", "dont", "none", "denies", "deny", "without"];
 
-            const hasHighPain = painKeywords.some(k => msgLower.includes(k));
-            const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
+        const hasHighPain = painKeywords.some(k => msgLower.includes(k));
+        const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
+        const hasNegation = negationWords.some(neg => msgLower.includes(neg));
 
-            if (aiBubbleCount >= 7) {
-                if (hasHighPain || hasSwelling) {
-                    return true;
-                }
-            }
+        // Only trigger if they have the symptom keywords AND they are not denying them
+        if ((hasHighPain || hasSwelling) && !hasNegation) {
+            return true;
+        }
+    }
 
-            return false;
-        };
+    return false;
+};
 
         window.renderPaginationControls = (totalItems, itemsPerPage, currentPage, containerId, changePageFunc) => {
             const container = document.getElementById(containerId);
