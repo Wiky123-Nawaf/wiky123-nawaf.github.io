@@ -206,7 +206,7 @@
     </div>
 
     <!-- MAIN CONTENT AREA -->
-    <div class="flex-1 flex flex-col relative h-full bg-[#f8fafc] overflow-hidden">
+    <div class="flex-1 flex flex-col relative h-full bg-[#f8fafc] overflow-hidden md:ml-[220px] lg:ml-[260px]">
 
         <!-- HEADER -->
         <div class="h-16 border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 bg-white shrink-0 shadow-sm z-10">
@@ -245,7 +245,7 @@
         </div>
 
         <!-- GLOBAL INLINE ERROR / SUCCESS NOTIFICATIONS -->
-        <div id="global-message-container" class="hidden absolute top-16 left-0 right-0 px-4 sm:px-8 pt-6 pb-2 z-[150] bg-transparent pointer-events-none transition-opacity">
+        <div id="global-message-container" class="hidden absolute top-16 left-0 right-0 px-4 sm:px-8 pt-6 pb-2 z-[150] bg-transparent pointer-events-none transition-opacity md:left-[220px] lg:left-[260px]">
             <div id="global-message-box" class="max-w-4xl mx-auto p-4 rounded-xl text-sm font-bold border flex items-center justify-between shadow-lg pointer-events-auto backdrop-blur-md">
                 <div class="flex items-center">
                     <svg id="global-message-icon" class="w-5 h-5 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"></svg>
@@ -402,8 +402,8 @@
         </div>
 
         <!-- ================= SCHEDULE APPOINTMENT VIEW ================= -->
-        <div id="view-schedule" class="app-view flex-1 flex-col overflow-y-auto">
-            <div class="max-w-6xl mx-auto px-4 pb-8 sm:p-10 w-full pt-4 sm:pt-8 font-sans">
+        <div id="view-schedule" class="app-view flex-1 flex-col overflow-y-auto font-sans">
+            <div class="max-w-6xl mx-auto px-4 pb-8 sm:p-10 w-full pt-4 sm:pt-8">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1">Schedule Appointment</h2>
                 <p class="text-gray-500 text-sm mb-6 sm:mb-8">Manage your upcoming consultations and prescriptions with ease.</p>
 
@@ -1198,24 +1198,10 @@
                         <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text animate-fade" style="max-width: 340px;">
                             <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
                                 <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
-                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
-									     viewBox="0 0 24 24"
-									     fill="none"
-									     stroke="#111827"
-									     stroke-width="1.8"
-									     stroke-linecap="round"
-									     stroke-linejoin="round">
-									
-									    <!-- Brain outline -->
-									    <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
-									
-									    <!-- Internal folds -->
-									    <path d="M12 5v14"/>
-									    <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
-									    <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
-									</svg>
+                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9.5 2h5M12 2v20M17.5 4.5c2 1.5 3.5 4 3.5 7.5s-1.5 6-3.5 7.5M6.5 4.5c-2 1.5-3.5 4-3.5 7.5s1.5 6 3.5 7.5"></path>
+                                    <path d="M12 4.5c1.5-1 3.5-1 5 0M12 19.5c1.5 1 3.5 1 5 0M7 4.5c-1.5-1-3.5-1-5 0M7 19.5c-1.5 1-3.5 1-5 0"></path>
+                                </svg>
                             </div>
                             <h3 id="${typeId}-text" class="text-gray-900 font-extrabold text-[15px] leading-snug mb-1.5">Reviewing the latest medical data...</h3>
                             <p class="text-xs text-gray-400 font-medium">This can take a couple of minutes.</p>
