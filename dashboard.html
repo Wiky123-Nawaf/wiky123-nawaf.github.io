@@ -666,13 +666,13 @@
         return false;
     }
 
-    // 2. Absolute Turn Check (at turn 12, backend will escalate regardless of keywords)
-    if (aiBubbleCount >= 11) {
+    // 2. Absolute Turn Check (Backend forces escalation strictly when history has 12+ assistant messages)
+    if (aiBubbleCount >= 12) {
         return true;
     }
 
-    // 3. Pain/Swelling thresholds (Only check if we are 7+ turns deep)
-    if (aiBubbleCount >= 7) {
+    // 3. Pain/Swelling thresholds (Only check if we already have 8+ assistant messages rendered)
+    if (aiBubbleCount >= 8) {
         const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
         const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
         const negationWords = ["no", "not", "don't", "dont", "none", "denies", "deny", "without"];
@@ -681,7 +681,6 @@
         const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
         const hasNegation = negationWords.some(neg => msgLower.includes(neg));
 
-        // Only trigger if they have the symptom keywords AND they are not denying them
         if ((hasHighPain || hasSwelling) && !hasNegation) {
             return true;
         }
