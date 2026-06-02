@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Dashboard - Doktura AI</title>
-    <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
+    <link class="chatLogoFav" rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -76,6 +76,14 @@
         /* View Switching Logic */
         .app-view { display: none; }
         .app-view.active { display: flex; }
+
+        @keyframes loader-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-spinner-ring {
+            animation: loader-spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
     </style>
 </head>
 <body class="hidden w-full overflow-hidden flex bg-white" id="appBody" style="height: 100dvh;">
@@ -142,7 +150,7 @@
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-[190] hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
     <!-- LEFT SIDEBAR -->
-    <div id="sidebar" class="fixed md:static inset-y-0 left-0 z-[200] w-[260px] md:w-[220px] lg:w-[260px] transform -translate-x-full md:translate-x-0 transition duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col shrink-0 h-full shadow-2xl md:shadow-sm">
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-[200] w-[260px] md:w-[220px] lg:w-[260px] transform -translate-x-full md:translate-x-0 transition duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col shrink-0 h-full shadow-2xl md:shadow-sm">
         <div class="p-6 pb-2 flex justify-between items-center">
             <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" class="h-11 object-contain">
             <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-gray-800 active:scale-95 p-2 -mr-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
@@ -434,7 +442,7 @@
                         <button onclick="linkGoogleDrive()" class="w-full sm:w-auto flex justify-center items-center border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 active:scale-95 text-gray-700 text-sm font-bold py-3 sm:py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-lg shadow-sm transition">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M16.0019 12.4507L12.541 6.34297C12.6559 6.22598 12.7881 6.09766 12.9203 6.09766C11.8998 6.43355 11.4315 7.57961 11.4315 7.57961L5.10895 18.7345C5.01999 19.0843 4.99528 19.4 5.0064 19.6781H11.9072L16.0019 12.4507Z" fill="#34A853"/>
-                              <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.8949 18.7345L20.5724 7.57961C20.5724 7.57961 20.1029 6.43355 19.0835 6.09766C19.2145 6.14924 19.3479 6.22598 19.4628 6.34297L16.002 12.4507Z" fill="#FBBC05"/>
+                              <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.9975 19.6781H11.9072L16.0019 12.4507Z" fill="#FBBC05"/>
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
                               <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
@@ -619,6 +627,65 @@
         window.cachedReports = [];
         window.currentReportPage = 1;
         window.reportsPerPage = 6;
+
+        const loadingPhases = [
+            "Reviewing the latest medical data...",
+            "Checking clinical guidelines...",
+            "Assessing your health details...",
+            "Aligning with medical standards..."
+        ];
+
+        let activeLoaderInterval = null;
+
+        function startLoaderAnimation(loadId) {
+            let phaseIndex = 0;
+            const textElementId = `${loadId}-text`;
+            
+            activeLoaderInterval = setInterval(() => {
+                const el = document.getElementById(textElementId);
+                if (el) {
+                    phaseIndex = (phaseIndex + 1) % loadingPhases.length;
+                    el.innerText = loadingPhases[phaseIndex];
+                } else {
+                    clearInterval(activeLoaderInterval);
+                }
+            }, 3000);
+        }
+
+        window.willTriggerReport = function(userMessage) {
+            // Count existing AI assistant messages rendered in history
+            const aiBubbleCount = document.querySelectorAll('#chat-history img[src*="Vector%20(4).png"]').length;
+            const msgLower = userMessage.toLowerCase();
+            
+            // 1. Emergency Bypass
+            const emergencyKeywords = [
+                "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
+                "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
+            ];
+            if (emergencyKeywords.some(k => msgLower.includes(k))) {
+                return false;
+            }
+
+            // 2. Turns check
+            if (aiBubbleCount >= 11) {
+                return true;
+            }
+
+            // 3. Pain/Swelling thresholds
+            const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
+            const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
+
+            const hasHighPain = painKeywords.some(k => msgLower.includes(k));
+            const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
+
+            if (aiBubbleCount >= 7) {
+                if (hasHighPain || hasSwelling) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
 
         window.renderPaginationControls = (totalItems, itemsPerPage, currentPage, containerId, changePageFunc) => {
             const container = document.getElementById(containerId);
@@ -1115,25 +1182,58 @@
             history.scrollTo(0, history.scrollHeight);
 
             const typeId = 'typing-' + Date.now();
-            history.innerHTML += `
-            <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
-                <div class="flex items-center mb-1">
-                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
-                </div>
-                <div class="bg-white border shadow-sm px-4 py-3 rounded-2xl rounded-tl-sm flex space-x-2 items-center text-left" style="width: auto;">
-                    <div class="flex space-x-1 pb-1">
-                        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+            const isReportEscalation = window.willTriggerReport(msg);
+
+            if (isReportEscalation) {
+                // Show the complex revolving brain loader immediately
+                history.innerHTML += `
+                <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
+                    <div class="flex items-center mb-1">
+                        <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                        <span class="text-xs font-bold text-gray-800">doktura.ai</span>
                     </div>
-                </div>
-            </div>`;
-            history.scrollTo(0, history.scrollHeight);
+                    <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
+                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text animate-fade" style="max-width: 340px;">
+                            <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
+                                <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
+                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9.5 2h5M12 2v20M17.5 4.5c2 1.5 3.5 4 3.5 7.5s-1.5 6-3.5 7.5M6.5 4.5c-2 1.5-3.5 4-3.5 7.5s1.5 6 3.5 7.5"></path>
+                                    <path d="M12 4.5c1.5-1 3.5-1 5 0M12 19.5c1.5 1 3.5 1 5 0M7 4.5c-1.5-1-3.5-1-5 0M7 19.5c-1.5 1-3.5 1-5 0"></path>
+                                </svg>
+                            </div>
+                            <h3 id="${typeId}-text" class="text-gray-900 font-extrabold text-[15px] leading-snug mb-1.5">Reviewing the latest medical data...</h3>
+                            <p class="text-xs text-gray-400 font-medium">This can take a couple of minutes.</p>
+                        </div>
+                    </div>
+                </div>`;
+                history.scrollTo(0, history.scrollHeight);
+                startLoaderAnimation(typeId);
+            } else {
+                // Show the standard, classic fast "Thinking..." bubble
+                history.innerHTML += `
+                <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
+                    <div class="flex items-center mb-1">
+                        <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                        <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                    </div>
+                    <div class="bg-white border shadow-sm px-4 py-3 rounded-2xl rounded-tl-sm flex space-x-2 items-center text-left" style="width: auto;">
+                        <div class="flex space-x-1 pb-1">
+                            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>`;
+                history.scrollTo(0, history.scrollHeight);
+            }
 
             if (isVoiceActive) setVoiceState('PROCESSING');
 
             try {
                 const r = await fetch(API_BASE+'/api/chat',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({message:msg, session_id:window.currentSessionId || "default", user_name:window.userData.name})});
                 const data = await r.json();
+
+                if (isReportEscalation && activeLoaderInterval) {
+                    clearInterval(activeLoaderInterval);
+                }
 
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
@@ -1143,6 +1243,13 @@
 
                 if(isVoiceActive) speakOut(data.reply);
             } catch(e) {
+                if (isReportEscalation && activeLoaderInterval) {
+                    clearInterval(activeLoaderInterval);
+                }
+
+                const tEl = document.getElementById(typeId);
+                if(tEl) tEl.remove();
+
                 if(isVoiceActive) {
                     setVoiceState('IDLE');
                     document.getElementById('voice-transcript').innerText = "Network Error. Please try again.";
