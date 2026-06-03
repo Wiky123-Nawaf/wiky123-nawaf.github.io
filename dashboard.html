@@ -171,7 +171,7 @@
             <p class="px-6 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Main Menu</p>
             <nav class="space-y-1 mt-1">
                 <button onclick="switchTab('chat')" id="btn-chat" class="nav-btn w-full flex items-center px-6 py-3 nav-active transition">
-                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="ai-bubble-avatar w-6 h-6 mr-3 shrink-0 object-contain" alt="AI">
+                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="w-6 h-6 mr-3 shrink-0 object-contain" alt="AI">
                     <span class="text-sm">AI Doctor</span>
                 </button>
                 <button onclick="switchTab('book')" id="btn-book" class="nav-btn w-full flex items-center px-6 py-3 nav-inactive transition">
@@ -653,41 +653,41 @@
         }
 
         window.willTriggerReport = function(userMessage) {
-    // Count existing AI assistant messages rendered in history
-    const aiBubbleCount = document.querySelectorAll('#chat-history img[src*="Vector%20(4).png"]').length;
-    const msgLower = userMessage.toLowerCase();
-    
-    // 1. Emergency Bypass
-    const emergencyKeywords = [
-        "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
-        "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
-    ];
-    if (emergencyKeywords.some(k => msgLower.includes(k))) {
-        return false;
-    }
+            // Count existing AI assistant messages rendered in history using the avatar class
+            const aiBubbleCount = document.querySelectorAll('#chat-history .ai-bubble-avatar').length;
+            const msgLower = userMessage.toLowerCase();
+            
+            // 1. Emergency Bypass
+            const emergencyKeywords = [
+                "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
+                "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
+            ];
+            if (emergencyKeywords.some(k => msgLower.includes(k))) {
+                return false;
+            }
 
-    // 2. Absolute Turn Check (Backend forces escalation strictly when history has 12+ assistant messages)
-    if (aiBubbleCount >= 12) {
-        return true;
-    }
+            // 2. Absolute Turn Check (Backend forces escalation strictly when history has 12+ assistant messages)
+            if (aiBubbleCount >= 12) {
+                return true;
+            }
 
-    // 3. Pain/Swelling thresholds (Only check if we already have 8+ assistant messages rendered)
-    if (aiBubbleCount >= 8) {
-        const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
-        const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
-        const negationWords = ["no", "not", "don't", "dont", "none", "denies", "deny", "without"];
+            // 3. Pain/Swelling thresholds (Only check if we already have 8+ assistant messages rendered)
+            if (aiBubbleCount >= 8) {
+                const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
+                const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
+                const negationWords = ["no", "not", "don't", "dont", "none", "denies", "deny", "without"];
 
-        const hasHighPain = painKeywords.some(k => msgLower.includes(k));
-        const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
-        const hasNegation = negationWords.some(neg => msgLower.includes(neg));
+                const hasHighPain = painKeywords.some(k => msgLower.includes(k));
+                const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
+                const hasNegation = negationWords.some(neg => msgLower.includes(neg));
 
-        if ((hasHighPain || hasSwelling) && !hasNegation) {
-            return true;
-        }
-    }
+                if ((hasHighPain || hasSwelling) && !hasNegation) {
+                    return true;
+                }
+            }
 
-    return false;
-};
+            return false;
+        };
 
         window.renderPaginationControls = (totalItems, itemsPerPage, currentPage, containerId, changePageFunc) => {
             const container = document.getElementById(containerId);
@@ -1002,7 +1002,7 @@
 
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
-                    return text
+                    let formatted = text
                         // 1. Numbered subheadings
                         .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
                             '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
@@ -1018,13 +1018,19 @@
                         // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                        // 5. Standard bullet points
-                        .replace(/(^|\n+)[ \t]*-[ \t]+/g, function(match, p1) {
-                            return (p1 ? '<br>' : '') + '<span class="text-[#0066FF] mr-2 font-bold">&bull;</span>';
-                        })
+                        // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a black bold hyphen
+                        .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
+                            return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-black font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
+                        });
 
-                        // 6. Convert remaining newlines
-                        .replace(/\n/g, '<br>');
+                    // 6. Convert remaining newlines
+                    formatted = formatted.replace(/\n/g, '<br>');
+
+                    // 7. Clean up excessive spacing around block divs to keep spacing tight and neat
+                    formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
+                    formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
+
+                    return formatted;
                 };
 
                 const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -1042,35 +1048,53 @@
 
                 // Completely continuous accordion without internal scrolling
                 let reportHtml = `
-                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="font-family: Georgia, serif; max-width: 100%;">
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
                     <!-- Header -->
                     <div class="p-4 sm:p-5 border-b border-gray-100">
                         <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
-                        <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
+                        <p class="text-xs text-gray-500 tracking-wide">${dateStr}</p>
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
                     <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
-                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors" open>
-                        <summary class="p-4 sm:p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
-                            Assessment & Plan
-                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
+                        <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
+                                <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 font-sans text-sm text-gray-700 border-t border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
-                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
-                            ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">${formatClinicalText(soap)}</div></div>` : ''}
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
+                            ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
                     </details>
                     
+                    <!-- Expandable SOAP Note Accordion -->
+                    ${soap ? `
+                    <details class="group bg-white transition-colors border-b border-gray-100">
+                        <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
+                                <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${formatClinicalText(soap)}
+                        </div>
+                    </details>
+                    ` : ''}
+                    
                     <!-- Booking CTA -->
-                    <div class="p-4 sm:p-5 font-sans bg-white text-left">
+                    <div class="p-4 sm:p-5 bg-white text-left">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
-                        <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                        <p class="text-sm text-gray-600 mb-4 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
@@ -1109,10 +1133,10 @@
             return `
             <div class="flex flex-col items-start mb-6 w-full">
                 <div class="flex items-center mb-1">
-                    <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                    <img src="${chatLogoUrl}" class="ai-bubble-avatar w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
                     <span class="text-xs font-bold text-gray-800">doktura.ai</span>
                 </div>
-                <div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text ai-bubble-container">
+                <div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-left chat-bubble-text ai-bubble-container">
                     ${formatAiMessage(text, true)}
                 </div>
             </div>`;
@@ -1195,7 +1219,7 @@
                         <span class="text-xs font-bold text-gray-800">doktura.ai</span>
                     </div>
                     <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
-                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text animate-fade" style="max-width: 340px;">
+                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-left chat-bubble-text animate-fade" style="max-width: 340px;">
                             <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
                                 <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
                                 <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
