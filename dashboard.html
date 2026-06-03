@@ -1215,86 +1215,106 @@
             history.innerHTML += createUserBubble(msg);
             history.scrollTo(0, history.scrollHeight);
 
+            // 1. ALWAYS show the standard 3-dots typing indicator first
             const typeId = 'typing-' + Date.now();
-            const isReportEscalation = window.willTriggerReport(msg);
-
-            if (isReportEscalation) {
-                // Show the complex revolving brain loader immediately
-                history.innerHTML += `
-                <div id="${typeId}" class="flex flex-col items-start mb-6 w-full animate-fade">
-                    <div class="flex items-center mb-1">
-                        <img src="${chatLogoUrl}" class="ai-bubble-avatar w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                        <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+            history.innerHTML += `
+            <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
+                <div class="flex items-center mb-1">
+                    <img src="${chatLogoUrl}" class="ai-bubble-avatar w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                    <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                </div>
+                <div class="bg-white border shadow-sm px-4 py-3 rounded-2xl rounded-tl-sm flex space-x-2 items-center text-left" style="width: auto;">
+                    <div class="flex space-x-1 pb-1">
+                        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
                     </div>
-                    <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
-                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-left chat-bubble-text animate-fade" style="max-width: 340px;">
-                            <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
-                                <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
-                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
-									     viewBox="0 0 24 24"
-									     fill="none"
-									     stroke="#111827"
-									     stroke-width="1.8"
-									     stroke-linecap="round"
-									     stroke-linejoin="round">
-									
-									    <!-- Brain outline -->
-									    <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
-									
-									    <!-- Internal folds -->
-									    <path d="M12 5v14"/>
-									    <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
-									    <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
-								</svg>
-                            </div>
-                            <h3 id="${typeId}-text" class="text-gray-900 font-extrabold text-[15px] leading-snug mb-1.5">Reviewing the latest medical data...</h3>
-                            <p class="text-xs text-gray-400 font-medium">This can take a couple of minutes.</p>
-                        </div>
-                    </div>
-                </div>`;
-                history.scrollTo(0, history.scrollHeight);
-                startLoaderAnimation(typeId);
-            } else {
-                // Show the standard, classic fast "Thinking..." bubble
-                history.innerHTML += `
-                <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
-                    <div class="flex items-center mb-1">
-                        <img src="${chatLogoUrl}" class="ai-bubble-avatar w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
-                        <span class="text-xs font-bold text-gray-800">doktura.ai</span>
-                    </div>
-                    <div class="bg-white border shadow-sm px-4 py-3 rounded-2xl rounded-tl-sm flex space-x-2 items-center text-left" style="width: auto;">
-                        <div class="flex space-x-1 pb-1">
-                            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
-                        </div>
-                    </div>
-                </div>`;
-                history.scrollTo(0, history.scrollHeight);
-            }
+                </div>
+            </div>`;
+            history.scrollTo(0, history.scrollHeight);
 
             if (isVoiceActive) setVoiceState('PROCESSING');
 
             try {
-                const r = await fetch(API_BASE+'/api/chat',{method:'POST',headers:await getAuthHeaders(),body:JSON.stringify({message:msg, session_id:window.currentSessionId || "default", user_name:window.userData.name})});
+                // Fetch the response from the backend
+                const r = await fetch(API_BASE+'/api/chat',{
+                    method:'POST',
+                    headers:await getAuthHeaders(),
+                    body:JSON.stringify({message:msg, session_id:window.currentSessionId || "default", user_name:window.userData.name})
+                });
                 const data = await r.json();
 
-                if (isReportEscalation && activeLoaderInterval) {
-                    clearInterval(activeLoaderInterval);
+                // 2. Check if the received message is a report
+                const isReport = data.reply.includes("[ESCALATE]") || data.reply.includes("Comprehensive Doktura Clinical Report");
+
+                if (isReport) {
+                    // Remove the 3-dots indicator
+                    const tEl = document.getElementById(typeId);
+                    if(tEl) tEl.remove();
+
+                    // Show the Brain Loader instead
+                    const brainLoaderId = 'brain-' + Date.now();
+                    history.innerHTML += `
+                    <div id="${brainLoaderId}" class="flex flex-col items-start mb-6 w-full animate-fade">
+                        <div class="flex items-center mb-1">
+                            <img src="${chatLogoUrl}" class="ai-bubble-avatar w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
+                            <span class="text-xs font-bold text-gray-800">doktura.ai</span>
+                        </div>
+                        <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
+                            <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-left chat-bubble-text animate-fade" style="max-width: 340px;">
+                                <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
+                                    <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
+                                    <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
+                                             viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
+                                            <path d="M12 5v14"/>
+                                            <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
+                                            <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
+                                            <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
+                                            <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
+                                    </svg>
+                                </div>
+                                <h3 id="${brainLoaderId}-text" class="text-gray-900 font-extrabold text-[15px] leading-snug mb-1.5">Reviewing the latest medical data...</h3>
+                                <p class="text-xs text-gray-400 font-medium">This can take a couple of minutes.</p>
+                            </div>
+                        </div>
+                    </div>`;
+                    history.scrollTo(0, history.scrollHeight);
+
+                    // Start transitioning the text messages
+                    let phaseIndex = 0;
+                    const textEl = document.getElementById(`${brainLoaderId}-text`);
+                    const phaseInterval = setInterval(() => {
+                        if(textEl) {
+                            phaseIndex = (phaseIndex + 1) % loadingPhases.length;
+                            textEl.innerText = loadingPhases[phaseIndex];
+                        }
+                    }, 2000);
+
+                    // Wait 5 seconds to build suspense and show the animation
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+
+                    // Remove the Brain Loader
+                    clearInterval(phaseInterval);
+                    const bEl = document.getElementById(brainLoaderId);
+                    if(bEl) bEl.remove();
+
+                    // Finally, reveal the actual report
+                    history.innerHTML += createAiBubble(data.reply);
+                    history.scrollTo(0, history.scrollHeight);
+                    if(isVoiceActive) speakOut(data.reply);
+
+                } else {
+                    // Normal message flow (Not a report)
+                    const tEl = document.getElementById(typeId);
+                    if(tEl) tEl.remove();
+
+                    history.innerHTML += createAiBubble(data.reply);
+                    history.scrollTo(0, history.scrollHeight);
+
+                    if(isVoiceActive) speakOut(data.reply);
                 }
 
-                const tEl = document.getElementById(typeId);
-                if(tEl) tEl.remove();
-
-                history.innerHTML += createAiBubble(data.reply);
-                history.scrollTo(0, history.scrollHeight);
-
-                if(isVoiceActive) speakOut(data.reply);
             } catch(e) {
-                if (isReportEscalation && activeLoaderInterval) {
-                    clearInterval(activeLoaderInterval);
-                }
-
+                // If there's an error, just clear the 3-dots and show an error message
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
