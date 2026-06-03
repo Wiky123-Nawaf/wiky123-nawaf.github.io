@@ -653,8 +653,9 @@
         }
 
         window.willTriggerReport = function(userMessage) {
-            // Count existing AI assistant messages rendered in history using the avatar class
-            const aiBubbleCount = document.querySelectorAll('#chat-history .ai-bubble-avatar').length;
+            // Count existing AI assistant messages rendered in history using the avatar class, discounting local greetings
+            const localGreetingCount = document.querySelectorAll('#chat-history .local-greeting').length;
+            const aiBubbleCount = document.querySelectorAll('#chat-history .ai-bubble-avatar').length - localGreetingCount;
             const msgLower = userMessage.toLowerCase();
             
             // 1. Emergency Bypass
@@ -1129,9 +1130,10 @@
             </div>`;
         }
 
-        function createAiBubble(text) {
+        function createAiBubble(text, isGreeting = false) {
+            const extraClass = isGreeting ? 'local-greeting' : '';
             return `
-            <div class="flex flex-col items-start mb-6 w-full">
+            <div class="flex flex-col items-start mb-6 w-full ${extraClass}">
                 <div class="flex items-center mb-1">
                     <img src="${chatLogoUrl}" class="ai-bubble-avatar w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
                     <span class="text-xs font-bold text-gray-800">doktura.ai</span>
@@ -1149,7 +1151,7 @@
             el.innerHTML = '';
 
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
-                el.innerHTML = createAiBubble(`Hello ${window.userData.name}! How can I assist you today?`);
+                el.innerHTML = createAiBubble(`Hello ${window.userData.name}! How can I assist you today?`, true);
             } else {
                 data.history.forEach(m => {
                     if(m.role === 'system') return;
@@ -1180,7 +1182,7 @@
             } 
             else if (state === 'LISTENING') {
                 btn.classList.add('bg-gradient-to-br', 'from-red-400', 'to-red-600', 'hover:scale-105', 'orb-pulse-red');
-                statusText.innerText = "Listening... Tap to stop";
+                statusText.innerText = "Thinking...";
                 iStop.classList.remove('hidden');
             } 
             else if (state === 'PROCESSING') {
