@@ -1019,9 +1019,9 @@
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
                         // 5. Standard bullet points
-                        .replace(/(^|\n+)[ \t]*-[ \t]+/g, function(match, p1) {
-                            return (p1 ? '<br>' : '') + '<span class="text-[#0066FF] mr-2 font-bold">&bull;</span>';
-                        })
+                        .replace(/(^|\n+)[ \t]*[-•][ \t]+/g, function(match, p1) {
+						    return (p1 ? '<br>' : '') + '<span class="text-[#0066FF] mr-2 font-bold">&bull;</span>';
+						})
 
                         // 6. Convert remaining newlines
                         .replace(/\n/g, '<br>');
