@@ -1504,51 +1504,117 @@
                 let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=\*\*Differential Diagnosis)/i);
                 let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action)/i);
                 let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms)/i);
 
                 let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
                 let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
                 let plan = planMatch ? planMatch[1].trim() : "";
+                let soap = soapMatch ? soapMatch[1].trim() : "";
+
+                let formatClinicalText = (text) => {
+                    if (!text) return "";
+
+                    text = text.replace(/\n{3,}/g, '\n\n').trim();
+
+                    let formatted = text
+                        // 1. Numbered subheadings
+                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+
+                        // 2. Specific Fallback Categories
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+
+                        // 3. Bulleted / Category subheadings
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+
+                        // 4. General Bold Text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
+
+                        // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a black bold hyphen
+                        .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
+                            return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-black font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
+                        });
+
+                    // 6. Convert remaining newlines
+                    formatted = formatted.replace(/\n/g, '<br>');
+
+                    // 7. Clean up excessive spacing around block divs to keep spacing tight and neat
+                    formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
+                    formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
+
+                    return formatted;
+                };
 
                 const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 
                 const btnAction = `window.location.href='login.html';`;
-                const btnText = "Login to Connect With a Doctor &rarr;";
+                const btnText = "Save Report & Consult Doctor";
+
+                // Add CSS to remove the default summary arrow for WebKit browsers inline
+                const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
 
                 let reportHtml = `
-                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left" style="font-family: Georgia, serif;">
+                <style>summary::-webkit-details-marker { display: none; }</style>
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
+                    
+                    <!-- Header -->
                     <div class="p-4 sm:p-5 border-b border-gray-100">
                         <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
-                        <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
+                        <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
                     </div>
                     
-                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 font-sans text-justify">
+                    <!-- Summary -->
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
-
-                    <div class="font-sans bg-white border-b border-gray-100">
-                        <a href="login.html" class="block p-4 sm:p-5 hover:bg-gray-50 transition cursor-pointer" style="text-decoration: none;">
-                            <div class="flex justify-between items-center font-bold text-[#0066FF] text-sm mb-2">
-                                Assessment & Plan
-                                <svg class="w-5 h-5 text-[#0066FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            </div>
-                            <p class="text-[11px] sm:text-xs text-gray-500 uppercase tracking-wider font-bold mb-4">A clinical overview of possible causes considered</p>
-                            <div class="bg-blue-50 text-blue-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center shadow-sm border border-blue-100">
-                                <svg class="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Log in to view your detailed assessment & plan.
-                            </div>
-                        </a>
-                    </div>
                     
+                    <!-- Expandable Assessment & Plan Accordion -->
+                    <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
+                        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
+                                <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
+                            ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
+                        </div>
+                    </details>
+                    
+                    <!-- Expandable SOAP Note Accordion -->
+                    ${soap ? `
+                    <details class="group bg-white transition-colors border-b border-gray-100">
+                        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
+                                <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${formatClinicalText(soap)}
+                        </div>
+                    </details>
+                    ` : ''}
+                    
+                    <!-- Booking CTA & Warning -->
                     <div class="p-4 sm:p-5 bg-gray-50 font-sans">
-                        <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
-                        <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
-                        <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
-                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
-                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
-                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
-                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
-                        </ul>
-                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                        
+                        <!-- Warning Box for Unsaved Session -->
+                        <div class="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg p-3 text-xs mb-4 shadow-sm flex items-start gap-2">
+                            <svg class="w-5 h-5 shrink-0 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div>
+                                <strong class="block mb-1 text-sm">Report Not Saved</strong>
+                                If you leave this page without logging in, this report will be lost forever. Log in now to permanently save your medical history and seamlessly connect with a licensed doctor.
+                            </div>
+                        </div>
+
+                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                             ${btnText}
                         </button>
                     </div>
