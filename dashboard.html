@@ -724,7 +724,7 @@
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </nav>
@@ -1050,7 +1050,7 @@
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
@@ -1063,7 +1063,7 @@
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
                             ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
@@ -1079,10 +1079,8 @@
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
-                            <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">
-                                ${formatClinicalText(soap)}
-                            </div>
+                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${formatClinicalText(soap)}
                         </div>
                     </details>
                     ` : ''}
@@ -1090,7 +1088,7 @@
                     <!-- Booking CTA -->
                     <div class="p-4 sm:p-5 bg-white text-left">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
-                        <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                        <p class="text-sm text-gray-600 mb-4 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
                             <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
@@ -1132,7 +1130,7 @@
                     <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
                     <span class="text-xs font-bold text-gray-800">doktura.ai</span>
                 </div>
-                <div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text ai-bubble-container">
+                <div class="bg-white border shadow-sm px-4 sm:px-5 py-3 sm:py-4 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-left chat-bubble-text ai-bubble-container">
                     ${formatAiMessage(text, true)}
                 </div>
             </div>`;
@@ -1215,7 +1213,7 @@
                         <span class="text-xs font-bold text-gray-800">doktura.ai</span>
                     </div>
                     <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
-                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text animate-fade" style="max-width: 340px;">
+                        <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-left chat-bubble-text animate-fade" style="max-width: 340px;">
                             <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
                                 <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
                                 <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
