@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -739,7 +738,7 @@
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </nav>
@@ -1015,29 +1014,40 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
 
+                    // Normalize spacing
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
-                    return text
-                        // 1. Numbered subheadings
-                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
-                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] font-bold mr-2 text-sm">$1.</span><strong class="text-gray-900 font-bold text-sm">$2</strong></div>')
+                    // 1. SOAP Note headers (Subjective, Objective, Assessment, Plan)
+                    text = text.replace(/(?:^|\n+)(Subjective|Objective|Assessment|Plan)[\s:]*\n+/gi,
+                        '<div class="mt-6 mb-2"><strong class="text-gray-900 font-bold text-sm uppercase tracking-wide">$1</strong></div>');
 
-                        // 2. Specific Fallback Categories / Bold headers
-                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
-                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><strong class="text-gray-900 font-bold text-sm">$1</strong></div>')
+                    // 2. Numbered subheadings
+                    text = text.replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
+                        '<div class="mt-5 mb-1 flex items-start"><span class="text-gray-900 font-bold mr-2 text-sm">$1.</span><strong class="text-gray-900 font-bold text-sm">$2</strong></div>');
 
-                        // 3. Bulleted / Category subheadings
-                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
-                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><strong class="text-gray-900 font-bold text-sm">$1</strong></div>')
+                    // 3. Specific Fallback Categories / Bold headers
+                    text = text.replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
+                        '<div class="mt-5 mb-1 flex items-start"><span class="text-gray-900 mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><strong class="text-gray-900 font-bold text-sm">$1</strong></div>');
 
-                        // 4. General Bold Text
-                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>')
+                    // 4. Generic Bold Headers
+                    text = text.replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
+                        '<div class="mt-5 mb-1 flex items-start"><span class="text-gray-900 mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><strong class="text-gray-900 font-bold text-sm">$1</strong></div>');
 
-                        // 5. Standard bullet points (Handles hyphens and literal bullets perfectly)
-                        .replace(/(?:^|\n)[ \t]*(?:-|•|\*)[ \t]*(.*?)(?=\n|$)/g, '<div class="flex items-start mb-1.5 mt-0.5"><span class="text-[#0066FF] mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><span class="text-sm text-gray-700 leading-relaxed">$1</span></div>')
+                    // 5. Remaining inline bold text
+                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
 
-                        // 6. Convert remaining newlines
-                        .replace(/\n/g, '<br>');
+                    // 6. Standard bullet points (Handles hyphens, en-dashes, em-dashes, and literal bullets exactly the same)
+                    text = text.replace(/(?:^|\n)[ \t]*(?:-|–|—|•|\*)[ \t]+([^\n]+)/g, 
+                        '<div class="flex items-start mb-1.5"><span class="text-gray-900 mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><span class="text-sm text-gray-700 leading-relaxed">$1</span></div>');
+
+                    // 7. Strip newlines around divs to cleanly snap elements together using exact CSS margins, not <br>s
+                    text = text.replace(/<\/div>\s*\n+/g, '</div>');
+                    text = text.replace(/\n+\s*<div/g, '<div');
+
+                    // 8. Convert remaining non-div newlines to br
+                    text = text.replace(/\n/g, '<br>');
+
+                    return text;
                 };
 
                 const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
