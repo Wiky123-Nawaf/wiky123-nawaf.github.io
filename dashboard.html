@@ -1018,10 +1018,10 @@
                         // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                        // 5. Standard bullet points
-                        .replace(/(^|\n+)[ \t]*[-•][ \t]+/g, function(match, p1) {
-						    return (p1 ? '<br>' : '') + '<span class="text-[#0066FF] mr-2 font-bold">&bull;</span>';
-						})
+                        // 5. Indented sub-items (hyphens or en-dashes)
+                        .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
+                            return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-[#0066FF] font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
+                        })
 
                         // 6. Convert remaining newlines
                         .replace(/\n/g, '<br>');
