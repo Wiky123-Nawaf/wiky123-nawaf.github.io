@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -652,56 +653,41 @@
         }
 
         window.willTriggerReport = function(userMessage) {
-            // Count actual conversational AI bubbles (ignore loaders and already generated reports)
-            const aiBubbles = document.querySelectorAll('.ai-bubble-container');
-            let aiBubbleCount = 0;
-            let reportAlreadyGenerated = false;
+    // Count existing AI assistant messages rendered in history
+    const aiBubbleCount = document.querySelectorAll('#chat-history img[src*="Vector%20(4).png"]').length;
+    const msgLower = userMessage.toLowerCase();
+    
+    // 1. Emergency Bypass
+    const emergencyKeywords = [
+        "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
+        "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
+    ];
+    if (emergencyKeywords.some(k => msgLower.includes(k))) {
+        return false;
+    }
 
-            aiBubbles.forEach(bubble => {
-                const txt = bubble.innerText;
-                // If a report exists in this session, never trigger the loader again
-                if (txt.includes("Doktura Report") || txt.includes("Assessment & Plan")) {
-                    reportAlreadyGenerated = true;
-                } else if (txt.trim().length > 0 && !txt.includes("Reviewing the latest medical data...")) {
-                    aiBubbleCount++;
-                }
-            });
+    // 2. Absolute Turn Check (Backend forces escalation strictly when history has 12+ assistant messages)
+    if (aiBubbleCount >= 12) {
+        return true;
+    }
 
-            if (reportAlreadyGenerated) return false;
+    // 3. Pain/Swelling thresholds (Only check if we already have 8+ assistant messages rendered)
+    if (aiBubbleCount >= 8) {
+        const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
+        const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
+        const negationWords = ["no", "not", "don't", "dont", "none", "denies", "deny", "without"];
 
-            const msgLower = userMessage.toLowerCase();
-            
-            // 1. Emergency Bypass
-            const emergencyKeywords = [
-                "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
-                "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
-            ];
-            if (emergencyKeywords.some(k => msgLower.includes(k))) {
-                return false;
-            }
+        const hasHighPain = painKeywords.some(k => msgLower.includes(k));
+        const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
+        const hasNegation = negationWords.some(neg => msgLower.includes(neg));
 
-            // 2. Absolute Turn Check (Matches backend forcing escalation >= 12 turns)
-            if (aiBubbleCount >= 12) {
-                return true;
-            }
+        if ((hasHighPain || hasSwelling) && !hasNegation) {
+            return true;
+        }
+    }
 
-            // 3. Pain/Swelling thresholds (Matches backend forcing escalation >= 8 turns)
-            if (aiBubbleCount >= 8) {
-                const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
-                const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
-                const negationWords = ["no", "not", "don't", "dont", "none", "denies", "deny", "without"];
-
-                const hasHighPain = painKeywords.some(k => msgLower.includes(k));
-                const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
-                const hasNegation = negationWords.some(neg => msgLower.includes(neg));
-
-                if ((hasHighPain || hasSwelling) && !hasNegation) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
+    return false;
+};
 
         window.renderPaginationControls = (totalItems, itemsPerPage, currentPage, containerId, changePageFunc) => {
             const container = document.getElementById(containerId);
@@ -738,7 +724,7 @@
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </nav>
@@ -1014,40 +1000,31 @@
                 let formatClinicalText = (text) => {
                     if (!text) return "";
 
-                    // Normalize spacing
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
-                    // 1. SOAP Note headers (Subjective, Objective, Assessment, Plan)
-                    text = text.replace(/(?:^|\n+)(Subjective|Objective|Assessment|Plan)[\s:]*\n+/gi,
-                        '<div class="mt-6 mb-2"><strong class="text-gray-900 font-bold text-sm uppercase tracking-wide">$1</strong></div>');
+                    return text
+                        // 1. Numbered subheadings
+                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
 
-                    // 2. Numbered subheadings
-                    text = text.replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
-                        '<div class="mt-5 mb-1 flex items-start"><span class="text-gray-900 font-bold mr-2 text-sm">$1.</span><strong class="text-gray-900 font-bold text-sm">$2</strong></div>');
+                        // 2. Specific Fallback Categories
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
-                    // 3. Specific Fallback Categories / Bold headers
-                    text = text.replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
-                        '<div class="mt-5 mb-1 flex items-start"><span class="text-gray-900 mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><strong class="text-gray-900 font-bold text-sm">$1</strong></div>');
+                        // 3. Bulleted / Category subheadings
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
+                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
-                    // 4. Generic Bold Headers
-                    text = text.replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
-                        '<div class="mt-5 mb-1 flex items-start"><span class="text-gray-900 mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><strong class="text-gray-900 font-bold text-sm">$1</strong></div>');
+                        // 4. General Bold Text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                    // 5. Remaining inline bold text
-                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
+                        // 5. Standard bullet points
+                        .replace(/(^|\n+)[ \t]*-[ \t]+/g, function(match, p1) {
+                            return (p1 ? '<br>' : '') + '<span class="text-[#0066FF] mr-2 font-bold">&bull;</span>';
+                        })
 
-                    // 6. Standard bullet points (Handles hyphens, en-dashes, em-dashes, and literal bullets exactly the same)
-                    text = text.replace(/(?:^|\n)[ \t]*(?:-|–|—|•|\*)[ \t]+([^\n]+)/g, 
-                        '<div class="flex items-start mb-1.5"><span class="text-gray-900 mr-2.5 font-bold shrink-0 text-lg leading-none mt-[-2px]">&bull;</span><span class="text-sm text-gray-700 leading-relaxed">$1</span></div>');
-
-                    // 7. Strip newlines around divs to cleanly snap elements together using exact CSS margins, not <br>s
-                    text = text.replace(/<\/div>\s*\n+/g, '</div>');
-                    text = text.replace(/\n+\s*<div/g, '<div');
-
-                    // 8. Convert remaining non-div newlines to br
-                    text = text.replace(/\n/g, '<br>');
-
-                    return text;
+                        // 6. Convert remaining newlines
+                        .replace(/\n/g, '<br>');
                 };
 
                 const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -1073,12 +1050,12 @@
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-4 sm:p-5 text-sm text-gray-700 leading-relaxed border-b border-gray-100 border-dashed text-justify font-sans" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
                     <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
-                    <details class="group bg-white transition-colors border-b border-gray-100 border-dashed" open>
+                    <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
                         <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
                             <div class="flex flex-col text-left">
                                 <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
@@ -1086,9 +1063,9 @@
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 font-sans leading-relaxed text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                            ${plan ? `<div class="${diffDiag ? 'mt-4' : ''}">${formatClinicalText(plan)}</div>` : ''}
+                            ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
                     </details>
                     
@@ -1102,8 +1079,10 @@
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 font-sans leading-relaxed text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
-                            ${formatClinicalText(soap)}
+                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">
+                                ${formatClinicalText(soap)}
+                            </div>
                         </div>
                     </details>
                     ` : ''}
@@ -1127,7 +1106,7 @@
                 let conversationalIntro = content.split("[ESCALATE]")[0].trim();
                 if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
-                return `<div class="mb-3 text-sm text-gray-700 leading-relaxed text-left font-sans">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+                return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
             }
 
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
@@ -1239,15 +1218,26 @@
                         <div class="bg-white border shadow-sm px-4 sm:px-5 py-5 sm:py-6 rounded-2xl rounded-tl-sm text-sm text-gray-700 leading-relaxed text-justify chat-bubble-text animate-fade" style="max-width: 340px;">
                             <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
                                 <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
-                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9.5 2h5"></path>
-                                    <path d="M12 2v20"></path>
-                                    <path d="M17.5 4.5c2 1.5 3.5 4 3.5 7.5s-1.5 6-3.5 7.5"></path>
-                                    <path d="M6.5 4.5c-2 1.5-3.5 4-3.5 7.5s1.5 6 3.5 7.5"></path>
-                                    <path d="M12 4.5c1.5-1 3.5-1 5 0"></path>
-                                    <path d="M12 19.5c1.5 1 3.5 1 5 0"></path>
-                                    <path d="M7 4.5c-1.5-1-3.5-1-5 0"></path>
-                                    <path d="M7 19.5c-1.5-1-3.5-1-5 0"></path>
+                                <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
+									     viewBox="0 0 24 24"
+									     fill="none"
+									     stroke="#111827"
+									     stroke-width="1.8"
+									     stroke-linecap="round"
+									     stroke-linejoin="round">
+									
+									    <!-- Brain outline -->
+									    <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
+									
+									    <!-- Internal folds -->
+									    <path d="M12 5v14"/>
+									    <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
+									    <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
+									    <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
+									    <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
+									</svg>
+                                    <path d="M9.5 2h5M12 2v20M17.5 4.5c2 1.5 3.5 4 3.5 7.5s-1.5 6-3.5 7.5M6.5 4.5c-2 1.5-3.5 4-3.5 7.5s1.5 6 3.5 7.5"></path>
+                                    <path d="M12 4.5c1.5-1 3.5-1 5 0M12 19.5c1.5 1 3.5 1 5 0M7 4.5c-1.5-1-3.5-1-5 0M7 19.5c-1.5 1-3.5 1-5 0"></path>
                                 </svg>
                             </div>
                             <h3 id="${typeId}-text" class="text-gray-900 font-extrabold text-[15px] leading-snug mb-1.5">Reviewing the latest medical data...</h3>
