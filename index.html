@@ -1452,6 +1452,9 @@
             });
         });
 
+        // NEW: Temporarily stores the user's message while they accept the TOS
+        window.pendingGuestMessage = ""; 
+
         window.handleTosChange = function(checkbox) {
             if (checkbox.checked) {
                 localStorage.setItem("tos_accepted", "true");
@@ -1475,13 +1478,18 @@
                 chatInput.classList.remove("placeholder-red");
                 chatWrapper.classList.remove("warning-active");
                 chatInput.placeholder = "Reply to doktura.ai...";
-
                 chatInput.focus();
 
                 let sessionId = localStorage.getItem("anon_session_id");
                 if (!sessionId) {
                     sessionId = Date.now().toString(); 
                     localStorage.setItem("anon_session_id", sessionId);
+                }
+
+                // MAGIC FIX: Immediately send the stored message to the AI!
+                if (window.pendingGuestMessage) {
+                    window.processAiResponse(window.pendingGuestMessage);
+                    window.pendingGuestMessage = ""; // Clear it after sending
                 }
             }
         };
@@ -1728,6 +1736,9 @@
 
             const tosAccepted = localStorage.getItem("tos_accepted");
             if (tosAccepted !== "true") {
+                // Store message so it can be sent after checkbox is clicked
+                window.pendingGuestMessage = message; 
+
                 if (document.getElementById('tos-blocker')) {
                     window.showTosWarning();
                     return;
@@ -1769,6 +1780,13 @@
                 return;
             }
 
+            // If TOS already accepted, process message immediately
+            await window.processAiResponse(message);
+        };
+
+        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
+        window.processAiResponse = async function(message) {
+            const history = document.getElementById('chat-history');
             const loadId = 'load-' + Date.now();
             const isReportEscalation = window.willTriggerReport(message);
 
@@ -1782,23 +1800,19 @@
                                 <div style="position: relative; width: 44px; height: 44px; margin-bottom: 16px;">
                                     <div class="loader-spinner-ring" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 2px solid #f3f4f6; border-top-color: #0066FF; border-right-color: #0066FF; border-radius: 50%;"></div>
                                     <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px;"
-									     viewBox="0 0 24 24"
-									     fill="none"
-									     stroke="#111827"
-									     stroke-width="1.8"
-									     stroke-linecap="round"
-									     stroke-linejoin="round">
-									
-									    <!-- Brain outline -->
-									    <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
-									
-									    <!-- Internal folds -->
-									    <path d="M12 5v14"/>
-									    <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
-									    <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
-									    <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
-									</svg>
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="#111827"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path d="M8.5 4.5C6.3 4.5 4.5 6.3 4.5 8.5c0 .7.2 1.4.5 2-1.2.7-2 2-2 3.5 0 2.2 1.8 4 4 4 .4 1.5 1.8 2.5 3.5 2.5 1 0 1.9-.4 2.5-1.1.6.7 1.5 1.1 2.5 1.1 1.7 0 3.1-1 3.5-2.5 2.2 0 4-1.8 4-4 0-1.5-.8-2.8-2-3.5.3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4-.8 0-1.5.2-2.1.6C14.8 3.8 13.9 3.5 13 3.5c-.9 0-1.8.3-2.4.9-.6-.4-1.3-.6-2.1-.6z"/>
+                                        <path d="M12 5v14"/>
+                                        <path d="M9 7.5c1 .5 1.5 1.5 1.5 2.5"/>
+                                        <path d="M9 12c1 .5 1.5 1.5 1.5 2.5"/>
+                                        <path d="M15 7.5c-1 .5-1.5 1.5-1.5 2.5"/>
+                                        <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
+                                    </svg>
                                 </div>
                                 <h3 id="${loadId}-text" style="font-size: 15px; font-weight: 700; color: #111827; margin: 0 0 6px 0;">Reviewing the latest medical data...</h3>
                                 <p style="font-size: 13px; color: #9ca3af; margin: 0;">This can take a couple of minutes.</p>
@@ -1850,7 +1864,7 @@
                 if (loader) loader.remove();
                 history.innerHTML += `<div style="text-align: center; color: var(--text-dark); font-size: 12px; margin-top: 12px; font-weight: 600;">⚠️ Backend Server Offline.</div>`;
             }
-        }
+        };
     </script>
 
     <script>
