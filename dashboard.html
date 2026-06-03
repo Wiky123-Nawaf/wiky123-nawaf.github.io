@@ -445,7 +445,7 @@
                               <path d="M16.002 12.4507L20.0967 19.6781H26.9975C27.0086 19.4 26.9839 19.0843 26.9975 19.6781H11.9072L16.0019 12.4507Z" fill="#FBBC05"/>
                               <path d="M16.0019 12.4514L19.4628 6.34371C19.3479 6.22671 19.2144 6.14997 19.0835 6.09839C18.9327 6.04933 18.7709 6.01662 18.5954 6.00781H18.4125H13.5913H13.4084C13.2342 6.01536 13.0711 6.04807 12.9203 6.09839C12.7894 6.14997 12.6559 6.22671 12.541 6.34371L16.0019 12.4514Z" fill="#188038"/>
                               <path d="M11.9082 19.6782L8.48687 25.7168C8.48687 25.7168 8.3732 25.6614 8.21875 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168C23.5116 25.7155 23.5129 25.7142 23.5153 25.713L20.0965 19.6782H11.9082Z" fill="#4285F4"/>
-                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.70434 25.9206 9.17633 25.9998 9.17633 25.9998H22.6134C23.3547 25.9998 23.5092 25.7168 23.5092 25.7168L20.0967 19.6782Z" fill="#1967D2"/>
+                              <path d="M11.9086 19.6782H5.00781C5.04241 20.4985 5.39826 20.9778 5.39826 20.9778L5.65773 21.4281C5.67627 21.4546 5.68739 21.4697 5.68739 21.4697L6.25205 22.461L7.51976 24.6676C7.55683 24.7569 7.60008 24.8386 7.6458 24.9166C7.66309 24.9431 7.67915 24.972 7.69769 24.9972C7.70263 25.0047 7.70757 25.0123 7.71252 25.0198C7.86944 25.2412 8.04489 25.4123 8.22034 25.5469C8.37479 25.6627 8.48847 25.7168 8.48847 25.7168L11.9086 19.6782Z" fill="#1967D2"/>
                               <path d="M20.0967 19.6782H26.9974C26.9628 20.4985 26.607 20.9778 26.607 20.9778L26.3475 21.4281C26.329 21.4546 26.3179 21.4697 26.3179 21.4697L25.7532 22.461L24.4855 24.6676C24.4484 24.7569 24.4052 24.8386 24.3595 24.9166C24.3422 24.9431 24.3261 24.972 24.3076 24.9972C24.3026 25.0047 24.2977 25.0123 24.2927 25.0198C24.1358 25.2412 23.9604 25.4123 23.7849 25.5469C23.6305 25.6627 23.5168 25.7168 23.5168 25.7168L20.0967 19.6782Z" fill="#EA4335"/>
                             </svg>
                             <span class="inline">Drive</span>
@@ -724,7 +724,7 @@
             html += `       <button onclick="${changePageFunc}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="relative inline-flex items-center rounded-r-md px-2 py-1.5 text-gray-400 ring-1 ring-inset ring-gray-200 hover:bg-gray-50 active:scale-95 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5-4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </nav>
@@ -1042,33 +1042,53 @@
 
                 // Completely continuous accordion without internal scrolling
                 let reportHtml = `
-                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="font-family: Georgia, serif; max-width: 100%;">
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
                     <!-- Header -->
                     <div class="p-4 sm:p-5 border-b border-gray-100">
                         <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
-                        <p class="text-xs text-gray-500 font-sans tracking-wide">${dateStr}</p>
+                        <p class="text-xs text-gray-500 tracking-wide">${dateStr}</p>
                     </div>
                     
                     <!-- Summary -->
-                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed font-sans border-b border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
                     <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
-                    <details class="group bg-gray-50 border-b border-gray-100 open:bg-white transition-colors" open>
-                        <summary class="p-4 sm:p-5 font-extrabold text-gray-900 cursor-pointer flex justify-between items-center outline-none list-none uppercase tracking-wider text-sm hover:bg-gray-100 transition">
-                            Assessment & Plan
-                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
+                        <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
+                                <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 font-sans text-sm text-gray-700 border-t border-gray-100 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
-                            ${diffDiag ? `<div><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Differential Diagnosis</h4><div>${formatClinicalText(diffDiag)}</div></div>` : ''}
-                            ${plan ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-2 uppercase tracking-wide text-[#0066FF] text-left">Plan of Action</h4><div>${formatClinicalText(plan)}</div></div>` : ''}
-                            ${soap ? `<div class="pt-8 mt-8 border-t border-gray-100"><h4 class="text-lg font-extrabold text-gray-900 mb-4 uppercase tracking-wide text-[#0066FF] text-left">SOAP Note for Physician</h4><div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">${formatClinicalText(soap)}</div></div>` : ''}
+                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
+                            ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
                     </details>
                     
+                    <!-- Expandable SOAP Note Accordion -->
+                    ${soap ? `
+                    <details class="group bg-white transition-colors border-b border-gray-100">
+                        <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
+                                <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="px-4 sm:px-5 pb-5 text-sm text-gray-700 text-justify" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg shadow-sm font-mono text-xs leading-relaxed text-gray-800 text-left">
+                                ${formatClinicalText(soap)}
+                            </div>
+                        </div>
+                    </details>
+                    ` : ''}
+                    
                     <!-- Booking CTA -->
-                    <div class="p-4 sm:p-5 font-sans bg-white text-left">
+                    <div class="p-4 sm:p-5 bg-white text-left">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
                         <p class="text-sm text-gray-600 mb-4 text-justify">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                         <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
@@ -1235,7 +1255,7 @@
                         <img src="${chatLogoUrl}" class="w-8 h-8 rounded-full mr-2 border border-gray-200 bg-white object-contain">
                         <span class="text-xs font-bold text-gray-800">doktura.ai</span>
                     </div>
-                    <div class="bg-white border shadow-sm px-4 sm:px-5 py-3 rounded-2xl rounded-tl-sm flex space-x-2 items-center text-left" style="width: auto;">
+                    <div class="bg-white border shadow-sm px-4 py-3 rounded-2xl rounded-tl-sm flex space-x-2 items-center text-left" style="width: auto;">
                         <div class="flex space-x-1 pb-1">
                             <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
                         </div>
