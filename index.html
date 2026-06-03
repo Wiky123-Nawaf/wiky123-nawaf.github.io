@@ -1500,7 +1500,7 @@
                               .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             }
 
-            if (content.includes("[ESCALATE]")) {
+            if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
                 let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=\*\*Differential Diagnosis)/i);
                 let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action)/i);
                 let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note)/i);
