@@ -1730,58 +1730,6 @@
             "Aligning with medical standards..."
         ];
 
-        let activeLoaderInterval = null;
-
-        function startLoaderAnimation(loadId) {
-            let phaseIndex = 0;
-            const textElementId = `${loadId}-text`;
-            
-            activeLoaderInterval = setInterval(() => {
-                const el = document.getElementById(textElementId);
-                if (el) {
-                    phaseIndex = (phaseIndex + 1) % loadingPhases.length;
-                    el.innerText = loadingPhases[phaseIndex];
-                } else {
-                    clearInterval(activeLoaderInterval);
-                }
-            }, 3000);
-        }
-
-        window.willTriggerReport = function(userMessage) {
-            // Count existing AI assistant messages rendered in history
-            const aiBubbleCount = document.querySelectorAll('#chat-history img[src*="Fig%204.png"]').length;
-            const msgLower = userMessage.toLowerCase();
-            
-            // 1. Emergency Bypass
-            const emergencyKeywords = [
-                "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
-                "cannot breathe", "can't breathe", "shortness of breath", "thunderclap"
-            ];
-            if (emergencyKeywords.some(k => msgLower.includes(k))) {
-                return false;
-            }
-
-            // 2. Turns check
-            if (aiBubbleCount >= 11) {
-                return true;
-            }
-
-            // 3. Pain/Swelling thresholds
-            const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
-            const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
-
-            const hasHighPain = painKeywords.some(k => msgLower.includes(k));
-            const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
-
-            if (aiBubbleCount >= 7) {
-                if (hasHighPain || hasSwelling) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
         window.sendGuestChat = async function() {
             const input = document.getElementById('chat-input');
             const history = document.getElementById('chat-history');
@@ -1852,15 +1800,47 @@
         };
 
         // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
+        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
         window.processAiResponse = async function(message) {
             const history = document.getElementById('chat-history');
+            
+            // 1. ALWAYS show the standard fast "Thinking..." bubble first
             const loadId = 'load-' + Date.now();
-            const isReportEscalation = window.willTriggerReport(message);
+            history.innerHTML += `
+                <div id="${loadId}" style="display: flex; gap: 12px; margin-top: 16px; opacity: 0.6;">
+                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
+                    <div style="background: var(--card-grayish); color: var(--text-dark); padding: 12px 16px; border-radius: 16px 16px 16px 4px; font-size: 14px;">Thinking...</div>
+                </div>`;
+            history.scrollTop = history.scrollHeight;
 
-            if (isReportEscalation) {
-                // Show the complex revolving brain loader immediately
-                history.innerHTML += `
-                    <div id="${loadId}" style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
+            try {
+                let sessionId = localStorage.getItem("anon_session_id");
+                if (!sessionId) {
+                    sessionId = Date.now().toString(); 
+                    localStorage.setItem("anon_session_id", sessionId);
+                }
+
+                // Fetch the response from the backend
+                const res = await fetch(API_BASE + '/api/chat', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: message, session_id: sessionId, user_id: "anonymous_web", user_name: "Guest" })
+                });
+
+                if (!res.ok) throw new Error("Backend Error");
+                const data = await res.json();
+
+                // 2. Check if the received message is a report
+                const isReport = data.reply.includes("[ESCALATE]") || data.reply.includes("Comprehensive Doktura Clinical Report");
+
+                if (isReport) {
+                    // Remove the standard "Thinking..." indicator
+                    const tEl = document.getElementById(loadId);
+                    if(tEl) tEl.remove();
+
+                    // Show the Brain Loader instead
+                    const brainLoaderId = 'brain-' + Date.now();
+                    history.innerHTML += `
+                    <div id="${brainLoaderId}" style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
                         <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
                         <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
                             <div style="background: #ffffff; border: 1px solid #e2e8f0; color: var(--text-dark); padding: 20px; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.03); max-width: 340px;">
@@ -1881,52 +1861,46 @@
                                         <path d="M15 12c-1 .5-1.5 1.5-1.5 2.5"/>
                                     </svg>
                                 </div>
-                                <h3 id="${loadId}-text" style="font-size: 15px; font-weight: 700; color: #111827; margin: 0 0 6px 0;">Reviewing the latest medical data...</h3>
+                                <h3 id="${brainLoaderId}-text" style="font-size: 15px; font-weight: 700; color: #111827; margin: 0 0 6px 0;">Reviewing the latest medical data...</h3>
                                 <p style="font-size: 13px; color: #9ca3af; margin: 0;">This can take a couple of minutes.</p>
                             </div>
                         </div>
                     </div>`;
-                history.scrollTop = history.scrollHeight;
-                startLoaderAnimation(loadId);
-            } else {
-                // Show the standard, classic fast "Thinking..." bubble
-                history.innerHTML += `
-                    <div id="${loadId}" style="display: flex; gap: 12px; margin-top: 16px; opacity: 0.6;">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
-                        <div style="background: var(--card-grayish); color: var(--text-dark); padding: 12px 16px; border-radius: 16px 16px 16px 4px; font-size: 14px;">Thinking...</div>
-                    </div>`;
-                history.scrollTop = history.scrollHeight;
-            }
+                    history.scrollTop = history.scrollHeight;
 
-            try {
-                let sessionId = localStorage.getItem("anon_session_id");
-                if (!sessionId) {
-                    sessionId = Date.now().toString(); 
-                    localStorage.setItem("anon_session_id", sessionId);
+                    // Start transitioning the text messages
+                    let phaseIndex = 0;
+                    const textEl = document.getElementById(`${brainLoaderId}-text`);
+                    const phaseInterval = setInterval(() => {
+                        if(textEl) {
+                            phaseIndex = (phaseIndex + 1) % loadingPhases.length;
+                            textEl.innerText = loadingPhases[phaseIndex];
+                        }
+                    }, 2000);
+
+                    // Wait 5 seconds to build suspense and show the animation
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+
+                    // Remove the Brain Loader
+                    clearInterval(phaseInterval);
+                    const bEl = document.getElementById(brainLoaderId);
+                    if(bEl) bEl.remove();
+
+                    // Finally, reveal the actual report
+                    history.innerHTML += createAiBubble(data.reply);
+                    history.scrollTop = history.scrollHeight;
+
+                } else {
+                    // Normal message flow
+                    const loader = document.getElementById(loadId);
+                    if(loader) loader.remove();
+                    
+                    history.innerHTML += createAiBubble(data.reply);
+                    history.scrollTop = history.scrollHeight;
                 }
 
-                const res = await fetch(API_BASE + '/api/chat', {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ message: message, session_id: sessionId, user_id: "anonymous_web", user_name: "Guest" })
-                });
-
-                if (!res.ok) throw new Error("Backend Error");
-                const data = await res.json();
-
-                if (isReportEscalation && activeLoaderInterval) {
-                    clearInterval(activeLoaderInterval);
-                }
-
-                const loader = document.getElementById(loadId);
-                if(loader) loader.remove();
-                
-                history.innerHTML += createAiBubble(data.reply);
-                history.scrollTop = history.scrollHeight;
             } catch (e) {
                 console.error(e);
-                if (isReportEscalation && activeLoaderInterval) {
-                    clearInterval(activeLoaderInterval);
-                }
                 const loader = document.getElementById(loadId);
                 if (loader) loader.remove();
                 history.innerHTML += `<div style="text-align: center; color: var(--text-dark); font-size: 12px; margin-top: 12px; font-weight: 600;">⚠️ Backend Server Offline.</div>`;
