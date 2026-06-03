@@ -985,11 +985,14 @@
                               .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             }
 
-            if (content.includes("[ESCALATE]")) {
-                let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Summary:)\s*([\s\S]*?)(?=\*\*Differential Diagnosis)/i);
-                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action)/i);
-                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note)/i);
-                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms)/i);
+            // BULLETPROOF CHECK: Catch the hidden tag OR the main report title
+            if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
+                
+                // Relaxed Regex to catch headings even if the AI forgets the ** asterisks
+                let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
+                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
                 let bookingMatch = content.match(/(?:\*\*Booking Symptoms:\*\*|\*\*Booking Symptoms\*\*|Booking Symptoms:)\s*([\s\S]*?)$/i);
 
                 let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
@@ -1019,7 +1022,7 @@
                         // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                        // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a black bold hyphen
+                        // 5. Indented sub-bullets (hyphens or en-dashes)
                         .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
                             return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-black font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
                         });
@@ -1047,8 +1050,10 @@
 
                 const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
 
-                // Completely continuous accordion without internal scrolling
+                const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
+
                 let reportHtml = `
+                <style>summary::-webkit-details-marker { display: none; }</style>
                 <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
                     <!-- Header -->
                     <div class="p-4 sm:p-5 border-b border-gray-100">
@@ -1061,16 +1066,16 @@
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Expandable Assessment & Plan Accordion (No internal scrollbar) -->
+                    <!-- Expandable Assessment & Plan Accordion -->
                     <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
-                        <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
+                        <summary style="${summaryStyle}" class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
                             <div class="flex flex-col text-left">
                                 <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
                                 <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
                             ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
@@ -1079,14 +1084,14 @@
                     <!-- Expandable SOAP Note Accordion -->
                     ${soap ? `
                     <details class="group bg-white transition-colors border-b border-gray-100">
-                        <summary class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
+                        <summary style="${summaryStyle}" class="p-4 sm:p-5 cursor-pointer flex justify-between items-center outline-none list-none hover:bg-gray-50 transition">
                             <div class="flex flex-col text-left">
                                 <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
                                 <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${formatClinicalText(soap)}
                         </div>
                     </details>
@@ -1108,7 +1113,8 @@
                     </div>
                 </div>`;
 
-                let conversationalIntro = content.split("[ESCALATE]")[0].trim();
+                // Cleanly split off any conversational text before the report
+                let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
                 if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
                 return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
