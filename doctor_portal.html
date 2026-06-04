@@ -2273,6 +2273,7 @@
 
         // Handle Doctor Saving their own schedule
         // Handle Doctor Saving their own schedule
+        // Handle Doctor Saving their own schedule
         document.getElementById("saveScheduleBtn").addEventListener("click", async () => {
             showGlobalLoader("Saving Schedule...");
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -2314,28 +2315,6 @@
                 hideGlobalLoader();
                 console.error("Schedule Update Failed:", e);
                 alert("Error saving schedule: " + e.message);
-            }
-        });
-
-            try {
-                const token = await auth.currentUser.getIdToken(true);
-                const res = await fetch(`${API_BASE}/api/doctor/schedule`, {
-                    method: 'PUT',
-                    headers: { 
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ availability: newAvailability })
-                });
-
-                if(!res.ok) throw new Error("Endpoint not configured in backend yet.");
-                
-                hideGlobalLoader();
-                alert("Schedule saved successfully!");
-            } catch(e) {
-                hideGlobalLoader();
-                console.warn(e);
-                alert("Notice: Doctor Portal schedule saving is not yet enabled in the backend API. For now, the schedule you see is correctly synced directly from the Admin Dashboard.");
             }
         });
 
