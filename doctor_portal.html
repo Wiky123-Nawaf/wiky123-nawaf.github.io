@@ -2272,19 +2272,50 @@
         }
 
         // Handle Doctor Saving their own schedule
+        // Handle Doctor Saving their own schedule
         document.getElementById("saveScheduleBtn").addEventListener("click", async () => {
             showGlobalLoader("Saving Schedule...");
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             let newAvailability = {};
 
             days.forEach(day => {
-                if(document.getElementById(`chk_${day}`).checked) {
+                const chk = document.getElementById(`chk_${day}`);
+                if (chk && chk.checked) {
                     newAvailability[day] = [
                         document.getElementById(`start_${day}`).value, 
                         document.getElementById(`end_${day}`).value
                     ];
                 }
             });
+
+            try {
+                const token = await auth.currentUser.getIdToken(true);
+                const res = await fetch(`${API_BASE}/api/doctor/schedule`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ availability: newAvailability })
+                });
+
+                if (!res.ok) {
+                    const errData = await res.json();
+                    throw new Error(errData.detail || "Failed to update schedule.");
+                }
+                
+                hideGlobalLoader();
+                alert("Schedule saved successfully!");
+                
+                // Silent refresh to update local variables in memory
+                await triggerSync(auth.currentUser);
+                
+            } catch(e) {
+                hideGlobalLoader();
+                console.error("Schedule Update Failed:", e);
+                alert("Error saving schedule: " + e.message);
+            }
+        });
 
             try {
                 const token = await auth.currentUser.getIdToken(true);
