@@ -610,7 +610,7 @@
 
         /* =====================================================
            FULL SCREEN CHAT MODE OVERRIDES (Placed at end to override all)
-           ===================================================== */
+           ==================================================== */
         body.chat-mode-active {
             overflow: hidden !important; height: 100dvh !important; position: fixed !important; inset: 0 !important; width: 100% !important;
         }
@@ -666,6 +666,17 @@
         .loader-spinner-ring {
             animation: loader-spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         }
+
+        /* Smooth slide-up drawer for mobile save consult modal */
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        @media (max-width: 640px) {
+            #save-consult-modal .bg-white {
+                animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+        }
     </style>
 </head>
 
@@ -699,6 +710,29 @@
             }
         });
     </script>
+
+    <!-- SAVE CONSULT MODAL (Centered Modal on Desktop, Bottom Drawer on Mobile) -->
+    <div id="save-consult-modal" class="fixed inset-0 bg-gray-900/60 z-[300] hidden items-center justify-center max-sm:items-end backdrop-blur-sm transition-opacity px-0 sm:px-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl text-center max-sm:w-full max-sm:rounded-b-none">
+            <button onclick="closeSaveConsultModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-800 active:scale-95 text-lg font-bold transition p-1">✕</button>
+            
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1 mt-2">Don't lose this consult</h2>
+            <p class="text-gray-500 text-sm mb-6 leading-relaxed">We'll save all your chats to revisit later</p>
+            
+            <div class="relative w-full mb-4">
+                <input type="email" id="save-consult-email" placeholder="Email address" class="w-full bg-white border border-gray-200 hover:border-gray-300 focus:border-[#0066cc] rounded-2xl py-4 pl-5 pr-14 text-sm outline-none transition font-sans shadow-sm" oninput="this.classList.remove('border-red-500')" onkeydown="if(event.key === 'Enter') handleSaveConsultSubmit();">
+                <button onclick="handleSaveConsultSubmit()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition flex items-center justify-center text-white shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
+                </button>
+            </div>
+            
+            <p class="text-[11px] text-gray-400 leading-relaxed font-sans mb-2 px-2">
+                By providing your contact information, you agree to our 
+                <a href="terms.html" class="text-blue-500 underline hover:text-blue-700">Terms of Service</a> and 
+                <a href="privacy.html" class="text-blue-500 underline hover:text-blue-700">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
 
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-[190] hidden backdrop-blur-sm transition-opacity"></div>
 
@@ -1461,13 +1495,12 @@
 
                 const tosBlocker = document.getElementById('tos-blocker');
                 if (tosBlocker) {
-                    tosBlocker.innerHTML = `
-                        <div style="width: 32px; flex-shrink: 0;"></div>
+                    text_accepted = `<div style="width: 32px; flex-shrink: 0;"></div>
                         <div style="display: flex; align-items: center; gap: 8px; color: #10b981; font-size: 13px; font-weight: 600; padding: 8px 0;">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
                             Terms accepted
-                        </div>
-                    `;
+                        </div>`;
+                    tosBlocker.innerHTML = text_accepted;
                     tosBlocker.id = "tos-accepted-msg"; 
                 }
 
@@ -1552,8 +1585,6 @@
                 
                 const btnAction = `window.location.href='login.html';`;
                 const btnText = "Save Report & Consult Doctor";
-
-                // Add CSS to remove the default summary arrow for WebKit browsers inline
                 const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
 
                 let reportHtml = `
@@ -1580,7 +1611,7 @@
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
                             ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
@@ -1596,7 +1627,7 @@
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
-                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${formatClinicalText(soap)}
                         </div>
                     </details>
@@ -1614,14 +1645,14 @@
                             </div>
                         </div>
 
-                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                             ${btnText}
                         </button>
                     </div>
                 </div>`;
 
-                let conversationalIntro = content.split("[ESCALATE]")[0].trim();
+                let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
                 if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
                 return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
@@ -1667,7 +1698,7 @@
                 <div style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
                     <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Fig%204.png" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gray); background: white; flex-shrink: 0;">
                     <div class="ai-bubble-container" style="display: flex; flex-direction: column;">
-                        <div style="background: ${text.includes('[ESCALATE]') ? 'transparent' : '#f0f7ff'}; border: ${text.includes('[ESCALATE]') ? 'none' : '1px solid rgba(0, 102, 204, 0.1)'}; color: var(--text-dark); padding: ${text.includes('[ESCALATE]') ? '0' : '12px 16px'}; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6; width: 100%;">
+                        <div style="background: ${text.includes('[ESCALATE]') || text.includes('Comprehensive Doktura Clinical Report') ? 'transparent' : '#f0f7ff'}; border: ${text.includes('[ESCALATE]') || text.includes('Comprehensive Doktura Clinical Report') ? 'none' : '1px solid rgba(0, 102, 204, 0.1)'}; color: var(--text-dark); padding: ${text.includes('[ESCALATE]') || text.includes('Comprehensive Doktura Clinical Report') ? '0' : '12px 16px'}; border-radius: 16px 16px 16px 4px; font-size: 14px; text-align: left; line-height: 1.6; width: 100%;">
                             ${formattedText}
                         </div>
                         ${extraHtml}
@@ -1890,6 +1921,11 @@
                     history.innerHTML += createAiBubble(data.reply);
                     history.scrollTop = history.scrollHeight;
 
+                    // Trigger the "Don't lose this consult" modal popup 1 second after report generation
+                    setTimeout(() => {
+                        openSaveConsultModal();
+                    }, 1200);
+
                 } else {
                     // Normal message flow
                     const loader = document.getElementById(loadId);
@@ -1905,6 +1941,45 @@
                 if (loader) loader.remove();
                 history.innerHTML += `<div style="text-align: center; color: var(--text-dark); font-size: 12px; margin-top: 12px; font-weight: 600;">⚠️ Backend Server Offline.</div>`;
             }
+        };
+
+        window.openSaveConsultModal = function() {
+            const modal = document.getElementById('save-consult-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        };
+
+        window.closeSaveConsultModal = function() {
+            const modal = document.getElementById('save-consult-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        };
+
+        window.handleSaveConsultSubmit = function() {
+            const emailInput = document.getElementById('save-consult-email');
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                emailInput.focus();
+                return;
+            }
+            
+            // Basic email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailInput.classList.add('border-red-500');
+                return;
+            }
+            
+            // Store the email in localStorage so we can retrieve and pre-fill it on the login page!
+            localStorage.setItem('pending_signup_email', email);
+            
+            // Redirect directly to login.html with the email param
+            window.location.href = `login.html?email=${encodeURIComponent(email)}`;
         };
     </script>
 
