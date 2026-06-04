@@ -1832,6 +1832,7 @@
 
         // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
         // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
+        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
         window.processAiResponse = async function(message) {
             const history = document.getElementById('chat-history');
             
@@ -1921,10 +1922,8 @@
                     history.innerHTML += createAiBubble(data.reply);
                     history.scrollTop = history.scrollHeight;
 
-                    // Trigger the "Don't lose this consult" modal popup 1 second after report generation
-                    setTimeout(() => {
-                        openSaveConsultModal();
-                    }, 1200);
+                    // FIXED: Open modal instantly at the exact same moment the report is added!
+                    openSaveConsultModal();
 
                 } else {
                     // Normal message flow
