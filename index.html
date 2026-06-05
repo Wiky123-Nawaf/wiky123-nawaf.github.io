@@ -1548,13 +1548,16 @@
                 // BULLETPROOF CLINICAL FORMATTING ENGINE
                 let formatClinicalText = (text) => {
                     if (!text) return "";
+                    
+                    // FIXED: Instantly wipe out any leading/trailing blank spaces and newlines
+                    text = text.trim(); 
 
                     // Compress sequential newlines at the source to prevent vertical gaps
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
                     let formatted = text
-                        // 1. SPECIFIC SUBHEADINGS (English & Malay) - Intercepts them first with or without bullets/bolding
-                        .replace(/(?:^|\n+)[ \t]*[•\-\*–—\u2022]?\s*\*\*?(Laboratory Tests|Imaging Studies|Medications|Red Flag Warnings|Ujian Makmal|Kajian Pengimejan|Ubat-ubatan|Amaran Tanda Merah|Amaran)\*\*?[:]*[ \t]*\n*/gi, 
+                        // 1. SPECIFIC SUBHEADINGS (English & Malay) - FIXED: Uses \*{0,2} to support headings with 0, 1, or 2 asterisks
+                        .replace(/(?:^|\n+)[ \t]*[•\-\*–—\u2022]?\s*\*{0,2}(Laboratory Tests|Imaging Studies|Medications|Red Flag Warnings|Ujian Makmal|Kajian Pengimejan|Ubat-ubatan|Amaran Tanda Merah|Amaran)\*{0,2}[:]*[ \t]*\n*/gi, 
                             '<div class="mt-4 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
                         // 2. Numbered subheadings (e.g. 1. Migraine, etc.)
@@ -1581,6 +1584,7 @@
                     formatted = formatted.replace(/(<br\s*\/?>){2,}/gi, '<br>'); // Compress duplicate breaks
                     formatted = formatted.replace(/^(<br\s*\/?>\s*)+/, ''); // Trim leading breaks
                     formatted = formatted.replace(/(<br\s*\/?>\s*)+$/, ''); // Trim trailing breaks
+                    formatted = formatted.trim();
 
                     return formatted;
                 };
