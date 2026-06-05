@@ -1202,7 +1202,7 @@
                         <div class="testimonial-card">
                             <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
                             <p>I was feeling unwell late at night and didn't know what to do. The AI gave me clear guidance instantly, and I booked a doctor right after. Everything was smooth and reassuring....</p>
-                            <div class="user-profile"><img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/1e37881e785c2acf3a1882b6dad6518d55813fa4.png" alt="Faisal Ahmed"><span>Faisal Ahmed</span></div>
+                            <div class="user-profile"><img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/1e37881e785c2acf3a1882b6dad55813fa4.png" alt="Faisal Ahmed"><span>Faisal Ahmed</span></div>
                         </div>
                         <div class="testimonial-card">
                             <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
@@ -1527,146 +1527,197 @@
             }
         };
 
-       function formatAiMessage(content, isDashboard = false) {
-    if (content.includes("[EMERGENCY]")) {
-        return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    }
+        function formatAiMessage(content, isDashboard = false) {
+            if (content.includes("[EMERGENCY]")) {
+                return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
+                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            }
 
-    // Bulletproof trigger: Catch both [ESCALATE] or the title
-    if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
-        let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
-        let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
-        let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
-        let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
+            // Bulletproof trigger: Catch both [ESCALATE] or the title
+            if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
+                let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
+                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
 
-        let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
-        let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
-        let plan = planMatch ? planMatch[1].trim() : "";
-        let soap = soapMatch ? soapMatch[1].trim() : "";
+                let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
+                let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
+                let plan = planMatch ? planMatch[1].trim() : "";
+                let soap = soapMatch ? soapMatch[1].trim() : "";
 
-        // EXACT STYLING ENGINE FROM DASHBOARD (Spacing Reduced & Unified)
-        let formatClinicalText = (text) => {
-            if (!text) return "";
+                // EXACT STYLING ENGINE TO MATCH EXAMPLES IN THE IMAGES
+                let formatClinicalText = (text) => {
+                    if (!text) return "";
 
-            text = text.replace(/\n{3,}/g, '\n\n').trim();
+                    text = text.replace(/\n{3,}/g, '\n\n').trim();
+                    let lines = text.split('\n');
+                    let htmlOut = '';
 
-            let formatted = text
-                // 1. Numbered subheadings (Reduced mt-5 to mt-3, mb-1.5 to mb-1)
-                .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
-                    '<div class="mt-3 mb-1 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+                    lines.forEach(line => {
+                        let trimmed = line.trim();
+                        if (!trimmed) {
+                            htmlOut += '<div class="h-2"></div>';
+                            return;
+                        }
 
-                // 2. Specific Fallback Categories (Reduced mt-5 to mt-3, mb-1.5 to mb-1)
-                .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
-                    '<div class="mt-3 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                        // Check for bold headers such as **Ujian Makmal**
+                        if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
+                            let title = trimmed.replace(/\*\*/g, '');
+                            htmlOut += `<div class="font-bold text-gray-950 mt-4 mb-2 text-[15px] sm:text-[16px]">${title}</div>`;
+                            return;
+                        }
 
-                // 3. Bulleted / Category subheadings (Reduced mt-5 to mt-3, mb-1.5 to mb-1)
-                .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
-                    '<div class="mt-3 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                        // Check for lines starting with bold title prefix like **Title** Content
+                        let boldPrefixMatch = trimmed.match(/^\*\*(.*?)\*\*\s*(.*)/);
+                        if (boldPrefixMatch) {
+                            let title = boldPrefixMatch[1];
+                            let rest = boldPrefixMatch[2].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                            htmlOut += `<p class="text-gray-800 leading-relaxed mb-3"><strong class="font-bold text-gray-950">${title}</strong> ${rest}</p>`;
+                            return;
+                        }
 
-                // 4. General Bold Text
-                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
+                        // Bullet point lines containing bold conditions or standard text: • **Vertigo...** sering kali...
+                        let bulletMatch = trimmed.match(/^[-•*]\s*(.*)/);
+                        if (bulletMatch) {
+                            let content = bulletMatch[1];
+                            let bulletBoldMatch = content.match(/^\*\*(.*?)\*\*\s*(.*)/);
+                            if (bulletBoldMatch) {
+                                let title = bulletBoldMatch[1];
+                                let rest = bulletBoldMatch[2].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                                htmlOut += `<div class="flex items-start my-1.5 pl-1"><span class="text-gray-400 mr-2.5 shrink-0 mt-1.5 text-xs">&bull;</span><span class="text-gray-800"><strong class="font-bold text-gray-950">${title}</strong> ${rest}</span></div>`;
+                            } else {
+                                let formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                                htmlOut += `<div class="flex items-start my-1.5 pl-1"><span class="text-gray-400 mr-2.5 shrink-0 mt-1.5 text-xs">&bull;</span><span class="text-gray-800">${formattedContent}</span></div>`;
+                            }
+                            return;
+                        }
 
-                // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a black bold hyphen
-                .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
-                    return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-black font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
-                });
+                        // Numbered list rows (e.g. 1. Vertigo...)
+                        let numMatch = trimmed.match(/^(\d+)\.\s*(.*)/);
+                        if (numMatch) {
+                            let num = numMatch[1];
+                            let rest = numMatch[2].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                            htmlOut += `<div class="flex items-start my-1.5 pl-1"><span class="font-bold text-gray-900 mr-2 shrink-0">${num}.</span><span class="text-gray-800">${rest}</span></div>`;
+                            return;
+                        }
 
-            // 6. Convert remaining newlines
-            formatted = formatted.replace(/\n/g, '<br>');
+                        // Alphabet lists (e.g. A. Meclizine...)
+                        let alphaMatch = trimmed.match(/^([A-Za-z])\.\s*(.*)/);
+                        if (alphaMatch) {
+                            let letter = alphaMatch[1];
+                            let rest = alphaMatch[2].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                            htmlOut += `<div class="flex items-start my-1.5 pl-4"><span class="font-semibold text-gray-900 mr-2 shrink-0">${letter}.</span><span class="text-gray-800">${rest}</span></div>`;
+                            return;
+                        }
 
-            // 7. Clean up excessive spacing around block divs to keep spacing tight and neat
-            formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
-            formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
+                        // Standard fall-through formatted paragraph
+                        let formattedLine = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        htmlOut += `<p class="text-gray-700 leading-relaxed mb-2">${formattedLine}</p>`;
+                    });
 
-            return formatted;
-        };
+                    return htmlOut;
+                };
 
-        const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                let assessmentPlanHtml = '';
+                if (diffDiag) {
+                    assessmentPlanHtml += `<div>${formatClinicalText(diffDiag)}</div>`;
+                }
+                if (plan) {
+                    assessmentPlanHtml += `<div class="mt-5 pt-5 border-t border-gray-150">${formatClinicalText(plan)}</div>`;
+                }
 
-        const btnAction = `window.location.href='login.html';`;
-        const btnText = "Connect With a Doctor &rarr;";
-        const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
+                const dateStr = "5 June 2026 · 10:42 AM"; 
 
-        let reportHtml = `
-        <style>summary::-webkit-details-marker { display: none; }</style>
-        <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
-            
-            <!-- Header -->
-            <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-            <div class="p-3 sm:p-4 border-b border-gray-100">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
-                <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
-            </div>
-            
-            <!-- Summary -->
-            <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-            <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
-            </div>
-            
-            <!-- Expandable Assessment & Plan Accordion -->
-            <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
-                <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-                <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center hover:bg-gray-50 transition">
-                    <div class="flex flex-col text-left">
-                        <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
-                        <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
+                let reportHtml = `
+                <div class="w-full text-left font-sans text-gray-900 bg-white" style="max-width: 100%;">
+                    
+                    <!-- Header Block matching Image 1 -->
+                    <div class="flex flex-row justify-between items-center gap-4 pb-4">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-950 tracking-tight">Doktura Report</h1>
+                            <p class="text-sm text-gray-400 mt-1">${dateStr}</p>
+                        </div>
+                        <!-- Download Report Pill Action -->
+                        <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full hover:bg-gray-50 active:scale-95 transition text-xs sm:text-sm font-semibold text-gray-700 bg-white shadow-sm shrink-0">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            Download Report
+                        </button>
                     </div>
-                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </summary>
-                <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-                <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                    ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                    ${plan ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
-                </div>
-            </details>
-            
-            <!-- Expandable SOAP Note Accordion -->
-            ${soap ? `
-            <details class="group bg-white transition-colors border-b border-gray-100">
-                <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-                <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center hover:bg-gray-50 transition">
-                    <div class="flex flex-col text-left">
-                        <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
-                        <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+                    
+                    <hr class="border-gray-150 my-4" />
+                    
+                    <!-- Clinical Narrative Paragraph -->
+                    <div class="text-[15px] text-gray-800 leading-relaxed mb-6">
+                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
-                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </summary>
-                <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-                <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                    ${formatClinicalText(soap)}
-                </div>
-            </details>
-            ` : ''}
-            
-            <!-- Clean Care Checklist Section -->
-            <!-- Reduced padding: p-4 sm:p-5 -> p-3 sm:p-4 -->
-            <div class="p-3 sm:p-4 bg-white text-left font-sans">
-                <h3 class="font-bold text-gray-900 text-lg mb-1.5">Continue to a licensed doctor</h3>
-                <p class="text-sm text-gray-600 mb-3 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
-                <!-- Reduced space-y-2.5 to space-y-1.5 and mb-5 to mb-3 -->
-                <ul class="text-sm text-gray-600 space-y-1.5 mb-3">
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
-                </ul>
-                <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
-                    ${btnText}
-                </button>
-            </div>
-        </div>`;
+                    
+                    <!-- Separate Expandable Panels to mirror Image 1 & 2 -->
+                    <div class="space-y-4">
+                        <!-- Card 1: Assessment & Plan -->
+                        <div class="bg-[#f8fafc] border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                            <details class="group" open>
+                                <summary style="list-style: none; outline: none; cursor: pointer;" class="p-5 flex justify-between items-center hover:bg-gray-50/50 transition">
+                                    <div class="flex flex-col text-left">
+                                        <span class="text-[#0066cc] font-bold text-lg sm:text-xl leading-tight">Assessment & Plan</span>
+                                        <span class="text-gray-400 text-xs sm:text-sm font-normal mt-1">A clinical overview of possible causes considered</span>
+                                    </div>
+                                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </summary>
+                                <div class="p-5 pt-0 border-t border-gray-100/50 text-[14px] text-gray-800 leading-relaxed text-left bg-white">
+                                    <div class="space-y-2 pt-4">
+                                        ${assessmentPlanHtml}
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                        
+                        <!-- Card 2: SOAP Note (for Physicians) -->
+                        ${soap ? `
+                        <div class="bg-[#f8fafc] border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                            <details class="group">
+                                <summary style="list-style: none; outline: none; cursor: pointer;" class="p-5 flex justify-between items-center hover:bg-gray-50/50 transition">
+                                    <div class="flex flex-col text-left">
+                                        <span class="text-[#0066cc] font-bold text-lg sm:text-xl leading-tight">SOAP Note (for Physicians)</span>
+                                        <span class="text-gray-400 text-xs sm:text-sm font-normal mt-1">A clinical summary to share with your doctor</span>
+                                    </div>
+                                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </summary>
+                                <div class="p-5 pt-0 border-t border-gray-100/50 text-[14px] text-gray-800 leading-relaxed text-left bg-white">
+                                    <div class="space-y-2 pt-4">
+                                        ${formatClinicalText(soap)}
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                        ` : ''}
+                    </div>
 
-        let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
-        if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
+                    <!--
+                    DO NOT RENDER CHECKLIST BOX AND BOOKING BUT KEEP IT RETAINED IN TEMPLATE SCRIPT IF REQUIRED FOR FURTHER WORK:
+                    <div class="p-3 sm:p-4 bg-white text-left font-sans mt-6 border-t border-gray-150">
+                        <h3 class="font-bold text-gray-900 text-lg mb-1.5">Continue to a licensed doctor</h3>
+                        <p class="text-sm text-gray-600 mb-3 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                        <button class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
+                            Connect With a Doctor &rarr;
+                        </button>
+                    </div>
+                    -->
+                </div>`;
 
-        return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
-    }
+                let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
+                if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
-    return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-}
+                return `<div class="mb-4 text-gray-800" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+            }
+
+            return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
 
         function createUserBubble(text) {
             return `
@@ -1837,13 +1888,11 @@
             await window.processAiResponse(message);
         };
 
-        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
-        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
-        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
+        // Separated API process logic for ease of triggers
         window.processAiResponse = async function(message) {
             const history = document.getElementById('chat-history');
 
-            // 1. ALWAYS show the standard fast "Thinking..." bubble first
+            // 1. ALWAYS show standard fast "Thinking..." placeholder bubble
             const loadId = 'load-' + Date.now();
             history.innerHTML += `
                 <div id="${loadId}" style="display: flex; gap: 12px; margin-top: 16px; opacity: 0.6;">
@@ -1859,7 +1908,7 @@
                     localStorage.setItem("anon_session_id", sessionId);
                 }
 
-                // Fetch the response from the backend
+                // Request chat reply
                 const res = await fetch(API_BASE + '/api/chat', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ message: message, session_id: sessionId, user_id: "anonymous_web", user_name: "Guest" })
@@ -1868,15 +1917,15 @@
                 if (!res.ok) throw new Error("Backend Error");
                 const data = await res.json();
 
-                // 2. Check if the received message is a report
+                // 2. Identify if response constitutes a detailed clinical report
                 const isReport = data.reply.includes("[ESCALATE]") || data.reply.includes("Comprehensive Doktura Clinical Report");
 
                 if (isReport) {
-                    // Remove the standard "Thinking..." indicator
+                    // Remove standard thinking placeholder
                     const tEl = document.getElementById(loadId);
                     if(tEl) tEl.remove();
 
-                    // Show the Brain Loader instead
+                    // Generate processing brain loop layout
                     const brainLoaderId = 'brain-' + Date.now();
                     history.innerHTML += `
                     <div id="${brainLoaderId}" style="display: flex; gap: 12px; margin-top: 16px; width: 100%;">
@@ -1907,7 +1956,7 @@
                     </div>`;
                     history.scrollTop = history.scrollHeight;
 
-                    // Start transitioning the text messages
+                    // Text phase update iterations
                     let phaseIndex = 0;
                     const textEl = document.getElementById(`${brainLoaderId}-text`);
                     const phaseInterval = setInterval(() => {
@@ -1917,23 +1966,22 @@
                         }
                     }, 2000);
 
-                    // Wait 5 seconds to build suspense and show the animation
+                    // Add slight buffer delay for UX transition pacing
                     await new Promise(resolve => setTimeout(resolve, 5000));
 
-                    // Remove the Brain Loader
+                    // Reset brain load states
                     clearInterval(phaseInterval);
                     const bEl = document.getElementById(brainLoaderId);
                     if(bEl) bEl.remove();
 
-                    // Finally, reveal the actual report
+                    // Output fully formatted escalate triage layout
                     history.innerHTML += createAiBubble(data.reply);
                     history.scrollTop = history.scrollHeight;
 
-                    // FIXED: Open modal instantly at the exact same moment the report is added!
+                    // Pop save session option modal
                     openSaveConsultModal();
 
                 } else {
-                    // Normal message flow
                     const loader = document.getElementById(loadId);
                     if(loader) loader.remove();
 
@@ -1974,17 +2022,13 @@
                 return;
             }
 
-            // Basic email validation regex
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 emailInput.classList.add('border-red-500');
                 return;
             }
 
-            // Store the email in localStorage so we can retrieve and pre-fill it on the login page!
             localStorage.setItem('pending_signup_email', email);
-
-            // Redirect directly to login.html with the email param
             window.location.href = `login.html?email=${encodeURIComponent(email)}`;
         };
     </script>
