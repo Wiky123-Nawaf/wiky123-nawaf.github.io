@@ -1545,32 +1545,31 @@
                 let plan = planMatch ? planMatch[1].trim() : "";
                 let soap = soapMatch ? soapMatch[1].trim() : "";
 
-                // EXACT STYLING ENGINE FROM DASHBOARD
+                // FIXED STYLING ENGINE: Tightened, compressed vertical gaps
                 let formatClinicalText = (text) => {
                     if (!text) return "";
 
+                    // Compress sequential newlines at the source to prevent vertical gaps
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
                     let formatted = text
                         // 1. Numbered subheadings
                         .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
-                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
 
                         // 2. Specific Fallback Categories
                         .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
-                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
                         // 3. Bulleted / Category subheadings
-                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
-                            '<div class="mt-5 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(.*?)\*\*[:]*[ \t]*\n+/g, 
+                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
                         // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                        // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a black bold hyphen
-                        .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
-                            return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-black font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
-                        });
+                        // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a clean bullet marker (no raw line breaks)
+                        .replace(/(?:^|\n+)[ \t]*[-–][ \t]+(.*)/g, '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-gray-400 font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>');
 
                     // 6. Convert remaining newlines
                     formatted = formatted.replace(/\n/g, '<br>');
@@ -1578,6 +1577,9 @@
                     // 7. Clean up excessive spacing around block divs to keep spacing tight and neat
                     formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
                     formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
+                    formatted = formatted.replace(/(<br\s*\/?>){2,}/gi, '<br>'); // Compress duplicate breaks
+                    formatted = formatted.replace(/^(<br\s*\/?>\s*)+/, ''); // Trim leading breaks
+                    formatted = formatted.replace(/(<br\s*\/?>\s*)+$/, ''); // Trim trailing breaks
 
                     return formatted;
                 };
@@ -1603,28 +1605,28 @@
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Expandable Assessment & Plan Accordion -->
+                    <!-- Expandable Assessment & Plan Accordion (Off-White Background) -->
                     <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
-                        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition">
+                        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center bg-slate-50/90 hover:bg-slate-100 transition">
                             <div class="flex flex-col text-left">
-                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
-                                <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
+                                <span class="text-[#0066FF] font-bold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
+                                <span class="text-gray-500 text-[13px] font-normal font-sans">A clinical overview of possible causes considered</span>
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
                         <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                             ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                            ${plan ? `<div class="${diffDiag ? 'pt-6 mt-4 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
+                            ${plan ? `<div class="${diffDiag ? 'pt-4 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                         </div>
                     </details>
                     
-                    <!-- Expandable SOAP Note Accordion -->
+                    <!-- Expandable SOAP Note Accordion (Off-White Background) -->
                     ${soap ? `
                     <details class="group bg-white transition-colors border-b border-gray-100">
-                        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition">
+                        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center bg-slate-50/90 hover:bg-slate-100 transition">
                             <div class="flex flex-col text-left">
-                                <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
-                                <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+                                <span class="text-[#0066FF] font-bold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
+                                <span class="text-gray-500 text-[13px] font-normal font-sans">A clinical summary to share with your doctor</span>
                             </div>
                             <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </summary>
@@ -1634,7 +1636,7 @@
                     </details>
                     ` : ''}
                     
-                    <!-- Clean Care Checklist Section (Replaces the clunky yellow warning box) -->
+                    <!-- Clean Care Checklist Section -->
                     <div class="p-4 sm:p-5 bg-white text-left font-sans">
                         <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
                         <p class="text-sm text-gray-600 mb-4 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
