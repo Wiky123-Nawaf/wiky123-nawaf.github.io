@@ -1528,218 +1528,146 @@
         };
 
        function formatAiMessage(content, isDashboard = false) {
-    if (content.includes("[EMERGENCY]")) {
-        return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    }
-
-    // Bulletproof trigger: Catch both [ESCALATE] or the title
-    if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
-        let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
-        let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
-        let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
-        let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
-
-        let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
-        let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
-        let plan = planMatch ? planMatch[1].trim() : "";
-        let soap = soapMatch ? soapMatch[1].trim() : "";
-
-        // EXACT STYLING ENGINE (Matches Image 1 & 2 Perfectly)
-        let formatClinicalText = (text) => {
-            if (!text) return "";
-
-            // Standardize line breaks and split by line for perfect parsing
-            text = text.replace(/\n{3,}/g, '\n\n').trim();
-            let lines = text.split('\n');
-            let formattedLines = [];
-
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                
-                // Track indentation before trimming
-                let isIndented = line.startsWith(' ') || line.startsWith('\t');
-                let trimmed = line.trim();
-
-                if (!trimmed) {
-                    formattedLines.push('<div class="h-2"></div>'); // Spacing margin
-                    continue;
-                }
-
-                // Apply indentation offset matching standard reports
-                let indentClass = isIndented ? 'ml-5 sm:ml-6' : '';
-
-                // 1. Standalone Section Titles (e.g. **Subjective**, <b>Subjective</b>, **Recommended Next Steps:**)
-                // Kept clean, bold, black, and completely bullet-free to match Image 1 & 2
-                let boldHeadMatch = trimmed.match(/^\*\*([^*]+)\*\*[:]*$/) || trimmed.match(/^<b>([^<]+)<\/b>[:]*$/);
-                if (boldHeadMatch) {
-                    let title = boldHeadMatch[1];
-                    formattedLines.push(
-                        `<div class="mt-4 mb-2 text-gray-900 font-bold text-[15px] sm:text-[16px] leading-snug text-left">${title}</div>`
-                    );
-                    continue;
-                }
-
-                // 2. Numbered subheadings with bold title (e.g. "1. **Tension-Type Headache**: ...")
-                let numMatchWithBold = trimmed.match(/^(\d+)\.\s*\*\*(.*?)\*\*(.*)/);
-                if (numMatchWithBold) {
-                    let num = numMatchWithBold[1];
-                    let title = numMatchWithBold[2];
-                    let rest = numMatchWithBold[3] ? numMatchWithBold[3].trim() : "";
-                    
-                    rest = rest.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
-                    
-                    formattedLines.push(
-                        `<div class="mt-2 mb-1.5 ${indentClass} flex items-start text-left">` +
-                          `<span class="text-gray-800 font-bold mr-2 text-[14px] sm:text-[15px] leading-snug shrink-0">${num}.</span>` +
-                          `<div class="flex-1 text-gray-800 text-[14px] sm:text-[15px] leading-relaxed">` +
-                            `<strong class="text-gray-900 font-bold mr-1">${title}</strong>${rest}` +
-                          `</div>` +
-                        `</div>`
-                    );
-                    continue;
-                }
-
-                // 3. Simple numbered list items (e.g. "1. Tension-Type Headache")
-                let simpleNumMatch = trimmed.match(/^(\d+)\.\s*(.*)/);
-                if (simpleNumMatch) {
-                    let num = simpleNumMatch[1];
-                    let rest = simpleNumMatch[2].trim();
-                    
-                    rest = rest.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
-                    
-                    formattedLines.push(
-                        `<div class="mt-1 mb-1 ${indentClass} flex items-start text-left">` +
-                          `<span class="text-gray-800 font-bold mr-2 text-[14px] sm:text-[15px] shrink-0">${num}.</span>` +
-                          `<span class="flex-1 text-gray-800 text-[14px] sm:text-[15px] leading-relaxed">${rest}</span>` +
-                        `</div>`
-                    );
-                    continue;
-                }
-
-                // 4. Bulleted lines (Supports: •, *, -, –, &bull;)
-                // Renders elegant, normal-sized black/dark-gray bullets
-                let bulletMatch = trimmed.match(/^[•&bull;\*\-–]\s*(.*)/);
-                if (bulletMatch) {
-                    let rest = bulletMatch[1].trim();
-                    
-                    rest = rest.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
-                    
-                    formattedLines.push(
-                        `<div class="mt-1.5 mb-1.5 ${indentClass} flex items-start text-left">` +
-                          `<span class="text-gray-500 mr-2 text-[18px] leading-none mt-[-1px] shrink-0">&bull;</span>` +
-                          `<div class="flex-1 text-gray-800 text-[14px] sm:text-[15px] leading-relaxed">${rest}</div>` +
-                        `</div>`
-                    );
-                    continue;
-                }
-
-                // 5. Lettered lists (e.g. "A. Meclizine...", "B. Jika...")
-                let letterMatch = trimmed.match(/^([A-Z])\.\s*(.*)/);
-                if (letterMatch) {
-                    let letter = letterMatch[1];
-                    let rest = letterMatch[2].trim();
-                    
-                    rest = rest.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
-                    
-                    formattedLines.push(
-                        `<div class="mt-1 mb-1 ml-5 sm:ml-6 flex items-start text-left">` +
-                          `<span class="text-gray-800 font-bold mr-2 text-[14px] sm:text-[15px] shrink-0">${letter}.</span>` +
-                          `<span class="flex-1 text-gray-800 text-[14px] sm:text-[15px] leading-relaxed">${rest}</span>` +
-                        `</div>`
-                    );
-                    continue;
-                }
-
-                // 6. Plain text paragraphs
-                let textWithBold = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold">$1</strong>');
-                let paragraphIndent = isIndented ? 'ml-6' : '';
-                
-                formattedLines.push(
-                    `<div class="${paragraphIndent} text-gray-800 text-[14px] sm:text-[15px] leading-relaxed mt-1 mb-1 text-left">${textWithBold}</div>`
-                );
+            if (content.includes("[EMERGENCY]")) {
+                return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
+                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             }
 
-            return formattedLines.join('');
-        };
+            // Bulletproof trigger: Catch both [ESCALATE] or the title
+            if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
+                let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
+                let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
+                let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
+                let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
 
-        const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
+                let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
+                let plan = planMatch ? planMatch[1].trim() : "";
+                let soap = soapMatch ? soapMatch[1].trim() : "";
 
-        const btnAction = `window.location.href='login.html';`;
-        const btnText = "Connect With a Doctor &rarr;";
-        const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
+                // MATHEMATICALLY BALANCED SPACING ENGINE
+                let formatClinicalText = (text) => {
+                    if (!text) return "";
+                    
+                    text = text.trim(); 
 
-        let reportHtml = `
-        <style>summary::-webkit-details-marker { display: none; }</style>
-        <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
-            
-            <!-- Header -->
-            <div class="p-3 sm:p-4 border-b border-gray-100">
-                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
-                <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
-            </div>
-            
-            <!-- Summary -->
-            <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
-            </div>
-            
-            <!-- Expandable Assessment & Plan Accordion -->
-            <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
-                <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center hover:bg-gray-50 transition">
-                    <div class="flex flex-col text-left">
-                        <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
-                        <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
+                    // Compress sequential newlines at the source to prevent vertical gaps
+                    text = text.replace(/\n{3,}/g, '\n\n').trim();
+
+                    let formatted = text
+                        // 1. SPECIFIC SUBHEADINGS (English & Malay) - Styled with a beautiful, bold colored line-marker
+                        .replace(/(?:^|\n+)[ \t]*\*\*(LABORATORY TESTS|IMAGING STUDIES|MEDICATIONS|RED FLAG WARNINGS|UJIAN MAKMAL|KAJIAN PENGIMEJAN|UBAT-UBATAN|AMARAN TANDA MERAH|AMARAN)\*\*[ \t]*\n*/gi, 
+                            '<div class="mt-4 mb-2 flex items-center gap-2 border-b border-gray-100 pb-1.5"><span class="text-[#0066FF] text-[16px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[12px] uppercase tracking-wider font-sans">$1</strong></div>')
+
+                        // 2. Numbered subheadings (e.g. 1. Migraine, etc.)
+                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*(.*?)[ \t]*\n*/g, 
+                            '<div class="mt-3.5 mb-1.5 flex items-start font-sans"><span class="text-[#0066FF] font-extrabold mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] leading-snug">$2</strong></div>')
+
+                        // 3. Custom Bulleted / Category subheadings (indented bold text)
+                        .replace(/(?:^|\n+)[ \t]*\*\*(.*?)\*\*[:]*[ \t]*\n+/g, 
+                            '<div class="mt-3 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+
+                        // 4. General Bold Text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
+
+                        // 5. NESTED LIST ITEMS (Indented hyphens '  - ')
+                        .replace(/(?:^|\n+)[ \t]{2,}-\s*(.*)/g, 
+                            '<div class="ml-6 flex items-start mt-1 text-gray-500 font-sans"><span class="text-gray-300 font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>')
+
+                        // 6. PARENT LIST ITEMS (Standard hyphens '- ')
+                        .replace(/(?:^|\n+)[ \t]*-\s*(.*)/g, 
+                            '<div class="ml-2 flex items-start mt-1.5 text-gray-700 font-sans"><span class="text-[#0066FF] font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>');
+
+                    // 7. Convert remaining newlines
+                    formatted = formatted.replace(/\n/g, '<br>');
+
+                    // 8. Clean up excessive spacing around block divs to keep spacing tight and neat
+                    formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
+                    formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
+                    formatted = formatted.replace(/(<br\s*\/?>){2,}/gi, '<br>'); // Compress duplicate breaks
+                    formatted = formatted.replace(/^(<br\s*\/?>\s*)+/, ''); // Trim leading breaks
+                    formatted = formatted.replace(/(<br\s*\/?>\s*)+$/, ''); // Trim trailing breaks
+                    formatted = formatted.trim();
+
+                    return formatted;
+                };
+
+                const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                
+                const btnAction = `window.location.href='login.html';`;
+                const btnText = "Connect With a Doctor &rarr;";
+                const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
+
+                let reportHtml = `
+                <style>summary::-webkit-details-marker { display: none; }</style>
+                <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
+                    
+                    <!-- Header -->
+                    <div class="p-4 sm:p-5 border-b border-gray-100">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
+                        <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
                     </div>
-                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </summary>
-                <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                    ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                    ${plan ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
-                </div>
-            </details>
-            
-            <!-- Expandable SOAP Note Accordion -->
-            ${soap ? `
-            <details class="group bg-white transition-colors border-b border-gray-100">
-                <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center hover:bg-gray-50 transition">
-                    <div class="flex flex-col text-left">
-                        <span class="text-[#0066FF] font-semibold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
-                        <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+                    
+                    <!-- Summary -->
+                    <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
-                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </summary>
-                <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                    ${formatClinicalText(soap)}
-                </div>
-            </details>
-            ` : ''}
-            
-            <!-- Clean Care Checklist Section -->
-            <div class="p-3 sm:p-4 bg-white text-left font-sans">
-                <h3 class="font-bold text-gray-900 text-lg mb-1.5">Continue to a licensed doctor</h3>
-                <p class="text-sm text-gray-600 mb-3 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
-                <ul class="text-sm text-gray-600 space-y-1.5 mb-3">
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
-                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
-                </ul>
-                <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
-                    ${btnText}
-                </button>
-            </div>
-        </div>`;
+                    
+                    <!-- Expandable Assessment & Plan Accordion (Grayish off-white bg-slate-100 summary) -->
+                    <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
+                        <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center bg-slate-100/80 hover:bg-slate-200/60 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-bold text-[16px] sm:text-[17px] mb-0.5">Assessment & Plan</span>
+                                <span class="text-gray-500 text-[13px] font-normal font-sans">A clinical overview of possible causes considered</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left bg-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
+                            ${plan ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
+                        </div>
+                    </details>
+                    
+                    <!-- Expandable SOAP Note Accordion (Grayish off-white bg-slate-100 summary) -->
+                    ${soap ? `
+                    <details class="group bg-white transition-colors border-b border-gray-100">
+                        <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center bg-slate-100/80 hover:bg-slate-200/60 transition">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[#0066FF] font-bold text-[16px] sm:text-[17px] mb-0.5">SOAP Note (for Physicians)</span>
+                                <span class="text-gray-500 text-[13px] font-normal font-sans">A clinical summary to share with your doctor</span>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-t border-gray-100 border-dashed text-left bg-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                            ${formatClinicalText(soap)}
+                        </div>
+                    </details>
+                    ` : ''}
+                    
+                    <!-- Clean Care Checklist Section -->
+                    <div class="p-4 sm:p-5 bg-white text-left font-sans">
+                        <h3 class="font-bold text-gray-900 text-lg mb-2">Continue to a licensed doctor</h3>
+                        <p class="text-sm text-gray-600 mb-4 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                        <ul class="text-sm text-gray-600 space-y-2.5 mb-5">
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
+                            <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
+                        </ul>
+                        <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                            ${btnText}
+                        </button>
+                    </div>
+                </div>`;
 
-        let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
-        if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
+                let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
+                if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
-        return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
-    }
+                return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
+            }
 
-    return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-}
+            return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
         function createUserBubble(text) {
             return `
                 <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
