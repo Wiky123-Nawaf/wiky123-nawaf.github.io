@@ -1545,43 +1545,44 @@
                 let plan = planMatch ? planMatch[1].trim() : "";
                 let soap = soapMatch ? soapMatch[1].trim() : "";
 
-                // MATHEMATICALLY BALANCED SPACING ENGINE
+                // ULTRA-RESILIENT BACKWARDS COMPATIBLE SPACING ENGINE
                 let formatClinicalText = (text) => {
                     if (!text) return "";
                     
+                    // Clean up initial leading/trailing whitespaces and tabs
                     text = text.trim(); 
 
                     // Compress sequential newlines at the source to prevent vertical gaps
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
                     let formatted = text
-                        // 1. SPECIFIC SUBHEADINGS (English & Malay) - Styled with a beautiful, bold colored line-marker
-                        .replace(/(?:^|\n+)[ \t]*\*\*(LABORATORY TESTS|IMAGING STUDIES|MEDICATIONS|RED FLAG WARNINGS|UJIAN MAKMAL|KAJIAN PENGIMEJAN|UBAT-UBATAN|AMARAN TANDA MERAH|AMARAN)\*\*[ \t]*\n*/gi, 
+                        // 1. BACKWARDS-COMPATIBLE SUBHEADINGS: Intercepts specific subheadings (English & Malay) even if they have prefixing bullets, missing bolding, or colons
+                        .replace(/(?:^|\n+)[ \t]*[•\-\*–—\u2022]?\s*\**\s*(Laboratory Tests|Imaging Studies|Medications|Red Flag Warnings|Ujian Makmal|Kajian Pengimejan|Ubat-ubatan|Amaran Tanda Merah|Amaran)\s*\**\s*[:]*[ \t]*\n*/gi, 
                             '<div class="mt-4 mb-2 flex items-center gap-2 border-b border-gray-100 pb-1.5"><span class="text-[#0066FF] text-[16px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[12px] uppercase tracking-wider font-sans">$1</strong></div>')
 
-                        // 2. Numbered subheadings (e.g. 1. Migraine, etc.)
-                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*(.*?)[ \t]*\n*/g, 
+                        // 2. Numbered diagnosis items (e.g. 1. Vertigo Posisi..., with or without bolding)
+                        .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\**([^*]+?)\**[:]*[ \t]*\n*/g, 
                             '<div class="mt-3.5 mb-1.5 flex items-start font-sans"><span class="text-[#0066FF] font-extrabold mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] leading-snug">$2</strong></div>')
 
-                        // 3. Custom Bulleted / Category subheadings (indented bold text)
+                        // 3. Custom Bulleted / Category subheadings (any other bold blocks)
                         .replace(/(?:^|\n+)[ \t]*\*\*(.*?)\*\*[:]*[ \t]*\n+/g, 
                             '<div class="mt-3 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
                         // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                        // 5. NESTED LIST ITEMS (Indented hyphens '  - ')
-                        .replace(/(?:^|\n+)[ \t]{2,}-\s*(.*)/g, 
+                        // 5. INDENTED LIST ITEMS: Catches nested sub-bullets (en-dashes, hyphens, or bullets preceded by 2+ spaces)
+                        .replace(/(?:^|\n+)[ \t]{2,}[-–—\u2013\u2014•\*\u2022][ \t]+(.*)/g, 
                             '<div class="ml-6 flex items-start mt-1 text-gray-500 font-sans"><span class="text-gray-300 font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>')
 
-                        // 6. PARENT LIST ITEMS (Standard hyphens '- ')
-                        .replace(/(?:^|\n+)[ \t]*-\s*(.*)/g, 
+                        // 6. PARENT LIST ITEMS: Catches any standard list bullets/hyphens/asterisks cleanly
+                        .replace(/(?:^|\n+)[ \t]*[-–—\u2013\u2014•\*\u2022][ \t]+(.*)/g, 
                             '<div class="ml-2 flex items-start mt-1.5 text-gray-700 font-sans"><span class="text-[#0066FF] font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>');
 
-                    // 7. Convert remaining newlines
+                    // 7. Convert remaining newlines to HTML breaks
                     formatted = formatted.replace(/\n/g, '<br>');
 
-                    // 8. Clean up excessive spacing around block divs to keep spacing tight and neat
+                    // 8. MATHEMATICALLY TIGHTEN SPACING: Strip raw breaks adjacent to block-level elements
                     formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
                     formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
                     formatted = formatted.replace(/(<br\s*\/?>){2,}/gi, '<br>'); // Compress duplicate breaks
@@ -1608,12 +1609,12 @@
                         <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
                     </div>
                     
-                    <!-- Summary -->
+                    <!-- Summary (English/User Language) -->
                     <div class="p-4 sm:p-5 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
                     </div>
                     
-                    <!-- Expandable Assessment & Plan Accordion (Grayish off-white bg-slate-100 summary) -->
+                    <!-- Expandable Assessment & Plan Accordion (Grayish off-white bg-slate-100 summary bar) -->
                     <details class="group bg-white transition-colors border-b border-gray-100 border-dashed">
                         <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center bg-slate-100/80 hover:bg-slate-200/60 transition">
                             <div class="flex flex-col text-left">
@@ -1628,7 +1629,7 @@
                         </div>
                     </details>
                     
-                    <!-- Expandable SOAP Note Accordion (Grayish off-white bg-slate-100 summary) -->
+                    <!-- Expandable SOAP Note Accordion (Grayish off-white bg-slate-100 summary bar) -->
                     ${soap ? `
                     <details class="group bg-white transition-colors border-b border-gray-100">
                         <summary style="${summaryStyle}" class="p-3 sm:p-4 flex justify-between items-center bg-slate-100/80 hover:bg-slate-200/60 transition">
@@ -1668,6 +1669,7 @@
 
             return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         }
+		
         function createUserBubble(text) {
             return `
                 <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
