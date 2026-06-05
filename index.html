@@ -1545,7 +1545,7 @@
                 let plan = planMatch ? planMatch[1].trim() : "";
                 let soap = soapMatch ? soapMatch[1].trim() : "";
 
-                // FIXED STYLING ENGINE: Tightened, compressed vertical gaps
+                // BULLETPROOF CLINICAL FORMATTING ENGINE
                 let formatClinicalText = (text) => {
                     if (!text) return "";
 
@@ -1553,23 +1553,24 @@
                     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
                     let formatted = text
-                        // 1. Numbered subheadings
+                        // 1. SPECIFIC SUBHEADINGS (English & Malay) - Intercepts them first with or without bullets/bolding
+                        .replace(/(?:^|\n+)[ \t]*[•\-\*–—\u2022]?\s*\*\*?(Laboratory Tests|Imaging Studies|Medications|Red Flag Warnings|Ujian Makmal|Kajian Pengimejan|Ubat-ubatan|Amaran Tanda Merah|Amaran)\*\*?[:]*[ \t]*\n*/gi, 
+                            '<div class="mt-4 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+
+                        // 2. Numbered subheadings (e.g. 1. Migraine, etc.)
                         .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
-                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+                            '<div class="mt-4 mb-1.5 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
 
-                        // 2. Specific Fallback Categories
-                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
-                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
-
-                        // 3. Bulleted / Category subheadings
-                        .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(.*?)\*\*[:]*[ \t]*\n+/g, 
-                            '<div class="mt-4 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                        // 3. Custom Bulleted / Category subheadings (any other bold blocks)
+                        .replace(/(?:^|\n+)[ \t]*[•\-\*–—\u2022]?\s*\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
+                            '<div class="mt-4 mb-1.5 flex items-start"><span class="text-[#0066FF] mr-2 text-[16px] leading-none mt-[1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
 
                         // 4. General Bold Text
                         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
 
-                        // 5. Indented sub-bullets (hyphens or en-dashes) - Styled with a clean bullet marker (no raw line breaks)
-                        .replace(/(?:^|\n+)[ \t]*[-–][ \t]+(.*)/g, '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-gray-400 font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>');
+                        // 5. GENERIC LIST ITEMS - Catches any remaining bullets (•, -, *, –, —) cleanly without creating loose spacing
+                        .replace(/(?:^|\n+)[ \t]*[•\-\*–—\u2022][ \t]+(.*)/g, 
+                            '<div class="ml-4 sm:ml-5 flex items-start mt-1 text-gray-700"><span class="text-gray-400 font-bold mr-2 mt-[-1px] shrink-0">&bull;</span><span class="flex-1">$1</span></div>');
 
                     // 6. Convert remaining newlines
                     formatted = formatted.replace(/\n/g, '<br>');
