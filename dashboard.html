@@ -1090,6 +1090,7 @@
 
         // ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
         // ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
+// ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
 let formatClinicalText = (text) => {
     if (!text) return "";
     text = text.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
@@ -1123,7 +1124,7 @@ let formatClinicalText = (text) => {
         const romanMatch = trimmed.match(/^(i{1,3}|iv|v|vi{0,3}|ix|x)\.\s+(.+)$/i);
         if (romanMatch) {
             const inner = bold(romanMatch[2]);
-            html += `<div class="flex items-start mt-1 ml-5">
+            html += `<div class="flex items-start mt-1 ml-4">
                         <span class="text-gray-700 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
                         <span class="flex-1 text-gray-900">${inner}</span>
                      </div>`;
@@ -1133,7 +1134,7 @@ let formatClinicalText = (text) => {
         // ── 3. Sub-bullet — indented 2+ spaces/tabs before the dash, bullet, or asterisk ──
         if (/^[ \t]{2,}[-•*]\s+/.test(raw)) {
             const inner = bold(raw.replace(/^[ \t]+[-•*]\s+/, ''));
-            html += `<div class="flex items-start mt-1 ml-5">
+            html += `<div class="flex items-start mt-1 ml-4">
                         <span class="text-gray-700 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
                         <span class="flex-1 text-gray-900">${inner}</span>
                      </div>`;
@@ -1203,6 +1204,7 @@ let formatClinicalText = (text) => {
 
     return html;
 };
+// ─────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────
         // ─────────────────────────────────────────────────────────────────────────
 
