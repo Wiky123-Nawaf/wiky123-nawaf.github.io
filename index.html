@@ -1715,63 +1715,20 @@
             </div>
 
             <!-- Clean Care Checklist Section -->
-            <div class="p-4 sm:p-5 bg-white text-left font-sans max-w-md">
-    <!-- Heading -->
-    <h3 class="font-bold text-gray-900 text-lg mb-2">Continue with a licensed doctor</h3>
-    
-    <!-- Description -->
-    <p class="text-sm text-gray-600 mb-4 text-left leading-relaxed">
-        Given your symptoms, a doctor can give you personalized guidance — and peace of mind.
-    </p>
-    
-    <!-- Bullet List -->
-    <ul class="text-sm font-semibold text-gray-900 space-y-3.5 mb-5">
-        <!-- Item 1 -->
-        <li class="flex items-start">
-            <div class="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600">
-    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-    </svg>
-</div>
-            <span>Talk to a doctor now or schedule a time</span>
-        </li>
-        
-        <!-- Item 2 -->
-        <li class="flex items-start">
-            <div class="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600">
-    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-    </svg>
-</div>
-            <span>A doctor can review your concerns and advise on treatment</span>
-        </li>
-        
-        <!-- Item 3 -->
-        <li class="flex items-start">
-            <div class="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600">
-    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-    </svg>
-</div>
-            <span>Get prescriptions, referrals, and more in as little as 30 mins</span>
-        </li>
-        
-        <!-- Item 4 -->
-        <li class="flex items-start">
-            <div class="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600">
-    <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-    </svg>
-</div>
-            <span>RM 38 self-pay</span>
-        </li>
-    </ul>
-    
-    <!-- Action Button -->
-    <button onclick="window.location.href='login.html';" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
-        Connect With a Doctor →
-    </button>
-</div>
+            <div class="p-3 sm:p-4 bg-white text-left font-sans">
+                <h3 class="font-bold text-gray-900 text-lg mb-1.5">Continue to a licensed doctor</h3>
+                <p class="text-sm text-gray-600 mb-3 text-left">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
+                <ul class="text-sm text-gray-600 space-y-1.5 mb-3">
+                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Talk to a doctor now or schedule a time</li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> A doctor can review your concerns and advise on treatment</li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Get prescriptions, referrals, and more in as little as 30 mins</li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-blue-500 mr-2.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> RM 38 self-pay</li>
+                </ul>
+                <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
+                    ${btnText}
+                </button>
+            </div>
         </div>`;
 
         let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
