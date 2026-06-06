@@ -640,7 +640,7 @@
         function startLoaderAnimation(loadId) {
             let phaseIndex = 0;
             const textElementId = `${loadId}-text`;
-            
+
             activeLoaderInterval = setInterval(() => {
                 const el = document.getElementById(textElementId);
                 if (el) {
@@ -657,7 +657,7 @@
             const localGreetingCount = document.querySelectorAll('#chat-history .local-greeting').length;
             const aiBubbleCount = document.querySelectorAll('#chat-history .ai-bubble-avatar').length - localGreetingCount;
             const msgLower = userMessage.toLowerCase();
-            
+
             // 1. Emergency Bypass
             const emergencyKeywords = [
                 "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
@@ -972,10 +972,10 @@
                     body:JSON.stringify({user_id:window.currentUser.uid})
                 });
                 const apiSess = (await r.json()).sessions || [];
-                
+
                 // Copy the array from the API response
                 let sess = [...apiSess];
-                
+
                 // If the active session is a brand-new chat (unsaved), force-insert it into the list
                 if (window.currentSessionId && !sess.includes(window.currentSessionId)) {
                     sess.push(window.currentSessionId);
@@ -999,7 +999,7 @@
                     const bg = id === window.currentSessionId 
                         ? 'bg-blue-50 text-blue-600 font-bold border-l-4 border-blue-600' 
                         : 'text-gray-500 hover:bg-gray-50 border-l-4 border-transparent';
-                    
+
                     const timestamp = parseInt(id);
                     let dateStr = '';
                     if (!isNaN(timestamp) && timestamp > 1000000000000) {
@@ -1150,7 +1150,7 @@
                 const numPlain = trimmed.match(/^(\d+)\.\s+(.+)$/);
                 if (numPlain) {
                     html += `<div class="flex items-baseline mt-1.5 ml-3">
-                                <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numBold[1]}.</span>
+                                <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numPlain[1]}.</span>
                                 <span class="text-gray-800">${bold(numPlain[2])}</span>
                              </div>`;
                     continue;
@@ -1187,6 +1187,7 @@
                 if (bulletMatch) {
                     const inner = bold(bulletMatch[1]);
                     html += `<div class="flex items-start mt-1.5 ml-3">
+                                <span class="mr-2.5 mt-[3px] shrink-0 text-gray-700 text-[16px] leading-none">•</span>
                                 <span class="mr-2.5 mt-[3px] shrink-0 text-gray-700 text-[18px] leading-none">•</span>
                                 <span class="flex-1">${inner}</span>
                              </div>`;
@@ -1587,7 +1588,7 @@
                 voiceRec.onresult = (e) => {
                     let currentInterim = '';
                     let currentFinal = '';
-                    
+
                     for (let i = e.resultIndex; i < e.results.length; ++i) {
                         if (e.results[i].isFinal) {
                             currentFinal += e.results[i][0].transcript;
@@ -1595,11 +1596,11 @@
                             currentInterim += e.results[i][0].transcript;
                         }
                     }
-                    
+
                     if (currentFinal) {
                         window.recognizedText += currentFinal;
                     }
-                    
+
                     let displayTxt = window.recognizedText + currentInterim;
                     document.getElementById('voice-transcript').innerText = displayTxt || 'Listening...';
                     document.getElementById('chat-input').value = displayTxt;
