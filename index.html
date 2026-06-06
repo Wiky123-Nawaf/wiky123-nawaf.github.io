@@ -1578,7 +1578,7 @@ let formatClinicalText = (text) => {
         const romanMatch = trimmed.match(/^(i{1,3}|iv|v|vi{0,3}|ix|x)\.\s+(.+)$/i);
         if (romanMatch) {
             const inner = bold(romanMatch[2]);
-            html += `<div class="flex items-start mt-1 ml-7.5">
+            html += `<div class="flex items-start mt-1 ml-2">
                         <span class="text-black mr-2 mt-[5px] shrink-0" style="font-size:9px;">●</span>
                         <span class="flex-1 text-gray-800">${inner}</span>
                      </div>`;
@@ -1588,7 +1588,7 @@ let formatClinicalText = (text) => {
         // ── 3. Sub-bullet — indented 2+ spaces/tabs ────────────────────────
         if (/^[ \t]{2,}[-•*]\s+/.test(raw)) {
             const inner = bold(raw.replace(/^[ \t]+[-•*]\s+/, ''));
-            html += `<div class="flex items-start mt-1 ml-7.5">
+            html += `<div class="flex items-start mt-1 ml-2">
                         <span class="text-black mr-2 mt-[5px] shrink-0" style="font-size:9px;">●</span>
                         <span class="flex-1 text-gray-800">${inner}</span>
                      </div>`;
