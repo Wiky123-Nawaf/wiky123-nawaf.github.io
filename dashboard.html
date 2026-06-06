@@ -1072,7 +1072,6 @@
         let planMatch      = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
         let soapMatch      = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
 
-        // Insert these lines right below them:
         let bookingMatch   = content.match(/(?:\*\*Booking Symptoms:\*\*|\*\*Booking Symptoms\*\*|Booking Symptoms:)\s*([\s\S]*?)$/i);
         let bookingSymp = bookingMatch ? bookingMatch[1].trim().replace(/['"]/g, "") : "AI Triage Complete";
 
@@ -1089,124 +1088,118 @@
         let soap     = soapMatch     ? soapMatch[1].trim()     : "";
 
         // ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
-        // ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
-// ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
-let formatClinicalText = (text) => {
-    if (!text) return "";
-    text = text.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+        let formatClinicalText = (text) => {
+            if (!text) return "";
+            text = text.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 
-    // Apply inline bold/strong to a string
-    const bold = (str) =>
-        str.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>');
+            const bold = (str) =>
+                str.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>');
 
-    const lines = text.split('\n');
-    let html = '';
+            const lines = text.split('\n');
+            let html = '';
 
-    for (let i = 0; i < lines.length; i++) {
-        const raw     = lines[i];
-        const trimmed = raw.trim();
+            for (let i = 0; i < lines.length; i++) {
+                const raw     = lines[i];
+                const trimmed = raw.trim();
 
-        // ── Empty line → small spacer ──────────────────────────────────────
-        if (!trimmed) {
-            html += '<div class="h-2"></div>';
-            continue;
-        }
+                // ── Empty line → small spacer ──────────────────────────────────
+                if (!trimmed) {
+                    html += '<div class="h-2"></div>';
+                    continue;
+                }
 
-        // ── 1. SOAP section headers: Subjective / Objective / Assessment / Plan ──
-        const soapTest = trimmed.replace(/\*\*/g, '').replace(/:$/, '').trim();
-        if (/^(Subjective|Objective|Assessment|Plan)$/i.test(soapTest)) {
-            html += `<div class="mt-4 mb-1.5"><strong class="text-gray-900 font-bold text-[15px] sm:text-[16px]">${soapTest}</strong></div>`;
-            continue;
-        }
+                // ── 1. SOAP section headers: Subjective / Objective / Assessment / Plan ──
+                const soapTest = trimmed.replace(/\*\*/g, '').replace(/:$/, '').trim();
+                if (/^(Subjective|Objective|Assessment|Plan)$/i.test(soapTest)) {
+                    html += `<div class="mt-4 mb-1.5"><strong class="text-gray-900 font-bold text-[15px] sm:text-[16px]">${soapTest}</strong></div>`;
+                    continue;
+                }
 
-        // ── 2. Roman numerals: "i. text", "ii. text", "iii. text" etc ────────────
-        //    Treat like small sub-bullets, indented like the old sub-bullet style
-        const romanMatch = trimmed.match(/^(i{1,3}|iv|v|vi{0,3}|ix|x)\.\s+(.+)$/i);
-        if (romanMatch) {
-            const inner = bold(romanMatch[2]);
-            html += `<div class="flex items-start mt-1 ml-4">
-                        <span class="text-gray-700 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
-                        <span class="flex-1 text-gray-900">${inner}</span>
-                     </div>`;
-            continue;
-        }
+                // ── 2. Roman numerals: "i. text", "ii. text", "iii. text" etc ──
+                const romanMatch = trimmed.match(/^(i{1,3}|iv|v|vi{0,3}|ix|x)\.\s+(.+)$/i);
+                if (romanMatch) {
+                    const inner = bold(romanMatch[2]);
+                    html += `<div class="flex items-start mt-1 ml-2">
+                                <span class="text-gray-500 mr-2 mt-[5px] shrink-0" style="font-size:7px;">●</span>
+                                <span class="flex-1 text-gray-800">${inner}</span>
+                             </div>`;
+                    continue;
+                }
 
-        // ── 3. Sub-bullet — indented 2+ spaces/tabs before the dash, bullet, or asterisk ──
-        if (/^[ \t]{2,}[-•*]\s+/.test(raw)) {
-            const inner = bold(raw.replace(/^[ \t]+[-•*]\s+/, ''));
-            html += `<div class="flex items-start mt-1 ml-4">
-                        <span class="text-gray-700 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
-                        <span class="flex-1 text-gray-900">${inner}</span>
-                     </div>`;
-            continue;
-        }
+                // ── 3. Sub-bullet — indented 2+ spaces/tabs ────────────────────
+                if (/^[ \t]{2,}[-•*]\s+/.test(raw)) {
+                    const inner = bold(raw.replace(/^[ \t]+[-•*]\s+/, ''));
+                    html += `<div class="flex items-start mt-1 ml-2">
+                                <span class="text-gray-500 mr-2 mt-[5px] shrink-0" style="font-size:7px;">●</span>
+                                <span class="flex-1 text-gray-800">${inner}</span>
+                             </div>`;
+                    continue;
+                }
 
-        // ── 4. Numbered + bold: "1. **Name**" ─────────────────────────────
-        const numBold = trimmed.match(/^(\d+)\.\s*\*\*([^*\n]+)\*\*[: ]*$/);
-        if (numBold) {
-            html += `<div class="flex items-baseline mt-1.5 ml-3">
-                        <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numBold[1]}.</span>
-                        <span class="text-gray-800 font-semibold">${numBold[2]}</span>
-                     </div>`;
-            continue;
-        }
+                // ── 4. Numbered + bold: "1. **Name**" ─────────────────────────
+                const numBold = trimmed.match(/^(\d+)\.\s*\*\*([^*\n]+)\*\*[: ]*$/);
+                if (numBold) {
+                    html += `<div class="flex items-baseline mt-1.5 ml-3">
+                                <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numBold[1]}.</span>
+                                <span class="text-gray-800 font-semibold">${numBold[2]}</span>
+                             </div>`;
+                    continue;
+                }
 
-        // ── 5. Plain numbered: "1. Text" ───────────────────────────────────
-        const numPlain = trimmed.match(/^(\d+)\.\s+(.+)$/);
-        if (numPlain) {
-            html += `<div class="flex items-baseline mt-1.5 ml-3">
-                        <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numPlain[1]}.</span>
-                        <span class="text-gray-800">${bold(numPlain[2])}</span>
-                     </div>`;
-            continue;
-        }
+                // ── 5. Plain numbered: "1. Text" ───────────────────────────────
+                const numPlain = trimmed.match(/^(\d+)\.\s+(.+)$/);
+                if (numPlain) {
+                    html += `<div class="flex items-baseline mt-1.5 ml-3">
+                                <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numPlain[1]}.</span>
+                                <span class="text-gray-800">${bold(numPlain[2])}</span>
+                             </div>`;
+                    continue;
+                }
 
-        // ── 6. Lettered sub-items: "A. text" ──────────────────────────────
-        const lettered = trimmed.match(/^([A-D])\.\s+(.+)$/);
-        if (lettered) {
-            html += `<div class="flex items-baseline mt-1 ml-7">
-                        <span class="text-gray-800 font-medium mr-2 shrink-0">${lettered[1]}.</span>
-                        <span class="text-gray-900">${bold(lettered[2])}</span>
-                     </div>`;
-            continue;
-        }
+                // ── 6. Lettered sub-items: "A. text" ──────────────────────────
+                const lettered = trimmed.match(/^([A-D])\.\s+(.+)$/);
+                if (lettered) {
+                    html += `<div class="flex items-baseline mt-1 ml-7">
+                                <span class="text-gray-800 font-medium mr-2 shrink-0">${lettered[1]}.</span>
+                                <span class="text-gray-900">${bold(lettered[2])}</span>
+                             </div>`;
+                    continue;
+                }
 
-        // ── 7. Bold standalone heading: "**Heading**" or "**Heading:**" ───
-        const boldAlone = trimmed.match(/^\*\*([^*]+)\*\*[: ]*$/);
-        if (boldAlone) {
-            const title = boldAlone[1];
-            const isKnownCategory = /Laboratory Tests|Imaging Studies|Medications|Conservative Management|Red Flag|Follow-up|Referral|Recommended Next Steps/i.test(title);
-            if (isKnownCategory) {
-                html += `<div class="mt-3 mb-0.5 flex items-start ml-3">
-                            <span class="text-[#0066FF] mr-2 mt-[2px] shrink-0 font-bold text-[16px] leading-none">•</span>
-                            <strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">${title}</strong>
-                         </div>`;
-            } else {
-                html += `<div class="mt-3 mb-1"><strong class="text-gray-900 font-semibold text-[14px] sm:text-[15px]">${title}</strong></div>`;
+                // ── 7. Bold standalone heading: "**Heading**" or "**Heading:**" ──
+                const boldAlone = trimmed.match(/^\*\*([^*]+)\*\*[: ]*$/);
+                if (boldAlone) {
+                    const title = boldAlone[1];
+                    const isKnownCategory = /Laboratory Tests|Imaging Studies|Medications|Conservative Management|Red Flag|Follow-up|Referral|Recommended Next Steps/i.test(title);
+                    if (isKnownCategory) {
+                        html += `<div class="mt-3 mb-0.5 flex items-start ml-3">
+                                    <span class="text-[#0066FF] mr-2 mt-[2px] shrink-0 font-bold text-[16px] leading-none">•</span>
+                                    <strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">${title}</strong>
+                                 </div>`;
+                    } else {
+                        html += `<div class="mt-3 mb-1"><strong class="text-gray-900 font-semibold text-[14px] sm:text-[15px]">${title}</strong></div>`;
+                    }
+                    continue;
+                }
+
+                // ── 8. Bullet items: "- text", "• text", or "* text" ──────────
+                const bulletMatch = trimmed.match(/^[-•*]\s+(.+)$/);
+                if (bulletMatch) {
+                    const inner = bold(bulletMatch[1]);
+                    html += `<div class="flex items-start mt-1.5 ml-3">
+                                <span class="mr-2.5 mt-[3px] shrink-0 text-gray-700 text-[16px] leading-none">•</span>
+                                <span class="flex-1">${inner}</span>
+                             </div>`;
+                    continue;
+                }
+
+                // ── 9. Fallback: plain text paragraph ─────────────────────────
+                html += `<div class="mt-1 leading-relaxed">${bold(trimmed)}</div>`;
             }
-            continue;
-        }
 
-        // ── 8. Bullet items: "- text", "• text", or "* text" ─────────────────────────
-        const bulletMatch = trimmed.match(/^[-•*]\s+(.+)$/);
-        if (bulletMatch) {
-            const inner = bold(bulletMatch[1]);
-            html += `<div class="flex items-start mt-1.5 ml-3">
-                        <span class="mr-2.5 mt-[3px] shrink-0 text-gray-700 text-[16px] leading-none">•</span>
-                        <span class="flex-1">${inner}</span>
-                     </div>`;
-            continue;
-        }
-
-        // ── 9. Fallback: plain text paragraph ─────────────────────────────
-        html += `<div class="mt-1 leading-relaxed">${bold(trimmed)}</div>`;
-    }
-
-    return html;
-};
-// ─────────────────────────────────────────────────────────────────────────
-// ─────────────────────────────────────────────────────────────────────────
-        // ─────────────────────────────────────────────────────────────────────────
+            return html;
+        };
+        // ─────────────────────────────────────────────────────────────────────
 
         const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -1218,25 +1211,25 @@ let formatClinicalText = (text) => {
 
         let reportHtml = `
         <style>summary::-webkit-details-marker { display: none; }</style>
-        <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
 
             <!-- Header -->
-            <div class="p-3 sm:p-4 border-b border-gray-100">
+            <div class="p-3 sm:p-4 border-b border-gray-200 bg-white">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
                 <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
             </div>
 
-            <!-- Summary -->
-            <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <!-- Summary — same text style as accordion content -->
+            <div class="px-4 sm:px-5 py-4 text-sm text-gray-800 leading-relaxed border-b border-gray-200 text-left bg-gray-50" style="word-wrap: break-word; overflow-wrap: break-word;">
                 ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
             </div>
 
             <!-- Expandable Accordions — Standalone Cards -->
-            <div class="px-3 sm:px-4 py-3 space-y-2 border-b border-gray-100 border-dashed">
+            <div class="px-3 sm:px-4 py-3 space-y-2 border-b border-gray-200 bg-gray-50">
 
                 <!-- Assessment & Plan Card -->
-                <details class="group rounded-2xl border border-gray-200 bg-white overflow-hidden">
-                    <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                <details class="group rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+                    <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-100 transition-colors">
                         <div class="flex flex-col text-left">
                             <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">Assessment & Plan</span>
                             <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
@@ -1245,7 +1238,7 @@ let formatClinicalText = (text) => {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </summary>
-                    <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-200 text-left bg-gray-50" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
                         ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-300 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                     </div>
@@ -1253,8 +1246,8 @@ let formatClinicalText = (text) => {
 
                 <!-- SOAP Note Card -->
                 ${soap ? `
-                <details class="group rounded-2xl border border-gray-200 bg-white overflow-hidden">
-                    <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                <details class="group rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+                    <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-100 transition-colors">
                         <div class="flex flex-col text-left">
                             <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">SOAP Note (for Physicians)</span>
                             <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
@@ -1263,7 +1256,7 @@ let formatClinicalText = (text) => {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </summary>
-                    <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-200 text-left bg-gray-50" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${formatClinicalText(soap)}
                     </div>
                 </details>
@@ -1272,62 +1265,62 @@ let formatClinicalText = (text) => {
             </div>
 
             <!-- Clean Care Checklist Section -->
-            <div class="p-4 sm:p-5 bg-white rounded-lg text-left font-sans">
+            <div class="p-4 sm:p-5 bg-white rounded-b-2xl text-left font-sans">
 
-    <h3 class="font-bold text-gray-900 text-lg mb-2">
-        Continue with a licensed doctor
-    </h3>
+                <h3 class="font-bold text-gray-900 text-lg mb-2">
+                    Continue with a licensed doctor
+                </h3>
 
-    <p class="text-sm text-gray-700 mb-4 leading-relaxed">
-        Given your symptoms, a doctor can give you personalized guidance —
-        and peace of mind.
-    </p>
+                <p class="text-sm text-gray-700 mb-4 leading-relaxed">
+                    Given your symptoms, a doctor can give you personalized guidance —
+                    and peace of mind.
+                </p>
 
-    <ul class="space-y-3 mb-4">
-        
-        <li class="flex items-center text-sm font-semibold text-gray-900">
-            <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                </svg>
+                <ul class="space-y-3 mb-4">
+                    
+                    <li class="flex items-center text-sm font-semibold text-gray-900">
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
+                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
+                            </svg>
+                        </div>
+                        Talk to a doctor now or schedule a time
+                    </li>
+
+                    <li class="flex items-center text-sm font-semibold text-gray-900">
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
+                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
+                            </svg>
+                        </div>
+                        A doctor can review your concerns and advise on treatment
+                    </li>
+
+                    <li class="flex items-center text-sm font-semibold text-gray-900">
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
+                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
+                            </svg>
+                        </div>
+                        Get prescriptions, referrals, and more in as little as 30 mins
+                    </li>
+
+                    <li class="flex items-center text-sm font-semibold text-gray-900">
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
+                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
+                            </svg>
+                        </div>
+                        RM 38 self-pay
+                    </li>
+
+                </ul>
+
+                <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-sm transition text-sm">
+                    ${btnText}
+                </button>
+
             </div>
-            Talk to a doctor now or schedule a time
-        </li>
-
-        <li class="flex items-center text-sm font-semibold text-gray-900">
-            <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                </svg>
-            </div>
-            A doctor can review your concerns and advise on treatment
-        </li>
-
-        <li class="flex items-center text-sm font-semibold text-gray-900">
-            <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                </svg>
-            </div>
-            Get prescriptions, referrals, and more in as little as 30 mins
-        </li>
-
-        <li class="flex items-center text-sm font-semibold text-gray-900">
-            <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                </svg>
-            </div>
-            RM 38 self-pay
-        </li>
-
-    </ul>
-
-    <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-sm transition text-sm">
-        ${btnText}
-    </button>
-
-</div>
         </div>`;
 
         let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
