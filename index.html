@@ -1579,7 +1579,7 @@ let formatClinicalText = (text) => {
         if (romanMatch) {
             const inner = bold(romanMatch[2]);
             html += `<div class="flex items-start mt-1 ml-6">
-                        <span class="text-black mr-2 mt-[5px] shrink-0" style="font-size:9px;">●</span>
+                        <span class="text-black mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
                         <span class="flex-1 text-gray-800">${inner}</span>
                      </div>`;
             continue;
@@ -1589,7 +1589,7 @@ let formatClinicalText = (text) => {
         if (/^[ \t]{2,}[-•*]\s+/.test(raw)) {
             const inner = bold(raw.replace(/^[ \t]+[-•*]\s+/, ''));
             html += `<div class="flex items-start mt-1 ml-6">
-                        <span class="text-black mr-2 mt-[5px] shrink-0" style="font-size:9px;">●</span>
+                        <span class="text-black mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
                         <span class="flex-1 text-gray-800">${inner}</span>
                      </div>`;
             continue;
