@@ -1579,8 +1579,8 @@
                 if (/^[ \t]{2,}[-•]\s+/.test(raw)) {
                     const inner = bold(raw.replace(/^[ \t]+[-•]\s+/, ''));
                     html += `<div class="flex items-start mt-1 ml-5">
-                                <span class="text-gray-400 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
-                                <span class="flex-1 text-gray-700">${inner}</span>
+                                <span class="text-gray-700 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
+                                <span class="flex-1 text-gray-900">${inner}</span>
                              </div>`;
                     continue;
                 }
@@ -1608,9 +1608,9 @@
                 // ── 5. Lettered sub-items: "A. text" ──────────────────────────────
                 const lettered = trimmed.match(/^([A-D])\.\s+(.+)$/);
                 if (lettered) {
-                    html += `<div class="flex items-baseline mt-1 ml-4">
-                                <span class="text-gray-600 font-medium mr-2 shrink-0">${lettered[1]}.</span>
-                                <span class="text-gray-700">${bold(lettered[2])}</span>
+                    html += `<div class="flex items-baseline mt-1 ml-7">
+                                <span class="text-gray-800 font-medium mr-2 shrink-0">${lettered[1]}.</span>
+                                <span class="text-gray-900">${bold(lettered[2])}</span>
                              </div>`;
                     continue;
                 }
@@ -1690,7 +1690,7 @@
                     </summary>
                     <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                        ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
+                        ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-300 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                     </div>
                 </details>
 
