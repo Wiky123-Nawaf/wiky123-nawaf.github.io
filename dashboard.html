@@ -992,6 +992,14 @@
         let planMatch      = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
         let soapMatch      = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
 
+        // Insert these lines right below them:
+        let bookingMatch   = content.match(/(?:\*\*Booking Symptoms:\*\*|\*\*Booking Symptoms\*\*|Booking Symptoms:)\s*([\s\S]*?)$/i);
+        let bookingSymp = bookingMatch ? bookingMatch[1].trim().replace(/['"]/g, "") : "AI Triage Complete";
+
+        if (isDashboard) {
+            window.generatedClinicalReport = content; 
+        }
+
         let summary  = summaryMatch  ? summaryMatch[1].trim()  : "Based on your symptoms, a medical consultation is recommended.";
         let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
         let plan     = planMatch     ? planMatch[1].trim()     : "";
@@ -1105,8 +1113,10 @@
 
         const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-        const btnAction   = `window.location.href='login.html';`;
-        const btnText     = "Connect With a Doctor &rarr;";
+        const btnAction = isDashboard 
+            ? `switchTab('book'); document.getElementById('book-symptoms').value = '${bookingSymp}'; suggestDoctor();`
+            : `window.location.href='login.html';`;
+        const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
         const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
 
         let reportHtml = `
@@ -1216,8 +1226,8 @@
 
     </ul>
 
-    <button onclick="window.location.href='login.html';" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-sm transition text-sm">
-        Connect With a Doctor →
+    <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-sm transition text-sm">
+        ${btnText}
     </button>
 
 </div>
