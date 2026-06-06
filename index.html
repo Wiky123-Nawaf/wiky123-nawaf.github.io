@@ -1678,49 +1678,55 @@ let formatClinicalText = (text) => {
             </div>
 
             <!-- Summary -->
-            <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <div class="p-4 sm:p-5 bg-white rounded-lg text-left font-sans" style="word-wrap: break-word; overflow-wrap: break-word;">
                 ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
             </div>
 
             <!-- Expandable Accordions — Standalone Cards -->
-            <div class="px-3 sm:px-4 py-3 space-y-2 border-b border-gray-100 border-dashed">
+           <div class="p-4 sm:p-5 bg-white rounded-lg text-left font-sans">
 
-                <!-- Assessment & Plan Card -->
-                <details class="group rounded-2xl border border-gray-200 bg-white overflow-hidden">
-                    <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition-colors">
-                        <div class="flex flex-col text-left">
-                            <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">Assessment & Plan</span>
-                            <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
-                        </div>
-                        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </summary>
-                    <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                        ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                        ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-300 border-solid' : ''}">${formatClinicalText(plan)}</div>` : ''}
-                    </div>
-                </details>
-
-                <!-- SOAP Note Card -->
-                ${soap ? `
-                <details class="group rounded-2xl border border-gray-200 bg-white overflow-hidden">
-                    <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-50 transition-colors">
-                        <div class="flex flex-col text-left">
-                            <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">SOAP Note (for Physicians)</span>
-                            <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
-                        </div>
-                        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </summary>
-                    <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
-                        ${formatClinicalText(soap)}
-                    </div>
-                </details>
-                ` : ''}
-
+    <!-- Assessment & Plan Card -->
+    <!-- CHANGED: bg-white to bg-gray-50, added mb-5 for spacing -->
+    <details class="group mb-5 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+        <!-- CHANGED: hover:bg-gray-50 to hover:bg-gray-100 -->
+        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-100 transition-colors">
+            <div class="flex flex-col text-left">
+                <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">Assessment & Plan</span>
+                <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
             </div>
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </summary>
+        <!-- CHANGED: added bg-white inside class list -->
+        <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left bg-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+            ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
+            ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-300 border-solid' : ''}">${formatClinicalText(plan)}</div>` : ''}
+        </div>
+    </details>
+
+    <!-- SOAP Note Card -->
+    ${soap ? `
+    <!-- CHANGED: bg-white to bg-gray-50 -->
+    <details class="group rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
+        <!-- CHANGED: hover:bg-gray-50 to hover:bg-gray-100 -->
+        <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-100 transition-colors">
+            <div class="flex flex-col text-left">
+                <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">SOAP Note (for Physicians)</span>
+                <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
+            </div>
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </summary>
+        <!-- CHANGED: added bg-white inside class list -->
+        <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left bg-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+            ${formatClinicalText(soap)}
+        </div>
+    </details>
+    ` : ''}
+
+</div>
 
             <!-- Clean Care Checklist Section -->
             <div class="p-4 sm:p-5 bg-white rounded-lg text-left font-sans">
