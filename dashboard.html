@@ -971,10 +971,18 @@
                     headers:await getAuthHeaders(),
                     body:JSON.stringify({user_id:window.currentUser.uid})
                 });
-                const sess = (await r.json()).sessions || [];
+                const apiSess = (await r.json()).sessions || [];
                 
-                // 1. Sort stable descending (newest timestamp first)
-                const sortedSess = [...sess].sort((a, b) => {
+                // Copy the array from the API response
+                let sess = [...apiSess];
+                
+                // If the active session is a brand-new chat (unsaved), force-insert it into the list
+                if (window.currentSessionId && !sess.includes(window.currentSessionId)) {
+                    sess.push(window.currentSessionId);
+                }
+
+                // Sort session IDs chronologically descending (newest timestamp first)
+                const sortedSess = sess.sort((a, b) => {
                     const tA = parseInt(a) || 0;
                     const tB = parseInt(b) || 0;
                     return tB - tA; 
@@ -992,7 +1000,6 @@
                         ? 'bg-blue-50 text-blue-600 font-bold border-l-4 border-blue-600' 
                         : 'text-gray-500 hover:bg-gray-50 border-l-4 border-transparent';
                     
-                    // 2. Parse date-wise display context
                     const timestamp = parseInt(id);
                     let dateStr = '';
                     if (!isNaN(timestamp) && timestamp > 1000000000000) {
@@ -1000,19 +1007,25 @@
                         dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                     }
 
-                    // 3. Retrieve locally cached symptom or first query
                     const cachedSymptom = localStorage.getItem('symptom_' + id);
                     const cachedFirstMsg = localStorage.getItem('first_msg_' + id);
 
                     const cleanMsg = (cachedSymptom || cachedFirstMsg || '')
-                        .replace(/[^\w\s\-\?,]/gi, '') // clean up special characters
+                        .replace(/[^\w\s\-\?,]/gi, '')
                         .trim();
 
                     let sessionLabel = '';
                     let tooltipText = '';
 
-                    // 4. Arrange date at the beginning so truncation does not hide it
-                    if (cleanMsg) {
+                    const isUnsaved = !apiSess.includes(id);
+
+                    // If it is unsaved on the server, label it as "New Chat" with the creation time
+                    if (isUnsaved) {
+                        const date = new Date(timestamp);
+                        const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                        sessionLabel = `New Chat (${timeStr})`;
+                        tooltipText = `Active Unsaved Session - Started at ${timeStr}`;
+                    } else if (cleanMsg) {
                         if (dateStr) {
                             sessionLabel = `${dateStr} • ${cleanMsg}`;
                             tooltipText = `${dateStr} • ${cleanMsg}`;
@@ -1030,7 +1043,6 @@
                         tooltipText = `Session ${id}`;
                     }
 
-                    // Added the 'title' attribute below to show full symptom text on cursor hover
                     list.innerHTML += `
                         <button onclick="window.currentSessionId='${id}';loadSessions();switchTab('chat');" 
                                 title="${tooltipText.replace(/"/g, '&quot;')}"
@@ -1512,6 +1524,7 @@
 
                     if(isVoiceActive) speakOut(data.reply);
                 }
+                loadSessions();
 
             } catch(e) {
                 // If there's an error, just clear the 3-dots and show an error message
