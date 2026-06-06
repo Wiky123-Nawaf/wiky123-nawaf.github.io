@@ -1617,35 +1617,20 @@
 
                 // ── 6. Bold standalone heading: "**Heading**" or "**Heading:**" ───
                 //    (No leading bullet or number — acts as a section/category title)
-                // ── 6. Bold standalone heading ───────────────────────────────────────────
-const boldAlone = trimmed.match(/^\*\*([^*]+)\*\*[: ]*$/);
-if (boldAlone) {
-    const title = boldAlone[1];
-    const isKnownCategory = /Laboratory Tests|Imaging Studies|Medications|Conservative Management|Red Flag|Follow-up|Referral|Recommended Next Steps/i.test(title);
-    if (isKnownCategory) {
-        html += `<div class="mt-3 mb-0.5 flex items-start">
-                    <span class="text-[#0066FF] mr-2 mt-[2px] shrink-0 font-bold text-[16px] leading-none">•</span>
-                    <strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">${title}</strong>
-                 </div>`;
-    } else {
-        html += `<div class="mt-3 mb-1"><strong class="text-gray-900 font-semibold text-[14px] sm:text-[15px]">${title}</strong></div>`;
-    }
-    continue;
-}
-
-// ── 7b. Bare category heading (no ** wrapping) ────────────────────────────
-//    Catches: "Red Flag Warnings", "Recommended Next Steps:", etc.
-const bareCategory = trimmed.replace(/:$/, '').trim();
-const isBareKnown = /^(Red Flag(\s+\w+)?|Recommended Next Steps|Laboratory Tests|Imaging Studies|Medications|Conservative Management|Follow-up|Referral)$/i.test(bareCategory);
-if (isBareKnown) {
-    html += `<div class="mt-3 mb-0.5 flex items-start">
-                <span class="text-[#0066FF] mr-2 mt-[2px] shrink-0 font-bold text-[16px] leading-none">•</span>
-                <strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">${bareCategory}</strong>
-             </div>`;
-    continue;
-}
-
-// ── 7. Bullet items ────────────────────────────────────────────────────────
+                const boldAlone = trimmed.match(/^\*\*([^*]+)\*\*[: ]*$/);
+                if (boldAlone) {
+                    const title = boldAlone[1];
+                    const isKnownCategory = /Laboratory Tests|Imaging Studies|Medications|Conservative Management|Red Flag|Follow-up|Referral|Recommended Next Steps/i.test(title);
+                    if (isKnownCategory) {
+                        html += `<div class="mt-3 mb-0.5 flex items-start">
+                                    <span class="text-[#0066FF] mr-2 mt-[2px] shrink-0 font-bold text-[16px] leading-none">•</span>
+                                    <strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">${title}</strong>
+                                 </div>`;
+                    } else {
+                        html += `<div class="mt-3 mb-1"><strong class="text-gray-900 font-semibold text-[14px] sm:text-[15px]">${title}</strong></div>`;
+                    }
+                    continue;
+                }
 
                 // ── 7. Bullet items: "- text" or "• text" ─────────────────────────
                 //    Inline bold (**Name:** desc  OR  **Name** desc) is handled
