@@ -1535,73 +1535,145 @@
 
     // Bulletproof trigger: Catch both [ESCALATE] or the title
     if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
-        let summaryMatch = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
-        let diffDiagMatch = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
-        let planMatch = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
-        let soapMatch = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
+        let summaryMatch   = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
+        let diffDiagMatch  = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
+        let planMatch      = content.match(/(?:\*\*Comprehensive Plan[^\*]*\*\*|\*\*Plan of Action[^\*]*\*\*|Plan of Action:|Plan of Action)\s*([\s\S]*?)(?=---|###|\*\*SOAP Note|SOAP Note)/i);
+        let soapMatch      = content.match(/(?:\*\*SOAP Note[^\*]*\*\*|SOAP Note:|SOAP Note)\s*([\s\S]*?)(?=---|###|\*\*Booking Symptoms|Booking Symptoms|$)/i);
 
-        let summary = summaryMatch ? summaryMatch[1].trim() : "Based on your symptoms, a medical consultation is recommended.";
+        let summary  = summaryMatch  ? summaryMatch[1].trim()  : "Based on your symptoms, a medical consultation is recommended.";
         let diffDiag = diffDiagMatch ? diffDiagMatch[1].trim() : "";
-        let plan = planMatch ? planMatch[1].trim() : "";
-        let soap = soapMatch ? soapMatch[1].trim() : "";
+        let plan     = planMatch     ? planMatch[1].trim()     : "";
+        let soap     = soapMatch     ? soapMatch[1].trim()     : "";
 
+        // ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
         let formatClinicalText = (text) => {
             if (!text) return "";
+            text = text.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 
-            text = text.replace(/\n{3,}/g, '\n\n').trim();
+            // Apply inline bold/strong to a string
+            const bold = (str) =>
+                str.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>');
 
-            let formatted = text
-                // 1. Numbered subheadings
-                .replace(/(?:^|\n+)[ \t]*(\d+)\.\s*\*\*([^*]+)\*\*[:]*[ \t]*\n*/g, 
-                    '<div class="mt-3 mb-1 flex items-start"><span class="text-[#0066FF] font-black mr-2 text-[14px] sm:text-[15px] leading-snug">$1.</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$2</strong></div>')
+            const lines = text.split('\n');
+            let html = '';
 
-                // 2. Specific Fallback Categories
-                .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*(Laboratory Tests|Imaging Studies|Medications(?: and| &)? Conservative Management|Red Flag Warnings|Follow-up|Referral)\*\*[:]*[ \t]*\n*/gi, 
-                    '<div class="mt-3 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+            for (let i = 0; i < lines.length; i++) {
+                const raw     = lines[i];
+                const trimmed = raw.trim();
 
-                // 3. Bulleted / Category subheadings
-                .replace(/(?:^|\n+)[ \t]*(?:-\s*)?\*\*([^*]+)\*\*[:]*[ \t]*\n+/g, 
-                    '<div class="mt-3 mb-1 flex items-start"><span class="text-[#0066FF] mr-2 text-[20px] leading-none mt-[-1px]">&bull;</span><strong class="text-gray-900 font-extrabold text-[14px] sm:text-[15px] uppercase tracking-wide leading-snug">$1</strong></div>')
+                // ── Empty line → small spacer ──────────────────────────────────────
+                if (!trimmed) {
+                    html += '<div class="h-2"></div>';
+                    continue;
+                }
 
-                // 4. General Bold Text
-                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">$1</strong>')
+                // ── 1. SOAP section headers: Subjective / Objective / Assessment / Plan ──
+                //    Matches with or without surrounding ** and with or without trailing colon
+                const soapTest = trimmed.replace(/\*\*/g, '').replace(/:$/, '').trim();
+                if (/^(Subjective|Objective|Assessment|Plan)$/i.test(soapTest)) {
+                    html += `<div class="mt-4 mb-1.5"><strong class="text-gray-900 font-bold text-[15px] sm:text-[16px]">${soapTest}</strong></div>`;
+                    continue;
+                }
 
-                // 5. Indented sub-bullets (hyphens or en-dashes)
-                .replace(/(^|\n+)[ \t]*[-–][ \t]+(.*)/g, function(match, p1, p2) {
-                    return (p1 ? '<br>' : '') + '<div class="ml-4 sm:ml-5 flex items-start mt-0.5"><span class="text-black font-bold mr-2 mt-[1px] shrink-0">-</span><span class="flex-1">' + p2 + '</span></div>';
-                });
+                // ── 2. Sub-bullet — indented 2+ spaces/tabs before the dash or bullet ──
+                if (/^[ \t]{2,}[-•]\s+/.test(raw)) {
+                    const inner = bold(raw.replace(/^[ \t]+[-•]\s+/, ''));
+                    html += `<div class="flex items-start mt-1 ml-5">
+                                <span class="text-gray-400 mr-2 mt-[5px] shrink-0" style="font-size:8px;">●</span>
+                                <span class="flex-1 text-gray-700">${inner}</span>
+                             </div>`;
+                    continue;
+                }
 
-            // 6. Convert remaining newlines
-            formatted = formatted.replace(/\n/g, '<br>');
+                // ── 3. Numbered + bold: "1. **Name**" ─────────────────────────────
+                const numBold = trimmed.match(/^(\d+)\.\s*\*\*([^*\n]+)\*\*[: ]*$/);
+                if (numBold) {
+                    html += `<div class="flex items-baseline mt-1.5">
+                                <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numBold[1]}.</span>
+                                <span class="text-gray-800 font-semibold">${numBold[2]}</span>
+                             </div>`;
+                    continue;
+                }
 
-            // 7. Clean up excessive spacing around block divs
-            formatted = formatted.replace(/(<\/div>|<div[^>]*>)\s*<br\s*\/?>/gi, '$1');
-            formatted = formatted.replace(/<br\s*\/?>\s*(<div[^>]*>)/gi, '$1');
+                // ── 4. Plain numbered: "1. Text" ───────────────────────────────────
+                const numPlain = trimmed.match(/^(\d+)\.\s+(.+)$/);
+                if (numPlain) {
+                    html += `<div class="flex items-baseline mt-1.5">
+                                <span class="text-gray-700 font-medium mr-2 shrink-0" style="min-width:18px;">${numPlain[1]}.</span>
+                                <span class="text-gray-800">${bold(numPlain[2])}</span>
+                             </div>`;
+                    continue;
+                }
 
-            return formatted;
+                // ── 5. Lettered sub-items: "A. text" ──────────────────────────────
+                const lettered = trimmed.match(/^([A-D])\.\s+(.+)$/);
+                if (lettered) {
+                    html += `<div class="flex items-baseline mt-1 ml-4">
+                                <span class="text-gray-600 font-medium mr-2 shrink-0">${lettered[1]}.</span>
+                                <span class="text-gray-700">${bold(lettered[2])}</span>
+                             </div>`;
+                    continue;
+                }
+
+                // ── 6. Bold standalone heading: "**Heading**" or "**Heading:**" ───
+                //    (No leading bullet or number — acts as a section/category title)
+                const boldAlone = trimmed.match(/^\*\*([^*]+)\*\*[: ]*$/);
+                if (boldAlone) {
+                    const title = boldAlone[1];
+                    const isKnownCategory = /Laboratory Tests|Imaging Studies|Medications|Conservative Management|Red Flag|Follow-up|Referral|Recommended Next Steps/i.test(title);
+                    if (isKnownCategory) {
+                        html += `<div class="mt-3 mb-0.5 flex items-start">
+                                    <span class="text-[#0066FF] mr-2 mt-[2px] shrink-0 font-bold text-[16px] leading-none">•</span>
+                                    <strong class="text-gray-900 font-bold text-[14px] sm:text-[15px]">${title}</strong>
+                                 </div>`;
+                    } else {
+                        html += `<div class="mt-3 mb-1"><strong class="text-gray-900 font-semibold text-[14px] sm:text-[15px]">${title}</strong></div>`;
+                    }
+                    continue;
+                }
+
+                // ── 7. Bullet items: "- text" or "• text" ─────────────────────────
+                //    Inline bold (**Name:** desc  OR  **Name** desc) is handled
+                //    naturally by the bold() helper — no separate case needed.
+                const bulletMatch = trimmed.match(/^[-•]\s+(.+)$/);
+                if (bulletMatch) {
+                    const inner = bold(bulletMatch[1]);
+                    html += `<div class="flex items-start mt-1.5">
+                                <span class="mr-2.5 mt-[3px] shrink-0 text-gray-700 text-[16px] leading-none">•</span>
+                                <span class="flex-1">${inner}</span>
+                             </div>`;
+                    continue;
+                }
+
+                // ── 8. Fallback: plain text paragraph ─────────────────────────────
+                html += `<div class="mt-1 leading-relaxed">${bold(trimmed)}</div>`;
+            }
+
+            return html;
         };
+        // ─────────────────────────────────────────────────────────────────────────
 
         const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-        const btnAction = `window.location.href='login.html';`;
-        const btnText = "Connect With a Doctor &rarr;";
+        const btnAction   = `window.location.href='login.html';`;
+        const btnText     = "Connect With a Doctor &rarr;";
         const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
 
         let reportHtml = `
         <style>summary::-webkit-details-marker { display: none; }</style>
         <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
-            
+
             <!-- Header -->
             <div class="p-3 sm:p-4 border-b border-gray-100">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
                 <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
             </div>
-            
+
             <!-- Summary -->
             <div class="p-3 sm:p-4 text-sm text-gray-800 leading-relaxed border-b border-gray-100 border-dashed text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                 ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
             </div>
-            
+
             <!-- Expandable Accordions — Standalone Cards -->
             <div class="px-3 sm:px-4 py-3 space-y-2 border-b border-gray-100 border-dashed">
 
@@ -1612,11 +1684,13 @@
                             <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">Assessment & Plan</span>
                             <span class="text-gray-500 text-[13px] font-normal">A clinical overview of possible causes considered</span>
                         </div>
-                        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </summary>
                     <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${diffDiag ? `<div>${formatClinicalText(diffDiag)}</div>` : ''}
-                        ${plan ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
+                        ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-100 border-dashed' : ''}">${formatClinicalText(plan)}</div>` : ''}
                     </div>
                 </details>
 
@@ -1628,7 +1702,9 @@
                             <span class="text-[#0066FF] font-bold text-[17px] sm:text-[18px] leading-snug mb-0.5">SOAP Note (for Physicians)</span>
                             <span class="text-gray-500 text-[13px] font-normal">A clinical summary to share with your doctor</span>
                         </div>
-                        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-200 shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </summary>
                     <div class="px-4 sm:px-5 pb-4 pt-3 text-sm text-gray-800 leading-relaxed border-t border-gray-100 text-left" style="word-wrap: break-word; overflow-wrap: break-word;">
                         ${formatClinicalText(soap)}
@@ -1637,7 +1713,7 @@
                 ` : ''}
 
             </div>
-            
+
             <!-- Clean Care Checklist Section -->
             <div class="p-3 sm:p-4 bg-white text-left font-sans">
                 <h3 class="font-bold text-gray-900 text-lg mb-1.5">Continue to a licensed doctor</h3>
@@ -1656,7 +1732,7 @@
         </div>`;
 
         let conversationalIntro = content.split("###")[0].replace("[ESCALATE]", "").trim();
-        if(!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
+        if (!conversationalIntro) conversationalIntro = "I have reviewed your symptoms and prepared a clinical summary for you.";
 
         return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
     }
