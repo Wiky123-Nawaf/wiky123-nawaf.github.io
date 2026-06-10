@@ -306,7 +306,7 @@
         .AffiliationsRow-module__csBNVG__logos { 
             display: flex; 
             align-items: center; 
-            gap: 50px; /* Base gap between logos */
+            gap: 72px; /* Base gap between logos */
             flex-wrap: nowrap; 
             padding: 4px 0 !important; 
             margin: 0; 
@@ -322,7 +322,7 @@
         }
         .AffiliationsRow-module__csBNVG__logoItem img { 
             /* Made logos significantly bigger */
-            height: clamp(44px, 11vw, 54px) !important; 
+            height: clamp(52px, 13vw, 68px) !important;
             max-width: none !important;
             width: auto !important; 
             object-fit: contain; 
@@ -602,7 +602,7 @@
                 margin-bottom: clamp(6px, 1.5vh, 10px) !important; 
             }
             .AffiliationsRow-module__csBNVG__logoItem img {
-                height: clamp(28px, 7vw, 40px) !important;
+                height: clamp(48px, 12vw, 64px) !important;
             }
 
             .bottom-info { padding: 20px 0 24px 0; text-align: center; margin-top: 0;} 
@@ -2383,18 +2383,29 @@ let formatClinicalText = (text) => {
             });
 
             function scrollMarquee() {
-                if (!isPaused) {
-                    currentPos += 0.8; // Smooth, continuous speed rate
-                    if (currentPos >= setWidth) {
-                        currentPos -= setWidth; // Infinite loop reset
-                    }
-                    track.style.transform = `translateX(-${currentPos}px)`;
-                }
-                requestAnimationFrame(scrollMarquee);
-            }
-
-            requestAnimationFrame(scrollMarquee);
-        });
+				    if (!isPaused) {
+				        currentPos += 0.8;
+				        if (currentPos >= setWidth) {
+				            currentPos -= setWidth;
+				        }
+				        track.style.transform = `translateX(-${currentPos}px)`;
+				    }
+				    requestAnimationFrame(scrollMarquee);
+					}
+					
+					// Desktop: pause on hover
+					track.addEventListener('mouseenter', () => { isPaused = true; });
+					track.addEventListener('mouseleave', () => { isPaused = false; });
+					
+					// Mobile: pause while finger is held
+					track.addEventListener('touchstart',  () => { isPaused = true; },  { passive: true });
+					track.addEventListener('touchend',    () => { isPaused = false; }, { passive: true });
+					track.addEventListener('touchcancel', () => { isPaused = false; }, { passive: true });
+					
+					track.style.cursor = 'grab';
+					
+					requestAnimationFrame(scrollMarquee);
+	        });
     </script>
 </body>
 </html>
