@@ -473,6 +473,27 @@
         .faq-item.active .faq-body { display: block; }
         .faq-body p { font-size: 15px; color: var(--text-gray); line-height: 1.6; margin: 0; max-width: 580px; }
 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Footer Section --- */
+        .footer-section { background-color: #111111; color: #ffffff; padding: 80px 0 40px 0; width: 100%; margin-top: auto; }
+        .footer-content { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; }
+        .footer-top { display: flex; justify-content: space-between; gap: 60px; padding-bottom: 60px; }
+        .footer-brand { max-width: 380px; }
+        .footer-brand img { height: 50px; width: auto; margin-bottom: 24px; display: block; margin-left: -12px;}
+        .footer-brand p { color: #a0aab5; font-size: 16px; line-height: 1.6; }
+        .footer-links-group { display: flex; gap: 120px; }
+        .footer-col h4 { font-size: 16px; font-weight: 600; margin-bottom: 24px; color: #ffffff; }
+        .footer-col a { display: block; color: #a0aab5; font-size: 15px; margin-bottom: 16px; text-decoration: none; transition: color 0.2s; }
+        .footer-col a:hover { color: #ffffff; }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .footer-bottom p { color: #a0aab5; font-size: 14px; }
+        .social-area { display: flex; align-items: center; gap: 20px; }
+        .social-area span { color: #ffffff; font-weight: 500; font-size: 15px; }
+        .social-icons { display: flex; align-items: center; gap: 16px; }
+        .social-icons a { color: #ffffff; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; }
+        .social-icons a:hover { opacity: 0.7; }
+
         @media (max-width: 1024px) {
             .join-doctor-section { flex-direction: column-reverse; gap: 50px; }
             .join-doctor-left { flex: auto; width: 100%; max-width: 600px; margin: 0 auto; }
@@ -495,7 +516,7 @@
 
             header { padding: 12px 16px; }
 
-            .feature-card h3 br { display: none; }
+			.feature-card h3 br { display: none; }
 
             header button[onclick="toggleSidebar()"] {
                 background-color: transparent; border-radius: 50%; padding: 8px; width: 40px; height: 40px;
@@ -512,121 +533,76 @@
 
             .section-white.flex-1 { flex: none !important; display: block !important; }
 
+            /* Updated Mobile Spacing and Bounds for Hero Section */
             body:not(.chat-mode-active) .hero-chat-wrapper {
-                display: flex !important; 
-                flex-direction: column !important; 
-                min-height: calc(100dvh - 64px) !important; /* Switch to dvh for auto-sizing bottom bars */
-                padding: clamp(6px, 1.5vh, 12px) 16px clamp(8px, 2vh, 16px) 16px !important; 
-                justify-content: space-between !important; /* Aligns hero items, chat box, and logos marquee automatically */
-                align-items: center !important;
-                gap: clamp(8px, 2vh, 16px) !important; 
-                box-sizing: border-box !important;
+                display: flex !important; flex-direction: column !important; min-height: calc(100svh - 64px) !important; 
+                padding: 4px 16px 12px 16px !important; justify-content: center !important; align-items: center !important;
+                gap: clamp(12px, 2vh, 24px) !important; box-sizing: border-box !important;
             }
 
-            .hero-content-top { flex: 0 1 auto; width: 100%; display: flex; justify-content: center; margin: 0 !important; padding: 0 !important; }
+            .hero-content-top { flex: 0 0 auto; width: 100%; display: flex; justify-content: center; margin: 0 !important; padding: 0 !important; }
 
             .hero { padding: 0 !important; align-items: center; text-align: center; width: 100%; max-width: 100%; margin: 0 auto; gap: 0; }
 
-            .hero-fig2 { height: clamp(34px, 5vh, 46px) !important; margin: 0 auto clamp(4px, 0.8vh, 8px) auto !important; display: block; object-fit: contain; } 
+            .hero-fig2 { height: clamp(28px, 5vh, 44px) !important; margin: 0 auto clamp(4px, 1vh, 8px) auto !important; display: block; object-fit: contain; } 
 
-            .mobile-rating { margin: 0 auto clamp(4px, 0.8vh, 8px) auto !important; }
+            .mobile-rating { margin: 0 auto clamp(4px, 1vh, 8px) auto !important; }
             .mobile-rating svg { width: clamp(16px, 4vw, 20px) !important; height: clamp(16px, 4vw, 20px) !important; }
-            .mobile-rating span { font-size: clamp(14px, 4vw, 17px) !important; }
+            .mobile-rating span { font-size: clamp(14px, 4vw, 18px) !important; }
 
             .hero h1.mobile-title { 
                 font-family: Georgia, Cambria, "Times New Roman", Times, serif !important; 
-                font-size: clamp(32px, 8.5vw, 44px) !important; /* Enlarged and clarified hero text */
-                font-weight: 800 !important; 
-                margin-bottom: clamp(4px, 0.8vh, 8px) !important; 
-                text-align: center; 
-                width: 100%; 
-                letter-spacing: -0.5px !important; 
-                line-height: 1.15; 
-                color: #111 !important;
+                font-size: clamp(30px, 8.5vw, 42px) !important; margin-bottom: clamp(4px, 1vh, 8px) !important; 
+                text-align: center; width: 100%; letter-spacing: normal !important; font-weight: 400 !important; 
+                line-height: 1.15; color: #111 !important;
             }
 
             .hero-description.mobile-desc { padding: 0; width: 100%; text-align: center; display: flex; flex-direction: column; }
 
             .hero-description.mobile-desc p.hero-subtitle { 
-                font-family: 'Inter', sans-serif !important; 
-                font-size: clamp(14px, 4vw, 16px) !important; 
-                margin-bottom: clamp(3px, 0.6vh, 6px) !important; 
-                font-weight: 700 !important; 
-                color: #0066cc !important; 
-                text-align: center !important; 
+                font-family: 'Inter', sans-serif !important; font-size: clamp(14px, 4vw, 17px) !important; 
+                margin-bottom: clamp(4px, 1vh, 8px) !important; font-weight: 400 !important; color: #111 !important; text-align: center !important; 
             }
 
             .hero-description.mobile-desc p { 
-                font-size: clamp(12.5px, 3.4vw, 14.5px) !important; 
-                margin-bottom: clamp(3px, 0.6vh, 6px) !important; 
-                line-height: 1.4 !important; 
-                color: #475569 !important; 
-                text-align: center !important; 
-                padding: 0; 
-                max-width: 100%;
+                font-size: clamp(13px, 3.5vw, 15px) !important; margin-bottom: clamp(4px, 1vh, 8px) !important; 
+                line-height: 1.45 !important; color: #111 !important; text-align: center !important; padding: 0; max-width: 100%;
             }
 
             .chat-content-bottom { flex: 0 0 auto; display: flex; width: 100%; justify-content: center; align-items: center; margin: 0 !important; padding: 0; background: transparent; border-top: none; box-shadow: none; }
             .chat-section { width: 100%; padding: 0; align-items: center; }
 
-            .chat-container { 
-                padding: clamp(12px, 3.5vw, 16px) !important; 
-                border-radius: 16px !important; 
-                margin: 0 auto !important; 
-                width: 100%; 
-                max-width: 100%; 
-                background-color: #ffffff; 
-                border: 1px solid #e2e8f0 !important; 
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important; 
-            }
+            .chat-container { padding: clamp(12px, 3vw, 16px) !important; border-radius: clamp(12px, 3vw, 16px) !important; margin: 0 auto !important; width: 100%; max-width: 100%; background-color: #ffffff; border: none !important; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important; }
 
             .chat-tabs-wrapper { display: none !important; } 
 
-            body:not(.chat-mode-active) .input-wrapper { 
-                min-height: clamp(65px, 9vh, 85px) !important; 
-                padding: 0 !important; 
-                margin-bottom: 0; 
-                background-color: transparent !important; 
-                border: none !important; 
-                border-radius: 0; 
-                width: 100%; 
-                box-shadow: none !important; 
-                display: flex; 
-                flex-direction: column; 
-                justify-content: space-between; 
-            }
+            body:not(.chat-mode-active) .input-wrapper { min-height: clamp(60px, 8vh, 80px) !important; padding: 0 !important; margin-bottom: 0; background-color: transparent !important; border: none !important; border-radius: 0; width: 100%; box-shadow: none !important; display: flex; flex-direction: column; justify-content: space-between; }
             .input-top-area { gap: 8px; flex: 1; }
             .input-top-area svg { display: none;}
-            .input-field { font-size: clamp(14px, 4vw, 16px) !important; min-height: 44px; height: auto; }
+            .input-field { font-size: clamp(14px, 4vw, 16px) !important; min-height: 40px; height: auto; }
 
-            .input-actions { margin-top: clamp(8px, 2vh, 12px) !important; display: flex; justify-content: flex-end !important; }
-            .btn-get-started { background-color: #0066cc !important; padding: clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 24px) !important; font-size: clamp(14px, 4vw, 16px) !important; border-radius: 8px !important; width: auto !important; }
+            .input-actions { margin-top: clamp(4px, 1vh, 12px) !important; display: flex; justify-content: flex-end !important; }
+            .btn-get-started { background-color: #0066cc !important; padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px) !important; font-size: clamp(14px, 4vw, 16px) !important; border-radius: 8px !important; width: auto !important; }
             .btn-get-started svg { width: clamp(14px, 3.5vw, 16px) !important; height: clamp(14px, 3.5vw, 16px) !important; }
 
             .suggestion-chips { display: none !important; }
 
-            .mobile-private-tag { display: flex !important; align-items: center; justify-content: flex-end; gap: 6px; font-size: clamp(11px, 3vw, 13px) !important; color: #94a3b8; margin-top: clamp(8px, 2vh, 12px) !important; width: 100%; padding-right: 4px; }
+            .mobile-private-tag { display: flex !important; align-items: center; justify-content: flex-end; gap: 6px; font-size: clamp(11px, 3vw, 13px) !important; color: #94a3b8; margin-top: clamp(4px, 1vh, 8px) !important; width: 100%; padding-right: 4px; }
             .mobile-private-tag svg { width: clamp(12px, 3vw, 14px) !important; height: clamp(12px, 3vw, 14px) !important; }
 
             /* --- Brand Logos Marquee Overrides --- */
             .mobile-logos-section { 
                 max-width: 100% !important;
-                padding-bottom: clamp(2px, 0.5vh, 6px) !important; 
-                padding-top: clamp(2px, 0.5vh, 6px) !important; 
-                margin-top: 0 !important; 
-                flex-shrink: 0 !important;
+                padding-bottom: 4px !important; 
+                padding-top: 4px !important; 
+                margin-top: 0px !important; 
             }
             .mobile-logos-section p { 
-                font-size: clamp(11.5px, 3.2vw, 13px) !important; 
-                margin-bottom: clamp(4px, 0.8vh, 8px) !important; 
-                font-weight: 600 !important;
-                color: #64748b !important;
+                font-size: clamp(11px, 3vw, 13px) !important; 
+                margin-bottom: clamp(6px, 1.5vh, 10px) !important; 
             }
-            .AffiliationsRow-module__csBNVG__logoItem img { 
-                height: clamp(24px, 6.5vw, 32px) !important; /* Scaled down slightly to fit on compact mobile screens */
-            }
-            .AffiliationsRow-module__csBNVG__logos {
-                gap: clamp(18px, 5vw, 30px) !important;
+            .AffiliationsRow-module__csBNVG__logoItem img {
+                height: clamp(28px, 7vw, 40px) !important;
             }
 
             .bottom-info { padding: 20px 0 24px 0; text-align: center; margin-top: 0;} 
@@ -2097,6 +2073,9 @@ let formatClinicalText = (text) => {
             await window.processAiResponse(message);
         };
 
+        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
+        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
+        // NEW FUNCTION: Separated out the API call so both the Checkbox and Enter Key can use it
         window.processAiResponse = async function(message) {
             const history = document.getElementById('chat-history');
 
@@ -2186,7 +2165,7 @@ let formatClinicalText = (text) => {
                     history.innerHTML += createAiBubble(data.reply);
                     history.scrollTop = history.scrollHeight;
 
-                    // Open modal instantly at the exact same moment the report is added!
+                    // FIXED: Open modal instantly at the exact same moment the report is added!
                     openSaveConsultModal();
 
                 } else {
