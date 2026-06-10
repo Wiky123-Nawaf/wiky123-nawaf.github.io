@@ -534,9 +534,23 @@
             .section-white.flex-1 { flex: none !important; display: block !important; }
 
             body:not(.chat-mode-active) .hero-chat-wrapper {
-                display: flex !important; flex-direction: column !important; min-height: calc(100svh - 64px) !important; 
-                padding: 8px 16px 24px 16px !important; justify-content: center !important; align-items: center !important;
-                gap: clamp(24px, 4vh, 40px) !important; box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                /* svh = smallest viewport (all browser chrome visible) — fallback for old browsers */
+                min-height: calc(100svh - 64px) !important;
+                /* dvh = dynamic viewport — updates as Chrome address bar / bottom bar shows or hides */
+                min-height: calc(100dvh - 64px) !important;
+                padding: 10px 16px !important;
+                /* Bottom padding clears phone-OS nav bars + safe-area (iPhone home bar) */
+                padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 28px) !important;
+                /* IMPORTANT: flex-start prevents flex centering from hiding content off the TOP edge.
+                   Auto-margins on hero-content-top / mobile-logos-section handle visual centering. */
+                justify-content: flex-start !important;
+                align-items: center !important;
+                gap: clamp(14px, 2.8vh, 36px) !important;
+                box-sizing: border-box !important;
+                /* Allow natural scroll on very small screens so nothing is ever clipped */
+                overflow-y: auto !important;
             }
 
             .hero-content-top { flex: 0 0 auto; width: 100%; display: flex; justify-content: center; margin: 0 !important; padding: 0 !important; }
@@ -570,6 +584,13 @@
 
             .chat-content-bottom { flex: 0 0 auto; display: flex; width: 100%; justify-content: center; align-items: center; margin: 0 !important; padding: 0; background: transparent; border-top: none; box-shadow: none; }
             .chat-section { width: 100%; padding: 0; align-items: center; }
+
+            /* Centering trick: auto-margins push hero down from top and logos up from bottom,
+               effectively centering the group when they fit. When the screen is too small,
+               auto-margins collapse to 0 so content starts from top and can scroll down — 
+               nothing ever gets hidden off the top edge. */
+            body:not(.chat-mode-active) .hero-content-top { margin-top: auto !important; }
+            body:not(.chat-mode-active) .mobile-logos-section { margin-bottom: auto !important; }
 
             .chat-container { padding: clamp(16px, 4vw, 24px) !important; border-radius: clamp(12px, 3vw, 16px) !important; margin: 0 auto !important; width: 100%; max-width: 100%; background-color: #ffffff; border: none !important; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important; }
 
@@ -668,8 +689,56 @@
         }
 
         /* =====================================================
-           FULL SCREEN CHAT MODE OVERRIDES (Placed at end to override all)
-           ==================================================== */
+           EXTRA-SMALL PHONE OVERRIDES  (≤ 390px)
+           Covers iPhone SE (375px), old Samsung (~360px), etc.
+           ===================================================== */
+        @media (max-width: 390px) {
+            body:not(.chat-mode-active) .hero-chat-wrapper {
+                gap: clamp(10px, 2vh, 20px) !important;
+                padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px) !important;
+            }
+
+            .hero-fig2 {
+                height: clamp(32px, 5.5vh, 44px) !important;
+                margin-bottom: clamp(4px, 1vh, 10px) !important;
+            }
+
+            .mobile-rating { margin-bottom: clamp(4px, 1vh, 10px) !important; }
+
+            .hero h1.mobile-title {
+                font-size: clamp(24px, 7.5vw, 30px) !important;
+                margin-bottom: clamp(4px, 1vh, 8px) !important;
+                line-height: 1.12 !important;
+            }
+
+            .hero-description.mobile-desc p.hero-subtitle {
+                font-size: clamp(13px, 3.5vw, 15px) !important;
+                margin-bottom: clamp(4px, 1vh, 8px) !important;
+            }
+
+            .hero-description.mobile-desc p {
+                font-size: clamp(11.5px, 3.2vw, 13.5px) !important;
+                line-height: 1.4 !important;
+                margin-bottom: clamp(4px, 1vh, 8px) !important;
+            }
+
+            body:not(.chat-mode-active) .input-wrapper {
+                min-height: clamp(70px, 10vh, 90px) !important;
+            }
+
+            .mobile-logos-section {
+                margin-top: -4px !important;
+            }
+
+            .mobile-logos-section p {
+                font-size: 11.5px !important;
+                margin-bottom: clamp(8px, 1.5vh, 12px) !important;
+            }
+
+            .AffiliationsRow-module__csBNVG__logoItem img {
+                height: clamp(36px, 9vw, 44px) !important;
+            }
+        }
         body.chat-mode-active {
             overflow: hidden !important; height: 100dvh !important; position: fixed !important; inset: 0 !important; width: 100% !important;
         }
@@ -694,7 +763,10 @@
         }
 
         body.chat-mode-active .chat-input-area {
-            flex-shrink: 0 !important; padding-bottom: calc(12px + env(safe-area-inset-bottom, 8px)) !important; padding-top: 8px !important; padding-left: 0 !important; padding-right: 0 !important; width: 100% !important; background: #ffffff !important; position: relative !important; z-index: 200 !important; border-top: 1px solid #f1f5f9 !important;
+            flex-shrink: 0 !important;
+            /* max() ensures minimum clearance even when env() returns 0 (Android Chrome) */
+            padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 12px), 20px) !important;
+            padding-top: 8px !important; padding-left: 0 !important; padding-right: 0 !important; width: 100% !important; background: #ffffff !important; position: relative !important; z-index: 200 !important; border-top: 1px solid #f1f5f9 !important;
         }
 
         body.chat-mode-active .input-wrapper {
