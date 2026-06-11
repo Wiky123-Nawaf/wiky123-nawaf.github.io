@@ -561,12 +561,14 @@
 
                 document.getElementById('userNameSidebar').innerText = window.userData.name;
                 document.getElementById('userNameHeader').innerText = window.userData.name; 
-                document.getElementById('set-name').value = window.userData.name; 
+                document.getElementById('set-name').value = window.userData.name;
+                document.getElementById('set-age').value = window.userData.age || ""; // Prefills settings age
                 document.getElementById('set-phone').value = window.userData.phone || "";
                 document.getElementById('set-age').value = window.userData.age || "";
                 document.getElementById('book-name').value = window.userData.name; 
                 document.getElementById('book-email').value = user.email;
                 document.getElementById('book-age').value = window.userData.age || "";
+                document.getElementById('book-age').value = window.userData.age || ""; // Prefills booking age
 
                 let avatar = window.userData.photo_url || user.photoURL || `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#0066FF"/><text x="50%" y="50%" fill="#fff" font-size="32" font-family="sans-serif" font-weight="bold" text-anchor="middle" dy=".35em">${window.userData.name.charAt(0).toUpperCase()}</text></svg>`)}`;
                 document.getElementById('userAvatarSidebar').src = avatar;
@@ -1971,13 +1973,13 @@
                         const docExists = window.allDoctors.find(doc => doc.id === d.doctor_id);
                         if (docExists) {
                             selectDoctor(d.doctor_id);
-                            // success popup notification removed by request
+                            // Dynamic success message disabled per request
                         } else {
                             showInlineMessage(`No matching doctor is available immediately. Please select "Schedule for Later" to book a future slot.`, "warning");
                         }
                     } else {
                         selectDoctor(d.doctor_id);
-                        // success popup notification removed by request
+                        // Dynamic success message disabled per request
                     }
                 } else { showInlineMessage(d.message || "Failed to find a matching doctor.", "error"); }
             } catch(e) { showInlineMessage("Failed to connect to AI suggestion.", "error"); }
@@ -2023,7 +2025,7 @@
                         doctor_id: doctorId, 
                         visit_type: "online", 
                         preferred_datetime: finalDateTime,
-                        patient_age: parseInt(document.getElementById('book-age').value) || null,
+                        patient_age: parseInt(document.getElementById('book-age').value) || null, // Sends age parameter
                         symptoms: symptomsText,
                         ai_report: window.generatedClinicalReport || null 
                     }) 
