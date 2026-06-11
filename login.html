@@ -1269,6 +1269,7 @@ e.preventDefault();
 const fName = document.getElementById("profileFirstName").value.trim();
 const lName = document.getElementById("profileLastName").value.trim();
 const phone = document.getElementById("profilePhone").value.trim();
+const ageVal = document.getElementById("profileAge").value.trim(); // Reads age input
 const combinedName = fName + (lName ? " " + lName : "");
 
 const passContainer = document.getElementById('profilePassContainer');
@@ -1313,7 +1314,12 @@ const freshToken = await auth.currentUser.getIdToken(true);
 const response = await fetch(`${API_BASE}/api/user/profile`, { 
 method: 'POST', 
 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${freshToken}` }, 
-body: JSON.stringify({ name: combinedName, phone, photo_url: tempPhotoUrl }) 
+body: JSON.stringify({ 
+    name: combinedName, 
+    phone, 
+    age: ageVal ? parseInt(ageVal) : null, // Safely sends age parameter as an integer
+    photo_url: tempPhotoUrl 
+}) 
 });
 
 // If the backend refuses to save the data for any reason, show the actual error instead of refreshing!
