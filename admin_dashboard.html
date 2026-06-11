@@ -1726,6 +1726,7 @@
         // ================= FETCH CORE DATA =================
         async function loadCoreData() {
             try {
+                console.log("Fetching latest metrics and records...");
                 const [appRes, patRes, docsApprRes, docsPendRes] = await Promise.all([
                     fetch(`${API_BASE}/admin/appointments`, { headers }),
                     fetch(`${API_BASE}/admin/patients/all`, { headers }),
@@ -1733,14 +1734,30 @@
                     fetch(`${API_BASE}/admin/doctors/pending`, { headers })
                 ]);
 
-                if (appRes.ok) allAppointmentsData = await appRes.json();
-                if (patRes.ok) allPatientsData = await patRes.json();
+                // Session Expiration Handler: Redirect to login if unauthorized
+                if (appRes.status === 401 || patRes.status === 401 || docsPendRes.status === 401) {
+                    console.warn("Administrative session expired. Redirecting to login page.");
+                    logout();
+                    return;
+                }
+
+                if (appRes.ok) {
+                    allAppointmentsData = await appRes.json();
+                } else {
+                    console.error(`Failed to load appointments. Server responded with: ${appRes.status}`);
+                }
+
+                if (patRes.ok) {
+                    allPatientsData = await patRes.json();
+                } else {
+                    console.error(`Failed to load patients list. Server responded with: ${patRes.status}`);
+                }
                 
                 const approvedDocs = docsApprRes.ok ? await docsApprRes.json() : [];
                 const pendingDocs = docsPendRes.ok ? await docsPendRes.json() : [];
                 allDoctorsData = [...pendingDocs, ...approvedDocs];
                 
-                // Update Home
+                // Update Home Dashboard Views
                 updateAccurateStats();
                 calculateRevenueData();
                 renderUpcomingWidget(); 
@@ -1753,7 +1770,11 @@
                 processPatientData();
                 renderNotifications();
 
-            } catch (e) { console.error("Data Load Error:", e); }
+                console.log("Dashboard data synchronized successfully.");
+
+            } catch (e) { 
+                console.error("Dashboard Data Synchronization Error:", e); 
+            }
         }
 
         // ================= RENDER HOME TABLE WITH EDIT BUTTON =================
