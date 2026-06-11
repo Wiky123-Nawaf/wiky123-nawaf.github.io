@@ -414,6 +414,7 @@
         </div>
 
         <!-- VIEW 2: DOCTOR DETAILS FULL PAGE -->
+        <!-- VIEW 2: DOCTOR DETAILS FULL PAGE -->
         <div class="dashboard-body" id="doctor-detail-view">
             <div class="btn-back" onclick="window.location.hash='#/doctors'">← Back</div>
             
@@ -422,7 +423,9 @@
                     <img src="" id="dd-head-img" alt="doctor avatar">
                     <div>
                         <div class="dd-name" id="dd-head-name">Doctor Name</div>
-                        <div class="dd-spec" id="dd-head-spec">Specialty</div>
+                        <div class="dd-spec" id="dd-head-spec" style="margin-bottom: 4px;">Specialty</div>
+                        <!-- NEW: Clean separate line for MMC Registration Number -->
+                        <div class="dd-spec" id="dd-head-mmc" style="font-size: 13px; margin-bottom: 12px; font-weight: 500; color: var(--text-muted);"></div>
                         <div class="dd-tags">
                             <span class="dd-tag avail" id="dd-status-tag">● Status</span>
                         </div>
@@ -1204,8 +1207,19 @@
             document.getElementById('doctor-detail-view').classList.add('active');
             
             // Profile Header
+            // Profile Header
             document.getElementById('dd-head-name').innerText = doc.name;
-            document.getElementById('dd-head-spec').innerText = doc.mmc_number ? `${doc.spec} (MMC: ${doc.mmc_number})` : doc.spec;
+            document.getElementById('dd-head-spec').innerText = doc.spec; // Restore specialty to original line
+            
+            // Populate the new dedicated MMC element
+            const mmcEl = document.getElementById('dd-head-mmc');
+            if (doc.mmc_number) {
+                mmcEl.innerText = `MMC Registration: ${doc.mmc_number}`;
+                mmcEl.style.display = 'block';
+            } else {
+                mmcEl.style.display = 'none';
+            }
+            
             document.getElementById('dd-head-img').src = doc.img;
             
             const statusTag = document.getElementById('dd-status-tag');
