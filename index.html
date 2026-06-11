@@ -551,18 +551,30 @@
             .mobile-rating span { font-size: clamp(14px, 4vw, 18px) !important; }
 
             .hero h1.mobile-title { 
-                font-family: Georgia, Cambria, "Times New Roman", Times, serif !important; 
-                font-size: clamp(30px, 8.5vw, 42px) !important; margin-bottom: clamp(4px, 1vh, 8px) !important; 
-                text-align: center; width: 100%; letter-spacing: normal !important; font-weight: 400 !important; 
-                line-height: 1.15; color: #111 !important;
-            }
+				    font-family: Georgia, Cambria, "Times New Roman", Times, serif !important; 
+				    font-size: clamp(30px, 8.5vw, 42px) !important; 
+				    margin-bottom: clamp(4px, 1vh, 8px) !important; 
+				    text-align: center; 
+				    width: 100%; 
+				    letter-spacing: -0.5px !important; /* Matches desktop letter spacing */
+				    font-weight: 700 !important;        /* Matches desktop h1 font weight */
+				    line-height: 1.15; 
+				    color: #111 !important;
+				}
+			.hero h1.mobile-title strong {
+				    font-weight: 800 !important;
+				}
 
             .hero-description.mobile-desc { padding: 0; width: 100%; text-align: center; display: flex; flex-direction: column; }
 
             .hero-description.mobile-desc p.hero-subtitle { 
-                font-family: 'Inter', sans-serif !important; font-size: clamp(14px, 4vw, 17px) !important; 
-                margin-bottom: clamp(4px, 1vh, 8px) !important; font-weight: 400 !important; color: #111 !important; text-align: center !important; 
-            }
+			    font-family: 'Inter', sans-serif !important; 
+			    font-size: clamp(14px, 4vw, 17px) !important; 
+			    margin-bottom: clamp(4px, 1vh, 8px) !important; 
+			    font-weight: 700 !important;        /* Changed from 400 to match desktop weight */
+			    color: #111 !important; 
+			    text-align: center !important; 
+			}
 
             .hero-description.mobile-desc p { 
                 font-size: clamp(13px, 3.5vw, 15px) !important; margin-bottom: clamp(4px, 1vh, 8px) !important; 
@@ -910,7 +922,8 @@
                         <!-- Desktop Title -->
                         <h1 class="desktop-only">Hello, I'm <strong>Doktura.ai</strong>!</h1>
                         <!-- Mobile Title -->
-                        <h1 class="mobile-title mobile-only">Hi, I'm Doktura.ai</h1>
+                        <!-- Mobile Title -->
+						<h1 class="mobile-title mobile-only">Hi, I'm <strong>Doktura.ai</strong>!</h1>
 
                         <!-- Desktop Description -->
                         <div class="hero-description desktop-only">
