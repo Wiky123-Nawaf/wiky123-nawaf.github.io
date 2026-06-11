@@ -1206,7 +1206,6 @@
             // Profile Header
             document.getElementById('dd-head-name').innerText = doc.name;
             document.getElementById('dd-head-spec').innerText = doc.mmc_number ? `${doc.spec} (MMC: ${doc.mmc_number})` : doc.spec;
-            document.getElementById('dd-head-spec').innerText = doc.spec;
             document.getElementById('dd-head-img').src = doc.img;
             
             const statusTag = document.getElementById('dd-status-tag');
@@ -1559,7 +1558,8 @@
                 if(!res.ok) throw new Error("Failed to update doctor");
                 
                 closeEditModal();
-                loadCoreData(); 
+                loadCoreData();
+                viewDoctorDetail(docId);
 
             } catch (e) {
                 alert("Error: " + e.message);
