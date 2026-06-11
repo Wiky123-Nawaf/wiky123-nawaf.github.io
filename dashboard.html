@@ -311,9 +311,10 @@
 
                 <form id="booking-online-section" onsubmit="submitBooking(event)" class="block">
                     <div class="space-y-5 sm:space-y-6">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Name & Age</label><input type="text" id="book-name" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g Aiman Bin Abdul Latif, 35"></div>
-                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Email</label><input type="email" id="book-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g Aiman@gmail.com"></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Name</label><input type="text" id="book-name" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g Nawaf Waqas"></div>
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Age</label><input type="number" id="book-age" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g 28"></div>
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-1.5">Email</label><input type="email" id="book-email" required class="w-full border border-gray-300 rounded-lg px-4 py-3.5 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] shadow-sm" placeholder="e.g khananawaf@gmail.com"></div>
                         </div>
 
                         <div>
@@ -518,6 +519,7 @@
                     <div class="space-y-5">
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Full Name</label><input type="text" id="set-name" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF]"></div>
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Phone Number</label><input type="text" id="set-phone" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF]"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Age</label><input type="number" id="set-age" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF]" placeholder="e.g 28"></div>
                         <button onclick="saveSettings()" id="set-btn" class="w-full mt-4 bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition">Update Profile</button>
                     </div>
                 </div>
@@ -533,7 +535,7 @@
         const app = initializeApp({ apiKey: "AIzaSyCrx9BPS8ficDzgVZMbJIb4b3PQ9IqEHLw", authDomain: "doktura-ai-907d8.firebaseapp.com", projectId: "doktura-ai-907d8" });
         const auth = getAuth(app); 
 
-        window.userData = { name: "", phone: "", photo_url: "", is_subscribed: false, is_drive_linked: false };
+        window.userData = { name: "", phone: "", age: null, photo_url: "", is_subscribed: false, is_drive_linked: false };
         window.currentUser = null;
 
         onAuthStateChanged(auth, async (user) => {
@@ -561,8 +563,10 @@
                 document.getElementById('userNameHeader').innerText = window.userData.name; 
                 document.getElementById('set-name').value = window.userData.name; 
                 document.getElementById('set-phone').value = window.userData.phone || "";
+                document.getElementById('set-age').value = window.userData.age || "";
                 document.getElementById('book-name').value = window.userData.name; 
                 document.getElementById('book-email').value = user.email;
+                document.getElementById('book-age').value = window.userData.age || "";
 
                 let avatar = window.userData.photo_url || user.photoURL || `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#0066FF"/><text x="50%" y="50%" fill="#fff" font-size="32" font-family="sans-serif" font-weight="bold" text-anchor="middle" dy=".35em">${window.userData.name.charAt(0).toUpperCase()}</text></svg>`)}`;
                 document.getElementById('userAvatarSidebar').src = avatar;
@@ -1329,7 +1333,7 @@
         return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
     }
 
-    return content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    return content.replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 }
 
         function createUserBubble(text) {
@@ -1967,13 +1971,13 @@
                         const docExists = window.allDoctors.find(doc => doc.id === d.doctor_id);
                         if (docExists) {
                             selectDoctor(d.doctor_id);
-                            showInlineMessage(`Match Found: ${d.doctor} is available right now!`, "success");
+                            // success popup notification removed by request
                         } else {
                             showInlineMessage(`No matching doctor is available immediately. Please select "Schedule for Later" to book a future slot.`, "warning");
                         }
                     } else {
                         selectDoctor(d.doctor_id);
-                        showInlineMessage(`Match Found: ${d.doctor}`, "success");
+                        // success popup notification removed by request
                     }
                 } else { showInlineMessage(d.message || "Failed to find a matching doctor.", "error"); }
             } catch(e) { showInlineMessage("Failed to connect to AI suggestion.", "error"); }
@@ -2019,6 +2023,7 @@
                         doctor_id: doctorId, 
                         visit_type: "online", 
                         preferred_datetime: finalDateTime,
+                        patient_age: parseInt(document.getElementById('book-age').value) || null,
                         symptoms: symptomsText,
                         ai_report: window.generatedClinicalReport || null 
                     }) 
@@ -2254,7 +2259,76 @@
                     </tr>`;
             });
 
-            window.renderPaginationControls(window.cachedReports.length, window.reportsPerPage, window.currentReportPage, 'report-pagination', 'changeReportPage');
+            window.renderReports = () => {
+                const tbody = document.getElementById('reports-table-body');
+                tbody.innerHTML = '';
+
+                const start = (window.currentReportPage - 1) * window.reportsPerPage;
+                const end = start + window.reportsPerPage;
+                const pageData = window.cachedReports.slice(start, end);
+
+                pageData.forEach(rep => {
+                    let statColor = rep.status === 'Processing' ? 'bg-yellow-50 text-yellow-600 border border-yellow-200' : (rep.status === 'Failed' ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-green-50 text-green-600 border border-green-200');
+                    let safeId = rep.id ? `'${rep.id}'` : `null`;
+
+                    let driveBtnDesktop = rep.drive_url 
+                        ? `<a href="${rep.drive_url}" target="_blank" class="text-blue-500 hover:text-blue-700 mr-4 transition active:scale-95" title="View Document">
+                             <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                           </a>` 
+                        : `<span class="text-gray-300 mr-4 cursor-not-allowed" title="Document view unavailable">
+                             <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+                           </span>`;
+
+                    let driveBtnMobile = rep.drive_url 
+                        ? `<a href="${rep.drive_url}" target="_blank" class="text-blue-600 bg-blue-50 border border-blue-100 transition p-2.5 rounded-lg shadow-sm active:scale-95 flex items-center justify-center" title="View Document">
+                             <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                           </a>` 
+                        : `<span class="text-gray-400 bg-gray-100 border border-gray-200 transition p-2.5 rounded-lg flex items-center justify-center cursor-not-allowed" title="Document view unavailable">
+                             <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+                           </span>`;
+
+                    tbody.innerHTML += `
+                        <tr class="flex flex-col sm:table-row border border-gray-200 sm:border-b sm:border-t-0 sm:border-l-0 sm:border-r-0 sm:border-gray-100 bg-white sm:bg-transparent mb-5 sm:mb-0 rounded-3xl sm:rounded-none shadow-[0_4px_15px_rgba(0,0,0,0.03)] sm:shadow-none p-5 sm:p-0 hover:bg-gray-50 transition relative overflow-hidden">
+                            <td class="py-2 sm:py-5 px-1 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 pb-3 sm:pb-5">
+                                <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Report Name</span>
+                                <span class="font-extrabold text-gray-900 whitespace-nowrap text-right sm:text-left">${rep.name}</span>
+                            </td>
+                            <td class="px-4 py-3 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                                <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Type</span>
+                                <span class="font-bold text-gray-700 whitespace-nowrap">${rep.type}</span>
+                            </td>
+                            <td class="px-4 py-3 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0">
+                                <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Date</span>
+                                <span class="text-gray-600 font-medium whitespace-nowrap">${rep.date}</span>
+                            </td>
+                            <td class="px-4 py-3 sm:py-5 sm:px-6 flex justify-between items-center sm:table-cell border-b border-dashed border-gray-100 sm:border-0 mb-3 sm:mb-0">
+                                <span class="sm:hidden text-[11px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
+                                <span class="${statColor} px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm">${rep.status}</span>
+                            </td>
+                            <td class="p-4 bg-gray-50/50 flex flex-col sm:hidden -mx-5 -mb-5 rounded-b-3xl border-t border-gray-100">
+                                 <div class="flex justify-between items-center w-full">
+                                    <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Actions</span>
+                                    <div class="flex items-center gap-2">
+                                        ${driveBtnMobile}
+                                        <button onclick="deleteReport(${safeId})" class="text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 active:scale-95 transition p-2.5 rounded-lg shadow-sm" title="Delete">
+                                            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </div>
+                                 </div>
+                            </td>
+                            <td class="hidden sm:table-cell py-5 px-6 text-center">
+                                <div class="flex justify-center items-center">
+                                    ${driveBtnDesktop}
+                                    <button onclick="deleteReport(${safeId})" class="text-gray-400 hover:text-red-500 active:scale-95 font-bold transition" title="Delete"><svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+
+                window.renderPaginationControls(window.cachedReports.length, window.reportsPerPage, window.currentReportPage, 'report-pagination', 'changeReportPage');
+            };
+
+            window.renderReports();
         };
 
         window.deleteReport = (id) => {
@@ -2303,11 +2377,13 @@
             try { 
                 const name = document.getElementById('set-name').value;
                 const phone = document.getElementById('set-phone').value;
+                const age = document.getElementById('set-age').value;
                 const photoInput = document.getElementById('set-photo');
 
                 const fd = new FormData();
                 fd.append('name', name || "");
                 fd.append('phone', phone || "");
+                fd.append('age', age || "");
 
                 if (photoInput.files.length > 0) {
                     fd.append('file', photoInput.files[0]);
