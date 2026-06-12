@@ -40,12 +40,7 @@
             min-height: 24px; height: 24px; max-height: 120px; overflow-y: auto; line-height: 1.5;
         }
 
-        /* Text Wrapping Utility */
-        .chat-bubble-text {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
-        }
+        .chat-bubble-text { word-wrap: break-word; overflow-wrap: break-word; white-space: normal; }
 
         /* Typing Indicator Animation */
         .typing-dot { width: 6px; height: 6px; background: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out; }
@@ -64,7 +59,6 @@
         .orb-pulse-purple { animation: pulseGlowPurple 1.5s infinite ease-in-out; }
         .orb-pulse-green { animation: pulseGlowGreen 1.8s infinite ease-in-out; }
 
-        /* Speaking Soundwaves */
         .bar { width: 6px; height: 10px; background: white; border-radius: 4px; animation: sound 0.5s -0.1s linear infinite alternate; margin: 0 4px; }
         .bar:nth-child(1) { animation-delay: -0.2s; }
         .bar:nth-child(2) { animation-delay: -0.4s; }
@@ -73,17 +67,18 @@
         .bar:nth-child(5) { animation-delay: -1.0s; }
         @keyframes sound { 0% { height: 10px; } 100% { height: 45px; } }
 
-        /* View Switching Logic */
         .app-view { display: none; }
         .app-view.active { display: flex; }
 
-        @keyframes loader-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loader-spinner-ring {
-            animation: loader-spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-        }
+        @keyframes loader-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-spinner-ring { animation: loader-spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+
+        /* Stepper CSS for Insurance Modal */
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; transition: all 0.3s; z-index: 10;}
+        .step-circle.active { background: #0066FF; color: #fff; border: 2px solid #0066FF;}
+        .step-circle.inactive { background: #f3f4f6; color: #9ca3af; border: 2px solid #f3f4f6;}
+        .step-line { flex: 1; height: 2px; background: #f3f4f6; margin: 0 8px; transition: all 0.3s;}
+        .step-line.active { background: #0066FF; }
     </style>
 </head>
 <body class="hidden w-full overflow-hidden flex bg-white" id="appBody" style="height: 100dvh;">
@@ -122,7 +117,6 @@
             <h2 class="text-2xl font-extrabold text-gray-900 mb-1">Your session has ended</h2>
             <p class="text-gray-500 text-sm mb-6">How was your consultation?</p>
 
-            <!-- Verification Badge Design -->
             <div class="flex justify-center mb-6">
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="#0066FF" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-lg">
                    <path d="M12 2L14.8 4.6L18.4 4L19.5 7.5L22.7 9.2L21.3 12.6L22.7 16L19.5 17.7L18.4 21.2L14.8 20.6L12 23.2L9.2 20.6L5.6 21.2L4.5 17.7L1.3 16L2.7 12.6L1.3 9.2L4.5 7.5L5.6 4L9.2 4.6L12 2Z" fill="#0066FF"/>
@@ -132,10 +126,7 @@
 
             <p class="text-gray-700 text-sm font-medium mb-3">Rate your experience with <span id="review-doc-name" class="font-bold">Doctor</span></p>
 
-            <!-- Star Container -->
-            <div class="flex justify-center space-x-2 mb-6" id="star-container">
-                <!-- Stars will be injected via JS -->
-            </div>
+            <div class="flex justify-center space-x-2 mb-6" id="star-container"></div>
 
             <p class="text-gray-700 text-sm font-bold text-left mb-2">Tell us more about the session (optional)</p>
             <textarea id="review-comment" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#0066FF] mb-6 resize-none" rows="4" placeholder="Tell us here..."></textarea>
@@ -145,6 +136,189 @@
             </button>
         </div>
     </div>
+
+    <!-- INSURANCE UPLOAD / PRE-APPROVAL MODAL -->
+    <div id="insurance-modal" class="fixed inset-0 bg-gray-900/60 z-[600] hidden items-center justify-center backdrop-blur-sm px-4 py-8 overflow-y-auto">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full relative shadow-2xl my-auto">
+            <button onclick="closeInsuranceModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-800 active:scale-95 text-xl font-bold transition">✕</button>
+
+            <h2 class="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Pre-Approval Request
+            </h2>
+
+            <!-- Stepper -->
+            <div class="flex items-center justify-between px-2 sm:px-12 mb-8">
+                <div class="flex flex-col items-center gap-2">
+                    <div id="ins-step-1-cir" class="step-circle active">1</div>
+                    <span class="text-[11px] font-bold text-gray-800">Details</span>
+                </div>
+                <div id="ins-line-1" class="step-line inactive"></div>
+                <div class="flex flex-col items-center gap-2">
+                    <div id="ins-step-2-cir" class="step-circle inactive">2</div>
+                    <span class="text-[11px] font-bold text-gray-400" id="ins-step-2-txt">Review</span>
+                </div>
+                <div id="ins-line-2" class="step-line inactive"></div>
+                <div class="flex flex-col items-center gap-2">
+                    <div id="ins-step-3-cir" class="step-circle inactive">3</div>
+                    <span class="text-[11px] font-bold text-gray-400" id="ins-step-3-txt">Submit</span>
+                </div>
+            </div>
+
+            <!-- STEP 1: FILL DETAILS -->
+            <div id="ins-step-1-content" class="block">
+                <h3 class="text-[15px] font-bold text-gray-900 mb-1">Insurance Details</h3>
+                <p class="text-xs text-gray-500 mb-6">Fill in your insurance information</p>
+
+                <form id="ins-form-data" onsubmit="event.preventDefault(); goToInsStep(2);" class="space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Full Name</label>
+                            <input type="text" id="ins-name" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">IC / Passport Number</label>
+                            <input type="text" id="ins-ic" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none bg-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Insurance Company</label>
+                        <select id="ins-provider" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none bg-white cursor-pointer appearance-none">
+                            <option value="">Select Company</option>
+                            <option value="PMCare">PMCare</option>
+                            <option value="AIA">AIA</option>
+                            <option value="Etiqa">Etiqa</option>
+                            <option value="Red Alert">Red Alert</option>
+                            <option value="G-Flex">G-Flex</option>
+                            <option value="Health Connect">Health Connect</option>
+                            <option value="TNB Healthcare">TNB Healthcare</option>
+                            <option value="E-MAS">E-MAS</option>
+                            <option value="Mednefits">Mednefits</option>
+                            <option value="Compumed">Compumed</option>
+                            <option value="HealthMetrics">HealthMetrics</option>
+                            <option value="Medkad">Medkad</option>
+                            <option value="IHP">IHP</option>
+                            <option value="WeCare">WeCare</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Membership / Policy Number</label>
+                            <input type="text" id="ins-policy" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Employee Company (If Applicable)</label>
+                            <input type="text" id="ins-emp" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none bg-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Upload Insurance Card (Front & Back) <span class="text-red-500">*</span></label>
+                        <div class="border border-dashed border-gray-300 rounded-xl p-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition relative">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-gray-700" id="ins-file-name">Drag & drop your file</div>
+                                    <div class="text-[10px] text-gray-500">Max file size: 10MB (PDF, DOC, DOCX, JPG, PNG)</div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="document.getElementById('ins-file').click()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition shrink-0 z-10 relative">Browse from Computer</button>
+                            <input type="file" id="ins-file" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="document.getElementById('ins-file-name').innerText = this.files[0] ? this.files[0].name : 'Drag & drop your file'; document.getElementById('ins-file-name').classList.add('text-[#0066FF]');">
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                            Continue
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- STEP 2: REVIEW DETAILS -->
+            <div id="ins-step-2-content" class="hidden">
+                <h3 class="text-[15px] font-bold text-gray-900 mb-1">Review & Submit</h3>
+                <p class="text-xs text-gray-500 mb-6">Please review your details</p>
+
+                <div class="space-y-5 bg-gray-50/50 p-1">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Full Name</label>
+                            <div id="rev-ins-name" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-medium bg-gray-50 text-gray-800 break-words"></div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">IC / Passport Number</label>
+                            <div id="rev-ins-ic" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-medium bg-gray-50 text-gray-800 break-words"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Insurance Company</label>
+                        <div id="rev-ins-provider" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-medium bg-gray-50 text-gray-800 break-words"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Membership / Policy Number</label>
+                            <div id="rev-ins-policy" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-medium bg-gray-50 text-gray-800 break-words"></div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Employee Company</label>
+                            <div id="rev-ins-emp" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm font-medium bg-gray-50 text-gray-800 break-words"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Upload Insurance Card</label>
+                            <span class="text-[10px] text-gray-500 font-medium">1 file uploaded</span>
+                        </div>
+                        <div class="border border-gray-200 bg-gray-50 rounded-lg p-3.5 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-white border border-gray-200 w-8 h-8 rounded flex items-center justify-center text-[10px] font-bold text-red-500">PDF</div>
+                                <div>
+                                    <div class="text-xs font-bold text-gray-700 truncate max-w-[200px]" id="rev-ins-filename">card.pdf</div>
+                                    <div class="text-[10px] text-gray-400 mt-0.5">Ready for upload</div>
+                                </div>
+                            </div>
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-[10px] text-gray-500 mt-6 text-center">By submitting, you agree to our <a href="#" class="text-[#0066FF] hover:underline">Privacy Policy</a> and <a href="#" class="text-[#0066FF] hover:underline">Terms of Use</a></p>
+
+                <div class="pt-4 flex gap-3">
+                    <button type="button" onclick="goToInsStep(1)" class="w-1/3 bg-white border border-gray-300 hover:bg-gray-50 active:scale-[0.98] text-gray-700 font-bold py-3.5 rounded-xl shadow-sm transition text-sm">Back</button>
+                    <button type="button" id="ins-submit-btn" onclick="submitInsuranceReq()" class="w-2/3 bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center">Submit Request</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: SUBMITTED (PENDING STATE) -->
+            <div id="ins-step-3-content" class="hidden text-center py-6">
+                <div class="w-16 h-16 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mx-auto mb-5 border border-blue-100 shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <h3 class="text-xl font-extrabold text-gray-900 mb-2">Pre-Approval Required</h3>
+                <p class="text-sm text-gray-500 mb-6 max-w-sm mx-auto leading-relaxed">Insurance verification and pre-approval are required before you can proceed with cashless booking.</p>
+                
+                <div class="bg-blue-50 text-blue-700 text-xs font-medium p-4 rounded-xl border border-blue-100 mb-6 text-left leading-relaxed">
+                    <span class="font-bold">Notice:</span> Insurance coverage is only available if your employer has an active panel agreement with Hello Doctor Clinic. Eligibility and coverage will be verified during the approval process.
+                </div>
+
+                <p class="text-xs text-gray-600 font-medium mb-8">Approval is usually completed within <b>±1 hour</b>. You will receive a notification once your request has been reviewed.</p>
+
+                <button type="button" onclick="closeInsuranceModal()" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                    Understood, Back to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- MOBILE SIDEBAR OVERLAY -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-[190] hidden md:hidden backdrop-blur-sm transition-opacity"></div>
@@ -159,9 +333,7 @@
         <div class="px-5 py-4">
             <button onclick="startNewSession()" class="w-full bg-blue-600 text-white font-bold py-3 sm:py-2.5 rounded-xl sm:rounded-lg shadow-sm flex items-center justify-center transition hover:bg-blue-700 active:scale-95 text-sm">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.586-9.414a2 2 0 112.828 2.828L12 14l-4 1 1-4 8.414-8.414z">
-                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.586-9.414a2 2 0 112.828 2.828L12 14l-4 1 1-4 8.414-8.414z"></path>
                 </svg>
                 New Chat
             </button>
@@ -371,21 +543,43 @@
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-gray-200">
-                        <p class="text-sm font-bold text-gray-700 mb-2">Payment (FEE: RM 38.00)</p>
-                        <div class="bg-gray-50 p-4 border border-gray-200 rounded-xl text-xs text-gray-600 font-medium flex items-center leading-relaxed shadow-sm">
-                            <svg class="w-5 h-5 mr-3 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Kindly be informed that cancellations will not be eligible for a refund.
+                        <!-- PAYMENT METHOD SELECTION -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Payment Method</label>
+                            <div class="flex bg-gray-50 p-1.5 rounded-xl border border-gray-200 shadow-sm">
+                                <label class="flex-1 text-center cursor-pointer relative">
+                                    <input type="radio" name="pay_type_toggle" value="self" checked class="peer sr-only" onchange="togglePayType('self')">
+                                    <div class="py-2.5 rounded-lg text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-[#0066FF] peer-checked:border-blue-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center gap-1.5">
+                                        <span>💳</span> <span>Self Pay</span>
+                                    </div>
+                                </label>
+                                <label class="flex-1 text-center cursor-pointer relative">
+                                    <input type="radio" name="pay_type_toggle" value="insurance" class="peer sr-only" onchange="togglePayType('insurance')">
+                                    <div class="py-2.5 rounded-lg text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-[#0066FF] peer-checked:border-blue-200 peer-checked:border peer-checked:shadow-sm transition flex items-center justify-center gap-1.5">
+                                        <span>🏥</span> <span>Panel / Insurance</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mt-6 mb-8 flex items-start cursor-pointer bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                        <input type="checkbox" id="pdpa-agree" required class="mt-0.5 mr-3 h-4 w-4 text-[#0066FF] border-gray-300 rounded focus:ring-[#0066FF] cursor-pointer shrink-0">
-                        <label for="pdpa-agree" class="text-xs text-gray-600 leading-relaxed font-medium cursor-pointer">
-                            By submitting, you agree to the processing of your personal data in accordance with the Personal Data Protection Act (PDPA) and our Privacy Policy.
-                        </label>
-                    </div>
+                        <!-- DYNAMIC PAYMENT/INSURANCE STATUS BOX -->
+                        <div id="payment-status-box" class="bg-gray-50 p-4 border border-gray-200 rounded-xl text-xs text-gray-600 font-medium flex items-center leading-relaxed shadow-sm mb-6">
+                            <svg class="w-5 h-5 mr-3 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Standard consultation fee is <strong>RM 38.00</strong>. Kindly be informed that cancellations will not be eligible for a refund.</span>
+                        </div>
 
-                    <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-4 rounded-xl shadow-lg transition text-sm">Pay Now</button>
+                        <div class="mb-8 flex items-start cursor-pointer bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                            <input type="checkbox" id="pdpa-agree" required class="mt-0.5 mr-3 h-4 w-4 text-[#0066FF] border-gray-300 rounded focus:ring-[#0066FF] cursor-pointer shrink-0">
+                            <label for="pdpa-agree" class="text-xs text-gray-600 leading-relaxed font-medium cursor-pointer">
+                                By submitting, you agree to the processing of your personal data in accordance with the Personal Data Protection Act (PDPA) and our Privacy Policy.
+                            </label>
+                        </div>
+
+                        <button type="submit" id="book-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-4 rounded-xl shadow-lg transition text-sm">Pay Now (RM 38.00)</button>
+                        
+                        <!-- Extra button shown only if insurance needs upload -->
+                        <button type="button" id="ins-apply-btn" onclick="openInsuranceModal()" class="hidden w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-4 rounded-xl shadow-lg transition text-sm">Apply for Pre-Approval</button>
+                    </div>
                 </form>
 
                 <div id="booking-clinic-section" class="hidden">
@@ -481,6 +675,7 @@
                 </div>
             </div>
 
+            <!-- Upload Document Modal -->
             <div id="upload-modal" class="fixed inset-0 bg-gray-900/50 z-[250] hidden items-center justify-center backdrop-blur-sm px-4">
                 <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
                     <div class="flex justify-between items-center mb-6">
@@ -522,6 +717,14 @@
                         <div><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Age</label><input type="number" id="set-age" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[#0066FF]" placeholder="e.g 28"></div>
                         <button onclick="saveSettings()" id="set-btn" class="w-full mt-4 bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition">Update Profile</button>
                     </div>
+
+                    <!-- INSURANCE SETTINGS SECTION -->
+                    <div class="mt-10 border-t border-gray-200 pt-8">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Insurance / Panel Coverage</h3>
+                        <div id="settings-insurance-box">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -535,8 +738,12 @@
         const app = initializeApp({ apiKey: "AIzaSyCrx9BPS8ficDzgVZMbJIb4b3PQ9IqEHLw", authDomain: "doktura-ai-907d8.firebaseapp.com", projectId: "doktura-ai-907d8" });
         const auth = getAuth(app); 
 
-        window.userData = { name: "", phone: "", age: null, photo_url: "", is_subscribed: false, is_drive_linked: false };
+        window.userData = { 
+            name: "", phone: "", age: null, photo_url: "", is_subscribed: false, is_drive_linked: false,
+            insurance_status: "none", insurance_provider: "", insurance_policy_no: "" 
+        };
         window.currentUser = null;
+        window.bookingPayType = 'self'; 
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
@@ -552,6 +759,8 @@
                     window.currentSessionId = data.merged_session_id;
                 }
 
+                // Ensure insurance status defaults safely
+                if (!data.insurance_status) data.insurance_status = "none";
                 window.userData = { ...window.userData, ...data };
                 window.currentUser = user;
 
@@ -573,6 +782,9 @@
                 document.getElementById('userAvatarHeader').src = avatar; 
                 document.getElementById('set-avatar').src = avatar; 
                 window.currentAvatar = avatar;
+
+                // Render dynamic insurance states
+                renderInsuranceUI();
 
                 const params = new URLSearchParams(window.location.search);
                 const urlTab = params.get('tab');
@@ -608,7 +820,7 @@
         });
 
         document.getElementById("logoutBtn").addEventListener("click", () => {
-            localStorage.removeItem('doktura_active_tab'); // Clears the saved tab memory
+            localStorage.removeItem('doktura_active_tab'); 
             signOut(auth);
         });
     </script>
@@ -621,6 +833,8 @@
         let isRecording = false; 
         window.pendingDeleteId = null;
         window.notifiedAppointments = new Set();
+        window.currentInsStep = 1;
+
         const chatLogoUrl = "https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true";
 
         // ---- PAGINATION STATE ----
@@ -657,26 +871,18 @@
         }
 
         window.willTriggerReport = function(userMessage) {
-            // Count existing AI assistant messages rendered in history using the avatar class, discounting local greetings
             const localGreetingCount = document.querySelectorAll('#chat-history .local-greeting').length;
             const aiBubbleCount = document.querySelectorAll('#chat-history .ai-bubble-avatar').length - localGreetingCount;
             const msgLower = userMessage.toLowerCase();
 
-            // 1. Emergency Bypass
             const emergencyKeywords = [
                 "chest pain", "heart attack", "stroke", "drooping", "slurred speech",
                 "cannot breathe", "can't breathe", "shortness of text", "thunderclap"
             ];
-            if (emergencyKeywords.some(k => msgLower.includes(k))) {
-                return false;
-            }
+            if (emergencyKeywords.some(k => msgLower.includes(k))) return false;
 
-            // 2. Absolute Turn Check (Backend forces escalation strictly when history has 12+ assistant messages)
-            if (aiBubbleCount >= 12) {
-                return true;
-            }
+            if (aiBubbleCount >= 12) return true;
 
-            // 3. Pain/Swelling thresholds (Only check if we already have 8+ assistant messages rendered)
             if (aiBubbleCount >= 8) {
                 const painKeywords = ["10", "9", "8", "7", "severe", "unbearable", "worst"];
                 const swellingKeywords = ["swell", "swollen", "swelling", "puffy", "inflamed"];
@@ -686,9 +892,7 @@
                 const hasSwelling = swellingKeywords.some(k => msgLower.includes(k));
                 const hasNegation = negationWords.some(neg => msgLower.includes(neg));
 
-                if ((hasHighPain || hasSwelling) && !hasNegation) {
-                    return true;
-                }
+                if ((hasHighPain || hasSwelling) && !hasNegation) return true;
             }
 
             return false;
@@ -977,15 +1181,12 @@
                 });
                 const apiSess = (await r.json()).sessions || [];
 
-                // Copy the array from the API response
                 let sess = [...apiSess];
 
-                // If the active session is a brand-new chat (unsaved), force-insert it into the list
                 if (window.currentSessionId && !sess.includes(window.currentSessionId)) {
                     sess.push(window.currentSessionId);
                 }
 
-                // Sort session IDs chronologically descending (newest timestamp first)
                 const sortedSess = sess.sort((a, b) => {
                     const tA = parseInt(a) || 0;
                     const tB = parseInt(b) || 0;
@@ -1014,16 +1215,13 @@
                     const cachedSymptom = localStorage.getItem('symptom_' + id);
                     const cachedFirstMsg = localStorage.getItem('first_msg_' + id);
 
-                    const cleanMsg = (cachedSymptom || cachedFirstMsg || '')
-                        .replace(/[^\w\s\-\?,]/gi, '')
-                        .trim();
+                    const cleanMsg = (cachedSymptom || cachedFirstMsg || '').replace(/[^\w\s\-\?,]/gi, '').trim();
 
                     let sessionLabel = '';
                     let tooltipText = '';
 
                     const isUnsaved = !apiSess.includes(id);
 
-                    // If it is unsaved on the server, label it as "New Chat" with the creation time
                     if (isUnsaved) {
                         const date = new Date(timestamp);
                         const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -1069,7 +1267,6 @@
                       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     }
 
-    // Bulletproof trigger: Catch both [ESCALATE] or the title
     if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
         let summaryMatch   = content.match(/(?:\*\*Patient Summary\*\*|\*\*Patient Summary:\*\*|\*\*Summary:\*\*|Patient Summary:|Patient Summary)\s*([\s\S]*?)(?=\*\*Differential Diagnosis|Differential Diagnosis)/i);
         let diffDiagMatch  = content.match(/(?:\*\*Differential Diagnosis\*\*|\*\*Differential Diagnosis:\*\*|Differential Diagnosis:|Differential Diagnosis)\s*([\s\S]*?)(?=\*\*Comprehensive Plan|\*\*Plan of Action|Plan of Action)/i);
@@ -1091,7 +1288,6 @@
         let plan     = planMatch     ? planMatch[1].trim()     : "";
         let soap     = soapMatch     ? soapMatch[1].trim()     : "";
 
-        // ─── LINE-BY-LINE CLINICAL TEXT FORMATTER ────────────────────────────────
         let formatClinicalText = (text) => {
             if (!text) return "";
             text = text.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
@@ -1106,20 +1302,17 @@
                 const raw     = lines[i];
                 const trimmed = raw.trim();
 
-                // ── Empty line → small spacer ──────────────────────────────────
                 if (!trimmed) {
                     html += '<div class="h-2"></div>';
                     continue;
                 }
 
-                // ── 1. SOAP section headers: Subjective / Objective / Assessment / Plan ──
                 const soapTest = trimmed.replace(/\*\*/g, '').replace(/:$/, '').trim();
                 if (/^(Subjective|Objective|Assessment|Plan)$/i.test(soapTest)) {
                     html += `<div class="mt-4 mb-1.5"><strong class="text-gray-900 font-bold text-[15px] sm:text-[16px]">${soapTest}</strong></div>`;
                     continue;
                 }
 
-                // ── 2. Roman numerals: "i. text", "ii. text", "iii. text" etc ──
                 const romanMatch = trimmed.match(/^(i{1,3}|iv|v|vi{0,3}|ix|x)\.\s+(.+)$/i);
                 if (romanMatch) {
                     const inner = bold(romanMatch[2]);
@@ -1130,7 +1323,6 @@
                     continue;
                 }
 
-                // ── 3. Sub-bullet — indented 2+ spaces/tabs ────────────────────
                 if (/^[ \t]{2,}[-•*]\s+/.test(raw)) {
                     const inner = bold(raw.replace(/^[ \t]+[-•*]\s+/, ''));
                     html += `<div class="flex items-start mt-1 ml-7">
@@ -1140,7 +1332,6 @@
                     continue;
                 }
 
-                // ── 4. Numbered + bold: "1. **Name**" ─────────────────────────
                 const numBold = trimmed.match(/^(\d+)\.\s*\*\*([^*\n]+)\*\*[: ]*$/);
                 if (numBold) {
                     html += `<div class="flex items-baseline mt-1.5 ml-3">
@@ -1150,7 +1341,6 @@
                     continue;
                 }
 
-                // ── 5. Plain numbered: "1. Text" ───────────────────────────────
                 const numPlain = trimmed.match(/^(\d+)\.\s+(.+)$/);
                 if (numPlain) {
                     html += `<div class="flex items-baseline mt-1.5 ml-3">
@@ -1160,7 +1350,6 @@
                     continue;
                 }
 
-                // ── 6. Lettered sub-items: "A. text" ──────────────────────────
                 const lettered = trimmed.match(/^([A-D])\.\s+(.+)$/);
                 if (lettered) {
                     html += `<div class="flex items-baseline mt-1 ml-7">
@@ -1170,7 +1359,6 @@
                     continue;
                 }
 
-                // ── 7. Bold standalone heading: "**Heading**" or "**Heading:**" ──
                 const boldAlone = trimmed.match(/^\*\*([^*]+)\*\*[: ]*$/);
                 if (boldAlone) {
                     const title = boldAlone[1];
@@ -1186,7 +1374,6 @@
                     continue;
                 }
 
-                // ── 8. Bullet items: "- text", "• text", or "* text" ──────────
                 const bulletMatch = trimmed.match(/^[-•*]\s+(.+)$/);
                 if (bulletMatch) {
                     const inner = bold(bulletMatch[1]);
@@ -1197,13 +1384,11 @@
                     continue;
                 }
 
-                // ── 9. Fallback: plain text paragraph ─────────────────────────
                 html += `<div class="mt-1 leading-relaxed">${bold(trimmed)}</div>`;
             }
 
             return html;
         };
-        // ─────────────────────────────────────────────────────────────────────
 
         const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -1216,22 +1401,14 @@
         let reportHtml = `
         <style>summary::-webkit-details-marker { display: none; }</style>
         <div class="bg-gray-50 border border-gray-200 rounded-2xl shadow-lg w-full mt-2 mb-2 overflow-hidden text-left chat-bubble-text" style="max-width: 100%;">
-
-            <!-- Header -->
             <div class="p-3 sm:p-4 border-b border-gray-200 bg-white">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Doktura Report</h2>
                 <p class="text-xs text-gray-500 tracking-wide">${dateStr} • Guest Session</p>
             </div>
-
-            <!-- Summary — same text style as accordion content -->
             <div class="p-4 sm:p-5 bg-white rounded-b-2xl text-left font-sans" style="word-wrap: break-word; overflow-wrap: break-word;">
                 ${summary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
             </div>
-
-            <!-- Expandable Accordions — Standalone Cards -->
             <div class="p-4 sm:p-5 bg-white rounded-b-2xl text-left font-sans">
-
-                <!-- Assessment & Plan Card -->
                 <details class="group mb-2 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
                     <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-100 transition-colors">
                         <div class="flex flex-col text-left">
@@ -1247,8 +1424,6 @@
                         ${plan     ? `<div class="${diffDiag ? 'pt-3 mt-3 border-t border-gray-300 border-solid' : ''}">${formatClinicalText(plan)}</div>` : ''}
                     </div>
                 </details>
-
-                <!-- SOAP Note Card -->
                 ${soap ? `
                 <details class="group rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden">
                     <summary style="${summaryStyle}" class="p-4 sm:p-5 flex justify-between items-center hover:bg-gray-100 transition-colors">
@@ -1265,65 +1440,27 @@
                     </div>
                 </details>
                 ` : ''}
-
             </div>
-
-            <!-- Clean Care Checklist Section -->
             <div class="p-4 sm:p-5 bg-white rounded-b-2xl text-left font-sans">
-
-                <h3 class="font-bold text-gray-900 text-lg mb-2">
-                    Continue with a licensed doctor
-                </h3>
-
-                <p class="text-sm text-gray-700 mb-4 leading-relaxed">
-                    Given your symptoms, a doctor can give you personalized guidance —
-                    and peace of mind.
-                </p>
-
+                <h3 class="font-bold text-gray-900 text-lg mb-2">Continue with a licensed doctor</h3>
+                <p class="text-sm text-gray-700 mb-4 leading-relaxed">Given your symptoms, a doctor can give you personalized guidance — and peace of mind.</p>
                 <ul class="space-y-3 mb-4">
-                    
                     <li class="flex items-center text-sm font-semibold text-gray-900">
-                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                            </svg>
-                        </div>
-                        Talk to a doctor now or schedule a time
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg></div> Talk to a doctor now or schedule a time
                     </li>
-
                     <li class="flex items-center text-sm font-semibold text-gray-900">
-                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                            </svg>
-                        </div>
-                        A doctor can review your concerns and advise on treatment
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg></div> A doctor can review your concerns and advise on treatment
                     </li>
-
                     <li class="flex items-center text-sm font-semibold text-gray-900">
-                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                            </svg>
-                        </div>
-                        Get prescriptions, referrals, and more in as little as 30 mins
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg></div> Get prescriptions, referrals, and more in as little as 30 mins
                     </li>
-
                     <li class="flex items-center text-sm font-semibold text-gray-900">
-                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-                            </svg>
-                        </div>
-                        RM 38 self-pay
+                        <div class="w-6 h-6 rounded-full bg-[#0070F3] flex items-center justify-center mr-3 shrink-0"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg></div> RM 38 self-pay
                     </li>
-
                 </ul>
-
                 <button onclick="${btnAction}" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-semibold py-3 rounded-xl shadow-sm transition text-sm">
                     ${btnText}
                 </button>
-
             </div>
         </div>`;
 
@@ -1376,7 +1513,6 @@
             if(!data.history || data.history.length === 0 || !data.history.some(m=>m.role!=='system')) {
                 el.innerHTML = createAiBubble(`Hello ${window.userData.name}! How can I assist you today?`, true);
             } else {
-                // Find and cache the first user message for sidebar labeling
                 const firstUserMsg = data.history.find(m => m.role === 'user');
                 if (firstUserMsg && firstUserMsg.content) {
                     localStorage.setItem('first_msg_' + window.currentSessionId, firstUserMsg.content.trim());
@@ -1438,7 +1574,6 @@
             history.innerHTML += createUserBubble(msg);
             history.scrollTo(0, history.scrollHeight);
 
-            // 1. ALWAYS show the standard 3-dots typing indicator first
             const typeId = 'typing-' + Date.now();
             history.innerHTML += `
             <div id="${typeId}" class="flex flex-col items-start mb-6 w-full">
@@ -1457,7 +1592,6 @@
             if (isVoiceActive) setVoiceState('PROCESSING');
 
             try {
-                // Fetch the response from the backend
                 const r = await fetch(API_BASE+'/api/chat',{
                     method:'POST',
                     headers:await getAuthHeaders(),
@@ -1465,15 +1599,12 @@
                 });
                 const data = await r.json();
 
-                // 2. Check if the received message is a report
                 const isReport = data.reply.includes("[ESCALATE]") || data.reply.includes("Comprehensive Doktura Clinical Report");
 
                 if (isReport) {
-                    // Remove the 3-dots indicator
                     const tEl = document.getElementById(typeId);
                     if(tEl) tEl.remove();
 
-                    // Show the Brain Loader instead
                     const brainLoaderId = 'brain-' + Date.now();
                     history.innerHTML += `
                     <div id="${brainLoaderId}" class="flex flex-col items-start mb-6 w-full animate-fade">
@@ -1502,7 +1633,6 @@
                     </div>`;
                     history.scrollTo(0, history.scrollHeight);
 
-                    // Start transitioning the text messages
                     let phaseIndex = 0;
                     const textEl = document.getElementById(`${brainLoaderId}-text`);
                     const phaseInterval = setInterval(() => {
@@ -1512,21 +1642,17 @@
                         }
                     }, 2000);
 
-                    // Wait 5 seconds to build suspense and show the animation
                     await new Promise(resolve => setTimeout(resolve, 5000));
 
-                    // Remove the Brain Loader
                     clearInterval(phaseInterval);
                     const bEl = document.getElementById(brainLoaderId);
                     if(bEl) bEl.remove();
 
-                    // Finally, reveal the actual report
                     history.innerHTML += createAiBubble(data.reply);
                     history.scrollTo(0, history.scrollHeight);
                     if(isVoiceActive) speakOut(data.reply);
 
                 } else {
-                    // Normal message flow (Not a report)
                     const tEl = document.getElementById(typeId);
                     if(tEl) tEl.remove();
 
@@ -1538,7 +1664,6 @@
                 loadSessions();
 
             } catch(e) {
-                // If there's an error, just clear the 3-dots and show an error message
                 const tEl = document.getElementById(typeId);
                 if(tEl) tEl.remove();
 
@@ -1584,9 +1709,7 @@
                 voiceRec.continuous = true; 
                 voiceRec.interimResults = true; 
 
-                voiceRec.onstart = () => {
-                    // Do nothing on start. Initialization is handled outside.
-                };
+                voiceRec.onstart = () => {};
 
                 voiceRec.onresult = (e) => {
                     let currentInterim = '';
@@ -1714,6 +1837,206 @@
                 fetchDoctorsAvailableNow();
             } else {
                 fetchDoctors();
+            }
+        };
+
+        // NEW: Handles the Payment Method toggle on the Booking Tab
+        window.togglePayType = (type) => {
+            window.bookingPayType = type;
+            const statusBox = document.getElementById('insurance-status-box');
+            const payBtn = document.getElementById('book-btn');
+            const applyBtn = document.getElementById('ins-apply-btn');
+            const status = window.userData.insurance_status || 'none';
+
+            if (type === 'self') {
+                statusBox.classList.add('hidden');
+                statusBox.innerHTML = '';
+                payBtn.innerText = "Pay Now (RM 38.00)";
+                payBtn.classList.remove('hidden');
+                applyBtn.classList.add('hidden');
+            } else if (type === 'insurance') {
+                statusBox.classList.remove('hidden');
+                if (status === 'approved') {
+                    statusBox.innerHTML = `
+                        <div class="flex items-center gap-3 text-green-700 bg-green-50 p-4 rounded-xl border border-green-200">
+                            <svg class="w-6 h-6 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <div>
+                                <span class="block font-bold">Insurance Verified</span>
+                                <span class="text-xs">Your consultation is covered by ${window.userData.insurance_provider}.</span>
+                            </div>
+                        </div>
+                    `;
+                    payBtn.innerText = "Confirm Booking (Covered by Panel)";
+                    payBtn.classList.remove('hidden');
+                    applyBtn.classList.add('hidden');
+                } else if (status === 'pending') {
+                    statusBox.innerHTML = `
+                        <div class="flex items-center gap-3 text-yellow-700 bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                            <svg class="w-6 h-6 text-yellow-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <div>
+                                <span class="block font-bold">Approval in Progress</span>
+                                <span class="text-xs">Your insurance is still being verified. Please select Self Pay for immediate consultation, or wait for approval.</span>
+                            </div>
+                        </div>
+                    `;
+                    payBtn.classList.add('hidden');
+                    applyBtn.classList.add('hidden');
+                } else {
+                    statusBox.innerHTML = `
+                        <div class="flex items-center gap-3 text-red-700 bg-red-50 p-4 rounded-xl border border-red-200">
+                            <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div>
+                                <span class="block font-bold">No Insurance on File</span>
+                                <span class="text-xs">You must apply for pre-approval to use cashless panel coverage.</span>
+                            </div>
+                        </div>
+                    `;
+                    payBtn.classList.add('hidden');
+                    applyBtn.classList.remove('hidden');
+                }
+            }
+        };
+
+        // NEW: Function to render the Insurance Status in the Profile Settings tab
+        window.renderInsuranceUI = function() {
+            const status = window.userData.insurance_status || 'none';
+            const box = document.getElementById('settings-insurance-box');
+            if(!box) return;
+
+            if(status === 'approved') {
+                box.innerHTML = `
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">${window.userData.insurance_provider}</h4>
+                                <p class="text-xs text-gray-500 font-medium">Policy No: ${window.userData.insurance_policy_no}</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg font-bold border border-green-100 inline-block">Active & Verified</div>
+                    </div>
+                `;
+            } else if(status === 'pending') {
+                box.innerHTML = `
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center shadow-sm">
+                        <svg class="w-10 h-10 text-yellow-500 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h4 class="font-bold text-yellow-800 mb-1">Approval in Progress</h4>
+                        <p class="text-xs text-yellow-700 max-w-xs mx-auto">Your insurance details have been submitted and are currently under review by our admin team.</p>
+                    </div>
+                `;
+            } else {
+                // none or rejected
+                box.innerHTML = `
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center shadow-sm">
+                        <svg class="w-10 h-10 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"></path></svg>
+                        <h4 class="font-bold text-gray-700 mb-1">No Insurance Found</h4>
+                        <p class="text-xs text-gray-500 mb-4 max-w-xs mx-auto">Add your insurance card to enjoy cashless consultations on the platform.</p>
+                        <button onclick="openInsuranceModal()" class="bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition">Add Insurance</button>
+                    </div>
+                `;
+            }
+
+            // Sync toggle UI if book tab is open
+            if(window.bookingPayType === 'insurance') togglePayType('insurance');
+        };
+
+        // NEW: Insurance Modal Actions
+        window.openInsuranceModal = () => {
+            window.currentInsStep = 1;
+            goToInsStep(1);
+            document.getElementById('ins-name').value = window.userData.name || "";
+            document.getElementById('ins-ic').value = window.userData.ic_number || "";
+            
+            document.getElementById('insurance-modal').classList.remove('hidden');
+            document.getElementById('insurance-modal').classList.add('flex');
+        };
+
+        window.closeInsuranceModal = () => {
+            document.getElementById('insurance-modal').classList.add('hidden');
+            document.getElementById('insurance-modal').classList.remove('flex');
+        };
+
+        window.goToInsStep = (step) => {
+            window.currentInsStep = step;
+            // Hide all steps
+            document.getElementById('ins-step-1-content').classList.add('hidden');
+            document.getElementById('ins-step-1-content').classList.remove('block');
+            document.getElementById('ins-step-2-content').classList.add('hidden');
+            document.getElementById('ins-step-2-content').classList.remove('block');
+            document.getElementById('ins-step-3-content').classList.add('hidden');
+            document.getElementById('ins-step-3-content').classList.remove('block');
+
+            // Update UI
+            document.getElementById(`ins-step-${step}-content`).classList.remove('hidden');
+            document.getElementById(`ins-step-${step}-content`).classList.add('block');
+
+            // Update stepper circles
+            ['1','2','3'].forEach(num => {
+                const cir = document.getElementById(`ins-step-${num}-cir`);
+                const txt = document.getElementById(`ins-step-${num}-txt`);
+                if(parseInt(num) <= step) {
+                    cir.className = "step-circle active";
+                    if(txt) txt.className = "text-[11px] font-bold text-gray-800";
+                } else {
+                    cir.className = "step-circle inactive";
+                    if(txt) txt.className = "text-[11px] font-bold text-gray-400";
+                }
+            });
+            ['1','2'].forEach(num => {
+                const line = document.getElementById(`ins-line-${num}`);
+                if(parseInt(num) < step) line.className = "step-line active";
+                else line.className = "step-line inactive";
+            });
+
+            // If going to step 2, grab data
+            if(step === 2) {
+                document.getElementById('rev-ins-name').innerText = document.getElementById('ins-name').value || '-';
+                document.getElementById('rev-ins-ic').innerText = document.getElementById('ins-ic').value || '-';
+                document.getElementById('rev-ins-provider').innerText = document.getElementById('ins-provider').value || '-';
+                document.getElementById('rev-ins-policy').innerText = document.getElementById('ins-policy').value || '-';
+                document.getElementById('rev-ins-emp').innerText = document.getElementById('ins-emp').value || 'N/A';
+            }
+        };
+
+        window.submitInsuranceReq = async () => {
+            const btn = document.getElementById('ins-submit-btn');
+            btn.innerText = "Submitting...";
+            btn.disabled = true;
+
+            const fd = new FormData();
+            fd.append('insurance_provider', document.getElementById('ins-provider').value);
+            fd.append('insurance_policy_no', document.getElementById('ins-policy').value);
+            fd.append('insurance_employee_company', document.getElementById('ins-emp').value);
+            
+            const fileInput = document.getElementById('ins-file');
+            if(fileInput.files[0]) fd.append('file', fileInput.files[0]);
+
+            try {
+                const token = await window.currentUser.getIdToken();
+                const r = await fetch(`${API_BASE}/api/user/insurance`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: fd
+                });
+                const d = await r.json();
+
+                if(r.ok) {
+                    window.userData.insurance_status = "pending";
+                    window.userData.insurance_provider = document.getElementById('ins-provider').value;
+                    window.userData.insurance_policy_no = document.getElementById('ins-policy').value;
+                    goToInsStep(3); // Show success pending state
+                    renderInsuranceUI(); // update background UIs
+                } else {
+                    showInlineMessage(d.detail || "Failed to submit insurance details.", "error");
+                    btn.innerText = "Submit Request";
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                showInlineMessage("Network error.", "error");
+                btn.innerText = "Submit Request";
+                btn.disabled = false;
             }
         };
 
@@ -1971,13 +2294,11 @@
                         const docExists = window.allDoctors.find(doc => doc.id === d.doctor_id);
                         if (docExists) {
                             selectDoctor(d.doctor_id);
-                            // Dynamic success message disabled per request
                         } else {
                             showInlineMessage(`No matching doctor is available immediately. Please select "Schedule for Later" to book a future slot.`, "warning");
                         }
                     } else {
                         selectDoctor(d.doctor_id);
-                        // Dynamic success message disabled per request
                     }
                 } else { showInlineMessage(d.message || "Failed to find a matching doctor.", "error"); }
             } catch(e) { showInlineMessage("Failed to connect to AI suggestion.", "error"); }
@@ -2000,7 +2321,12 @@
 
             if (!document.getElementById('pdpa-agree').checked) return showInlineMessage("You must agree to the PDPA to proceed.", "error");
             const symptomsText = document.getElementById('book-symptoms').value;
-            const patientAgeInput = document.getElementById('book-age').value; // Reads age input during booking
+            const patientAgeInput = document.getElementById('book-age').value;
+
+            // NEW: Optional protection if trying to book with unapproved insurance
+            if (window.bookingPayType === 'insurance' && window.userData.insurance_status !== 'approved') {
+                return showInlineMessage("Your insurance is not approved yet. Please use Self Pay or wait for approval.", "error");
+            }
 
             const btn = document.getElementById('book-btn'); 
             btn.innerText = "Processing...";
@@ -2017,28 +2343,37 @@
             }
 
             try {
+                // We pass `payment_method: window.bookingPayType` to backend (needs backend update to actually bypass Billplz, but UI handles redirect if backend cooperates)
+                const payload = { 
+                    doctor_id: doctorId, 
+                    visit_type: "online", 
+                    preferred_datetime: finalDateTime,
+                    patient_age: parseInt(patientAgeInput) || null,
+                    symptoms: symptomsText,
+                    ai_report: window.generatedClinicalReport || null 
+                };
+
                 const r = await fetch(API_BASE + '/api/book_appointment', { 
                     method:'POST', 
                     headers:await getAuthHeaders(), 
-                    body:JSON.stringify({ 
-                        doctor_id: doctorId, 
-                        visit_type: "online", 
-                        preferred_datetime: finalDateTime,
-                        patient_age: parseInt(patientAgeInput) || null, // Sends age parameter
-                        symptoms: symptomsText,
-                        ai_report: window.generatedClinicalReport || null 
-                    }) 
+                    body:JSON.stringify(payload) 
                 });
                 const d = await r.json(); 
 
                 if (d.error || !r.ok) {
                     showInlineMessage(d.message || d.detail || "Booking failed", "error"); 
                 } else {
-                    // Update global state and Profile Settings input instantly!
                     window.userData.age = patientAgeInput ? parseInt(patientAgeInput) : null;
                     document.getElementById('set-age').value = patientAgeInput || "";
 
-                    if (d.stripe_url) {
+                    // If insurance booking is successful, we just go to schedule. 
+                    // (Assuming backend logic supports bypassing stripe_url for insurance)
+                    if (window.bookingPayType === 'insurance' && !d.stripe_url) {
+                        showInlineMessage("Cashless Booking Confirmed!", "success"); 
+                        fetchAppointments(); 
+                        switchTab('schedule');
+                    }
+                    else if (d.stripe_url && window.bookingPayType !== 'insurance') {
                         window.location.href = d.stripe_url; 
                     } else { 
                         showInlineMessage("Booking Confirmed Successfully!", "success"); 
@@ -2049,7 +2384,7 @@
             } catch(e) { 
                 showInlineMessage("Booking Failed. Please try again.", "error"); 
             } 
-            btn.innerText = "Pay Now";
+            btn.innerText = window.bookingPayType === 'insurance' ? "Confirm Booking (Covered by Panel)" : "Pay Now (RM 38.00)";
         }
 
         window.checkUpcomingReminders = (appointments) => {
