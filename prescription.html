@@ -443,18 +443,32 @@
                 }
 
                 // Populate clinical notes and clear duplicate MC references
+                // Populate clinical notes and dynamically extract MC days
+                let rawNotes = data.doctor_notes || "Use all prescribed medicine exactly as directed. In case of unexpected allergic reaction or worsening symptoms, contact your medical center immediately.";
+                let extractedMcValue = "1"; // Default fallback
+
+                // Match "MC Issued: [anything]" in the doctor's notes (case insensitive)
+                const mcRegex = /MC Issued:\s*([^\n]+)/i;
+                const mcMatch = rawNotes.match(mcRegex);
+
+                if (mcMatch) {
+                    extractedMcValue = mcMatch[1].trim(); // Grabs the "2", "3", "Yes", etc.
+                    // Remove the matched line from the main notes body to prevent duplication
+                    rawNotes = rawNotes.replace(mcRegex, '').trim();
+                }
+
                 if (document.getElementById('ui-doctor-notes')) {
-                    let rawNotes = data.doctor_notes || "Use all prescribed medicine exactly as directed. In case of unexpected allergic reaction or worsening symptoms, contact your medical center immediately.";
-                    rawNotes = rawNotes.replace(/MC Issued:\s*(1|Yes|True)/gi, '').trim();
                     document.getElementById('ui-doctor-notes').innerText = rawNotes;
                 }
 
-                // Setup the MC Issue Flag specifically without duplicates
+                // Setup the bottom MC Issue Flag dynamically
                 const mcFlag = document.getElementById('ui-notes-mc-flag');
                 const mcDivider = document.getElementById('ui-mc-divider-wrap');
+                
                 if (mcFlag && mcDivider) {
-                    if (data.mc_needed) {
-                        mcFlag.innerText = "MC Issued: 1";
+                    // Show if the backend flag is true, OR if the doctor explicitly wrote "MC Issued: X"
+                    if (data.mc_needed || mcMatch) {
+                        mcFlag.innerText = `MC Issued: ${extractedMcValue}`;
                         mcDivider.classList.remove('hidden');
                     } else {
                         mcDivider.classList.add('hidden');
