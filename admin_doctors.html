@@ -83,7 +83,7 @@
         .btn-primary:hover { background: #026ca3; }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* ====== DOCTOR & APPOINTMENTS FILTER TABS ====== */
+        /* ====== FILTER TABS ====== */
         .doc-filters { display: flex; gap: 4px; margin-bottom: 24px; background: #f3f4f6; padding: 4px; border-radius: 8px; width: max-content; flex-wrap: wrap;}
         .doc-filter-btn { padding: 8px 24px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text-muted); transition: 0.2s;}
         .doc-filter-btn.active { background: #fff; color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -278,7 +278,7 @@
 </head>
 <body>
 
-    <!-- SIDEBAR - Updated to match Dashboard structure exactly -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div>
             <div class="sidebar-top">
@@ -414,7 +414,6 @@
         </div>
 
         <!-- VIEW 2: DOCTOR DETAILS FULL PAGE -->
-        <!-- VIEW 2: DOCTOR DETAILS FULL PAGE -->
         <div class="dashboard-body" id="doctor-detail-view">
             <div class="btn-back" onclick="window.location.hash='#/doctors'">← Back</div>
             
@@ -424,7 +423,6 @@
                     <div>
                         <div class="dd-name" id="dd-head-name">Doctor Name</div>
                         <div class="dd-spec" id="dd-head-spec" style="margin-bottom: 4px;">Specialty</div>
-                        <!-- NEW: Clean separate line for MMC Registration Number -->
                         <div class="dd-spec" id="dd-head-mmc" style="font-size: 13px; margin-bottom: 12px; font-weight: 500; color: var(--text-muted);"></div>
                         <div class="dd-tags">
                             <span class="dd-tag avail" id="dd-status-tag">● Status</span>
@@ -561,7 +559,7 @@
                     <div class="form-grid">
                         <div class="form-group"><label>Contact Number</label><input type="text" id="editDocPhone" class="form-control" placeholder="+60 123 456 789"></div>
                         <div class="form-group"><label>Place of Practice</label><input type="text" id="editDocLocation" class="form-control" placeholder="Main Clinic Branch"></div>
-                        <div class="form-group"><label>MMC Number</label><input type="text" id="editDocMmcNumber" class="form-control" placeholder="e.g. 12345"></div> <!-- <-- Added -->
+                        <div class="form-group"><label>MMC Number</label><input type="text" id="editDocMmcNumber" class="form-control" placeholder="e.g. 12345"></div>
                     </div>
 
                     <h3 class="section-title" style="margin-top:24px;">Weekly Schedule</h3>
@@ -588,7 +586,7 @@
             <div class="modal-body">
                 <form id="adminAddDocForm" onsubmit="event.preventDefault(); submitAdminNewDoctor();">
                     
-                    <!-- Profile Upload -->
+                    <!-- Profile Photo -->
                     <div class="upload-profile-box">
                         <div style="display:flex; gap:12px; align-items:center;">
                             <div style="width:40px; height:40px; background:#fff; border-radius:8px; display:flex; justify-content:center; align-items:center; color:var(--primary);">👤</div>
@@ -652,7 +650,6 @@
                         </div>
                     </div>
 
-                    <!-- Weekly Availability Note -->
                     <div class="form-section-title">Weekly Availability</div>
                     <div style="font-size:13px; color:var(--text-muted); background:#f9fafb; padding:16px; border-radius:8px; border:1px solid var(--border-light); margin-bottom:16px;">
                         Doctors can configure their own daily available hours and shifts directly from their Doctor Dashboard after successfully logging in. By default, newly added doctors are set as available during standard clinic hours.
@@ -731,6 +728,14 @@
                         <input type="text" id="modal-appt-location" class="form-control" readonly>
                     </div>
                 </div>
+
+                <!-- Dynamic Insurance Card Image Viewer -->
+                <div id="modal-appt-insurance-card-wrapper" class="form-group" style="margin-top: 16px; display: none;">
+                    <label>Uploaded Insurance Card</label>
+                    <a id="modal-appt-insurance-card-link" href="#" target="_blank" style="color: var(--primary); font-size: 14px; font-weight: 600; text-decoration: underline; display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+                        View Patient Insurance Card Image ↗
+                    </a>
+                </div>
                 
                 <div class="form-group" style="margin-top: 16px; margin-bottom: 16px;">
                     <label>Appointment Status</label>
@@ -743,7 +748,7 @@
                 <div id="modal-prescription-section" style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 20px;">
                     <h3 class="section-title">Prescription Billing Details</h3>
                     <div id="modal-prescription-list">
-                        <!-- Populated dynamically via JS with Price & Qty fields -->
+                        <!-- Populated dynamically via JS -->
                     </div>
                 </div>
 
@@ -776,7 +781,6 @@
         // Global appointments state
         let globalApptFilterState = 'All';
 
-        // Variable for "live" silent refreshing behavior
         let isFirstLoad = true;
 
         // ====== MOBILE UI HARNESS ======
@@ -802,18 +806,16 @@
         function handleHashRouting() {
             const hash = window.location.hash || '#/doctors';
             
-            // Hide all views
             document.querySelectorAll('.dashboard-body').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
             
-            // Handle search bar visibility inside header
             const searchWrap = document.getElementById('search-bar-wrap');
             searchWrap.style.display = 'none';
 
             if (hash === '#/doctors') {
                 document.getElementById('nav-doctors').classList.add('active');
                 document.getElementById('doctors-view').classList.add('active');
-                searchWrap.style.display = 'flex'; // only show on main doctors view
+                searchWrap.style.display = 'flex';
                 renderGrid(currentFilterState);
             } else if (hash.startsWith('#/doctors/detail/')) {
                 const docId = hash.split('/').pop();
@@ -909,7 +911,7 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime);
                 gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 oscillator.start();
                 oscillator.stop(audioCtx.currentTime + 0.15);
@@ -942,7 +944,6 @@
             const list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
             const notifId = explicitId || ('n_' + Date.now() + Math.random());
             
-            // Prevent duplicate notifications based on ID
             if (explicitId && list.some(n => n.id === explicitId)) return;
 
             const newNotif = {
@@ -963,7 +964,6 @@
             try {
                 let list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
                 
-                // 1. Doctor Registration Verification Poll
                 const docsRes = await fetch(`${API_BASE}/admin/doctors/pending`, { headers });
                 if (docsRes.ok) {
                     const pending = await docsRes.json();
@@ -975,7 +975,6 @@
                     });
                 }
 
-                // 2. Prescription Billing configuration check
                 const apptsRes = await fetch(`${API_BASE}/admin/appointments`, { headers });
                 if (apptsRes.ok) {
                     const appts = await apptsRes.json();
@@ -992,7 +991,7 @@
             } catch (e) { console.log("Real-time engine polling error: ", e); }
         }
 
-        // ================= FETCH ALL DATA (LIVE CAPABLE) =================
+        // ================= FETCH ALL DATA =================
         async function loadCoreData() {
             try {
                 const [docsRes, pendRes, apptRes] = await Promise.all([
@@ -1042,7 +1041,6 @@
                     ...approvedDocs.map(d => mapDoc(d, 'Verified'))
                 ];
 
-                // Intelligently re-render current view without resetting UX state
                 if (isFirstLoad) {
                     handleHashRouting();
                     isFirstLoad = false;
@@ -1050,18 +1048,15 @@
                     const hash = window.location.hash || '#/doctors';
                     
                     if (hash === '#/doctors') {
-                        // Soft re-render the doctor grid maintaining search/filter
                         renderGrid(currentFilterState);
                     } else if (hash.startsWith('#/doctors/detail/')) {
-                        // If viewing a specific doctor, quietly update their appointments
                         if (currentlyViewingDocId) {
                             const doc = allDoctorsData.find(d => d.id === currentlyViewingDocId);
                             if (doc) {
                                 const docAppts = allAppointmentsData.filter(a => a.doctor_id === doc.id || a.doctor_name === doc.name);
                                 currentDocAppts = docAppts;
-                                filterDocAppts(); // re-runs local render safely
+                                filterDocAppts();
                                 
-                                // Silent update of sidebar stats
                                 const now = new Date(); now.setHours(0, 0, 0, 0); 
                                 const activeAppts = docAppts.filter(a => {
                                     if (a.status !== 'scheduled') return false; 
@@ -1071,7 +1066,6 @@
                             }
                         }
                     } else if (hash === '#/appointments') {
-                        // Soft re-render the global appointments grid
                         renderGlobalAppointments();
                     }
                 }
@@ -1109,40 +1103,42 @@
             if(filter === 'Verified') docs = docs.filter(d => d.status === 'Verified');
             if(searchQ) docs = docs.filter(d => d.name.toLowerCase().includes(searchQ) || d.spec.toLowerCase().includes(searchQ));
 
-            if(docs.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No doctors found matching criteria.</p>`;
-                return;
-            }
+            if(grid) {
+                if(docs.length === 0) {
+                    grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No doctors found matching criteria.</p>`;
+                    return;
+                }
 
-            grid.innerHTML = docs.map(doc => {
-                const isAvail = doc.status === 'Verified';
-                const badgeClass = isAvail ? 'available' : 'pending';
-                const badgeText = isAvail ? 'Verified' : 'Pending';
-                
-                let actionsHtml = isAvail ? `<div class="doc-c-actions"><div class="btn-icon">✏️</div></div>` : 
-                    `<div class="doc-pend-actions">
-                        <button class="btn-reject" onclick="verifyDoctorAction(event, '${doc.id}', 'reject')">✕ Reject</button>
-                        <button class="btn-approve" onclick="verifyDoctorAction(event, '${doc.id}', 'approve')">✓ Approve</button>
+                grid.innerHTML = docs.map(doc => {
+                    const isAvail = doc.status === 'Verified';
+                    const badgeClass = isAvail ? 'available' : 'pending';
+                    const badgeText = isAvail ? 'Verified' : 'Pending';
+                    
+                    let actionsHtml = isAvail ? `<div class="doc-c-actions"><div class="btn-icon">✏️</div></div>` : 
+                        `<div class="doc-pend-actions">
+                            <button class="btn-reject" onclick="verifyDoctorAction(event, '${doc.id}', 'reject')">✕ Reject</button>
+                            <button class="btn-approve" onclick="verifyDoctorAction(event, '${doc.id}', 'approve')">✓ Approve</button>
+                        </div>`;
+
+                    return `
+                    <div class="doc-card" onclick="window.location.hash='#/doctors/detail/${doc.id}'">
+                        <div class="doc-c-top">
+                            <div class="doc-c-img-wrap">
+                                <img src="${doc.img}">
+                                <div class="doc-c-status ${badgeClass}">${badgeText}</div>
+                            </div>
+                            <div class="doc-c-info">
+                                <div class="doc-c-name-row"><div class="doc-c-name">${doc.name}</div></div>
+                                <div class="doc-c-spec">${doc.spec}</div>
+                            </div>
+                        </div>
+                        <div class="doc-c-bottom">
+                            <div class="doc-c-schedule">${doc.location !== 'N/A' ? `📍 ${doc.location}` : 'No location set'}</div>
+                            ${actionsHtml}
+                        </div>
                     </div>`;
-
-                return `
-                <div class="doc-card" onclick="window.location.hash='#/doctors/detail/${doc.id}'">
-                    <div class="doc-c-top">
-                        <div class="doc-c-img-wrap">
-                            <img src="${doc.img}">
-                            <div class="doc-c-status ${badgeClass}">${badgeText}</div>
-                        </div>
-                        <div class="doc-c-info">
-                            <div class="doc-c-name-row"><div class="doc-c-name">${doc.name}</div></div>
-                            <div class="doc-c-spec">${doc.spec}</div>
-                        </div>
-                    </div>
-                    <div class="doc-c-bottom">
-                        <div class="doc-c-schedule">${doc.location !== 'N/A' ? `📍 ${doc.location}` : 'No location set'}</div>
-                        ${actionsHtml}
-                    </div>
-                </div>`;
-            }).join('');
+                }).join('');
+            }
         }
 
         async function verifyDoctorAction(e, docId, action) {
@@ -1202,16 +1198,12 @@
             });
             const uniquePatients = new Set(docAppts.map(a => a.patient_name || a.patient_id)).size;
 
-            // Set detail layout active
             document.querySelectorAll('.dashboard-body').forEach(v => v.classList.remove('active'));
             document.getElementById('doctor-detail-view').classList.add('active');
             
-            // Profile Header
-            // Profile Header
             document.getElementById('dd-head-name').innerText = doc.name;
-            document.getElementById('dd-head-spec').innerText = doc.spec; // Restore specialty to original line
+            document.getElementById('dd-head-spec').innerText = doc.spec;
             
-            // Populate the new dedicated MMC element
             const mmcEl = document.getElementById('dd-head-mmc');
             if (doc.mmc_number) {
                 mmcEl.innerText = `MMC Registration: ${doc.mmc_number}`;
@@ -1233,7 +1225,6 @@
                 statusTag.innerHTML = '● Pending';
             }
 
-            // Right Sidebar General Stats
             document.getElementById('sb-patients-count').innerText = uniquePatients;
             document.getElementById('sb-upcoming-count').innerText = activeAppts.length;
             document.getElementById('sb-rating-score').innerText = parseFloat(doc.rating).toFixed(1);
@@ -1243,7 +1234,6 @@
             document.getElementById('sb-phone').innerText = doc.phone;
             document.getElementById('sb-location').innerText = doc.location;
 
-            // TAB: DOCUMENTS
             const docsList = document.getElementById('docs-list-container');
             const makeDocRow = (label, url) => {
                 if (url && url !== "null" && url.trim() !== "") {
@@ -1259,7 +1249,6 @@
                 ${makeDocRow('Identification Card (IC)', doc.ic_url)}
             `;
 
-            // TAB: SCHEDULE 
             const schedList = document.getElementById('schedule-list-container');
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
             let schedHtml = '';
@@ -1273,14 +1262,12 @@
             });
             schedList.innerHTML = schedHtml;
 
-            // TAB: APPOINTMENTS 
             currentDocAppts = docAppts;
             filteredDocAppts = [...docAppts];
             docApptPage = 1;
             document.getElementById('docApptSearchInput').value = '';
             renderDocAppts();
 
-            // TAB: REVIEWS 
             const reviewsWithStars = docAppts.filter(a => a.patient_review_stars > 0);
             document.getElementById('dd-rev-score').innerHTML = `${parseFloat(doc.rating).toFixed(1)}<span>/5.0</span>`;
             document.getElementById('dd-rev-count').innerText = `${doc.reviews} ratings • ${doc.reviews} reviews`;
@@ -1315,7 +1302,6 @@
                 }).join('');
             }
 
-            // Reset to first tab
             switchTab('detail', document.querySelector('.dd-tab-btn'));
         }
 
@@ -1326,7 +1312,6 @@
                 (a.patient_name || '').toLowerCase().includes(query) ||
                 (a.patient_id || '').toLowerCase().includes(query)
             );
-            // Don't reset page if we are doing a live refresh silently
             if (!isFirstLoad && document.activeElement === document.getElementById('docApptSearchInput')) {
                  docApptPage = 1;
             }
@@ -1360,7 +1345,14 @@
                 if ((!a.type || a.type.toLowerCase() === 'online') && a.status === 'scheduled' && amount === 0) {
                     amount = 38.0; 
                 }
-                const amtStr = `MYR ${amount.toFixed(2)}`;
+
+                // Modified: Dynamic Coverage & Payment display row for the doctor's tab
+                let coverageDetailsRow = '';
+                if (a.insurance_provider) {
+                    coverageDetailsRow = `<div class="ac-detail-row"><span class="ac-label">Method / Coverage</span><span class="ac-val" style="color:#16a34a; font-weight:600;">🏥 Panel: ${a.insurance_provider}</span></div>`;
+                } else {
+                    coverageDetailsRow = `<div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">MYR ${amount.toFixed(2)}</span></div>`;
+                }
 
                 let actionBtnHtml = '';
                 if (a.status === 'pending') {
@@ -1382,7 +1374,7 @@
                     <div>
                         <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
                         <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">${amtStr}</span></div>
+                        ${coverageDetailsRow}
                     </div>
                     ${actionBtnHtml}
                 </div>`;
@@ -1432,14 +1424,12 @@
             
             let appts = [...allAppointmentsData];
 
-            // 1. Filter system divided by delivery status
             if (globalApptFilterState === 'Deliveries') {
                 appts = appts.filter(a => a.delivery_status && a.delivery_status !== 'null');
             } else if (globalApptFilterState === 'Others') {
                 appts = appts.filter(a => !a.delivery_status || a.delivery_status === 'null');
             }
 
-            // 2. Filter search query
             if (searchQ) {
                 appts = appts.filter(a => 
                     (a.patient_name || '').toLowerCase().includes(searchQ) ||
@@ -1448,62 +1438,70 @@
                 );
             }
 
-            if (appts.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No appointments found matching criteria.</p>`;
-                return;
-            }
-
-            grid.innerHTML = appts.map(a => {
-                let statusClass = 'scheduled';
-                if (a.status === 'completed') statusClass = 'completed';
-                if (a.status === 'cancelled') statusClass = 'cancelled';
-                if (a.status === 'pending') statusClass = 'pending';
-                
-                const d = new Date(a.preferred_datetime || a.created_at);
-                const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
-                let amount = parseFloat(a.amount_paid || 0);
-                if ((!a.type || a.type.toLowerCase() === 'online') && a.status === 'scheduled' && amount === 0) {
-                    amount = 38.0; 
-                }
-                const amtStr = `MYR ${amount.toFixed(2)}`;
-
-                let actionBtnHtml = '';
-                if (a.status === 'pending') {
-                    actionBtnHtml = `
-                    <div style="display: flex; gap: 8px; width: 100%; margin-top: 8px;">
-                        <button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="flex: 1;">Details</button>
-                        <button class="btn-reject" onclick="alert('Action Restricted')" style="padding: 8px; font-size: 12px; border-radius: 8px; flex: 1;">Cancel</button>
-                    </div>`;
-                } else {
-                    actionBtnHtml = `<button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="margin-top: 8px;">Details</button>`;
+            if (grid) {
+                if (appts.length === 0) {
+                    grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px;">No appointments found matching criteria.</p>`;
+                    return;
                 }
 
-                // Delivery information layout badge
-                let deliveryBadge = '';
-                if (a.delivery_status && a.delivery_status !== 'null') {
-                    deliveryBadge = `<span style="background:var(--warning-bg); color:var(--warning); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-left: 8px;">Delivery: ${a.delivery_status.replace('_',' ').toUpperCase()}</span>`;
-                }
-                
-                return `
-                <div class="appt-card" style="background:#fff; border: 1px solid var(--border); border-radius:16px; padding:20px;">
-                    <div class="ac-head" style="margin-bottom:12px;">
-                        <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                            <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
-                            ${deliveryBadge}
+                grid.innerHTML = appts.map(a => {
+                    let statusClass = 'scheduled';
+                    if (a.status === 'completed') statusClass = 'completed';
+                    if (a.status === 'cancelled') statusClass = 'cancelled';
+                    if (a.status === 'pending') statusClass = 'pending';
+                    
+                    const d = new Date(a.preferred_datetime || a.created_at);
+                    const dtStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const tmStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                    let amount = parseFloat(a.amount_paid || 0);
+                    if ((!a.type || a.type.toLowerCase() === 'online') && a.status === 'scheduled' && amount === 0) {
+                        amount = 38.0; 
+                    }
+
+                    // Modified: Dynamic Coverage & Payment display row for the Global table
+                    let coverageDetailsRow = '';
+                    if (a.insurance_provider) {
+                        coverageDetailsRow = `<div class="ac-detail-row"><span class="ac-label">Method / Coverage</span><span class="ac-val" style="color:#16a34a; font-weight:600;">🏥 Panel: ${a.insurance_provider}</span></div>`;
+                    } else {
+                        coverageDetailsRow = `<div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">MYR ${amount.toFixed(2)}</span></div>`;
+                    }
+
+                    let actionBtnHtml = '';
+                    if (a.status === 'pending') {
+                        actionBtnHtml = `
+                        <div style="display: flex; gap: 8px; width: 100%; margin-top: 8px;">
+                            <button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="flex: 1;">Details</button>
+                            <button class="btn-reject" onclick="alert('Action Restricted')" style="padding: 8px; font-size: 12px; border-radius: 8px; flex: 1;">Cancel</button>
+                        </div>`;
+                    } else {
+                        actionBtnHtml = `<button class="btn-appt-action" onclick="openApptDetailModal(${a.id})" style="margin-top: 8px;">Details</button>`;
+                    }
+
+                    let deliveryBadge = '';
+                    if (a.delivery_status && a.delivery_status !== 'null') {
+                        deliveryBadge = `<span style="background:var(--warning-bg); color:var(--warning); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-left: 8px;">Delivery: ${a.delivery_status.replace('_',' ').toUpperCase()}</span>`;
+                    }
+                    
+                    return `
+                    <div class="appt-card" style="background:#fff; border: 1px solid var(--border); border-radius:16px; padding:20px;">
+                        <div class="ac-head" style="margin-bottom:12px;">
+                            <div class="ac-user"><img src="https://ui-avatars.com/api/?name=${a.patient_name || 'Patient'}&background=eff6ff&color=0066cc"><div><div class="ac-name">${a.patient_name || 'Unknown Patient'}</div></div></div>
+                            <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                                <div class="ac-status ${statusClass}">${a.status.replace('_',' ')}</div>
+                                ${deliveryBadge}
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">${a.doctor_name || 'Unassigned'}</span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
-                        <div class="ac-detail-row"><span class="ac-label">Amount Paid</span><span class="ac-val">${amtStr}</span></div>
-                    </div>
-                    ${actionBtnHtml}
-                </div>`;
-            }).join('');
+                        <div>
+                            <div class="ac-detail-row"><span class="ac-label">Doctor</span><span class="ac-val">${a.doctor_name || 'Unassigned'}</span></div>
+                            <div class="ac-detail-row"><span class="ac-label">Date & Time</span><span class="ac-val">${dtStr} &nbsp;<span class="ac-val blue">${tmStr}</span></span></div>
+                            <div class="ac-detail-row"><span class="ac-label">Visit Type</span><span class="ac-val blue">${a.type || 'Online'}</span></div>
+                            ${coverageDetailsRow}
+                        </div>
+                        ${actionBtnHtml}
+                    </div>`;
+                }).join('');
+            }
         };
 
         // ================= EDIT DOCTOR MODAL & SUBMISSION =================
@@ -1558,7 +1556,7 @@
             const payload = {
                 phone: document.getElementById('editDocPhone').value,
                 location: document.getElementById('editDocLocation').value,
-                mmc_number: document.getElementById('editDocMmcNumber').value || "", // <-- Added
+                mmc_number: document.getElementById('editDocMmcNumber').value || "",
                 availability: newAvailability
             };
 
@@ -1589,7 +1587,6 @@
             if (!appt) return;
             currentViewingAppt = appt;
 
-            // Populate elements
             document.getElementById('modal-appt-patient-name').innerText = appt.patient_name || 'Unknown Patient';
             document.getElementById('modal-appt-patient-email').innerText = appt.patient_email || 'N/A';
             document.getElementById('modal-appt-patient-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(appt.patient_name || 'P')}&background=eff6ff&color=0066cc`;
@@ -1604,14 +1601,30 @@
             document.getElementById('modal-appt-date').value = d.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
             document.getElementById('modal-appt-time').value = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-            document.getElementById('modal-appt-payment').value = 'Stripe / Card (Paid)';
-            document.getElementById('modal-appt-location').value = appt.location || 'Dental Clinic (Dental Clinic (Doktura HQ))';
+            // Modified: Set Payment Method input dynamically with either Insurance details or Self Paid amount
+            if (appt.insurance_provider) {
+                document.getElementById('modal-appt-payment').value = `Panel Insurance: ${appt.insurance_provider}`;
+            } else {
+                const apptAmt = parseFloat(appt.amount_paid || 0.0);
+                document.getElementById('modal-appt-payment').value = apptAmt > 0 ? `Self Paid (MYR ${apptAmt.toFixed(2)})` : 'Self Paid (Pending)';
+            }
+
+            // Modified: Control visibility of the Insurance Card Link inside the details modal
+            const insWrapper = document.getElementById('modal-appt-insurance-card-wrapper');
+            const insLink = document.getElementById('modal-appt-insurance-card-link');
+            if (appt.insurance_provider && appt.insurance_card_url) {
+                insWrapper.style.display = 'block';
+                insLink.href = appt.insurance_card_url;
+            } else {
+                insWrapper.style.display = 'none';
+            }
+
+            document.getElementById('modal-appt-location').value = appt.location || 'Dental Clinic (Doktura HQ)';
 
             const badge = document.getElementById('modal-appt-status-badge');
             badge.className = `ac-status ${appt.status}`;
             badge.innerText = appt.status.replace('_', ' ');
 
-            // Prescription billing setup
             const listContainer = document.getElementById('modal-prescription-list');
             const submitBtn = document.getElementById('btnSubmitPrescBilling');
 
@@ -1702,7 +1715,6 @@
             }
         }
 
-        // ================= ADD DOCTOR MODAL & SUBMISSION =================
         window.openAddDoctorModal = function() { document.getElementById('addDoctorModal').style.display = 'flex'; };
         window.closeAddDoctorModal = function() { document.getElementById('addDoctorModal').style.display = 'none'; };
 
@@ -1725,7 +1737,7 @@
                 formData.append("specialty", document.getElementById('newDocSpec').value);
                 formData.append("phone", document.getElementById('newDocPhone').value);
                 formData.append("location", document.getElementById('newDocLocation').value);
-                formData.append("mmc_number", document.getElementById('newDocMmcNumber').value || ""); // <-- Added
+                formData.append("mmc_number", document.getElementById('newDocMmcNumber').value || "");
 
                 const appendFile = (inputId, formKey) => {
                     const el = document.getElementById(inputId);
@@ -1763,13 +1775,8 @@
         function logout() { localStorage.removeItem('admin_token'); window.location.href = "Admin_portal.html"; }
         
         window.onload = () => { 
-            // 1. Initial Load
             loadCoreData(); 
-            
-            // 2. Alert engine polling every 10s
             setInterval(pollCoreAlerts, 10000);
-            
-            // 3. Complete Data Auto-Refresh every 30s silently (Live capabilities)
             setInterval(loadCoreData, 30000);
         };
     </script>
