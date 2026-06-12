@@ -401,7 +401,7 @@
                 if (document.getElementById('ui-doctor-name')) document.getElementById('ui-doctor-name').innerText = data.doctor_name;
                 if (document.getElementById('ui-sig-doc')) document.getElementById('ui-sig-doc').innerText = data.doctor_name;
                 if (document.getElementById('ui-doctor-mmc')) {
-                    document.getElementById('ui-doctor-mmc').innerText = data.doctor_mmc ? `MMC ${data.doctor_mmc}` : '';
+                    document.getElementById('ui-doctor-mmc').innerText = data.doctor_mmc ? `${data.doctor_mmc}` : '';
                 }
 
                 // Render medication rows exactly as requested in Image 1
