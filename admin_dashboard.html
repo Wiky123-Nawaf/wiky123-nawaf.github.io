@@ -309,7 +309,7 @@
                           stroke-linecap="round" 
                           stroke-linejoin="round"
                         >
-                          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.44a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.56a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.44a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.44a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.56a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.44a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.44a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.56a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.44a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
                           <circle cx="12" cy="12" r="3"></circle>
                         </svg>
                         Settings
@@ -703,7 +703,7 @@
         </div>
     </div>
 
-    <!-- VIEW PATIENT MODAL (SCREENSHOT UI) -->
+    <!-- VIEW PATIENT MODAL -->
     <div id="viewPatientModal" class="modal-overlay" style="display: none;">
         <div class="modal-box vp-modal-box">
             <div class="modal-header" style="border-bottom: 1px solid var(--border-light); padding: 24px;">
@@ -826,52 +826,6 @@
             </div>
             <div class="modal-body" id="doctorDetailsBody">
                 <!-- Dynamically populated -->
-            </div>
-        </div>
-    </div>
-
-    <!-- EDIT APPOINTMENT MODAL -->
-    <div id="editApptModal" class="modal-overlay" style="display: none; z-index: 1050;">
-        <div class="modal-box" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2>Edit Appointment</h2>
-                <button class="modal-close" onclick="closeEditApptModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="editApptId">
-                <div class="form-group">
-                    <label>Preferred Date & Time</label>
-                    <input type="datetime-local" id="editApptDatetime" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Assign Doctor</label>
-                    <select id="editApptDoctor" class="form-control">
-                        <!-- Options injected dynamically -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select id="editApptStatus" class="form-control">
-                        <option value="scheduled">Scheduled</option>
-                        <option value="pending_payment">Pending Payment</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <button class="btn-primary" id="editApptSubmitBtn" onclick="submitEditAppt()" style="margin-top:16px;">Save Changes</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Symptom Modal -->
-    <div id="symptomModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2>Patient Symptoms</h2>
-                <button class="modal-close" onclick="closeSymptomModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p id="symptomFullText" style="font-size: 13px; line-height: 1.6; color: var(--text-main);"></p>
             </div>
         </div>
     </div>
@@ -1520,6 +1474,64 @@
                     </div>`;
                 }
 
+                // Construct Insurance Verification HTML
+                let insuranceHtml = '';
+                const insStatus = patient.insurance_status || 'none';
+
+                if (insStatus === 'none') {
+                    insuranceHtml = '<p style="font-size:13px; color:var(--text-muted);">No insurance details provided.</p>';
+                } else {
+                    let badgeColor = insStatus === 'approved' ? 'background:#dcfce7; color:#16a34a;' :
+                                     insStatus === 'pending' ? 'background:#fef3c7; color:#d97706;' :
+                                     'background:#fee2e2; color:#ef4444;';
+
+                    insuranceHtml = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                            <div style="flex: 1; min-width: 250px;">
+                                <div style="display:flex; gap: 8px; align-items:center; margin-bottom: 12px;">
+                                    <span style="font-weight: 700; font-size: 15px; color: var(--text-main);">${patient.insurance_provider || 'Unknown Provider'}</span>
+                                    <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; ${badgeColor}">${insStatus}</span>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                                    <div><span style="color:var(--text-muted); display:block; font-size:11px; margin-bottom:2px;">Policy / Membership No.</span><b>${patient.insurance_policy_no || '-'}</b></div>
+                                    <div><span style="color:var(--text-muted); display:block; font-size:11px; margin-bottom:2px;">Employee Company</span><b>${patient.insurance_employee_company || '-'}</b></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 150px;">
+                                <a href="${patient.insurance_card_url || '#'}" target="_blank" style="text-align:center; display:block; background: var(--primary-light); color: var(--primary); font-weight: 600; font-size: 12px; padding: 8px 12px; border-radius: 6px; text-decoration: none;">View Uploaded Card</a>
+                    `;
+
+                    if (insStatus === 'pending') {
+                        insuranceHtml += `
+                                <div style="margin-top: 8px; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+                                    <label style="font-size:11px; font-weight:600; color:var(--text-main); display:block; margin-bottom:6px;">Set Expiry Date <span style="color:var(--danger)">*</span></label>
+                                    <input type="date" id="vp-ins-expiry" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:12px; margin-bottom:12px; outline:none; font-family:inherit;">
+                                    <div style="display:flex; gap:8px;">
+                                        <button onclick="verifyPatientInsurance('${patient.id}', 'reject')" style="flex:1; padding:8px; border:1px solid var(--danger); background:#fff; color:var(--danger); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='var(--danger-bg)'" onmouseout="this.style.background='#fff'">Reject</button>
+                                        <button onclick="verifyPatientInsurance('${patient.id}', 'approve')" style="flex:1; padding:8px; border:none; background:var(--success); color:#fff; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Approve</button>
+                                    </div>
+                                </div>
+                        `;
+                    } else if (insStatus === 'approved') {
+                        insuranceHtml += `
+                                <div style="margin-top: 8px; font-size: 12px; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+                                    <span style="color:var(--text-muted); display:block; margin-bottom:4px;">Verified Expiry Date:</span> 
+                                    <b style="font-size:14px; color:var(--text-main);">${patient.insurance_expiry || 'Not set'}</b>
+                                </div>
+                                <button onclick="verifyPatientInsurance('${patient.id}', 'reject')" style="margin-top:8px; padding:8px; border:1px solid var(--danger); background:#fff; color:var(--danger); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; width:100%; transition:0.2s;" onmouseover="this.style.background='var(--danger-bg)'" onmouseout="this.style.background='#fff'">Revoke / Reject</button>
+                        `;
+                    } else if (insStatus === 'rejected') {
+                        insuranceHtml += `
+                                <div style="margin-top: 8px; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+                                    <label style="font-size:11px; font-weight:600; color:var(--text-main); display:block; margin-bottom:6px;">Set Expiry Date <span style="color:var(--danger)">*</span></label>
+                                    <input type="date" id="vp-ins-expiry" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:12px; margin-bottom:12px; outline:none; font-family:inherit;">
+                                    <button onclick="verifyPatientInsurance('${patient.id}', 'approve')" style="width:100%; padding:8px; border:none; background:var(--success); color:#fff; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Re-Approve</button>
+                                </div>
+                        `;
+                    }
+                    insuranceHtml += `</div></div>`;
+                }
+
                 // Compile Final Modal HTML - Inputs are now Editable!
                 body.innerHTML = `
                     <div class="vp-profile-section">
@@ -1565,6 +1577,12 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- NEW INSURANCE BLOCK HERE -->
+                    <div class="vp-section-title" style="margin-top:24px;">Insurance & Panel Coverage</div>
+                    <div style="border: 1px solid var(--border-light); background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 32px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                        ${insuranceHtml}
                     </div>
 
                     <div class="vp-section-title">Medical Reports</div>
@@ -1620,6 +1638,40 @@
             alert("Patient details successfully updated!");
             processPatientData(); // Refresh the data grid
         }
+
+        // ================= VERIFY PATIENT INSURANCE =================
+        window.verifyPatientInsurance = async function(patientId, action) {
+            let expiryDate = null;
+            if (action === 'approve') {
+                expiryDate = document.getElementById('vp-ins-expiry')?.value;
+                if (!expiryDate) {
+                    alert("Please set the insurance expiry date before approving.");
+                    return;
+                }
+            }
+
+            if (!confirm(`Are you sure you want to ${action} this insurance request?`)) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/patient/${patientId}/insurance/verify`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({ action: action, expiry_date: expiryDate })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || "Verification failed");
+
+                alert(`Insurance ${action}d successfully!`);
+                
+                // Re-fetch data and refresh modal
+                await loadCoreData(); 
+                viewPatient(patientId); 
+
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        };
 
         // ================= FULLY FUNCTIONAL: DEACTIVATE PATIENT =================
         async function deactivatePatient(id) {
@@ -2034,6 +2086,7 @@
                 formData.append("specialty", document.getElementById('newDocSpec').value || "");
                 formData.append("phone", document.getElementById('newDocPhone').value || "");
                 formData.append("location", document.getElementById('newDocLoc').value || "");
+                formData.append("mmc_number", document.getElementById('newDocMmcNumber').value || ""); // <-- Added
 
                 ['Photo','Resume','APC','MMC','IC'].forEach(ext => {
                     const fileInput = document.getElementById('newDoc'+ext);
@@ -2044,7 +2097,7 @@
 
                 const res = await fetch(`${API_BASE}/admin/doctors/add`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: { 'Authorization': `Bearer ${token}` }, 
                     body: formData
                 });
 
