@@ -196,7 +196,7 @@
         .file-upload-box input[type="file"] { opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
         .file-name-display { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* ====== VIEW PATIENT MODAL (SCREENSHOT UI) ====== */
+        /* ====== VIEW PATIENT MODAL ====== */
         .vp-modal-box { max-width: 850px !important; border-radius: 16px; padding: 0; }
         .vp-header-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: #111827;}
         .vp-profile-section { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
@@ -237,7 +237,7 @@
         .vp-btn-ok { background: var(--primary); color: white; padding: 12px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; flex: 1; min-width: 120px; transition:0.2s; text-align: center;}
         .vp-btn-ok:hover { background: #026ca3; }
 
-        /* Notifications Badge Overlay & Toast Animations */
+        /* Notifications & Alerts */
         .toast-notification { position: fixed; bottom: 24px; right: 24px; background: #fff; border-left: 4px solid var(--primary); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; gap: 12px; align-items: flex-start; z-index: 9999; animation: slideIn 0.3s forwards; max-width: 360px;}
         .toast-notification.success { border-left-color: var(--success); }
         .toast-notification.warning { border-left-color: var(--warning); }
@@ -268,7 +268,7 @@
 </head>
 <body>
 
-    <!-- SIDEBAR - Standardized Unified Structure -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div>
             <div class="sidebar-top">
@@ -309,7 +309,7 @@
                           stroke-linecap="round" 
                           stroke-linejoin="round"
                         >
-                          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.44a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.56a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.44a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.44a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.56a2 2 0 0 1-1 1.72l-.15.1a2 2 0 0 0-.73 2.73l.22.44a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.44a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.56a2 2 0 0 1 1-1.72l.15-.1a2 2 0 0 0 .73-2.73l-.22-.44a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
                           <circle cx="12" cy="12" r="3"></circle>
                         </svg>
                         Settings
@@ -330,7 +330,6 @@
                         <span class="email">dokturamedic@gmail.com</span>
                     </div>
                 </div>
-                <!-- Corrected Logout Icon -->
                 <button class="logout-btn" onclick="logout()" title="Logout">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -344,7 +343,6 @@
 
     <!-- MAIN CONTENT -->
     <main class="main-content" id="mainContent">
-        <!-- Overlay for mobile sidebar -->
         <div id="sidebarOverlay" class="modal-overlay" style="display: none; z-index: 1000;" onclick="toggleSidebar()"></div>
         
         <header>
@@ -355,7 +353,6 @@
 
             <div class="header-right">
                 <div class="notif-container">
-                    <!-- Corrected Bell Icon -->
                     <div class="bell-icon" onclick="toggleNotifications()">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -394,7 +391,6 @@
                 </div>
             </div>
 
-            <!-- METRIC CARDS -->
             <div class="metrics-grid">
                 <div class="metric-card clickable" onclick="window.location.hash='#/patients'" title="Manage Patients">
                     <div class="card-header">Total Patients <span class="arrow">↗</span></div>
@@ -430,10 +426,7 @@
             </div>
 
             <div class="layout-grid">
-                <!-- LEFT COLUMN -->
                 <div class="left-col" style="display: flex; flex-direction: column;">
-                    
-                    <!-- Chart Panel -->
                     <div class="panel">
                         <div class="panel-header">
                             Appointment Received Over Time
@@ -448,7 +441,6 @@
                         </div>
                     </div>
 
-                    <!-- Appointment Table Panel -->
                     <div class="panel" style="flex: 1;" id="appointmentTablePanel">
                         <div class="panel-header" style="border-bottom:none; padding-bottom:10px;">
                             <span style="color:var(--text-muted); margin-right:8px;">📝</span> Appointment Records
@@ -481,9 +473,7 @@
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN -->
                 <div class="right-col">
-                    <!-- Doctors Panel -->
                     <div class="panel">
                         <div class="panel-header">
                             <div><span style="color:var(--text-muted); margin-right:8px;">🩺</span> Doctor Management</div>
@@ -494,7 +484,6 @@
                         </div>
                     </div>
 
-                    <!-- APPOINTMENT MANAGEMENT PANEL -->
                     <div class="panel">
                         <div class="panel-header">
                             <div><span style="color:var(--text-muted); margin-right:8px;">📅</span> Next Appointment</div>
@@ -518,7 +507,6 @@
                 </div>
             </div>
 
-            <!-- Patient Metrics -->
             <div class="p-metrics-grid">
                 <div class="p-metric-card">
                     <div class="p-card-header">
@@ -549,7 +537,6 @@
                 </div>
             </div>
 
-            <!-- Patients Table Panel -->
             <div class="panel" style="flex: 1;">
                 <div class="panel-header" style="border-bottom:none; padding-bottom:10px;">
                     <span style="color:var(--primary); margin-right:8px;">👥</span> All Patients
@@ -830,6 +817,52 @@
         </div>
     </div>
 
+    <!-- EDIT APPOINTMENT MODAL -->
+    <div id="editApptModal" class="modal-overlay" style="display: none; z-index: 1050;">
+        <div class="modal-box" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Edit Appointment</h2>
+                <button class="modal-close" onclick="closeEditApptModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editApptId">
+                <div class="form-group">
+                    <label>Preferred Date & Time</label>
+                    <input type="datetime-local" id="editApptDatetime" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Assign Doctor</label>
+                    <select id="editApptDoctor" class="form-control">
+                        <!-- Options injected dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="editApptStatus" class="form-control">
+                        <option value="scheduled">Scheduled</option>
+                        <option value="pending_payment">Pending Payment</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <button class="btn-primary" id="editApptSubmitBtn" onclick="submitEditAppt()" style="margin-top:16px;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Symptom Modal -->
+    <div id="symptomModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Patient Symptoms</h2>
+                <button class="modal-close" onclick="closeSymptomModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="symptomFullText" style="font-size: 13px; line-height: 1.6; color: var(--text-main);"></p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Check Auth
         const token = localStorage.getItem('admin_token');
@@ -935,7 +968,6 @@
             const list = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
             const notifId = explicitId || ('n_' + Date.now() + Math.random());
             
-            // Prevent duplicate notifications based on ID
             if (explicitId && list.some(n => n.id === explicitId)) return;
 
             const newNotif = {
@@ -1002,7 +1034,6 @@
             renderNotifications();
         }
 
-        // Notification Dropdown Toggle
         function toggleNotifications() {
             const dropdown = document.getElementById('notifDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
@@ -1260,10 +1291,9 @@
                 
                 p.isActive = daysSince <= 90;
 
-                // Accurately map status category for filtering and badges
                 if (p.is_deactivated) {
                     p.statusCategory = "Deactivated";
-                    p.isActive = false; // Forces inactive for metric counts
+                    p.isActive = false;
                 } else if (!p.isActive) {
                     p.statusCategory = "Inactive";
                 } else if (p.is_subscribed) {
@@ -1358,7 +1388,7 @@
             seeMoreContainer.style.display = (currentPatientTableLimit >= filteredPatientsData.length) ? 'none' : 'block';
         }
 
-        // ================= FULLY FUNCTIONAL: VIEW PATIENT (EXACT SCREENSHOT UI) =================
+        // ================= VIEW PATIENT (WITH INSURANCE UI) =================
         async function viewPatient(id) {
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
@@ -1371,7 +1401,6 @@
             let reports = [];
 
             try {
-                // 1. Fetch Patient Details via the dedicated endpoint
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/detail`, { headers });
                 
                 if (res.ok) {
@@ -1380,12 +1409,10 @@
                     reports = detailData.reports || []; 
                 }
 
-                // Fill from local generic arrays if specific fetch failed or is empty
                 if (appts.length === 0) {
                     appts = allAppointmentsData.filter(a => a.patient_id === id || a.patient_name === patient.name);
                 }
 
-                // 2. Fallback Fetch for Medical Reports (if endpoint 1 didn't include them)
                 if (reports.length === 0) {
                     try {
                         const reportsRes = await fetch(`${API_BASE}/reports`, { headers });
@@ -1402,7 +1429,6 @@
                 const mockAge = patient.age || (patient.id ? 20 + (patient.id.charCodeAt(0) % 30) : 30);
                 const bookingsCount = appts.length;
 
-                // Construct Medical Reports HTML
                 let reportsHtml = '<p style="font-size:13px; color:var(--text-muted);">No documents uploaded yet.</p>';
                 if (reports.length > 0) {
                     reportsHtml = `
@@ -1428,7 +1454,6 @@
                     </div>`;
                 }
 
-                // Construct Appointment History HTML (SHOW ALL)
                 let apptsHtml = '<p style="font-size:13px; color:var(--text-muted);">No past appointments.</p>';
                 if (appts.length > 0) {
                     appts.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -1465,7 +1490,6 @@
                                     <span class="vp-appt-label">Status</span>
                                     <span class="vp-badge-status" style="color:${statusColor}; background:${statusBg};">${a.status || 'Scheduled'}</span>
                                 </div>
-                                <!-- Action Buttons to Reschedule/Cancel inside User Detail -->
                                 <div style="display:flex; gap:8px; margin-top: 12px; border-top: 1px solid #e5e7eb; padding-top: 12px;">
                                     <button style="flex:1; padding:6px; border:1px solid #d1d5db; border-radius:6px; background:#fff; cursor:pointer; font-size:11px; font-weight:600; color:var(--text-main); transition: 0.2s;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#fff'" onclick="openEditApptModal('${a.id}')">✏️ Reschedule / Status</button>
                                 </div>
@@ -1474,65 +1498,70 @@
                     </div>`;
                 }
 
-                // Construct Insurance Verification HTML
+                // Insurance Pre-Approval UI Segment
                 let insuranceHtml = '';
-                const insStatus = patient.insurance_status || 'none';
-
-                if (insStatus === 'none') {
-                    insuranceHtml = '<p style="font-size:13px; color:var(--text-muted);">No insurance details provided.</p>';
-                } else {
-                    let badgeColor = insStatus === 'approved' ? 'background:#dcfce7; color:#16a34a;' :
-                                     insStatus === 'pending' ? 'background:#fef3c7; color:#d97706;' :
-                                     'background:#fee2e2; color:#ef4444;';
+                if (patient.insurance_status && patient.insurance_status.toLowerCase() !== 'none') {
+                    const statusVal = patient.insurance_status.toLowerCase();
+                    let statusBadgeClass = 'inactive';
+                    if (statusVal === 'approved') statusBadgeClass = 'active';
+                    if (statusVal === 'rejected') statusBadgeClass = 'deactivated';
+                    if (statusVal === 'pending') statusBadgeClass = 'premium';
 
                     insuranceHtml = `
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
-                            <div style="flex: 1; min-width: 250px;">
-                                <div style="display:flex; gap: 8px; align-items:center; margin-bottom: 12px;">
-                                    <span style="font-weight: 700; font-size: 15px; color: var(--text-main);">${patient.insurance_provider || 'Unknown Provider'}</span>
-                                    <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; ${badgeColor}">${insStatus}</span>
-                                </div>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
-                                    <div><span style="color:var(--text-muted); display:block; font-size:11px; margin-bottom:2px;">Policy / Membership No.</span><b>${patient.insurance_policy_no || '-'}</b></div>
-                                    <div><span style="color:var(--text-muted); display:block; font-size:11px; margin-bottom:2px;">Employee Company</span><b>${patient.insurance_employee_company || '-'}</b></div>
-                                </div>
+                    <div class="vp-section-title">Insurance Pre-Approval</div>
+                    <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Provider</span>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_provider || 'N/A'}</strong>
                             </div>
-                            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 150px;">
-                                <a href="${patient.insurance_card_url || '#'}" target="_blank" style="text-align:center; display:block; background: var(--primary-light); color: var(--primary); font-weight: 600; font-size: 12px; padding: 8px 12px; border-radius: 6px; text-decoration: none;">View Uploaded Card</a>
-                    `;
-
-                    if (insStatus === 'pending') {
-                        insuranceHtml += `
-                                <div style="margin-top: 8px; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
-                                    <label style="font-size:11px; font-weight:600; color:var(--text-main); display:block; margin-bottom:6px;">Set Expiry Date <span style="color:var(--danger)">*</span></label>
-                                    <input type="date" id="vp-ins-expiry" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:12px; margin-bottom:12px; outline:none; font-family:inherit;">
-                                    <div style="display:flex; gap:8px;">
-                                        <button onclick="verifyPatientInsurance('${patient.id}', 'reject')" style="flex:1; padding:8px; border:1px solid var(--danger); background:#fff; color:var(--danger); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.background='var(--danger-bg)'" onmouseout="this.style.background='#fff'">Reject</button>
-                                        <button onclick="verifyPatientInsurance('${patient.id}', 'approve')" style="flex:1; padding:8px; border:none; background:var(--success); color:#fff; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Approve</button>
-                                    </div>
-                                </div>
-                        `;
-                    } else if (insStatus === 'approved') {
-                        insuranceHtml += `
-                                <div style="margin-top: 8px; font-size: 12px; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
-                                    <span style="color:var(--text-muted); display:block; margin-bottom:4px;">Verified Expiry Date:</span> 
-                                    <b style="font-size:14px; color:var(--text-main);">${patient.insurance_expiry || 'Not set'}</b>
-                                </div>
-                                <button onclick="verifyPatientInsurance('${patient.id}', 'reject')" style="margin-top:8px; padding:8px; border:1px solid var(--danger); background:#fff; color:var(--danger); border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; width:100%; transition:0.2s;" onmouseover="this.style.background='var(--danger-bg)'" onmouseout="this.style.background='#fff'">Revoke / Reject</button>
-                        `;
-                    } else if (insStatus === 'rejected') {
-                        insuranceHtml += `
-                                <div style="margin-top: 8px; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
-                                    <label style="font-size:11px; font-weight:600; color:var(--text-main); display:block; margin-bottom:6px;">Set Expiry Date <span style="color:var(--danger)">*</span></label>
-                                    <input type="date" id="vp-ins-expiry" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:12px; margin-bottom:12px; outline:none; font-family:inherit;">
-                                    <button onclick="verifyPatientInsurance('${patient.id}', 'approve')" style="width:100%; padding:8px; border:none; background:var(--success); color:#fff; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; transition:0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Re-Approve</button>
-                                </div>
-                        `;
-                    }
-                    insuranceHtml += `</div></div>`;
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Policy Number</span>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_policy_number || 'N/A'}</strong>
+                            </div>
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Employee Company</span>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_company || 'N/A'}</strong>
+                            </div>
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Status</span>
+                                <span class="status-badge ${statusBadgeClass}" style="text-transform: capitalize; margin-top: 2px;">
+                                    ${patient.insurance_status}
+                                </span>
+                            </div>
+                            ${patient.insurance_expiry ? `
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Expiry Date</span>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_expiry}</strong>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${patient.insurance_card_url ? `
+                        <div style="margin-bottom: 16px;">
+                            <a href="${patient.insurance_card_url}" target="_blank" style="color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                View Uploaded Insurance Card Image
+                            </a>
+                        </div>
+                        ` : ''}
+                        
+                        ${statusVal === 'pending' ? `
+                        <hr style="border: 0; border-top: 1px solid #bfdbfe; margin: 16px 0;">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: block;">Set Coverage Expiry Date <span style="color: var(--danger); font-size: 11px;">(Required for Approval)</span></label>
+                                <input type="date" id="insurance-expiry-input" class="form-control" style="background: #fff; max-width: 250px;">
+                            </div>
+                            <div style="display: flex; gap: 12px; margin-top: 8px;">
+                                <button class="btn-primary" onclick="verifyInsurance('${patient.id}', 'approve')" style="background: var(--success); width: auto; padding: 10px 16px;">Approve & Grant Cashless</button>
+                                <button class="btn-primary" onclick="verifyInsurance('${patient.id}', 'reject')" style="background: var(--danger); width: auto; padding: 10px 16px;">Reject</button>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>`;
                 }
 
-                // Compile Final Modal HTML - Inputs are now Editable!
                 body.innerHTML = `
                     <div class="vp-profile-section">
                         <img src="${patient.photo_url || `https://ui-avatars.com/api/?name=${patient.name}&background=f3f4f6`}" alt="Avatar">
@@ -1579,11 +1608,7 @@
                         </div>
                     </div>
 
-                    <!-- NEW INSURANCE BLOCK HERE -->
-                    <div class="vp-section-title" style="margin-top:24px;">Insurance & Panel Coverage</div>
-                    <div style="border: 1px solid var(--border-light); background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 32px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                        ${insuranceHtml}
-                    </div>
+                    ${insuranceHtml}
 
                     <div class="vp-section-title">Medical Reports</div>
                     ${reportsHtml}
@@ -1608,13 +1633,58 @@
         }
         function closeViewPatientModal() { document.getElementById('viewPatientModal').style.display = 'none'; }
 
+        // ================= ASYNC INSURANCE VERIFICATION CONTROLLER =================
+        async function verifyInsurance(patientId, action) {
+            let expiryDate = null;
+            if (action === 'approve') {
+                const dateInput = document.getElementById('insurance-expiry-input');
+                expiryDate = dateInput ? dateInput.value : null;
+                if (!expiryDate) {
+                    alert("Please select a valid coverage expiry date to approve the insurance.");
+                    return;
+                }
+            }
+            
+            if (!confirm(`Are you sure you want to ${action} this insurance request?`)) {
+                return;
+            }
+
+            try {
+                const payload = {
+                    action: action,
+                    expiry_date: expiryDate
+                };
+
+                const res = await fetch(`${API_BASE}/admin/patient/${patientId}/insurance/verify`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || `Failed to update insurance status.`);
+                }
+
+                alert(`Insurance request has been successfully ${action}d.`);
+                
+                // Synchronize core metrics & update UI state
+                await loadCoreData();
+                
+                // Re-populate modal view
+                viewPatient(patientId);
+                
+            } catch (e) {
+                alert("Insurance Verification Action Error: " + e.message);
+            }
+        }
+
         // ================= SAVE PATIENT DETAILS =================
         async function savePatientDetails(id) {
             const name = document.getElementById('vp-edit-name').value;
             const age = document.getElementById('vp-edit-age').value;
             const phone = document.getElementById('vp-edit-phone').value;
 
-            // Update locally for instant UI reflection
             const patient = allPatientsData.find(p => p.id === id);
             if(patient) {
                 patient.name = name;
@@ -1623,7 +1693,6 @@
             }
 
             try {
-                // Backend API call if it exists
                 const res = await fetch(`${API_BASE}/admin/patient/${id}`, {
                     method: 'PUT',
                     headers: headers,
@@ -1636,44 +1705,10 @@
             }
 
             alert("Patient details successfully updated!");
-            processPatientData(); // Refresh the data grid
+            processPatientData();
         }
 
-        // ================= VERIFY PATIENT INSURANCE =================
-        window.verifyPatientInsurance = async function(patientId, action) {
-            let expiryDate = null;
-            if (action === 'approve') {
-                expiryDate = document.getElementById('vp-ins-expiry')?.value;
-                if (!expiryDate) {
-                    alert("Please set the insurance expiry date before approving.");
-                    return;
-                }
-            }
-
-            if (!confirm(`Are you sure you want to ${action} this insurance request?`)) return;
-
-            try {
-                const res = await fetch(`${API_BASE}/admin/patient/${patientId}/insurance/verify`, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify({ action: action, expiry_date: expiryDate })
-                });
-
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.detail || "Verification failed");
-
-                alert(`Insurance ${action}d successfully!`);
-                
-                // Re-fetch data and refresh modal
-                await loadCoreData(); 
-                viewPatient(patientId); 
-
-            } catch (e) {
-                alert("Error: " + e.message);
-            }
-        };
-
-        // ================= FULLY FUNCTIONAL: DEACTIVATE PATIENT =================
+        // ================= DEACTIVATE / DELETE PATIENT =================
         async function deactivatePatient(id) {
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
@@ -1681,7 +1716,6 @@
             if(!confirm(`Are you sure you want to completely DELETE ${patient.name || 'this patient'}? This action is permanent and will delete them from the database.`)) return;
 
             try {
-                // Call backend API to physically delete user from Firebase & Database
                 const res = await fetch(`${API_BASE}/admin/patient/${id}/deactivate`, {
                     method: 'POST',
                     headers: headers
@@ -1694,18 +1728,17 @@
                     alert("Patient access revoked locally for this session.");
                 }
 
-                // Completely remove the patient from the frontend data array instantly
                 allPatientsData = allPatientsData.filter(p => p.id !== id);
                 
                 closeViewPatientModal();
-                processPatientData(); // Re-render table
+                processPatientData();
 
             } catch (e) {
                 alert("Error deleting patient: " + e.message);
             }
         }
 
-        // ================= FULLY FUNCTIONAL: ADD PATIENT =================
+        // ================= ADD PATIENT =================
         function openAddPatientModal() { document.getElementById('addPatientModal').style.display = 'flex'; }
         function closeAddPatientModal() { document.getElementById('addPatientModal').style.display = 'none'; }
 
@@ -1748,10 +1781,10 @@
                 alert(`Patient profile for ${name} created successfully!`);
                 closeAddPatientModal();
                 document.getElementById('adminAddPatientForm').reset();
-                loadCoreData(); // Refresh data
+                loadCoreData();
             } catch (e) {
                 console.warn(e.message);
-                alert("Notice: Backend endpoint missing. Simulating patient creation locally for demonstration.");
+                alert("Notice: Backend endpoint missing. Simulating patient creation locally.");
                 
                 const newPat = {
                     id: "u_" + Math.random().toString(36).substr(2, 9),
@@ -1786,7 +1819,6 @@
                     fetch(`${API_BASE}/admin/doctors/pending`, { headers })
                 ]);
 
-                // Session Expiration Handler: Redirect to login if unauthorized
                 if (appRes.status === 401 || patRes.status === 401 || docsPendRes.status === 401) {
                     console.warn("Administrative session expired. Redirecting to login page.");
                     logout();
@@ -1795,21 +1827,16 @@
 
                 if (appRes.ok) {
                     allAppointmentsData = await appRes.json();
-                } else {
-                    console.error(`Failed to load appointments. Server responded with: ${appRes.status}`);
                 }
 
                 if (patRes.ok) {
                     allPatientsData = await patRes.json();
-                } else {
-                    console.error(`Failed to load patients list. Server responded with: ${patRes.status}`);
                 }
                 
                 const approvedDocs = docsApprRes.ok ? await docsApprRes.json() : [];
                 const pendingDocs = docsPendRes.ok ? await docsPendRes.json() : [];
                 allDoctorsData = [...pendingDocs, ...approvedDocs];
                 
-                // Update Home Dashboard Views
                 updateAccurateStats();
                 calculateRevenueData();
                 renderUpcomingWidget(); 
@@ -1818,7 +1845,6 @@
                 renderAppointmentsTable();
                 renderChartWithRealData(allAppointmentsData);
 
-                // Update Patients Tab
                 processPatientData();
                 renderNotifications();
 
@@ -1907,7 +1933,6 @@
 
             document.getElementById('editApptId').value = id;
             
-            // Format datetime-local requires YYYY-MM-DDTHH:MM
             let formattedDt = '';
             if(appt.preferred_datetime) {
                 const dt = new Date(appt.preferred_datetime);
@@ -1940,7 +1965,6 @@
             btn.innerText = "Saving...";
             btn.disabled = true;
 
-            // Update local state for immediate feedback
             const apptIndex = allAppointmentsData.findIndex(a => a.id == id);
             if(apptIndex > -1) {
                 if(newDt) allAppointmentsData[apptIndex].preferred_datetime = newDt;
@@ -1970,7 +1994,6 @@
                 closeEditApptModal();
                 loadCoreData(); 
                 
-                // If patient view modal is open, refresh it as well
                 if(document.getElementById('viewPatientModal').style.display === 'flex' && apptIndex > -1) {
                    viewPatient(allAppointmentsData[apptIndex].patient_id);
                 }
@@ -2086,7 +2109,6 @@
                 formData.append("specialty", document.getElementById('newDocSpec').value || "");
                 formData.append("phone", document.getElementById('newDocPhone').value || "");
                 formData.append("location", document.getElementById('newDocLoc').value || "");
-                formData.append("mmc_number", document.getElementById('newDocMmcNumber').value || ""); // <-- Added
 
                 ['Photo','Resume','APC','MMC','IC'].forEach(ext => {
                     const fileInput = document.getElementById('newDoc'+ext);
@@ -2097,7 +2119,7 @@
 
                 const res = await fetch(`${API_BASE}/admin/doctors/add`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }, 
+                    headers: { 'Authorization': `Bearer ${token}` },
                     body: formData
                 });
 
@@ -2179,7 +2201,6 @@
             loadCoreData(); 
             handleHashRouting();
             
-            // Core Polling Thread Integration
             setInterval(runBackgroundAlertPolling, 10000);
             setInterval(loadCoreData, 30000);
         };
