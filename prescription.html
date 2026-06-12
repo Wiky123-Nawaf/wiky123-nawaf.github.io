@@ -12,7 +12,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         
         /* The traditional Rx Symbol styling */
-        .rx-symbol { font-family: 'Playfair Display', serif; font-size: 3rem; line-height: 1; color: #0066FF; opacity: 0.9; font-style: italic; }
+        .rx-symbol { font-family: 'Playfair Display', serif; font-size: 3.5rem; line-height: 1; color: #0066FF; opacity: 0.95; font-style: italic; }
 
         /* Loader animation */
         .spinner { border: 4px solid rgba(0, 102, 255, 0.1); border-left-color: #0066FF; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
@@ -41,6 +41,42 @@
     <div id="loader" class="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center">
         <div class="spinner mb-4"></div>
         <p class="text-gray-500 font-medium font-sm animate-pulse">Loading Prescription Data...</p>
+    </div>
+
+    <!-- PATIENT IDENTITY VERIFICATION MODAL (BLOCKS SCREEN IF DETAILS MISSING) -->
+    <div id="verification-modal" class="fixed inset-0 bg-gray-900/60 z-[300] hidden items-center justify-center backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl border border-gray-100">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-extrabold text-gray-900">Verify Patient Identity</h2>
+                <p class="text-gray-500 text-xs mt-1.5 leading-relaxed">Please confirm your verification details to view, download, or request delivery for this digital prescription.</p>
+            </div>
+            <form id="modal-verification-form" onsubmit="saveVerificationModal(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
+                    <input type="text" id="modal-name" required class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none" placeholder="e.g. Nawaf Waqas">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Mobile Number</label>
+                    <input type="tel" id="modal-phone" required class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none" placeholder="e.g. +6012...">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">NRIC (MyKad) / Passport Number</label>
+                    <input type="text" id="modal-ic" required class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none" placeholder="e.g. 900101-10-1234">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Complete Delivery Address</label>
+                    <textarea id="modal-address" required class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0066FF] outline-none h-20 resize-none leading-relaxed" placeholder="Complete Street Address..."></textarea>
+                </div>
+                <button type="submit" id="modal-save-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 text-sm mt-4">
+                    Save & View Prescription
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Top Navigation Bar (No Print) -->
@@ -127,10 +163,12 @@
                     </div>
                 </div>
 
+                <div class="border-t border-gray-100 border-dashed my-6 sm:my-8 relative z-10"></div>
+
                 <!-- The Prescription (Rx) Section -->
                 <div class="relative z-10 min-h-[220px] sm:min-h-[280px]">
                     <div class="flex flex-col sm:flex-row items-start mb-6">
-                        <span class="rx-symbol mb-2 sm:mb-0 sm:mr-4 select-none">℞</span>
+                        <span class="rx-symbol mb-2 sm:select-none sm:mr-4 select-none">℞</span>
                         <div class="sm:mt-2 flex-1 w-full">
                             
                             <!-- Medicines Table Layout -->
@@ -152,6 +190,8 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="border-t border-gray-100 border-dashed my-6 sm:my-8 relative z-10"></div>
 
                 <!-- Doctor's Notes & MC -->
                 <div class="mb-4 sm:mb-8 relative z-10">
