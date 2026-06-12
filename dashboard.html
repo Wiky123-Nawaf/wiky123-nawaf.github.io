@@ -1841,16 +1841,23 @@
         };
 
         // NEW: Handles the Payment Method toggle on the Booking Tab
+        // NEW: Handles the Payment Method toggle on the Booking Tab (Fixed IDs & added null-safety checks)
         window.togglePayType = (type) => {
             window.bookingPayType = type;
-            const statusBox = document.getElementById('insurance-status-box');
+            const statusBox = document.getElementById('payment-status-box'); // <-- Fixed ID
             const payBtn = document.getElementById('book-btn');
             const applyBtn = document.getElementById('ins-apply-btn');
             const status = window.userData.insurance_status || 'none';
 
+            // Safety check: Prevent execution if elements are not fully loaded in DOM
+            if (!statusBox || !payBtn || !applyBtn) return;
+
             if (type === 'self') {
-                statusBox.classList.add('hidden');
-                statusBox.innerHTML = '';
+                statusBox.classList.remove('hidden');
+                statusBox.innerHTML = `
+                    <svg class="w-5 h-5 mr-3 shrink-0 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Standard consultation fee is <strong>RM 38.00</strong>. Kindly be informed that cancellations will not be eligible for a refund.</span>
+                `;
                 payBtn.innerText = "Pay Now (RM 38.00)";
                 payBtn.classList.remove('hidden');
                 applyBtn.classList.add('hidden');
@@ -1858,7 +1865,7 @@
                 statusBox.classList.remove('hidden');
                 if (status === 'approved') {
                     statusBox.innerHTML = `
-                        <div class="flex items-center gap-3 text-green-700 bg-green-50 p-4 rounded-xl border border-green-200">
+                        <div class="flex items-center gap-3 text-green-700 bg-green-50 p-4 rounded-xl border border-green-200 w-full">
                             <svg class="w-6 h-6 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <div>
                                 <span class="block font-bold">Insurance Verified</span>
@@ -1871,7 +1878,7 @@
                     applyBtn.classList.add('hidden');
                 } else if (status === 'pending') {
                     statusBox.innerHTML = `
-                        <div class="flex items-center gap-3 text-yellow-700 bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                        <div class="flex items-center gap-3 text-yellow-700 bg-yellow-50 p-4 rounded-xl border border-yellow-200 w-full">
                             <svg class="w-6 h-6 text-yellow-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <div>
                                 <span class="block font-bold">Approval in Progress</span>
@@ -1883,7 +1890,7 @@
                     applyBtn.classList.add('hidden');
                 } else {
                     statusBox.innerHTML = `
-                        <div class="flex items-center gap-3 text-red-700 bg-red-50 p-4 rounded-xl border border-red-200">
+                        <div class="flex items-center gap-3 text-red-700 bg-red-50 p-4 rounded-xl border border-red-200 w-full">
                             <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             <div>
                                 <span class="block font-bold">No Insurance on File</span>
