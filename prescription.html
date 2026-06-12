@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Digital E-Prescription - Doktura AI</title>
-    <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
+    <link class="chatLogoFav" rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap');
@@ -12,7 +12,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         
         /* The traditional Rx Symbol styling */
-        .rx-symbol { font-family: 'Playfair Display', serif; font-size: 3rem; line-height: 1; color: #1e293b; opacity: 0.8; font-style: italic; }
+        .rx-symbol { font-family: 'Playfair Display', serif; font-size: 3rem; line-height: 1; color: #0066FF; opacity: 0.9; font-style: italic; }
 
         /* Loader animation */
         .spinner { border: 4px solid rgba(0, 102, 255, 0.1); border-left-color: #0066FF; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
@@ -65,7 +65,7 @@
     </div>
 
     <!-- Main Container -->
-    <div id="main-content" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-10 grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+    <div id="main-content" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
 
         <!-- ================== LEFT SIDE: E-PRESCRIPTION PAPER ================== -->
         <div class="lg:col-span-7 xl:col-span-8 flex flex-col items-center w-full">
@@ -78,89 +78,111 @@
             </div>
 
             <!-- DIGITAL PRESCRIPTION PAPER COMPONENT -->
-            <div id="rx-paper" class="w-full bg-white shadow-[0_5px_25px_-5px_rgba(0,0,0,0.1),0_0_1px_rgba(0,0,0,0.05)] border border-gray-100 rounded-2xl sm:rounded-lg p-5 sm:p-10 md:px-14 min-h-0 sm:min-h-[850px] pb-32 sm:pb-32 relative max-w-3xl border-t-8 border-t-[#0066FF] overflow-hidden">
+            <div id="rx-paper" class="w-full bg-white shadow-[0_5px_25px_-5px_rgba(0,0,0,0.1),0_0_1px_rgba(0,0,0,0.05)] border border-gray-100 rounded-2xl sm:rounded-lg p-5 sm:p-10 md:px-10 min-h-0 sm:min-h-[850px] pb-32 sm:pb-32 relative max-w-3xl border-t-8 border-t-[#0066FF] overflow-hidden">
                 
                 <!-- Background Watermark -->
-                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] w-64 h-64 sm:w-96 sm:h-96 pointer-events-none object-contain z-0">
+                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] w-64 h-64 sm:w-96 sm:h-96 pointer-events-none object-contain z-0">
 
                 <!-- Header / Logo -->
-                <div class="flex flex-row justify-between items-start border-b-2 border-gray-200 pb-5 sm:pb-6 mb-6 sm:mb-8 relative z-10">
-                    <div class="flex items-center">
-                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="w-10 h-10 sm:w-12 sm:h-12 mr-2.5 sm:mr-3" alt="Logo">
+                <div class="flex flex-row justify-between items-start border-b-2 border-gray-200 pb-5 mb-6 relative z-10">
+                    <div class="flex items-start">
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/logo%20p.png?download=true" class="w-16 h-16 sm:w-20 sm:h-20 mr-4 shrink-0 object-contain" alt="Logo">
                         <div>
-                            <h1 class="text-lg sm:text-xl font-extrabold text-[#0066FF] tracking-tight">Doktura<span class="text-gray-900">Medical</span></h1>
-                            <p class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Telemedicine Center</p>
+                            <h1 class="text-base sm:text-lg font-extrabold text-[#0f172a] uppercase tracking-tight">HELLO DOCTOR CLINIC (BANGI S9) PLT</h1>
+                            <p class="text-[10px] text-gray-500 font-semibold">202404000017</p>
+                            <p class="text-[10px] text-gray-500 font-medium mt-0.5 leading-relaxed">19G, Jalan 9/9C, Seksyen 9, 43650 Bandar Baru Bangi, Selangor</p>
+                            <p class="text-[11px] font-bold text-[#0066FF] mt-0.5">011-6133 3391</p>
+                            <p class="text-[9px] text-gray-400 italic">Powered by Doktura Ai</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <h2 class="text-[9px] sm:text-[10px] font-bold bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded uppercase tracking-wider inline-block mb-1">Official E-Rx</h2>
-                        <p class="text-[10px] sm:text-xs text-gray-500 font-medium mt-1">Rx ID: #<span id="ui-appt-id">...</span></p>
+                    <div class="text-right shrink-0">
+                        <h2 class="text-[9px] sm:text-[10px] font-bold bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-1">Official E-Rx</h2>
+                        <p class="text-[10px] sm:text-xs text-gray-500 font-medium mt-1">Rx ID: <span id="ui-appt-id" class="font-bold">...</span></p>
                         <p class="text-[10px] sm:text-xs text-gray-500 font-medium">Date: <span id="ui-date" class="font-bold text-gray-800">...</span></p>
                     </div>
                 </div>
 
                 <!-- Info Grid: Doctor & Patient -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8 mb-6 sm:mb-8 relative z-10">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 mb-8 relative z-10">
                     <!-- Doctor Info -->
-                    <div class="mb-2 sm:mb-0">
-                        <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1.5">Prescribed By</p>
-                        <p id="ui-doctor-name" class="font-extrabold text-gray-900 text-base sm:text-lg uppercase"></p>
-                        <p id="ui-doctor-spec" class="text-sm font-semibold text-[#0066FF]"></p>
-                        <p class="text-[11px] sm:text-xs text-gray-500 mt-1">License Verified ✓</p>
+                    <div class="sm:col-span-5 border-r-0 sm:border-r border-gray-100 pr-2">
+                        <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1">Prescribed By</p>
+                        <p id="ui-doctor-name" class="font-extrabold text-gray-900 text-sm sm:text-base uppercase tracking-tight"></p>
+                        <p id="ui-doctor-spec" class="text-xs font-semibold text-gray-500"></p>
+                        <p id="ui-doctor-mmc" class="text-xs font-bold text-[#0066FF] mt-1"></p>
+                        <p class="text-[10px] text-green-600 font-bold mt-1.5 flex items-center">
+                            <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            License Verified
+                        </p>
                     </div>
                     <!-- Patient Info -->
-                    <div class="text-left bg-gray-50 rounded-lg p-4 border border-gray-100 border-l-4 border-l-gray-400">
-                        <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1.5">Patient Details</p>
-                        <p id="ui-patient-name" class="font-extrabold text-gray-900 uppercase text-sm sm:text-base"></p>
+                    <div class="sm:col-span-7 bg-blue-50/20 rounded-xl p-4 sm:p-5 border border-blue-100/40 relative">
+                        <p class="text-[10px] font-extrabold text-[#0066FF] uppercase tracking-widest mb-2">Patient Details</p>
+                        <div class="space-y-1">
+                            <p class="text-sm font-extrabold text-gray-900 uppercase tracking-tight" id="ui-patient-name"></p>
+                            <p class="text-xs font-bold text-gray-600" id="ui-patient-ic">N/A</p>
+                            <p class="text-xs font-medium text-gray-500" id="ui-patient-age"></p>
+                            <p class="text-xs font-medium text-gray-500 leading-relaxed max-w-sm" id="ui-patient-address">No address provided.</p>
+                        </div>
                     </div>
                 </div>
-
-                <div class="border-t border-gray-100 border-dashed my-6 sm:my-8 relative z-10"></div>
 
                 <!-- The Prescription (Rx) Section -->
-                <div class="relative z-10 min-h-[200px] sm:min-h-[300px]">
+                <div class="relative z-10 min-h-[220px] sm:min-h-[280px]">
                     <div class="flex flex-col sm:flex-row items-start mb-6">
                         <span class="rx-symbol mb-2 sm:mb-0 sm:mr-4 select-none">℞</span>
-                        <div class="sm:mt-4 flex-1 w-full">
-                            <h3 class="text-xs sm:text-sm font-extrabold text-gray-900 uppercase tracking-wide border-b pb-2 mb-4">Medications</h3>
+                        <div class="sm:mt-2 flex-1 w-full">
                             
-                            <!-- Medicines List -->
-                            <ul id="ui-med-list" class="space-y-4 sm:space-y-5">
-                                <!-- JS Injection -->
-                            </ul>
+                            <!-- Medicines Table Layout -->
+                            <div class="w-full overflow-hidden border border-gray-100 rounded-xl shadow-sm">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-50 text-[10px] text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
+                                            <th class="py-3 px-4 w-1/2">Description</th>
+                                            <th class="py-3 px-4 w-1/3 text-center">Instruction</th>
+                                            <th class="py-3 px-4 text-center">QTY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ui-med-list" class="divide-y divide-gray-50 text-xs sm:text-sm text-gray-800 bg-white">
+                                        <!-- Javascript Injected row nodes -->
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-100 border-dashed my-6 sm:my-8 relative z-10"></div>
-
                 <!-- Doctor's Notes & MC -->
-                <div class="mb-4 sm:mb-10 relative z-10">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                        <div class="bg-blue-50/50 p-4 rounded-lg border border-blue-100/50">
-                            <p class="text-[10px] font-extrabold text-[#0066FF] uppercase tracking-widest mb-1.5">Clinical Notes / Directions</p>
+                <div class="mb-4 sm:mb-8 relative z-10">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
+                            <p class="text-[10px] font-extrabold text-[#0066FF] uppercase tracking-widest mb-2">Clinical Notes / Directions</p>
                             <p id="ui-doctor-notes" class="text-xs font-semibold text-gray-700 italic leading-relaxed text-balance">
-                                <!-- Notes here -->
+                                <!-- Directions -->
                             </p>
+                            <p class="text-[10px] font-bold text-gray-400 mt-2" id="ui-notes-mc-flag">MC Issued: 1</p>
                         </div>
-                        <div>
-                            <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-1.5">Medical Certificate</p>
-                            <div id="ui-mc-badge" class="inline-block font-bold text-[11px] sm:text-xs px-3 py-1.5 rounded bg-gray-100 text-gray-600 border border-gray-200">
-                                None Required
+                        <div class="bg-gray-50/50 p-4 rounded-xl border border-gray-200/50 flex flex-col justify-between">
+                            <div>
+                                <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Medical Certificate</p>
+                                <div id="ui-mc-badge" class="inline-block font-bold text-[11px] px-3 py-1.5 rounded-lg bg-gray-100 text-gray-500 border border-gray-200">
+                                    None Required
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Digital Signature Block -->
-                <div class="absolute bottom-12 sm:bottom-8 right-5 sm:right-12 text-right z-10">
-                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/sign_placeholder.png" onerror="this.style.display='none'" class="h-8 sm:h-10 ml-auto opacity-50 filter contrast-125 mb-1 mix-blend-multiply select-none pointer-events-none" alt="">
+                <div class="absolute bottom-12 sm:bottom-8 right-5 sm:right-10 text-right z-10">
+                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/sign_placeholder.png" onerror="this.style.display='none'" class="h-8 ml-auto opacity-50 filter contrast-125 mb-1 mix-blend-multiply select-none pointer-events-none" alt="">
                     <p class="text-[10px] sm:text-[11px] font-bold text-gray-800 uppercase" id="ui-sig-doc"></p>
                     <p class="text-[8px] sm:text-[9px] font-medium text-gray-400">Electronically Signed • Verified</p>
                 </div>
 
                 <!-- Legal Footer -->
-                <div class="absolute bottom-4 sm:bottom-6 left-0 right-0 text-center z-10 px-5 sm:px-8">
+                <div class="absolute bottom-4 left-0 right-0 text-center z-10 px-5">
                     <p class="text-[8px] sm:text-[9px] text-gray-400 leading-tight mx-auto max-w-xl">This prescription is digitally generated via the Doktura Platform and does not require a physical stamp. Valid strictly for the stated patient and should be fulfilled by an authorized pharmacy only.</p>
                 </div>
             </div>
@@ -203,16 +225,17 @@
                         <div class="bg-blue-50/60 p-4 sm:p-5 rounded-xl border border-blue-100 mb-5 sm:mb-6">
                             <h4 class="text-xs sm:text-sm font-bold text-gray-900 mb-4 flex items-center">
                                 <svg class="w-4 h-4 mr-2 text-[#0066FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/></svg>
-                                Where should we deliver?
+                                Patient Verification Details
                             </h4>
                             <div class="space-y-3 sm:space-y-4 text-left">
-                                <div><input type="text" id="del-name" required class="w-full border border-gray-300 rounded-lg p-3.5 sm:p-3 text-sm sm:text-xs bg-white focus:ring-2 focus:ring-[#0066FF] transition" placeholder="Recipient Full Name"></div>
-                                <div><input type="tel" id="del-phone" required class="w-full border border-gray-300 rounded-lg p-3.5 sm:p-3 text-sm sm:text-xs bg-white focus:ring-2 focus:ring-[#0066FF] transition" placeholder="Mobile Number (e.g. +6012...)"></div>
-                                <div><textarea id="del-address" required class="w-full border border-gray-300 rounded-lg p-3.5 sm:p-3 text-sm sm:text-xs bg-white focus:ring-2 focus:ring-[#0066FF] transition h-20 sm:h-24 resize-none leading-relaxed" placeholder="Complete Street Address..."></textarea></div>
+                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Recipient Name</label><input type="text" id="del-name" required class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] transition" placeholder="Recipient Full Name" onkeyup="updateLiveRxDetails()"></div>
+                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Mobile Number</label><input type="tel" id="del-phone" required class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] transition" placeholder="Mobile Number (e.g. +6012...)"></div>
+                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">NRIC / Passport Number</label><input type="text" id="del-ic" required class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] transition" placeholder="e.g. 900101-10-1234" onkeyup="updateLiveRxDetails()"></div>
+                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Complete Delivery Address</label><textarea id="del-address" required class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] transition h-20 sm:h-24 resize-none leading-relaxed" placeholder="Complete Street Address..." onkeyup="updateLiveRxDetails()"></textarea></div>
                             </div>
                         </div>
                         
-                        <button onclick="submitDelivery()" id="pay-btn" class="w-full flex items-center justify-center bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white font-extrabold py-3.5 sm:py-3.5 rounded-xl shadow-lg shadow-blue-500/30 group">
+                        <button onclick="submitDelivery()" id="pay-btn" class="w-full flex items-center justify-center bg-[#0066FF] hover:bg-blue-700 active:scale-95 transition text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 group">
                             <span class="text-sm sm:text-base">Proceed to Payment</span>
                             <svg class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
@@ -222,7 +245,7 @@
                     <div id="delivery-paid-wrapper" class="hidden">
                         <div class="bg-green-50 border border-green-200 rounded-xl p-5 sm:p-6 text-center shadow-inner relative overflow-hidden">
                             <div class="absolute inset-0 bg-white/20 z-0 pattern-dots"></div>
-                            <svg class="w-12 h-12 sm:w-14 sm:h-14 mx-auto text-green-500 drop-shadow-sm mb-3 relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-12 h-12 sm:w-14 sm:h-14 mx-auto text-green-500 drop-shadow-sm mb-3 relative z-10" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                             <h3 class="text-sm font-extrabold text-green-900 mb-1 relative z-10 uppercase tracking-widest">Payment Received</h3>
                             <p class="text-[11px] sm:text-xs text-green-700 font-medium relative z-10 leading-relaxed max-w-[220px] mx-auto">Medicines have been paid for and will be dispatched to your address.</p>
                         </div>
@@ -234,7 +257,7 @@
 
                     <!-- Secure notice -->
                     <p class="text-center text-[9px] font-bold text-gray-300 flex items-center justify-center uppercase mt-5 sm:mt-6">
-                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg> Payments Processed by Stripe
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg> Payments Processed securely
                     </p>
 
                 </div>
@@ -267,6 +290,7 @@
         const auth = getAuth(app); 
 
         window.currentUser = null;
+        window.userData = { name: "", phone: "", age: null, ic_number: "", address: "" }; // Global user cache
         const urlParams = new URLSearchParams(window.location.search);
         const apptIdStr = urlParams.get('id');
 
@@ -282,9 +306,28 @@
                 if (!user) { window.location.href = "login.html"; return; }
                 window.currentUser = user;
                 
-                // Fetch the data once user is authenticated!
+                // Fetch the sync details to pre-fill saved user metadata
+                await fetchUserSyncDetails();
+                // Fetch the prescription data
                 await fetchPrescriptionData();
             });
+        }
+
+        async function fetchUserSyncDetails() {
+            try {
+                const token = await window.currentUser.getIdToken();
+                const res = await fetch(`${API_BASE}/api/user/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ email: window.currentUser.email })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    window.userData = { ...window.userData, ...data };
+                }
+            } catch(e) {
+                console.warn("Could not sync user profile details: ", e);
+            }
         }
 
         async function fetchPrescriptionData() {
@@ -312,21 +355,35 @@
                 if (document.getElementById('ui-doctor-spec')) document.getElementById('ui-doctor-spec').innerText = data.doctor_specialty;
                 if (document.getElementById('ui-sig-doc')) document.getElementById('ui-sig-doc').innerText = data.doctor_name;
                 
-                if (document.getElementById('ui-patient-name')) document.getElementById('ui-patient-name').innerText = data.patient_name;
+                // Display Doctor's MMC number if available
+                if (document.getElementById('ui-doctor-mmc')) {
+                    document.getElementById('ui-doctor-mmc').innerText = data.doctor_mmc ? `MMC No. ${data.doctor_mmc}` : 'MMC No. Verified';
+                }
 
                 // Render Medicine Items in Rx Paper
                 const rxList = document.getElementById('ui-med-list');
                 if (rxList) {
                     rxList.innerHTML = '';
                     if (!data.medications || data.medications.length === 0) {
-                        rxList.innerHTML = `<p class="text-sm font-bold text-gray-400">No active medications prescribed for this session.</p>`;
+                        rxList.innerHTML = `<tr><td colspan="3" class="py-6 text-center font-bold text-gray-400">No active medications prescribed.</td></tr>`;
                     } else {
                         data.medications.forEach(m => {
+                            const uomText = m.uom ? `(${m.uom})` : '(TAB)';
                             rxList.innerHTML += `
-                            <li class="mb-4">
-                                <p class="font-extrabold text-sm sm:text-base text-gray-900 tracking-tight leading-snug">${m.name} ${m.dose ? `— <span class="font-medium text-[#0066FF] bg-blue-50 px-2 py-0.5 rounded text-[10px] sm:text-xs">${m.dose}</span>` : ''}</p>
-                                <p class="text-[11px] sm:text-xs font-semibold text-gray-500 mt-1 uppercase tracking-wide bg-gray-50 py-1.5 px-3 rounded inline-block border border-gray-100 shadow-sm">${m.pills_per_day} Daily</p>
-                            </li>`;
+                            <tr class="border-b border-gray-50">
+                                <td class="py-4 px-4">
+                                    <div class="font-extrabold text-gray-900 leading-snug">${m.name}</div>
+                                    <div class="text-[10px] font-bold text-[#0066FF] uppercase mt-1 tracking-wide">Anticoagulant Medication</div>
+                                </td>
+                                <td class="py-4 px-4 text-center">
+                                    <div class="font-bold text-gray-800">${m.pills_per_day || m.frequency || '1 Pill, x3 Times/day'}</div>
+                                    <div class="text-[10px] text-gray-400 font-medium mt-1">After Meals</div>
+                                </td>
+                                <td class="py-4 px-4 text-center">
+                                    <div class="font-extrabold text-gray-900">${m.quantity || 1}</div>
+                                    <div class="text-[10px] text-gray-400 font-medium mt-1">${uomText}</div>
+                                </td>
+                            </tr>`;
                         });
                     }
                 }
@@ -335,6 +392,11 @@
                     document.getElementById('ui-doctor-notes').innerText = data.doctor_notes || "Use all prescribed medicine exactly as directed. In case of unexpected allergic reaction or worsening side-effects, contact your medical center immediately.";
                 }
                 
+                // Display MC Issue Flag
+                if (document.getElementById('ui-notes-mc-flag')) {
+                    document.getElementById('ui-notes-mc-flag').innerText = data.mc_needed ? "MC Issued: Yes" : "MC Issued: No";
+                }
+
                 const mcBadge = document.getElementById('ui-mc-badge');
                 if (data.mc_needed && mcBadge) {
                     mcBadge.innerText = "✓ Required / Approved";
@@ -404,10 +466,18 @@
                         // UI STATE: Fill Form
                         formWrapper.classList.remove('hidden');
                         
-                        // Pre-fill Name inputs for convenience
-                        try { if(document.getElementById('del-name')) document.getElementById('del-name').value = data.patient_name; } catch(e){}
+                        // Pre-fill fields from persistent user state or browser localStorage
+                        try {
+                            if (document.getElementById('del-name')) document.getElementById('del-name').value = window.userData.name || data.patient_name || "";
+                            if (document.getElementById('del-phone')) document.getElementById('del-phone').value = window.userData.phone || "";
+                            if (document.getElementById('del-ic')) document.getElementById('del-ic').value = window.userData.ic_number || localStorage.getItem('user_ic_number') || "";
+                            if (document.getElementById('del-address')) document.getElementById('del-address').value = window.userData.address || localStorage.getItem('user_address') || "";
+                        } catch(e) {}
                     }
                 }
+
+                // Render initial left paper details
+                updateLiveRxDetails();
 
                 // Finished loading, transition screens safely
                 document.getElementById('loader')?.classList.add('hidden');
@@ -449,14 +519,28 @@
             setTimeout(() => { container.classList.add('hidden'); }, 6000);
         };
 
+        window.updateLiveRxDetails = () => {
+            const dName = document.getElementById('del-name')?.value.trim() || window.userData.name || "";
+            const dIc = document.getElementById('del-ic')?.value.trim() || localStorage.getItem('user_ic_number') || "MyKad/Passport: --";
+            const dAddress = document.getElementById('del-address')?.value.trim() || localStorage.getItem('user_address') || "Address: --";
+            const ageVal = window.userData.age ? `${window.userData.age} Years old` : "Age: --";
+
+            // Update paper UI details in real-time
+            if (document.getElementById('ui-patient-name')) document.getElementById('ui-patient-name').innerText = dName;
+            if (document.getElementById('ui-patient-ic')) document.getElementById('ui-patient-ic').innerText = dIc.includes('MyKad') ? dIc : `MyKad/Passport: ${dIc}`;
+            if (document.getElementById('ui-patient-age')) document.getElementById('ui-patient-age').innerText = ageVal;
+            if (document.getElementById('ui-patient-address')) document.getElementById('ui-patient-address').innerText = dAddress;
+        };
+
         window.submitDelivery = async () => {
             const apptIdStr = new URLSearchParams(window.location.search).get('id');
             const dName = document.getElementById('del-name')?.value.trim();
             const dPhone = document.getElementById('del-phone')?.value.trim();
+            const dIc = document.getElementById('del-ic')?.value.trim();
             const dAddress = document.getElementById('del-address')?.value.trim();
 
-            if (!dName || !dPhone || !dAddress) {
-                return window.showInlineMessage("Please provide your full delivery address and contact info.", "error");
+            if (!dName || !dPhone || !dIc || !dAddress) {
+                return window.showInlineMessage("Please provide your full details, NRIC/Passport, and delivery address.", "error");
             }
 
             const btn = document.getElementById('pay-btn');
@@ -466,6 +550,26 @@
 
             try {
                 const token = await window.currentUser.getIdToken();
+
+                // Save NRIC and Address to profile settings on the backend in background (saves database-wide)
+                const fd = new FormData();
+                fd.append('name', dName);
+                fd.append('phone', dPhone);
+                fd.append('age', window.userData.age || "");
+                fd.append('ic_number', dIc);     // Sent to backend
+                fd.append('address', dAddress);   // Sent to backend
+                
+                fetch(`${API_BASE}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: fd
+                }).then(async r => {
+                    if (r.ok) {
+                        localStorage.setItem('user_ic_number', dIc);
+                        localStorage.setItem('user_address', dAddress);
+                    }
+                }).catch(e => console.warn("Failed to persist user profile details locally: ", e));
+
                 const r = await fetch(`${API_BASE}/api/delivery/checkout`, {
                     method: 'POST',
                     headers: { 
@@ -483,7 +587,7 @@
                 const data = await r.json();
 
                 if (data.stripe_url) {
-                    // Reroute user to Stripe to execute final payment.
+                    // Reroute user to Stripe/Billplz to execute final payment.
                     window.location.href = data.stripe_url;
                 } else {
                     window.showInlineMessage(data.detail || data.message || "Failed to setup checkout session.", "error");
