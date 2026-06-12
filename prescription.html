@@ -33,17 +33,11 @@
             }
         }
 
-        /* Rx paper patient left accent border */
-        .patient-accent { border-left: 3px solid #0066FF; }
-
-        /* Med row pill icon */
-        .pill-icon-wrap { width: 36px; height: 36px; min-width: 36px; border-radius: 10px; background: #eff6ff; display: flex; align-items: center; justify-content: center; }
-
-        /* Verification popup input focus */
-        .verify-input:focus { border-color: #0066FF; box-shadow: 0 0 0 3px rgba(0,102,255,0.1); outline: none; }
-
-        /* Digital signature underline */
-        .sig-line { border-top: 1.5px solid #94a3b8; }
+        /* Rx Symbol */
+        .rx-symbol-circle { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #bfdbfe; display: flex; align-items: center; justify-content: center; background: #eff6ff; color: #0066FF; font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; font-style: italic; flex-shrink: 0; }
+        
+        /* Watermark */
+        .rx-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.02; w-96; h-96; pointer-events: none; z-index: 0; }
     </style>
 </head>
 <body class="text-gray-800 antialiased overflow-x-hidden">
@@ -57,16 +51,13 @@
     </div>
 
     <!-- ===================== PATIENT VERIFICATION MODAL ===================== -->
-    <!-- Shows on every page load so patient can confirm / update their details -->
+    <!-- Displays ONLY IF NRIC or Address is missing -->
     <div id="verification-modal" class="modal-backdrop fixed inset-0 bg-gray-900/50 z-[500] hidden items-center justify-center px-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden">
-            <!-- Modal Header -->
             <div class="bg-gradient-to-r from-[#0066FF] to-[#3385ff] px-6 py-5 text-white">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
-                        </svg>
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/></svg>
                     </div>
                     <div>
                         <h2 class="text-base font-extrabold tracking-tight">Confirm Patient Details</h2>
@@ -75,32 +66,17 @@
                 </div>
             </div>
 
-            <!-- Modal Body -->
             <div class="px-6 py-5 space-y-4">
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Recipient Full Name</label>
-                    <input type="text" id="modal-name" class="verify-input w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white" placeholder="e.g. Nawaf Waqas">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Mobile Number</label>
-                    <input type="tel" id="modal-phone" class="verify-input w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white" placeholder="e.g. +6012 345 6789">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">NRIC (MyKad) / Passport Number</label>
-                    <input type="text" id="modal-ic" class="verify-input w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white" placeholder="e.g. 900101-10-1234">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Complete Delivery Address</label>
-                    <textarea id="modal-address" rows="3" class="verify-input w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white resize-none leading-relaxed" placeholder="Street, City, Postcode, State..."></textarea>
-                </div>
+                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Recipient Full Name</label><input type="text" id="modal-name" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white focus:border-[#0066FF] outline-none" placeholder="e.g. Nawaf Waqas"></div>
+                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Mobile Number</label><input type="tel" id="modal-phone" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white focus:border-[#0066FF] outline-none" placeholder="e.g. +6012 345 6789"></div>
+                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">NRIC (MyKad) / Passport Number</label><input type="text" id="modal-ic" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white focus:border-[#0066FF] outline-none" placeholder="e.g. 900101-10-1234"></div>
+                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Complete Delivery Address</label><textarea id="modal-address" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-800 transition bg-gray-50 focus:bg-white focus:border-[#0066FF] outline-none resize-none leading-relaxed" placeholder="Street, City, Postcode, State..."></textarea></div>
             </div>
 
-            <!-- Modal Footer -->
             <div class="px-6 pb-6">
                 <button onclick="saveVerificationModal()" id="modal-confirm-btn" class="w-full bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] text-white font-extrabold py-3.5 rounded-xl text-sm shadow-lg shadow-blue-500/25 transition-all">
-                    Confirm &amp; View Prescription
+                    Save &amp; View Prescription
                 </button>
-                <p class="text-center text-[10px] text-gray-400 mt-3 font-medium">Details will be saved to your profile automatically.</p>
             </div>
         </div>
     </div>
@@ -127,248 +103,211 @@
     </div>
 
     <!-- ===================== MAIN CONTENT ===================== -->
-    <div id="main-content" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+    <div id="main-content" class="hidden max-w-[85rem] mx-auto px-4 sm:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
 
-        <!-- ======== LEFT: E-PRESCRIPTION PAPER ======== -->
-        <div class="lg:col-span-7 xl:col-span-8 flex flex-col items-center w-full">
+        <!-- ======== LEFT: E-PRESCRIPTION PAPER EXACT MATCH ======== -->
+        <div class="lg:col-span-8 flex flex-col w-full">
 
-            <!-- Print / Download button -->
-            <div class="no-print w-full flex justify-end mb-4 max-w-3xl mx-auto lg:max-w-none">
+            <!-- Print button -->
+            <div class="no-print w-full flex justify-end mb-4">
                 <button onclick="window.print()" class="flex items-center gap-2 text-sm font-bold bg-white text-gray-600 border border-gray-200 px-5 py-2.5 rounded-xl hover:bg-gray-50 active:scale-95 shadow-sm transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     Download PDF / Print
                 </button>
             </div>
 
             <!-- ===== PRESCRIPTION PAPER ===== -->
-            <div id="rx-paper" class="w-full bg-white rounded-2xl shadow-[0_2px_20px_rgba(0,0,0,0.07)] border border-gray-100 overflow-hidden max-w-3xl mx-auto lg:max-w-none">
+            <div id="rx-paper" class="w-full bg-white border border-gray-200 rounded-md p-8 sm:p-12 min-h-0 sm:min-h-[850px] relative mx-auto shadow-sm">
+                
+                <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="rx-watermark w-[400px] h-[400px] object-contain">
 
-                <!-- Top blue accent bar -->
-                <div class="h-1.5 w-full bg-[#0066FF]"></div>
-
-                <div class="p-6 sm:p-10">
-
-                    <!-- ---- HEADER ---- -->
-                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-gray-100">
-                        <!-- Clinic Info -->
-                        <div class="flex items-start gap-4">
-                            <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/logo%20p.png?download=true" class="w-14 h-14 object-contain rounded-xl border border-gray-100 shadow-sm shrink-0" alt="Clinic Logo">
-                            <div>
-                                <h1 class="text-base sm:text-lg font-extrabold text-[#0066FF] leading-tight tracking-tight uppercase">HELLO DOCTOR CLINIC (BANGI S9) PLT</h1>
-                                <p class="text-[11px] text-gray-400 font-semibold mt-0.5">202404000017</p>
-                                <p class="text-[11px] text-gray-500 mt-0.5 leading-snug">19G, Jalan 9/9C, Seksyen 9, 43650 Bandar Baru Bangi, Selangor</p>
-                                <a class="text-[12px] font-bold text-[#0066FF] mt-0.5 inline-block hover:underline">011-6133 3391</a>
-                                <p class="text-[10px] text-gray-400 italic mt-0.5">Powered by Doktura Ai</p>
-                            </div>
-                        </div>
-                        <!-- Rx Metadata -->
-                        <div class="text-left sm:text-right shrink-0 sm:ml-4">
-                            <div class="flex items-center gap-1.5 sm:justify-end mb-1.5">
-                                <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
-                                <span class="text-[11px] font-extrabold text-green-600 uppercase tracking-widest">Official E-Rx</span>
-                            </div>
-                            <p class="text-xs text-gray-500 font-medium">Rx ID: <span id="ui-appt-id" class="font-extrabold text-gray-800">...</span></p>
-                            <p class="text-xs text-gray-500 font-medium mt-0.5">Date: <span id="ui-date" class="font-extrabold text-gray-800">...</span></p>
-                        </div>
-                    </div>
-
-                    <!-- ---- DOCTOR & PATIENT GRID ---- -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 py-7">
-
-                        <!-- Doctor -->
+                <!-- ---- HEADER ---- -->
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-gray-100 relative z-10">
+                    <div class="flex items-center gap-5">
+                        <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/logo%20p.png?download=true" class="w-20 h-20 object-contain rounded border border-gray-50 shrink-0" alt="Clinic Logo">
                         <div>
-                            <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3">Prescribed By</p>
-                            <p id="ui-doctor-name" class="font-extrabold text-gray-900 text-base leading-snug"></p>
-                            <p id="ui-doctor-spec" class="text-xs text-gray-500 font-medium mt-0.5"></p>
-                            <p id="ui-doctor-mmc" class="text-sm font-bold text-gray-700 mt-1.5"></p>
-                            <div class="flex items-center gap-1.5 mt-2">
-                                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
-                                </svg>
-                                <span class="text-xs font-bold text-green-600">License Verified</span>
-                            </div>
+                            <h1 class="text-lg sm:text-[19px] font-extrabold text-[#1e293b] leading-tight tracking-tight uppercase">HELLO DOCTOR CLINIC (BANGI S9) PLT</h1>
+                            <p class="text-[11px] text-gray-500 font-medium mt-1">202404000017</p>
+                            <p class="text-[12px] text-gray-500 font-medium mt-0.5 leading-snug">19G, Jalan 9/9C, Seksyen 9, 43650 Bandar Baru Bangi, Selangor</p>
+                            <a class="text-[13px] font-bold text-[#0066FF] mt-1 inline-block">011-6133 3391</a>
+                            <p class="text-[10px] text-gray-400 italic mt-0.5">Powered by Doktura Ai</p>
                         </div>
+                    </div>
+                    <div class="text-right shrink-0 mt-2 sm:mt-0">
+                        <span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider mb-2.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> OFFICIAL E-RX
+                        </span>
+                        <p class="text-xs text-gray-600 font-medium mb-1">Rx ID: <span id="ui-appt-id" class="font-bold text-gray-800">...</span></p>
+                        <p class="text-xs text-gray-600 font-medium">Date: <span id="ui-date" class="font-bold text-gray-800">...</span></p>
+                    </div>
+                </div>
 
-                        <!-- Patient -->
-                        <div class="patient-accent bg-gray-50/60 rounded-r-xl pl-5 pr-4 py-4">
-                            <p class="text-[10px] font-extrabold text-[#0066FF] uppercase tracking-widest mb-3">Patient Details</p>
-                            <div class="space-y-1">
-                                <p class="text-sm font-extrabold text-gray-900" id="ui-patient-name">—</p>
-                                <p class="text-xs font-semibold text-gray-600" id="ui-patient-ic">—</p>
-                                <p class="text-xs text-gray-500 font-medium" id="ui-patient-age">—</p>
-                                <p class="text-xs text-gray-500 font-medium leading-relaxed" id="ui-patient-address">No address provided.</p>
-                            </div>
+                <!-- ---- DOCTOR & PATIENT GRID ---- -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 py-8 relative z-10">
+                    <!-- Doctor -->
+                    <div class="pt-2">
+                        <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">PRESCRIBED BY</p>
+                        <p id="ui-doctor-name" class="font-extrabold text-gray-900 text-base uppercase leading-snug"></p>
+                        <p id="ui-doctor-mmc" class="text-sm font-extrabold text-gray-900 mt-0.5"></p>
+                        <div class="flex items-center gap-1.5 mt-2.5">
+                            <svg class="w-4 h-4 text-[#10b981]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            <span class="text-xs font-bold text-[#10b981]">License Verified</span>
                         </div>
                     </div>
 
-                    <!-- ---- MEDICATIONS SECTION ---- -->
-                    <div class="border-t border-gray-100 pt-7">
+                    <!-- Patient -->
+                    <div class="border border-gray-200 rounded-xl p-5 border-l-[3px] border-l-[#0066FF] bg-white">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">PATIENT DETAILS</p>
+                        <p class="text-sm font-extrabold text-gray-900 uppercase tracking-tight mb-2" id="ui-patient-name">—</p>
+                        <p class="text-xs font-bold text-gray-800 mb-1.5" id="ui-patient-ic">—</p>
+                        <p class="text-xs font-bold text-gray-800 mb-1.5" id="ui-patient-age">—</p>
+                        <p class="text-xs font-bold text-gray-800 leading-relaxed" id="ui-patient-address">No address provided.</p>
+                    </div>
+                </div>
 
-                        <!-- Section Label -->
-                        <div class="flex items-center gap-3 mb-5">
-                            <div class="w-10 h-10 rounded-full border-2 border-[#0066FF]/25 flex items-center justify-center bg-blue-50 shrink-0">
-                                <svg class="w-5 h-5 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
-                                </svg>
-                            </div>
-                            <span class="text-sm font-extrabold text-gray-700 uppercase tracking-widest">Medications</span>
+                <!-- ---- MEDICATIONS SECTION ---- -->
+                <div class="mb-10 relative z-10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="rx-symbol-circle">Rx</div>
+                        <span class="text-sm font-extrabold text-gray-800 uppercase tracking-widest">MEDICATIONS</span>
+                    </div>
+
+                    <!-- Meds Table -->
+                    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+                        <!-- Header -->
+                        <div class="grid grid-cols-12 px-6 py-4 text-[12px] font-bold text-gray-900 border-b border-gray-200">
+                            <div class="col-span-7">Description</div>
+                            <div class="col-span-3 text-center">Instruction</div>
+                            <div class="col-span-2 text-center">QTY</div>
                         </div>
+                        <!-- Body -->
+                        <div id="ui-med-list" class="divide-y divide-gray-100">
+                            <!-- Injected rows -->
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Meds Table -->
-                        <div class="border border-gray-100 rounded-2xl overflow-hidden">
-                            <!-- Table Header -->
-                            <div class="grid grid-cols-12 bg-gray-50 px-5 py-3 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest border-b border-gray-100">
-                                <div class="col-span-6">Description</div>
-                                <div class="col-span-4 text-center">Instruction</div>
-                                <div class="col-span-2 text-center">QTY</div>
-                            </div>
-                            <!-- Table Body -->
-                            <div id="ui-med-list" class="divide-y divide-gray-50 bg-white">
-                                <!-- Injected rows -->
-                            </div>
+                <!-- ---- CLINICAL NOTES & MC ---- -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+                    
+                    <!-- Clinical Notes -->
+                    <div class="border border-gray-200 rounded-xl p-5 bg-white">
+                        <div class="flex items-center gap-2 mb-4">
+                            <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg>
+                            <span class="text-[11px] font-bold text-[#0066FF] uppercase tracking-widest">CLINICAL NOTES / DIRECTIONS</span>
+                        </div>
+                        <div class="border-t border-gray-100 pt-4">
+                            <p id="ui-doctor-notes" class="text-xs text-gray-800 font-medium italic leading-relaxed"></p>
+                            <p id="ui-notes-mc-flag" class="text-xs font-bold text-gray-800 mt-5 hidden"></p>
                         </div>
                     </div>
 
-                    <!-- ---- CLINICAL NOTES & MC ---- -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-
-                        <!-- Clinical Notes -->
-                        <div class="border border-gray-100 rounded-2xl p-5">
-                            <div class="flex items-center gap-2 mb-3">
-                                <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
-                                </svg>
-                                <span class="text-[10px] font-extrabold text-[#0066FF] uppercase tracking-widest">Clinical Notes / Directions</span>
-                            </div>
-                            <div class="border-t border-gray-100 pt-3">
-                                <p id="ui-doctor-notes" class="text-xs text-gray-600 leading-relaxed italic font-medium"></p>
-                                <p id="ui-notes-mc-flag" class="text-[10px] font-bold text-gray-400 mt-3"></p>
-                            </div>
+                    <!-- Medical Certificate -->
+                    <div class="border border-gray-200 rounded-xl p-5 bg-white">
+                        <div class="flex items-center gap-2 mb-4">
+                            <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                            <span class="text-[11px] font-bold text-[#0066FF] uppercase tracking-widest">MEDICAL CERTIFICATE</span>
                         </div>
-
-                        <!-- Medical Certificate -->
-                        <div class="border border-gray-100 rounded-2xl p-5">
-                            <div class="flex items-center gap-2 mb-3">
-                                <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/>
-                                </svg>
-                                <span class="text-[10px] font-extrabold text-[#0066FF] uppercase tracking-widest">Medical Certificate</span>
-                            </div>
-                            <div id="ui-mc-badge" class="mt-1 inline-flex items-center gap-1.5 text-[11px] font-bold px-4 py-2 rounded-full border bg-gray-100 text-gray-500 border-gray-200">
-                                None Required
-                            </div>
+                        <div id="ui-mc-badge" class="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-gray-500">
+                            None Required
                         </div>
                     </div>
+                </div>
 
-                    <!-- ---- DIGITAL SIGNATURE FOOTER ---- -->
-                    <div class="mt-10 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
-                        <!-- Legal disclaimer -->
-                        <p class="text-[10px] text-gray-400 leading-relaxed max-w-xs font-medium">
-                            This prescription is digitally generated via the Doktura Platform and does not require a physical stamp. Valid staff before legally signed — verified patient and should be fulfilled by an authorized pharmacy only.
-                        </p>
-                        <!-- Signature Block -->
-                        <div class="text-right shrink-0">
-                            <p class="text-[10px] text-gray-400 font-medium mb-1">— Digital Signature —</p>
-                            <div class="sig-line mb-2 w-full"></div>
-                            <p class="text-xs font-extrabold text-gray-900 uppercase tracking-tight" id="ui-sig-doc"></p>
-                            <div class="flex items-center gap-1 justify-end mt-1">
-                                <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
-                                </svg>
-                                <span class="text-[10px] font-bold text-green-600">Digitally Signed — Verified</span>
-                            </div>
+                <!-- ---- DIGITAL SIGNATURE FOOTER ---- -->
+                <div class="mt-16 pt-6 flex flex-col sm:flex-row items-end justify-between gap-8 relative z-10">
+                    <p class="text-[9px] text-gray-400 leading-relaxed max-w-xs font-medium pb-2">
+                        This prescription is digitally generated via the Doktura Platform and does not require a physical stamp. Valid strictly for the stated patient and should be fulfilled by an authorized pharmacy only.
+                    </p>
+                    <div class="text-right shrink-0">
+                        <p class="text-[10px] text-gray-400 font-medium mb-1.5 italic">— Digital Signature —</p>
+                        <div class="border-t border-gray-900 w-56 mb-2 mx-auto sm:ml-auto sm:mr-0"></div>
+                        <p class="text-xs font-extrabold text-gray-900 uppercase tracking-tight" id="ui-sig-doc"></p>
+                        <div class="flex items-center gap-1 justify-end mt-1.5">
+                            <svg class="w-3.5 h-3.5 text-[#10b981]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            <span class="text-[10px] font-bold text-[#10b981]">Digitally Signed — Verified</span>
                         </div>
                     </div>
+                </div>
 
-                </div><!-- end inner padding -->
-            </div><!-- end rx-paper -->
+            </div>
+        </div>
 
-        </div><!-- end left col -->
-
-        <!-- ======== RIGHT: DELIVERY SIDEBAR ======== -->
-        <div id="delivery-sidebar" class="no-print lg:col-span-5 xl:col-span-4 hidden sticky top-20 w-full max-w-3xl mx-auto lg:max-w-none mb-10">
-
-            <div class="bg-white shadow-xl shadow-gray-200/50 border border-gray-200 rounded-2xl overflow-hidden">
-
-                <div class="bg-gray-900 text-white p-6 relative overflow-hidden">
-                    <div class="relative z-10">
-                        <span class="bg-red-500 text-white text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">At-Home Service</span>
-                        <h2 class="text-xl font-extrabold tracking-tight">Medicine Delivery</h2>
-                        <p class="text-gray-400 text-xs mt-1 font-medium leading-relaxed max-w-[85%]">Skip the clinic wait. Let us send the prescribed medicines directly to your door.</p>
-                    </div>
-                    <div class="absolute -right-6 -bottom-8 w-36 h-36 bg-gray-800 rounded-full border-[14px] border-gray-700/40 z-0"></div>
+        <!-- ======== RIGHT: DELIVERY SIDEBAR EXACT MATCH ======== -->
+        <div id="delivery-sidebar" class="no-print lg:col-span-4 hidden sticky top-20 w-full mb-10">
+            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                <!-- Banner -->
+                <div class="bg-[#1e293b] text-white p-6 relative overflow-hidden">
+                    <h2 class="text-xl font-extrabold tracking-tight relative z-10">Medicine Delivery</h2>
+                    <p class="text-gray-300 text-[11px] mt-1.5 font-medium leading-relaxed relative z-10 max-w-[90%]">Skip the clinic wait. Let us send the prescribed medicines directly to your door.</p>
+                    <div class="absolute -right-12 -bottom-12 w-44 h-44 bg-[#0f172a] rounded-full z-0"></div>
                 </div>
 
                 <div class="p-6">
-                    <h3 class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2.5">Order Summary</h3>
+                    <h3 class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2.5">ORDER SUMMARY</h3>
 
-                    <div id="cost-breakdown-list" class="space-y-3 mb-4 mt-1">
+                    <div id="cost-breakdown-list" class="space-y-4 mb-5">
                         <!-- JS injected -->
                     </div>
 
-                    <div class="border-t border-dashed border-gray-200 my-4"></div>
+                    <div class="border-t border-dashed border-gray-200 my-5"></div>
 
                     <div class="flex justify-between items-center mb-6">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">Total Pay</span>
-                        <span id="total-cost" class="text-2xl font-extrabold text-[#0066FF]">RM 0.00</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">TOTAL PAY</span>
+                        <span id="total-cost" class="text-[26px] font-extrabold text-[#0066FF] tracking-tight">RM 0.00</span>
                     </div>
 
-                    <!-- Delivery Form (pending_payment) -->
-                    <div id="delivery-form-wrapper" class="hidden">
-                        <div class="bg-blue-50/60 p-5 rounded-xl border border-blue-100 mb-5">
-                            <h4 class="text-xs font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-[#0066FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/></svg>
-                                Patient Verification Details
-                            </h4>
-                            <div class="space-y-4">
-                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Recipient Name</label><input type="text" id="del-name" class="w-full border border-gray-200 rounded-xl p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] outline-none transition" placeholder="Full Name" onkeyup="updateLiveRxDetails()"></div>
-                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Mobile Number</label><input type="tel" id="del-phone" class="w-full border border-gray-200 rounded-xl p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] outline-none transition" placeholder="+6012..."></div>
-                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">NRIC / Passport</label><input type="text" id="del-ic" class="w-full border border-gray-200 rounded-xl p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] outline-none transition" placeholder="900101-10-1234" onkeyup="updateLiveRxDetails()"></div>
-                                <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Delivery Address</label><textarea id="del-address" class="w-full border border-gray-200 rounded-xl p-3 text-sm bg-white focus:ring-2 focus:ring-[#0066FF] outline-none transition h-20 resize-none leading-relaxed" placeholder="Complete Street Address..." onkeyup="updateLiveRxDetails()"></textarea></div>
-                            </div>
+                    <!-- Delivery Form -->
+                    <div id="delivery-form-wrapper" class="bg-[#f8faff] border border-blue-100 rounded-xl p-5 mb-5 hidden">
+                        <h4 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0066FF]" fill="currentColor" viewBox="0 0 20 20"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                            Patient Verification Details
+                        </h4>
+                        <div class="space-y-3.5">
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">RECIPIENT NAME</label><input type="text" id="del-name" class="w-full border border-gray-200 rounded-lg p-3 text-sm font-medium bg-white outline-none focus:border-[#0066FF]" onkeyup="updateLiveRxDetails()"></div>
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">MOBILE NUMBER</label><input type="tel" id="del-phone" class="w-full border border-gray-200 rounded-lg p-3 text-sm font-medium bg-white outline-none focus:border-[#0066FF]"></div>
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">NRIC / PASSPORT NUMBER</label><input type="text" id="del-ic" class="w-full border border-gray-200 rounded-lg p-3 text-sm font-medium bg-white outline-none focus:border-[#0066FF]" placeholder="e.g. 900101-10-1234" onkeyup="updateLiveRxDetails()"></div>
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">COMPLETE DELIVERY ADDRESS</label><textarea id="del-address" class="w-full border border-gray-200 rounded-lg p-3 text-sm font-medium bg-white outline-none focus:border-[#0066FF] h-20 resize-none" placeholder="Complete Street Address..." onkeyup="updateLiveRxDetails()"></textarea></div>
                         </div>
-
-                        <button onclick="submitDelivery()" id="pay-btn" class="w-full flex items-center justify-center gap-2 bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] transition text-white font-extrabold py-4 rounded-xl shadow-lg shadow-blue-500/25 text-sm group">
-                            <span>Proceed to Payment</span>
-                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                        </button>
                     </div>
+
+                    <button id="pay-btn" onclick="submitDelivery()" class="hidden w-full items-center justify-center gap-2 bg-[#0066FF] hover:bg-blue-700 active:scale-[0.98] transition text-white font-bold py-3.5 rounded-lg text-[15px]">
+                        <span>Proceed to Payment</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
 
                     <!-- Paid State -->
                     <div id="delivery-paid-wrapper" class="hidden">
-                        <div class="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
-                            <svg class="w-14 h-14 mx-auto text-green-500 mb-3" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-5 text-center">
+                            <svg class="w-12 h-12 mx-auto text-green-500 mb-2" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                             <h3 class="text-sm font-extrabold text-green-900 uppercase tracking-widest mb-1">Payment Received</h3>
-                            <p class="text-xs text-green-700 font-medium leading-relaxed max-w-[220px] mx-auto">Medicines have been paid for and will be dispatched to your address.</p>
+                            <p class="text-xs text-green-700 font-medium leading-relaxed">Medicines will be dispatched to your address.</p>
                         </div>
                     </div>
 
                     <!-- No billable items -->
-                    <div id="delivery-empty-wrapper" class="hidden text-center py-4">
-                        <p class="text-xs font-bold text-gray-400 leading-relaxed">Delivery service is unavailable — no payable medicines were prescribed.</p>
+                    <div id="delivery-empty-wrapper" class="hidden text-center py-2">
+                        <p class="text-xs font-bold text-gray-400">Delivery service is unavailable — no payable medicines prescribed.</p>
                     </div>
+                </div>
 
-                    <p class="text-center text-[9px] font-bold text-gray-300 flex items-center justify-center uppercase gap-1 mt-6">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        Payments Processed Securely
-                    </p>
+                <div class="bg-gray-50 border-t border-gray-100 py-4 flex justify-center items-center gap-1.5">
+                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Payments Processed Securely</span>
                 </div>
             </div>
-
-            <p class="text-center mt-5 text-[10px] text-gray-400 font-medium hover:underline cursor-pointer">Need help with your order? Contact Support</p>
         </div>
 
-    </div><!-- end main-content -->
+    </div>
 
     <!-- ===================== TOAST NOTIFICATIONS ===================== -->
-    <div id="global-message-container" class="fixed top-4 sm:top-20 left-4 right-4 sm:left-auto sm:right-6 hidden z-[200] no-print">
+    <div id="global-message-container" class="fixed top-4 sm:top-20 left-4 right-4 sm:left-auto sm:right-6 hidden z-[999] no-print">
         <div id="global-message-box" class="p-4 rounded-xl text-sm font-bold border flex items-center gap-3 shadow-xl max-w-sm w-full">
             <svg id="global-message-icon" class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
             <span id="global-message-text" class="flex-1 leading-relaxed"></span>
             <button onclick="document.getElementById('global-message-container').classList.add('hidden')" class="text-base opacity-60 hover:opacity-100 shrink-0 p-1 -mr-1">✕</button>
         </div>
     </div>
-
 
     <!-- ===================== FIREBASE MODULE ===================== -->
     <script type="module">
@@ -421,7 +360,10 @@
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.detail || "Unable to fetch prescription data.");
 
-                // ----- Populate Rx Paper -----
+                // Store prescription data globally to power UI re-renders later
+                window.prescriptionData = data;
+
+                // ----- Populate Rx Header -----
                 if (document.getElementById('ui-appt-id')) document.getElementById('ui-appt-id').innerText = data.appointment_id.toString().padStart(6, '0');
                 try {
                     let d = new Date(data.date.replace('T', ' '));
@@ -429,13 +371,12 @@
                 } catch (e) {}
 
                 if (document.getElementById('ui-doctor-name')) document.getElementById('ui-doctor-name').innerText = data.doctor_name;
-                if (document.getElementById('ui-doctor-spec')) document.getElementById('ui-doctor-spec').innerText = data.doctor_specialty || '';
                 if (document.getElementById('ui-sig-doc')) document.getElementById('ui-sig-doc').innerText = data.doctor_name;
                 if (document.getElementById('ui-doctor-mmc')) {
-                    document.getElementById('ui-doctor-mmc').innerText = data.doctor_mmc ? `MMC ${data.doctor_mmc}` : 'MMC No. Verified';
+                    document.getElementById('ui-doctor-mmc').innerText = data.doctor_mmc ? `MMC ${data.doctor_mmc}` : '';
                 }
 
-                // Render medication rows
+                // Render medication rows to exact match
                 const rxList = document.getElementById('ui-med-list');
                 if (rxList) {
                     rxList.innerHTML = '';
@@ -446,25 +387,25 @@
                             const uomText = m.uom ? `(${m.uom})` : '(Strip)';
                             const freq = m.pills_per_day || m.frequency || '1 Pill, x3 Times/day';
                             rxList.innerHTML += `
-                            <div class="grid grid-cols-12 items-center px-5 py-4 hover:bg-gray-50/70 transition border-b border-gray-50 last:border-b-0">
-                                <div class="col-span-6 flex items-center gap-3">
-                                    <div class="pill-icon-wrap shrink-0">
-                                        <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                            <div class="grid grid-cols-12 items-center px-5 py-5 hover:bg-gray-50/50 transition">
+                                <div class="col-span-7 flex items-start gap-4 pr-4">
+                                    <div class="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                                        <svg class="w-3.5 h-3.5 text-[#0066FF] -rotate-45" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/>
                                         </svg>
                                     </div>
                                     <div>
-                                        <div class="text-sm font-extrabold text-gray-900 leading-snug">${m.name}</div>
-                                        <div class="text-[10px] font-bold text-[#0066FF] mt-0.5">Anticoagulant Medication</div>
+                                        <div class="text-[13px] font-extrabold text-gray-900 leading-snug">${m.name}</div>
+                                        <div class="text-[11px] font-semibold text-[#0066FF] mt-1 tracking-wide">PRESCRIPTION MEDICATION</div>
                                     </div>
                                 </div>
-                                <div class="col-span-4 text-center">
-                                    <div class="text-sm font-bold text-gray-800">${freq}</div>
-                                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">After Meals</div>
+                                <div class="col-span-3 text-center">
+                                    <div class="text-[13px] font-bold text-gray-800">${freq}</div>
+                                    <div class="text-[11px] text-gray-500 font-medium mt-1">After Meals</div>
                                 </div>
                                 <div class="col-span-2 text-center">
                                     <div class="text-sm font-extrabold text-gray-900">${m.quantity || 1}</div>
-                                    <div class="text-[10px] text-gray-400 font-medium mt-0.5">${uomText}</div>
+                                    <div class="text-[11px] text-gray-400 font-bold mt-1">${uomText}</div>
                                 </div>
                             </div>`;
                         });
@@ -474,15 +415,23 @@
                 if (document.getElementById('ui-doctor-notes')) {
                     document.getElementById('ui-doctor-notes').innerText = data.doctor_notes || "Use all prescribed medicine exactly as directed. In case of unexpected allergic reaction or worsening symptoms, contact your medical center immediately.";
                 }
-                if (document.getElementById('ui-notes-mc-flag')) {
-                    document.getElementById('ui-notes-mc-flag').innerText = data.mc_needed ? "MC Issued: Yes" : "MC Issued: No";
+
+                // Append MC Issued line into notes if needed
+                const mcFlag = document.getElementById('ui-notes-mc-flag');
+                if (mcFlag) {
+                    if (data.mc_needed) {
+                        mcFlag.innerText = "MC Issued: 1";
+                        mcFlag.classList.remove('hidden');
+                    } else {
+                        mcFlag.classList.add('hidden');
+                    }
                 }
 
                 const mcBadge = document.getElementById('ui-mc-badge');
                 if (data.mc_needed && mcBadge) {
-                    mcBadge.innerHTML = `<svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg> Required / Approved`;
+                    mcBadge.innerHTML = `<svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg> Required / Approved`;
                     mcBadge.classList.remove('bg-gray-100','text-gray-500','border-gray-200');
-                    mcBadge.classList.add('bg-blue-50','text-[#0066FF]','border-blue-200');
+                    mcBadge.classList.add('bg-blue-50','text-[#0066FF]','border-blue-400');
                 }
 
                 // ----- Delivery Sidebar -----
@@ -491,6 +440,7 @@
                 const paidWrapper = document.getElementById('delivery-paid-wrapper');
                 const emptyWrapper = document.getElementById('delivery-empty-wrapper');
                 const deliverySidebar = document.getElementById('delivery-sidebar');
+                const payBtn = document.getElementById('pay-btn');
                 let subTotal = 0.0, isBillable = false;
 
                 if (breakdownUI && formWrapper && paidWrapper && emptyWrapper && deliverySidebar) {
@@ -500,7 +450,7 @@
                             let itemPrice = parseFloat(m.price || 0.0);
                             if (itemPrice > 0) isBillable = true;
                             subTotal += itemPrice;
-                            breakdownUI.innerHTML += `<div class="flex justify-between text-sm text-gray-600"><span class="font-medium pr-4 leading-relaxed">${m.name}</span><span class="font-bold whitespace-nowrap ml-2 text-gray-900">RM ${itemPrice.toFixed(2)}</span></div>`;
+                            breakdownUI.innerHTML += `<div class="flex justify-between text-[13px] text-gray-600"><span class="font-medium pr-4 leading-relaxed uppercase">${m.name}</span><span class="font-extrabold whitespace-nowrap ml-2 text-gray-900">RM ${itemPrice.toFixed(2)}</span></div>`;
                         });
                     }
 
@@ -512,15 +462,19 @@
                         if (document.getElementById('total-cost')) document.getElementById('total-cost').innerText = `RM 0.00`;
                         emptyWrapper.classList.remove('hidden');
                     } else if (data.delivery_status === 'paid' || data.delivery_status === 'shipped') {
-                        breakdownUI.innerHTML += `<div class="flex justify-between text-xs text-[#0066FF] font-bold uppercase tracking-wider pt-3 mt-3 border-t border-gray-100"><span>Delivery</span><span>RM ${parseFloat(data.delivery_fee).toFixed(2)}</span></div>`;
+                        breakdownUI.innerHTML += `<div class="flex justify-between text-xs text-[#0066FF] font-bold uppercase tracking-wider pt-4 mt-2 border-t border-dashed border-gray-200"><span>DELIVERY RATE</span><span>RM ${parseFloat(data.delivery_fee).toFixed(2)}</span></div>`;
                         let gTotal = subTotal + parseFloat(data.delivery_fee);
                         if (document.getElementById('total-cost')) document.getElementById('total-cost').innerText = `RM ${gTotal.toFixed(2)}`;
                         paidWrapper.classList.remove('hidden');
                     } else {
-                        breakdownUI.innerHTML += `<div class="flex justify-between text-xs text-[#0066FF] font-bold uppercase tracking-wider pt-3 mt-3 border-t border-gray-100"><span>Delivery Rate</span><span>RM ${parseFloat(data.delivery_fee).toFixed(2)}</span></div>`;
+                        breakdownUI.innerHTML += `<div class="flex justify-between text-xs text-[#0066FF] font-bold uppercase tracking-wider pt-4 mt-2 border-t border-dashed border-gray-200"><span>DELIVERY RATE</span><span>RM ${parseFloat(data.delivery_fee).toFixed(2)}</span></div>`;
                         let gTotal = subTotal + parseFloat(data.delivery_fee);
                         if (document.getElementById('total-cost')) document.getElementById('total-cost').innerText = `RM ${gTotal.toFixed(2)}`;
+                        
                         formWrapper.classList.remove('hidden');
+                        payBtn.classList.remove('hidden');
+                        payBtn.classList.add('flex');
+                        
                         try {
                             if (document.getElementById('del-name')) document.getElementById('del-name').value = window.userData.name || data.patient_name || "";
                             if (document.getElementById('del-phone')) document.getElementById('del-phone').value = window.userData.phone || "";
@@ -530,12 +484,8 @@
                     }
                 }
 
-                // Store prescription data for modal pre-fill
-                window.prescriptionData = data;
-
-                // Show loader done, then show verification modal
-                document.getElementById('loader')?.classList.add('hidden');
-                showVerificationModal();
+                // Check verification details to trigger modal or reveal immediately
+                checkAndTriggerVerification();
 
             } catch (error) {
                 console.error("Prescription Error:", error);
@@ -548,9 +498,26 @@
             }
         }
 
+        // Verification Gateway Logic
+        function checkAndTriggerVerification() {
+            const hasIC = window.userData?.ic_number || localStorage.getItem('user_ic_number');
+            const hasAddress = window.userData?.address || localStorage.getItem('user_address');
+            
+            document.getElementById('loader')?.classList.add('hidden');
+
+            if (!hasIC || !hasAddress) {
+                // Show modal to collect data
+                window.showVerificationModal();
+            } else {
+                // Directly load the Rx details without blocking
+                updateLiveRxDetails();
+                document.getElementById('main-content')?.classList.remove('hidden');
+                document.getElementById('main-content')?.classList.add('grid');
+            }
+        }
+
         // Expose globally so onclick can call it
         window.showVerificationModal = function() {
-            // Pre-fill modal fields from cached user data
             const ud = window.userData;
             const pData = window.prescriptionData || {};
             if (document.getElementById('modal-name')) document.getElementById('modal-name').value = ud.name || pData.patient_name || "";
@@ -584,24 +551,14 @@
             setTimeout(() => container.classList.add('hidden'), 5000);
         };
 
-        window.saveVerificationModal = function() {
+        window.saveVerificationModal = function(e) {
+            e.preventDefault();
             const name = document.getElementById('modal-name')?.value.trim();
             const phone = document.getElementById('modal-phone')?.value.trim();
             const ic = document.getElementById('modal-ic')?.value.trim();
             const address = document.getElementById('modal-address')?.value.trim();
 
-            // Validation
-            if (!name || !phone || !ic || !address) {
-                // Highlight empty fields
-                ['modal-name','modal-phone','modal-ic','modal-address'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && !el.value.trim()) {
-                        el.classList.add('border-red-400', 'bg-red-50');
-                        el.addEventListener('input', () => el.classList.remove('border-red-400','bg-red-50'), { once: true });
-                    }
-                });
-                return;
-            }
+            if (!name || !phone || !ic || !address) return;
 
             // Update global userData cache
             if (window.userData) {
@@ -619,7 +576,7 @@
                 if (document.getElementById('del-address')) document.getElementById('del-address').value = address;
             } catch(e) {}
 
-            // Persist to localStorage & optionally backend
+            // Persist to localStorage & backend
             try {
                 localStorage.setItem('user_ic_number', ic);
                 localStorage.setItem('user_address', address);
@@ -641,10 +598,10 @@
                 }
             } catch(e) {}
 
-            // Update the live Rx paper with these details
+            // Update the live Rx paper
             updateLiveRxDetails();
 
-            // Hide modal and reveal prescription
+            // Hide modal and reveal prescription instantly
             document.getElementById('verification-modal').classList.add('hidden');
             document.getElementById('verification-modal').classList.remove('flex');
             document.getElementById('main-content')?.classList.remove('hidden');
@@ -652,13 +609,13 @@
         };
 
         window.updateLiveRxDetails = () => {
-            const dName = document.getElementById('del-name')?.value.trim() || window.userData?.name || "";
-            const dIc = document.getElementById('del-ic')?.value.trim() || window.userData?.ic_number || localStorage.getItem('user_ic_number') || "";
-            const dAddress = document.getElementById('del-address')?.value.trim() || window.userData?.address || localStorage.getItem('user_address') || "No address provided.";
-            const ageVal = window.userData?.age ? `${window.userData.age} Years old` : "";
+            const dName = document.getElementById('del-name')?.value.trim() || window.userData?.name || window.prescriptionData?.patient_name || "";
+            const dIc = document.getElementById('del-ic')?.value.trim() || window.userData?.ic_number || localStorage.getItem('user_ic_number') || "--";
+            const dAddress = document.getElementById('del-address')?.value.trim() || window.userData?.address || localStorage.getItem('user_address') || "--";
+            const ageVal = window.userData?.age ? `${window.userData.age} Years old` : "--";
 
-            if (document.getElementById('ui-patient-name')) document.getElementById('ui-patient-name').innerText = dName || "—";
-            if (document.getElementById('ui-patient-ic')) document.getElementById('ui-patient-ic').innerText = dIc || "—";
+            if (document.getElementById('ui-patient-name')) document.getElementById('ui-patient-name').innerText = dName;
+            if (document.getElementById('ui-patient-ic')) document.getElementById('ui-patient-ic').innerText = dIc.includes('MyKad') || dIc.includes('Passport') || dIc === '--' ? dIc : `MyKad/Passport: ${dIc}`;
             if (document.getElementById('ui-patient-age')) document.getElementById('ui-patient-age').innerText = ageVal;
             if (document.getElementById('ui-patient-address')) document.getElementById('ui-patient-address').innerText = dAddress;
         };
