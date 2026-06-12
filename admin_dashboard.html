@@ -1220,64 +1220,76 @@
 
         // 4. NEXT APPOINTMENT WIDGET (HOME)
         function renderUpcomingWidget() {
-            const widget = document.getElementById('upcoming-appt-widget');
-            const now = new Date();
-            
-            const futureAppts = allAppointmentsData.filter(a => {
-                const d = new Date(a.preferred_datetime || a.created_at);
-                const status = (a.status || '').toLowerCase();
-                const isCompleted = status === 'completed' || status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
-                return d >= now && !isCompleted;
-            });
+    const widget = document.getElementById('upcoming-appt-widget');
+    const now = new Date();
+    
+    const futureAppts = allAppointmentsData.filter(a => {
+        const d = new Date(a.preferred_datetime || a.created_at);
+        const status = (a.status || '').toLowerCase();
+        const isCompleted = status === 'completed' || status === 'cancelled' || a.consultation_completed === true || a.consultation_completed === 1 || a.consultation_completed === 'true';
+        return d >= now && !isCompleted;
+    });
 
-            futureAppts.sort((a, b) => new Date(a.preferred_datetime || a.created_at) - new Date(b.preferred_datetime || b.created_at));
-            const upcoming = futureAppts.length > 0 ? futureAppts[0] : null;
-            
-            if (!upcoming) {
-                widget.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">No upcoming appointments scheduled.</div>`;
-                return;
-            }
+    futureAppts.sort((a, b) => new Date(a.preferred_datetime || a.created_at) - new Date(b.preferred_datetime || b.created_at));
+    const upcoming = futureAppts.length > 0 ? futureAppts[0] : null;
+    
+    if (!upcoming) {
+        widget.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">No upcoming appointments scheduled.</div>`;
+        return;
+    }
 
-            const d = new Date(upcoming.preferred_datetime || upcoming.created_at);
-            const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            const initials = (upcoming.patient_name || "P").substring(0,2).toUpperCase();
-            const prettyStatus = (upcoming.status || 'Scheduled').replace('_', ' ');
+    const d = new Date(upcoming.preferred_datetime || upcoming.created_at);
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const initials = (upcoming.patient_name || "P").substring(0,2).toUpperCase();
+    const prettyStatus = (upcoming.status || 'Scheduled').replace('_', ' ');
 
-            let displayEmail = upcoming.patient_email;
-            if (!displayEmail) {
-                const match = allPatientsData.find(p => p.name === upcoming.patient_name);
-                if (match) displayEmail = match.email;
-            }
+    let displayEmail = upcoming.patient_email;
+    if (!displayEmail) {
+        const match = allPatientsData.find(p => p.name === upcoming.patient_name);
+        if (match) displayEmail = match.email;
+    }
 
-            widget.innerHTML = `
-                <div class="appt-manage-card">
-                    <div class="appt-manage-header">
-                        <div class="appt-manage-info">
-                            <div class="appt-avatar-placeholder">${initials}</div>
-                            <div>
-                                <div style="font-weight:600; font-size:13px; color:var(--text-main);">${upcoming.patient_name || 'Anonymous'}</div>
-                                <div style="font-size:11px; color:var(--text-muted);">${displayEmail || 'Email not provided'}</div>
-                            </div>
-                        </div>
-                        <span class="badge pending" style="text-transform: capitalize;">${prettyStatus}</span>
-                    </div>
-                    <hr style="border:0; border-top:1px solid var(--border-light);">
-                    <div class="appt-detail-row">
-                        <span class="appt-detail-label">Date & Time</span>
-                        <span class="appt-detail-value">${dateStr} <span class="time-pill" style="margin-left:4px;">${timeStr}</span></span>
-                    </div>
-                    <div class="appt-detail-row">
-                        <span class="appt-detail-label">Doctor</span>
-                        <span class="appt-detail-value">${upcoming.doctor_name || 'Unassigned'}</span>
-                    </div>
-                    <div class="appt-detail-row">
-                        <span class="appt-detail-label">Type</span>
-                        <span class="appt-detail-value" style="color:var(--purple-text); font-weight:600; text-transform:capitalize;">${upcoming.type || 'Online'} Visit</span>
+    // Determine if the booking was covered under a cashless panel insurance scheme
+    let insuranceRow = '';
+    if (upcoming.insurance_provider) {
+        insuranceRow = `
+        <div class="appt-detail-row">
+            <span class="appt-detail-label">Coverage</span>
+            <span class="appt-detail-value" style="color:#16a34a; font-weight:600;">🏥 ${upcoming.insurance_provider} (Panel Coverage)</span>
+        </div>
+        `;
+    }
+
+    widget.innerHTML = `
+        <div class="appt-manage-card">
+            <div class="appt-manage-header">
+                <div class="appt-manage-info">
+                    <div class="appt-avatar-placeholder">${initials}</div>
+                    <div>
+                        <div style="font-weight:600; font-size:13px; color:var(--text-main);">${upcoming.patient_name || 'Anonymous'}</div>
+                        <div style="font-size:11px; color:var(--text-muted);">${displayEmail || 'Email not provided'}</div>
                     </div>
                 </div>
-            `;
-        }
+                <span class="badge pending" style="text-transform: capitalize;">${prettyStatus}</span>
+            </div>
+            <hr style="border:0; border-top:1px solid var(--border-light);">
+            <div class="appt-detail-row">
+                <span class="appt-detail-label">Date & Time</span>
+                <span class="appt-detail-value">${dateStr} <span class="time-pill" style="margin-left:4px;">${timeStr}</span></span>
+            </div>
+            <div class="appt-detail-row">
+                <span class="appt-detail-label">Doctor</span>
+                <span class="appt-detail-value">${upcoming.doctor_name || 'Unassigned'}</span>
+            </div>
+            <div class="appt-detail-row">
+                <span class="appt-detail-label">Type</span>
+                <span class="appt-detail-value" style="color:var(--purple-text); font-weight:600; text-transform:capitalize;">${upcoming.type || 'Online'} Visit</span>
+            </div>
+            ${insuranceRow} <!-- Injects Panel Details row if present -->
+        </div>
+    `;
+}
 
         // ================= PATIENTS MANAGEMENT LOGIC =================
         function processPatientData() {
@@ -1891,7 +1903,25 @@
                     <td>
                         <div style="display: flex; align-items: center;">
                             <img src="https://ui-avatars.com/api/?name=${app.patient_name}&background=f3f4f6" class="avatar-sm" alt="Patient Avatar"> 
-                            <span style="font-weight:500;">${app.patient_name || 'Anonymous'}</span>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight:600;">${app.patient_name || 'Anonymous'}</span>
+                                ${app.insurance_provider ? `
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <span style="font-size:10px; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:1px 6px; border-radius:4px; font-weight:600; width: max-content; margin-top:2px;" title="Policy: ${app.insurance_policy_no}">
+                                        🏥 Panel: ${app.insurance_provider}
+                                    </span>
+                                    ${app.insurance_card_url ? `
+                                    <a href="${app.insurance_card_url}" target="_blank" style="font-size:10px; color:#0284c7; text-decoration:underline; font-weight:500; margin-left:2px; margin-top:1px; display:inline-block;">
+                                        View Card Image ↗
+                                    </a>
+                                    ` : ''}
+                                </div>
+                                ` : `
+                                <span style="font-size:10px; color:#4b5563; background:#f3f4f6; border:1px solid #e5e7eb; padding:1px 6px; border-radius:4px; font-weight:600; width: max-content; margin-top:2px;">
+                                    💳 Self Paid: RM ${app.amount_paid.toFixed(2)}
+                                </span>
+                                `}
+                            </div>
                         </div>
                     </td>
                     <td>
