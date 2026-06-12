@@ -1264,7 +1264,7 @@
         function formatAiMessage(content, isDashboard = false) {
     if (content.includes("[EMERGENCY]")) {
         return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                      .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>');
     }
 
     if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
@@ -1470,7 +1470,7 @@
         return `<div class="mb-2" style="font-size:14px; text-align:left;">${conversationalIntro.replace(/\n/g, '<br>')}</div>` + reportHtml;
     }
 
-    return content.replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    return content.replace(/\*\*(.*?)\*\//g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 }
 
         function createUserBubble(text) {
@@ -1840,16 +1840,13 @@
             }
         };
 
-        // NEW: Handles the Payment Method toggle on the Booking Tab
-        // NEW: Handles the Payment Method toggle on the Booking Tab (Fixed IDs & added null-safety checks)
         window.togglePayType = (type) => {
             window.bookingPayType = type;
-            const statusBox = document.getElementById('payment-status-box'); // <-- Fixed ID
+            const statusBox = document.getElementById('payment-status-box'); 
             const payBtn = document.getElementById('book-btn');
             const applyBtn = document.getElementById('ins-apply-btn');
             const status = window.userData.insurance_status || 'none';
 
-            // Safety check: Prevent execution if elements are not fully loaded in DOM
             if (!statusBox || !payBtn || !applyBtn) return;
 
             if (type === 'self') {
@@ -1904,7 +1901,6 @@
             }
         };
 
-        // NEW: Function to render the Insurance Status in the Profile Settings tab
         window.renderInsuranceUI = function() {
             const status = window.userData.insurance_status || 'none';
             const box = document.getElementById('settings-insurance-box');
@@ -1934,7 +1930,6 @@
                     </div>
                 `;
             } else {
-                // none or rejected
                 box.innerHTML = `
                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center shadow-sm">
                         <svg class="w-10 h-10 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"></path></svg>
@@ -1945,11 +1940,9 @@
                 `;
             }
 
-            // Sync toggle UI if book tab is open
             if(window.bookingPayType === 'insurance') togglePayType('insurance');
         };
 
-        // NEW: Insurance Modal Actions
         window.openInsuranceModal = () => {
             window.currentInsStep = 1;
             goToInsStep(1);
@@ -1967,7 +1960,6 @@
 
         window.goToInsStep = (step) => {
             window.currentInsStep = step;
-            // Hide all steps
             document.getElementById('ins-step-1-content').classList.add('hidden');
             document.getElementById('ins-step-1-content').classList.remove('block');
             document.getElementById('ins-step-2-content').classList.add('hidden');
@@ -1975,11 +1967,9 @@
             document.getElementById('ins-step-3-content').classList.add('hidden');
             document.getElementById('ins-step-3-content').classList.remove('block');
 
-            // Update UI
             document.getElementById(`ins-step-${step}-content`).classList.remove('hidden');
             document.getElementById(`ins-step-${step}-content`).classList.add('block');
 
-            // Update stepper circles
             ['1','2','3'].forEach(num => {
                 const cir = document.getElementById(`ins-step-${num}-cir`);
                 const txt = document.getElementById(`ins-step-${num}-txt`);
@@ -1997,7 +1987,6 @@
                 else line.className = "step-line inactive";
             });
 
-            // If going to step 2, grab data
             if(step === 2) {
                 document.getElementById('rev-ins-name').innerText = document.getElementById('ins-name').value || '-';
                 document.getElementById('rev-ins-ic').innerText = document.getElementById('ins-ic').value || '-';
@@ -2033,8 +2022,8 @@
                     window.userData.insurance_status = "pending";
                     window.userData.insurance_provider = document.getElementById('ins-provider').value;
                     window.userData.insurance_policy_no = document.getElementById('ins-policy').value;
-                    goToInsStep(3); // Show success pending state
-                    renderInsuranceUI(); // update background UIs
+                    goToInsStep(3); 
+                    renderInsuranceUI(); 
                 } else {
                     showInlineMessage(d.detail || "Failed to submit insurance details.", "error");
                     btn.innerText = "Submit Request";
@@ -2330,7 +2319,6 @@
             const symptomsText = document.getElementById('book-symptoms').value;
             const patientAgeInput = document.getElementById('book-age').value;
 
-            // NEW: Optional protection if trying to book with unapproved insurance
             if (window.bookingPayType === 'insurance' && window.userData.insurance_status !== 'approved') {
                 return showInlineMessage("Your insurance is not approved yet. Please use Self Pay or wait for approval.", "error");
             }
@@ -2350,13 +2338,15 @@
             }
 
             try {
-                // We pass `payment_method: window.bookingPayType` to backend (needs backend update to actually bypass Billplz, but UI handles redirect if backend cooperates)
+                // Modified: Included payment_method & payment_type parameters in payload to signal cashless checkout
                 const payload = { 
                     doctor_id: doctorId, 
                     visit_type: "online", 
                     preferred_datetime: finalDateTime,
                     patient_age: parseInt(patientAgeInput) || null,
                     symptoms: symptomsText,
+                    payment_method: window.bookingPayType,
+                    payment_type: window.bookingPayType,
                     ai_report: window.generatedClinicalReport || null 
                 };
 
@@ -2373,14 +2363,13 @@
                     window.userData.age = patientAgeInput ? parseInt(patientAgeInput) : null;
                     document.getElementById('set-age').value = patientAgeInput || "";
 
-                    // If insurance booking is successful, we just go to schedule. 
-                    // (Assuming backend logic supports bypassing stripe_url for insurance)
-                    if (window.bookingPayType === 'insurance' && !d.stripe_url) {
+                    // Modified: Directly evaluate window.bookingPayType to confirm cashless checkout
+                    if (window.bookingPayType === 'insurance') {
                         showInlineMessage("Cashless Booking Confirmed!", "success"); 
                         fetchAppointments(); 
                         switchTab('schedule');
                     }
-                    else if (d.stripe_url && window.bookingPayType !== 'insurance') {
+                    else if (d.stripe_url) {
                         window.location.href = d.stripe_url; 
                     } else { 
                         showInlineMessage("Booking Confirmed Successfully!", "success"); 
@@ -2504,13 +2493,11 @@
                             <span class="sm:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</span>
                             <span class="font-bold"><span class="${sColor} px-2.5 py-1 rounded text-[9px] font-extrabold uppercase tracking-widest">${a.status}</span></span>
                         </td>
-                        <!-- Mobile Actions Row -->
                         <td class="pt-5 pb-1 flex sm:hidden items-center gap-3 w-full">
                             ${btnMobile}
                             ${erxMobile}
                             ${reviewMobile}
                         </td>
-                        <!-- Desktop Actions (Hidden on Mobile) -->
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${btnDesktop}</td>
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${erxDesktop}</td>
                         <td class="hidden sm:table-cell py-5 px-6 text-center">${reviewDesktop}</td>
@@ -2679,7 +2666,6 @@
                     const data = await res.json();
                     showInlineMessage("Profile successfully updated.", "success");
 
-                    // Instantly sync the settings data with local memory and the book consultation tab
                     window.userData.name = name;
                     window.userData.phone = phone;
                     window.userData.age = age ? parseInt(age) : null;
