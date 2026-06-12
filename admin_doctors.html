@@ -1588,7 +1588,6 @@
             currentViewingAppt = appt;
 
             document.getElementById('modal-appt-patient-name').innerText = appt.patient_name || 'Unknown Patient';
-            document.getElementById('modal-appt-patient-email').innerText = appt.patient_email || 'N/A';
             document.getElementById('modal-appt-patient-img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(appt.patient_name || 'P')}&background=eff6ff&color=0066cc`;
 
             document.getElementById('modal-appt-name-age').value = appt.patient_name || 'N/A';
