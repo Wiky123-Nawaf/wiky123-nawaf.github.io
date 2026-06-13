@@ -1219,75 +1219,84 @@
         }
 
         window.switchTab = function(tab) {
-    document.getElementById('global-message-container').classList.add('hidden'); 
-    if(tab === 'reports' && !window.userData.is_subscribed) { 
-        document.getElementById('premium-modal').classList.remove('hidden'); 
-        document.getElementById('premium-modal').classList.add('flex'); 
-        return; 
-    }
+            document.getElementById('global-message-container').classList.add('hidden'); 
+            if(tab === 'reports' && !window.userData.is_subscribed) { 
+                document.getElementById('premium-modal').classList.remove('hidden'); 
+                document.getElementById('premium-modal').classList.add('flex'); 
+                return; 
+            }
 
-    localStorage.setItem('doktura_active_tab', tab);
+            localStorage.setItem('doktura_active_tab', tab);
 
-    document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('nav-active'); b.classList.add('nav-inactive'); });
-    document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('nav-active'); b.classList.add('nav-inactive'); });
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
 
-    const activeBtn = document.getElementById('btn-'+tab);
-    if(activeBtn) { activeBtn.classList.add('nav-active'); activeBtn.classList.remove('nav-inactive'); }
+            const activeBtn = document.getElementById('btn-'+tab);
+            if(activeBtn) { activeBtn.classList.add('nav-active'); activeBtn.classList.remove('nav-inactive'); }
 
-    const activeView = document.getElementById('view-'+tab);
-    if(activeView) activeView.classList.add('active');
+            const activeView = document.getElementById('view-'+tab);
+            if(activeView) activeView.classList.add('active');
 
-    let headerName = tab.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    if (tab === 'chat') headerName = 'Consultation AI';
-    document.getElementById('header-title').innerText = headerName;
+            let headerName = tab.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            if (tab === 'chat') headerName = 'Consultation AI';
+            document.getElementById('header-title').innerText = headerName;
 
-    // ─── RESET BOOKING FORM WHEN LEAVING THE BOOK TAB ───
-    if (tab !== 'book') {
-        const bookForm = document.getElementById('booking-online-section');
-        if (bookForm) bookForm.reset();
+            // ─── RESET BOOKING FORM WHEN LEAVING THE BOOK TAB ───
+            if (tab !== 'book') {
+                const bookForm = document.getElementById('booking-online-section');
+                if (bookForm) bookForm.reset();
 
-        // Clear selected doctor preview and hidden input
-        const docSelectedContent = document.getElementById('doctor-selected-content');
-        if (docSelectedContent) {
-            docSelectedContent.innerHTML = '<span class="text-gray-500 font-medium">-- Search or Select a Doctor --</span>';
+                // Clear selected doctor preview and hidden input
+                const docSelectedContent = document.getElementById('doctor-selected-content');
+                if (docSelectedContent) {
+                    docSelectedContent.innerHTML = '<span class="text-gray-500 font-medium">-- Search or Select a Doctor --</span>';
+                }
+                const bookDoctorInput = document.getElementById('book-doctor');
+                if (bookDoctorInput) bookDoctorInput.value = '';
+
+                // Hide and clear available time slots
+                const slotsWrapper = document.getElementById('slots-wrapper');
+                if (slotsWrapper) slotsWrapper.classList.add('hidden');
+                const selectedSlotInput = document.getElementById('selected-slot');
+                if (selectedSlotInput) selectedSlotInput.value = '';
+
+                // Reset payment method selection to 'Self Pay' default
+                window.bookingPayType = 'self';
+                const paySelfRadio = document.querySelector('input[name="pay_type_toggle"][value="self"]');
+                if (paySelfRadio) paySelfRadio.checked = true;
+                window.togglePayType('self');
+
+                // Clear symptoms input field
+                const symptomsInput = document.getElementById('book-symptoms');
+                if (symptomsInput) symptomsInput.value = '';
+                
+                // Reset insurance consent flag
+                window.insuranceConsentAccepted = false;
+            } else {
+                // Re-populate personal patient profile details from memory on entering the tab
+                const nameInput = document.getElementById('book-name');
+                const emailInput = document.getElementById('book-email');
+                const ageInput = document.getElementById('book-age');
+                
+                if (nameInput) nameInput.value = window.userData.name || "";
+                if (emailInput && window.currentUser) emailInput.value = window.currentUser.email || "";
+                if (ageInput) ageInput.value = window.userData.age || "";
+
+                // If entering the booking tab manually, wipe any previous AI reports
+                if (!window.arrivedFromReport) {
+                    window.generatedClinicalReport = null;
+                }
+                window.arrivedFromReport = false; // Reset transition flag
+            }
+            
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('block');
+            }
         }
-        const bookDoctorInput = document.getElementById('book-doctor');
-        if (bookDoctorInput) bookDoctorInput.value = '';
-
-        // Hide and clear available time slots
-        const slotsWrapper = document.getElementById('slots-wrapper');
-        if (slotsWrapper) slotsWrapper.classList.add('hidden');
-        const selectedSlotInput = document.getElementById('selected-slot');
-        if (selectedSlotInput) selectedSlotInput.value = '';
-
-        // Reset payment method selection to 'Self Pay' default
-        window.bookingPayType = 'self';
-        const paySelfRadio = document.querySelector('input[name="pay_type_toggle"][value="self"]');
-        if (paySelfRadio) paySelfRadio.checked = true;
-        window.togglePayType('self');
-
-        // Clear symptoms input field
-        const symptomsInput = document.getElementById('book-symptoms');
-        if (symptomsInput) symptomsInput.value = '';
-        
-        // Reset insurance consent flag
-        window.insuranceConsentAccepted = false;
-    } else {
-        // If entering the booking tab manually, wipe any previous AI reports
-        if (!window.arrivedFromReport) {
-            window.generatedClinicalReport = null;
-        }
-        window.arrivedFromReport = false; // Reset transition flag
-    }
-    
-    if (window.innerWidth <= 768) {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        sidebar.classList.add('-translate-x-full');
-        overlay.classList.add('hidden');
-        overlay.classList.remove('block');
-    }
-}
         window.startNewSession = () => { 
             window.generatedClinicalReport = null; // Clear active report
             window.currentSessionId = Date.now().toString(); 
@@ -1400,7 +1409,10 @@
         let bookingSymp = bookingMatch ? bookingMatch[1].trim().replace(/['"]/g, "") : "AI Triage Complete";
 
         if (isDashboard) {
-            window.generatedClinicalReport = content; 
+            // Only set or update the global report if the content is an actual generated clinical report
+            if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
+                window.generatedClinicalReport = content; 
+            }
             if (bookingSymp && bookingSymp !== "AI Triage Complete") {
                 localStorage.setItem('symptom_' + window.currentSessionId, bookingSymp);
             }
