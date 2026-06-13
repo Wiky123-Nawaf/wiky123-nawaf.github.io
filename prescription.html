@@ -119,7 +119,7 @@
     <!-- ===================== MAIN CONTENT ===================== -->
     <div id="main-content" class="hidden max-w-[85rem] mx-auto px-4 sm:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
 
-        <!-- ======== LEFT: E-PRESCRIPTION PAPER ======== -->
+        <!-- ======== LEFT: E-PRESCRIPTION PAPER EXACT MATCH ======== -->
         <div class="lg:col-span-8 flex flex-col w-full">
 
             <!-- Print button -->
@@ -422,18 +422,31 @@
                             
                             // Extract a dynamic category from notes if possible, else default
                             let category = "General Medication";
-                            if (m.notes && m.notes.toLowerCase().includes("reason:")) {
-                                category = m.notes.split('|')[0].replace("Reason:", "").trim();
+                            let specificInstruction = "Take as directed";
+
+                            if (m.notes) {
+                                if (m.notes.toLowerCase().includes("reason:")) {
+                                    const parts = m.notes.split('|');
+                                    category = parts[0].replace(/Reason:/i, "").trim();
+                                    
+                                    // Check if the "Instructions" segment exists and is not empty
+                                    if (parts.length > 1 && parts[1].toLowerCase().includes("instructions:")) {
+                                        const extractedInstruction = parts[1].replace(/Instructions:/i, "").trim();
+                                        if (extractedInstruction) {
+                                            specificInstruction = extractedInstruction;
+                                        }
+                                    }
+                                } else {
+                                    // Fallback: Use the whole notes string as instruction if it doesn't match the strict format
+                                    const trimmedNote = m.notes.trim();
+                                    if (trimmedNote) {
+                                        specificInstruction = trimmedNote;
+                                    }
+                                }
                             }
 
-                            // Clean the duration text (e.g. "3 DAY(S)" -> "3 days")
-                            let cleanDuration = "";
-                            if (m.duration) {
-                                cleanDuration = m.duration.toLowerCase().replace("(s)", "s");
-                            }
-
-                            // Format duration with a stylized red text to mimic handwriting exactly
-                            const durationText = cleanDuration ? `<span style="color: #dc2626; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; font-weight: 700; margin-left: 6px;">x ${cleanDuration}</span>` : '';
+                            // Format duration with a stylized red text to mimic handwriting
+                            const durationText = m.duration ? `<span style="color: #dc2626; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; font-weight: 700; margin-left: 6px;">x ${m.duration.toLowerCase()}</span>` : '';
 
                             rxList.innerHTML += `
                             <div class="grid grid-cols-12 items-center px-6 py-5 bg-white hover:bg-gray-50/50 transition border-b border-gray-50">
@@ -449,12 +462,8 @@
                                     </div>
                                 </div>
                                 <div class="col-span-3 text-center flex flex-col justify-center items-center">
-                                    <div class="text-[13px] font-bold text-gray-800 whitespace-nowrap">
-                                        ${freq}${durationText}
-                                    </div>
-                                    <div class="text-[11px] text-gray-500 font-medium mt-1">
-                                        Take as directed
-                                    </div>
+                                    <div class="text-[13px] font-bold text-gray-800 flex items-center justify-center">${freq}${durationText}</div>
+                                    <div class="text-[11px] text-gray-500 font-medium mt-1">${specificInstruction}</div>
                                 </div>
                                 <div class="col-span-2 text-center flex flex-col justify-center">
                                     <div class="text-[16px] font-extrabold text-gray-900">${m.quantity || 1}</div>
@@ -557,7 +566,7 @@
                     }
                 }
 
-                // Show Verification modal to guarantee data capture before viewing
+                // Check verification details to trigger modal or reveal immediately
                 checkAndTriggerVerification();
 
             } catch (error) {
@@ -573,8 +582,20 @@
 
         // Verification Gateway Logic
         function checkAndTriggerVerification() {
+            const hasIC = window.userData?.ic_number || localStorage.getItem('user_ic_number');
+            const hasAddress = window.userData?.address || localStorage.getItem('user_address');
+            
             document.getElementById('loader')?.classList.add('hidden');
-            window.showVerificationModal();
+
+            if (!hasIC || !hasAddress) {
+                // Show modal to collect data if missing
+                window.showVerificationModal();
+            } else {
+                // Directly load the Rx details without blocking
+                updateLiveRxDetails();
+                document.getElementById('main-content')?.classList.remove('hidden');
+                document.getElementById('main-content')?.classList.add('grid');
+            }
         }
 
         // Expose globally so onclick can call it
@@ -586,23 +607,9 @@
             if (document.getElementById('modal-ic')) document.getElementById('modal-ic').value = ud.ic_number || localStorage.getItem('user_ic_number') || "";
             if (document.getElementById('modal-address')) document.getElementById('modal-address').value = ud.address || localStorage.getItem('user_address') || "";
 
-            // Allow closing the modal if they already have required delivery data on file
-            const hasRequired = (ud.ic_number || localStorage.getItem('user_ic_number')) && (ud.address || localStorage.getItem('user_address'));
-            if (hasRequired && document.getElementById('close-verify-btn')) {
-                document.getElementById('close-verify-btn').style.display = 'block';
-            }
-
             const modal = document.getElementById('verification-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        };
-
-        window.closeVerificationModal = function() {
-            updateLiveRxDetails();
-            document.getElementById('verification-modal').classList.add('hidden');
-            document.getElementById('verification-modal').classList.remove('flex');
-            document.getElementById('main-content')?.classList.remove('hidden');
-            document.getElementById('main-content')?.classList.add('grid');
         };
     </script>
 
