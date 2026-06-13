@@ -7,7 +7,7 @@
     <link class="chatLogoFav" rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600;1,700&display=swap');
         
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
 
@@ -59,12 +59,17 @@
         <p class="text-gray-400 font-semibold text-sm animate-pulse">Loading Prescription...</p>
     </div>
 
-    <!-- ===================== PATIENT VERIFICATION MODAL ===================== -->
-    <!-- Displays ONLY IF NRIC or Address is missing -->
+    <!-- ===================== PATIENT VERIFICATION / UPDATE MODAL ===================== -->
     <div id="verification-modal" class="modal-backdrop fixed inset-0 bg-gray-900/50 z-[500] hidden items-center justify-center px-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden relative">
+            
+            <!-- Close Button (Revealed only if patient has existing valid data) -->
+            <button id="close-verify-btn" onclick="closeVerificationModal()" class="absolute top-4 right-4 text-white hover:text-gray-200 z-10 hidden" title="Close without saving">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
             <div class="bg-gradient-to-r from-[#0066FF] to-[#3385ff] px-6 py-5 text-white">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 pr-8">
                     <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/></svg>
                     </div>
@@ -114,7 +119,7 @@
     <!-- ===================== MAIN CONTENT ===================== -->
     <div id="main-content" class="hidden max-w-[85rem] mx-auto px-4 sm:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
 
-        <!-- ======== LEFT: E-PRESCRIPTION PAPER EXACT MATCH ======== -->
+        <!-- ======== LEFT: E-PRESCRIPTION PAPER ======== -->
         <div class="lg:col-span-8 flex flex-col w-full">
 
             <!-- Print button -->
@@ -404,7 +409,7 @@
                     document.getElementById('ui-doctor-mmc').innerText = data.doctor_mmc ? `${data.doctor_mmc}` : '';
                 }
 
-                // Render medication rows exactly as requested in Image 1
+                // Render medication rows
                 const rxList = document.getElementById('ui-med-list');
                 if (rxList) {
                     rxList.innerHTML = '';
@@ -413,11 +418,19 @@
                     } else {
                         data.medications.forEach(m => {
                             const uomText = m.uom ? `(${m.uom})` : '(Strip)';
-                            const freq = m.pills_per_day || m.frequency || '1 Pill, x3 Times/day';
-                            // Capitalize subcategory or use default
-                            let category = "Anticoagulant Medication";
+                            const freq = m.pills_per_day || m.frequency || 'ONCE A DAY';
+                            
+                            // Extract a dynamic category from notes if possible, else default
+                            let category = "General Medication";
+                            if (m.notes && m.notes.toLowerCase().includes("reason:")) {
+                                category = m.notes.split('|')[0].replace("Reason:", "").trim();
+                            }
+
+                            // Format duration with a stylized red text to mimic handwriting
+                            const durationText = m.duration ? `<span style="color: #dc2626; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; font-weight: 700; margin-left: 6px;">x ${m.duration.toLowerCase()}</span>` : '';
+
                             rxList.innerHTML += `
-                            <div class="grid grid-cols-12 items-center px-6 py-5 bg-white hover:bg-gray-50/50 transition">
+                            <div class="grid grid-cols-12 items-center px-6 py-5 bg-white hover:bg-gray-50/50 transition border-b border-gray-50">
                                 <div class="col-span-7 flex items-start gap-4 pr-4">
                                     <div class="w-11 h-11 rounded-[12px] border border-gray-200 flex items-center justify-center shrink-0 bg-white shadow-sm mt-0.5">
                                         <svg class="w-5 h-5 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -429,20 +442,19 @@
                                         <div class="text-[12px] font-medium text-[#0066FF] mt-1">${category}</div>
                                     </div>
                                 </div>
-                                <div class="col-span-3 text-center flex flex-col justify-center">
-                                    <div class="text-[14px] font-semibold text-gray-800">${freq}</div>
-                                    <div class="text-[12px] text-gray-500 font-medium mt-1">After Meals</div>
+                                <div class="col-span-3 text-center flex flex-col justify-center items-center">
+                                    <div class="text-[13px] font-bold text-gray-800 flex items-center justify-center">${freq}${durationText}</div>
+                                    <div class="text-[11px] text-gray-500 font-medium mt-1">Take as directed</div>
                                 </div>
                                 <div class="col-span-2 text-center flex flex-col justify-center">
-                                    <div class="text-[15px] font-bold text-gray-900">${m.quantity || 1}</div>
-                                    <div class="text-[12px] text-gray-400 font-medium mt-1 capitalize">${uomText}</div>
+                                    <div class="text-[16px] font-extrabold text-gray-900">${m.quantity || 1}</div>
+                                    <div class="text-[11px] text-gray-400 font-bold mt-1 uppercase">${uomText}</div>
                                 </div>
                             </div>`;
                         });
                     }
                 }
 
-                // Populate clinical notes and clear duplicate MC references
                 // Populate clinical notes and dynamically extract MC days
                 let rawNotes = data.doctor_notes || "Use all prescribed medicine exactly as directed. In case of unexpected allergic reaction or worsening symptoms, contact your medical center immediately.";
                 let extractedMcValue = "1"; // Default fallback
@@ -535,7 +547,7 @@
                     }
                 }
 
-                // Check verification details to trigger modal or reveal immediately
+                // Show Verification modal to guarantee data capture before viewing
                 checkAndTriggerVerification();
 
             } catch (error) {
@@ -551,20 +563,8 @@
 
         // Verification Gateway Logic
         function checkAndTriggerVerification() {
-            const hasIC = window.userData?.ic_number || localStorage.getItem('user_ic_number');
-            const hasAddress = window.userData?.address || localStorage.getItem('user_address');
-            
             document.getElementById('loader')?.classList.add('hidden');
-
-            if (!hasIC || !hasAddress) {
-                // Show modal to collect data if missing
-                window.showVerificationModal();
-            } else {
-                // Directly load the Rx details without blocking
-                updateLiveRxDetails();
-                document.getElementById('main-content')?.classList.remove('hidden');
-                document.getElementById('main-content')?.classList.add('grid');
-            }
+            window.showVerificationModal();
         }
 
         // Expose globally so onclick can call it
@@ -576,9 +576,23 @@
             if (document.getElementById('modal-ic')) document.getElementById('modal-ic').value = ud.ic_number || localStorage.getItem('user_ic_number') || "";
             if (document.getElementById('modal-address')) document.getElementById('modal-address').value = ud.address || localStorage.getItem('user_address') || "";
 
+            // Allow closing the modal if they already have required delivery data on file
+            const hasRequired = (ud.ic_number || localStorage.getItem('user_ic_number')) && (ud.address || localStorage.getItem('user_address'));
+            if (hasRequired && document.getElementById('close-verify-btn')) {
+                document.getElementById('close-verify-btn').style.display = 'block';
+            }
+
             const modal = document.getElementById('verification-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+        };
+
+        window.closeVerificationModal = function() {
+            updateLiveRxDetails();
+            document.getElementById('verification-modal').classList.add('hidden');
+            document.getElementById('verification-modal').classList.remove('flex');
+            document.getElementById('main-content')?.classList.remove('hidden');
+            document.getElementById('main-content')?.classList.add('grid');
         };
     </script>
 
