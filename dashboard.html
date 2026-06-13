@@ -1219,37 +1219,69 @@
         }
 
         window.switchTab = function(tab) {
-            document.getElementById('global-message-container').classList.add('hidden'); 
-            if(tab === 'reports' && !window.userData.is_subscribed) { 
-                document.getElementById('premium-modal').classList.remove('hidden'); 
-                document.getElementById('premium-modal').classList.add('flex'); 
-                return; 
-            }
+    document.getElementById('global-message-container').classList.add('hidden'); 
+    if(tab === 'reports' && !window.userData.is_subscribed) { 
+        document.getElementById('premium-modal').classList.remove('hidden'); 
+        document.getElementById('premium-modal').classList.add('flex'); 
+        return; 
+    }
 
-            localStorage.setItem('doktura_active_tab', tab);
+    localStorage.setItem('doktura_active_tab', tab);
 
-            document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('nav-active'); b.classList.add('nav-inactive'); });
-            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('nav-active'); b.classList.add('nav-inactive'); });
+    document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
 
-            const activeBtn = document.getElementById('btn-'+tab);
-            if(activeBtn) { activeBtn.classList.add('nav-active'); activeBtn.classList.remove('nav-inactive'); }
+    const activeBtn = document.getElementById('btn-'+tab);
+    if(activeBtn) { activeBtn.classList.add('nav-active'); activeBtn.classList.remove('nav-inactive'); }
 
-            const activeView = document.getElementById('view-'+tab);
-            if(activeView) activeView.classList.add('active');
+    const activeView = document.getElementById('view-'+tab);
+    if(activeView) activeView.classList.add('active');
 
-            let headerName = tab.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-            if (tab === 'chat') headerName = 'Consultation AI';
-            document.getElementById('header-title').innerText = headerName;
+    let headerName = tab.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    if (tab === 'chat') headerName = 'Consultation AI';
+    document.getElementById('header-title').innerText = headerName;
 
-            if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('sidebar-overlay');
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-                overlay.classList.remove('block');
-            }
+    // ─── RESET BOOKING FORM WHEN LEAVING THE BOOK TAB ───
+    if (tab !== 'book') {
+        const bookForm = document.getElementById('booking-online-section');
+        if (bookForm) bookForm.reset();
+
+        // Clear selected doctor preview and hidden input
+        const docSelectedContent = document.getElementById('doctor-selected-content');
+        if (docSelectedContent) {
+            docSelectedContent.innerHTML = '<span class="text-gray-500 font-medium">-- Search or Select a Doctor --</span>';
         }
+        const bookDoctorInput = document.getElementById('book-doctor');
+        if (bookDoctorInput) bookDoctorInput.value = '';
 
+        // Hide and clear available time slots
+        const slotsWrapper = document.getElementById('slots-wrapper');
+        if (slotsWrapper) slotsWrapper.classList.add('hidden');
+        const selectedSlotInput = document.getElementById('selected-slot');
+        if (selectedSlotInput) selectedSlotInput.value = '';
+
+        // Reset payment method selection to 'Self Pay' default
+        window.bookingPayType = 'self';
+        const paySelfRadio = document.querySelector('input[name="pay_type_toggle"][value="self"]');
+        if (paySelfRadio) paySelfRadio.checked = true;
+        window.togglePayType('self');
+
+        // Clear symptoms input field
+        const symptomsInput = document.getElementById('book-symptoms');
+        if (symptomsInput) symptomsInput.value = '';
+        
+        // Reset insurance consent flag
+        window.insuranceConsentAccepted = false;
+    }
+    
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        overlay.classList.remove('block');
+    }
+}
         window.startNewSession = () => { window.currentSessionId = Date.now().toString(); loadSessions(); switchTab('chat'); }
 
         async function loadSessions() {
