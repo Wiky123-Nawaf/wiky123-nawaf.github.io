@@ -1218,6 +1218,7 @@
             document.getElementById('sub-btn').innerText = "Unlock DokturaPremium – RM 50";
         }
 
+        // ====== UNIFIED TAB SWITCH CONTROLLER ======
         window.switchTab = function(tab) {
             document.getElementById('global-message-container').classList.add('hidden'); 
             if(tab === 'reports' && !window.userData.is_subscribed) { 
@@ -1273,7 +1274,7 @@
                 // Reset insurance consent flag
                 window.insuranceConsentAccepted = false;
             } else {
-                // Re-populate personal patient profile details from memory on entering the tab
+                // Re-populate personal patient profile details on entering the tab
                 const nameInput = document.getElementById('book-name');
                 const emailInput = document.getElementById('book-email');
                 const ageInput = document.getElementById('book-age');
@@ -1297,12 +1298,15 @@
                 overlay.classList.remove('block');
             }
         }
+
         window.startNewSession = () => { 
             window.generatedClinicalReport = null; // Clear active report
             window.currentSessionId = Date.now().toString(); 
             loadSessions(); 
             switchTab('chat'); 
         }
+
+        async function loadSessions() {
 
         async function loadSessions() {
             try {
