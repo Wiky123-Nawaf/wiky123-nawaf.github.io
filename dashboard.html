@@ -1272,6 +1272,12 @@
         
         // Reset insurance consent flag
         window.insuranceConsentAccepted = false;
+    } else {
+        // If entering the booking tab manually, wipe any previous AI reports
+        if (!window.arrivedFromReport) {
+            window.generatedClinicalReport = null;
+        }
+        window.arrivedFromReport = false; // Reset transition flag
     }
     
     if (window.innerWidth <= 768) {
@@ -1282,7 +1288,12 @@
         overlay.classList.remove('block');
     }
 }
-        window.startNewSession = () => { window.currentSessionId = Date.now().toString(); loadSessions(); switchTab('chat'); }
+        window.startNewSession = () => { 
+            window.generatedClinicalReport = null; // Clear active report
+            window.currentSessionId = Date.now().toString(); 
+            loadSessions(); 
+            switchTab('chat'); 
+        }
 
         async function loadSessions() {
             try {
@@ -1505,7 +1516,7 @@
         const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
         const btnAction = isDashboard 
-            ? `switchTab('book'); document.getElementById('book-symptoms').value = '${bookingSymp}'; suggestDoctor();`
+            ? `window.arrivedFromReport = true; switchTab('book'); document.getElementById('book-symptoms').value = '${bookingSymp}'; suggestDoctor();`
             : `window.location.href='login.html';`;
         const btnText = isDashboard ? "Connect With a Doctor &rarr;" : "Login to Connect With a Doctor &rarr;";
         const summaryStyle = "list-style: none; outline: none; cursor: pointer;";
