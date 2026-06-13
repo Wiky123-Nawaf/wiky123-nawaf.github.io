@@ -18,20 +18,54 @@
         /* Modal backdrop blur */
         .modal-backdrop { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 
-        /* Print styles */
+        /* ==================== IMPROVED PRINT STYLES ==================== */
         @media print {
-            body { background: white; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page {
+                size: A4 portrait;
+                margin: 0mm; /* THIS REMOVES THE URL, DATE, AND PAGE NUMBERS */
+            }
+            body { 
+                background: white !important; 
+                margin: 0 !important;
+                padding: 15mm 20mm !important; /* Creates clean document margins instead of browser margins */
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+            }
             .no-print { display: none !important; }
+            
+            #main-content {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+
+            #delivery-sidebar {
+                display: none !important; /* Force hide delivery sidebar on print */
+            }
+
             #rx-paper {
                 box-shadow: none !important;
                 margin: 0 !important;
-                padding: 2rem !important;
+                padding: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 border: none !important;
                 border-radius: 0 !important;
+                min-height: auto !important;
+            }
+
+            /* Prevent awkward page splits cutting elements in half */
+            .grid > div, #ui-med-list > div {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .mt-16 { /* Protects the signature area */
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
         }
+        /* ============================================================== */
 
         /* Rx paper patient left accent border */
         .patient-accent { border-left: 3px solid #0066FF; }
@@ -60,7 +94,7 @@
     </div>
 
     <!-- ===================== PATIENT VERIFICATION / UPDATE MODAL ===================== -->
-    <div id="verification-modal" class="modal-backdrop fixed inset-0 bg-gray-900/50 z-[500] hidden items-center justify-center px-4">
+    <div id="verification-modal" class="modal-backdrop fixed inset-0 bg-gray-900/50 z-[500] hidden items-center justify-center px-4 no-print">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden relative">
             
             <!-- Close Button (Revealed only if patient has existing valid data) -->
@@ -462,12 +496,8 @@
                                     </div>
                                 </div>
                                 <div class="col-span-3 text-center flex flex-col justify-center items-center">
-                                    <div class="text-[13px] font-bold text-gray-800 whitespace-nowrap">
-                                        ${freq} ${durationText}
-                                    </div>
-                                    <div class="text-[11px] text-gray-500 font-medium mt-1">
-                                        ${specificInstruction}
-                                    </div>
+                                    <div class="text-[13px] font-bold text-gray-800 flex items-center justify-center">${freq}${durationText}</div>
+                                    <div class="text-[11px] text-gray-500 font-medium mt-1">${specificInstruction}</div>
                                 </div>
                                 <div class="col-span-2 text-center flex flex-col justify-center">
                                     <div class="text-[16px] font-extrabold text-gray-900">${m.quantity || 1}</div>
@@ -570,7 +600,7 @@
                     }
                 }
 
-                // Check verification details to trigger modal or reveal immediately
+                // Show Verification modal to guarantee data capture before viewing
                 checkAndTriggerVerification();
 
             } catch (error) {
@@ -586,20 +616,8 @@
 
         // Verification Gateway Logic
         function checkAndTriggerVerification() {
-            const hasIC = window.userData?.ic_number || localStorage.getItem('user_ic_number');
-            const hasAddress = window.userData?.address || localStorage.getItem('user_address');
-            
             document.getElementById('loader')?.classList.add('hidden');
-
-            if (!hasIC || !hasAddress) {
-                // Show modal to collect data if missing
-                window.showVerificationModal();
-            } else {
-                // Directly load the Rx details without blocking
-                updateLiveRxDetails();
-                document.getElementById('main-content')?.classList.remove('hidden');
-                document.getElementById('main-content')?.classList.add('grid');
-            }
+            window.showVerificationModal();
         }
 
         // Expose globally so onclick can call it
@@ -611,9 +629,23 @@
             if (document.getElementById('modal-ic')) document.getElementById('modal-ic').value = ud.ic_number || localStorage.getItem('user_ic_number') || "";
             if (document.getElementById('modal-address')) document.getElementById('modal-address').value = ud.address || localStorage.getItem('user_address') || "";
 
+            // Allow closing the modal if they already have required delivery data on file
+            const hasRequired = (ud.ic_number || localStorage.getItem('user_ic_number')) && (ud.address || localStorage.getItem('user_address'));
+            if (hasRequired && document.getElementById('close-verify-btn')) {
+                document.getElementById('close-verify-btn').style.display = 'block';
+            }
+
             const modal = document.getElementById('verification-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+        };
+
+        window.closeVerificationModal = function() {
+            updateLiveRxDetails();
+            document.getElementById('verification-modal').classList.add('hidden');
+            document.getElementById('verification-modal').classList.remove('flex');
+            document.getElementById('main-content')?.classList.remove('hidden');
+            document.getElementById('main-content')?.classList.add('grid');
         };
     </script>
 
