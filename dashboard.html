@@ -298,7 +298,7 @@
                 </div>
             </div>
 
-            <!-- STEP 3: SUBMITTED (PENDING STATE) -->
+            <!-- STEP 3: SUBMITTED -->
             <div id="ins-step-3-content" class="hidden text-center py-6">
                 <div class="w-16 h-16 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mx-auto mb-5 border border-blue-100 shadow-sm">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
@@ -316,6 +316,67 @@
                     Understood, Back to Dashboard
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- PATIENT ACKNOWLEDGMENT & CONSENT MODAL (INSURANCE PANEL FACILITY) -->
+    <div id="consent-modal" class="fixed inset-0 bg-gray-900/60 z-[700] hidden items-center justify-center backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full relative shadow-2xl my-auto animate-fade">
+            <button onclick="closeConsentModal()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-800 active:scale-95 text-xl font-bold transition">✕</button>
+
+            <!-- Title with Shield Icon -->
+            <h2 class="text-lg sm:text-xl font-extrabold text-gray-900 mb-5 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-blue-50 text-[#0066FF] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"></path>
+                    </svg>
+                </div>
+                Patient Acknowledgment & Consent
+            </h2>
+
+            <div class="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                <!-- Insurance Panel Facility -->
+                <h3 class="text-sm font-bold text-[#0066FF] mb-3 uppercase tracking-wider">Insurance Panel Facility</h3>
+                <p class="text-xs font-semibold text-gray-700 mb-4">By checking the consent box below, I confirm that:</p>
+
+                <div class="space-y-4 mb-6">
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-6 h-6 rounded-full bg-blue-50 text-[#0066FF] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</div>
+                        <p class="text-xs text-gray-600 leading-relaxed font-medium">I authorize Hello Doctor Clinic to submit my medical claims and bills to the relevant insurance company, TPA, or corporate panel for treatments received at any Hello Doctor Clinic branch.</p>
+                    </div>
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-6 h-6 rounded-full bg-blue-50 text-[#0066FF] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</div>
+                        <p class="text-xs text-gray-600 leading-relaxed font-medium">I understand that claim approval is subject to the terms, conditions, coverage limits, eligibility benefits, and final decision of the insurance company, TPA, or corporate panel.</p>
+                    </div>
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-6 h-6 rounded-full bg-blue-50 text-[#0066FF] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</div>
+                        <p class="text-xs text-gray-600 leading-relaxed font-medium">I agree to fully pay any uncovered charges, rejected claims, deductible amounts, balance payments, or any amounts not paid by the panel.</p>
+                    </div>
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-6 h-6 rounded-full bg-blue-50 text-[#0066FF] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">4</div>
+                        <p class="text-xs text-gray-600 leading-relaxed font-medium">I confirm that all information provided is true and accurate.</p>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <h3 class="text-sm font-bold text-[#0066FF] mb-3 uppercase tracking-wider">Disclaimer</h3>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-xs text-gray-600 space-y-3 leading-relaxed mb-6 font-medium">
+                    <p>Hello Doctor Clinic is not responsible for any rejected claims, approval delays, benefit reductions, balance payments, or additional costs resulting from decisions by the insurance company, TPA, or corporate panel.</p>
+                    <p>Any charges not covered by the insurance company, TPA, or corporate panel must be fully paid by the patient.</p>
+                </div>
+            </div>
+
+            <!-- Checkbox Option -->
+            <div class="mb-6 pt-4 border-t border-gray-100 flex items-start cursor-pointer">
+                <input type="checkbox" id="consent-agree" onchange="toggleConsentSubmitBtn(this.checked)" class="mt-0.5 mr-3 h-4 w-4 text-[#0066FF] border-gray-300 rounded focus:ring-[#0066FF] cursor-pointer shrink-0">
+                <label for="consent-agree" class="text-xs text-gray-700 leading-relaxed font-bold cursor-pointer">
+                    I have read, understood, and agree to the terms, conditions, and disclaimer of the Insurance Panel Facility stated above.
+                </label>
+            </div>
+
+            <button type="button" id="btn-consent-continue" onclick="window.confirmConsentAndProceed()" disabled class="w-full bg-gray-400 cursor-not-allowed text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                Continue
+            </button>
         </div>
     </div>
 
@@ -835,6 +896,7 @@
         window.pendingDeleteId = null;
         window.notifiedAppointments = new Set();
         window.currentInsStep = 1;
+        window.insuranceConsentAccepted = false; // Tracks panel/insurance booking consent
 
         const chatLogoUrl = "https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true";
 
@@ -1268,7 +1330,7 @@
         function formatAiMessage(content, isDashboard = false) {
     if (content.includes("[EMERGENCY]")) {
         return content.replace(/\[EMERGENCY\]/g, "🚨 <strong style='color: #ef4444; font-size: 16px;'>URGENT MEDICAL ALERT:</strong><br>")
-                      .replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>');
+                      .replace(/\*\*(.*?)\*\//g, '<strong>$1</strong>');
     }
 
     if (content.includes("[ESCALATE]") || content.includes("Comprehensive Doktura Clinical Report")) {
@@ -1853,6 +1915,8 @@
 
             if (!statusBox || !payBtn || !applyBtn) return;
 
+            window.insuranceConsentAccepted = false; // Reset consent upon toggle
+
             if (type === 'self') {
                 statusBox.classList.remove('hidden');
                 statusBox.innerHTML = `
@@ -1864,9 +1928,39 @@
                 applyBtn.classList.add('hidden');
             } else if (type === 'insurance') {
                 statusBox.classList.remove('hidden');
+
+                // Check for real-time expiration
+                let isExpired = false;
+                if (window.userData.insurance_expiry) {
+                    const expiryDate = new Date(window.userData.insurance_expiry);
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    if (expiryDate < today) {
+                        isExpired = true;
+                    }
+                }
+
+                if (isExpired) {
+                    statusBox.innerHTML = `
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-red-700 bg-red-50 p-5 rounded-xl border border-red-200 w-full animate-fade">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                <div>
+                                    <span class="block font-bold">Insurance Coverage Expired</span>
+                                    <span class="text-xs">Your registered insurance card expired on ${window.userData.insurance_expiry}. Please update your details.</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="switchTab('settings')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm whitespace-nowrap active:scale-95 transition">Go to Settings &rarr;</button>
+                        </div>
+                    `;
+                    payBtn.classList.add('hidden');
+                    applyBtn.classList.add('hidden');
+                    return;
+                }
+
                 if (status === 'approved') {
                     statusBox.innerHTML = `
-                        <div class="flex items-center gap-3 text-green-700 bg-green-50 p-4 rounded-xl border border-green-200 w-full">
+                        <div class="flex items-center gap-3 text-green-700 bg-green-50 p-4 rounded-xl border border-green-200 w-full animate-fade">
                             <svg class="w-6 h-6 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <div>
                                 <span class="block font-bold">Insurance Verified</span>
@@ -1879,7 +1973,7 @@
                     applyBtn.classList.add('hidden');
                 } else if (status === 'pending') {
                     statusBox.innerHTML = `
-                        <div class="flex items-center gap-3 text-yellow-700 bg-yellow-50 p-4 rounded-xl border border-yellow-200 w-full">
+                        <div class="flex items-center gap-3 text-yellow-700 bg-yellow-50 p-4 rounded-xl border border-yellow-200 w-full animate-fade">
                             <svg class="w-6 h-6 text-yellow-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <div>
                                 <span class="block font-bold">Approval in Progress</span>
@@ -1891,16 +1985,19 @@
                     applyBtn.classList.add('hidden');
                 } else {
                     statusBox.innerHTML = `
-                        <div class="flex items-center gap-3 text-red-700 bg-red-50 p-4 rounded-xl border border-red-200 w-full">
-                            <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            <div>
-                                <span class="block font-bold">No Insurance on File</span>
-                                <span class="text-xs">You must apply for pre-approval to use cashless panel coverage.</span>
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-red-700 bg-red-50 p-5 rounded-xl border border-red-200 w-full animate-fade">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                <div>
+                                    <span class="block font-bold">No Approved Insurance on File</span>
+                                    <span class="text-xs">You must have an approved insurance card to proceed with cashless panel booking.</span>
+                                </div>
                             </div>
+                            <button type="button" onclick="switchTab('settings')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm whitespace-nowrap active:scale-95 transition">Go to Settings &rarr;</button>
                         </div>
                     `;
                     payBtn.classList.add('hidden');
-                    applyBtn.classList.remove('hidden');
+                    applyBtn.classList.add('hidden');
                 }
             }
         };
@@ -2327,6 +2424,12 @@
                 return showInlineMessage("Your insurance is not approved yet. Please use Self Pay or wait for approval.", "error");
             }
 
+            // Intercept booking for Insurance and present Patient Acknowledgment & Consent
+            if (window.bookingPayType === 'insurance' && !window.insuranceConsentAccepted) {
+                openConsentModal();
+                return; // halt flow until consent accepted
+            }
+
             const btn = document.getElementById('book-btn'); 
             btn.innerText = "Processing...";
 
@@ -2342,7 +2445,6 @@
             }
 
             try {
-                // Modified: Included payment_method & payment_type parameters in payload to signal cashless checkout
                 const payload = { 
                     doctor_id: doctorId, 
                     visit_type: "online", 
@@ -2367,7 +2469,6 @@
                     window.userData.age = patientAgeInput ? parseInt(patientAgeInput) : null;
                     document.getElementById('set-age').value = patientAgeInput || "";
 
-                    // Modified: Directly evaluate window.bookingPayType to confirm cashless checkout
                     if (window.bookingPayType === 'insurance') {
                         showInlineMessage("Cashless Booking Confirmed!", "success"); 
                         fetchAppointments(); 
@@ -2386,6 +2487,39 @@
             } 
             btn.innerText = window.bookingPayType === 'insurance' ? "Confirm Booking (Covered by Panel)" : "Pay Now (RM 38.00)";
         }
+
+        // ====== CONSENT MODAL INTERACTIVE LOGIC ======
+        window.openConsentModal = () => {
+            const m = document.getElementById('consent-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            document.getElementById('consent-agree').checked = false;
+            toggleConsentSubmitBtn(false);
+        };
+
+        window.closeConsentModal = () => {
+            const m = document.getElementById('consent-modal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        };
+
+        window.toggleConsentSubmitBtn = (isChecked) => {
+            const btn = document.getElementById('btn-consent-continue');
+            if (isChecked) {
+                btn.removeAttribute('disabled');
+                btn.className = "w-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm cursor-pointer";
+            } else {
+                btn.setAttribute('disabled', 'true');
+                btn.className = "w-full bg-gray-400 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm cursor-not-allowed";
+            }
+        };
+
+        window.confirmConsentAndProceed = () => {
+            window.insuranceConsentAccepted = true;
+            closeConsentModal();
+            // Programmatically trigger the booking form submit again
+            document.getElementById('booking-online-section').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        };
 
         window.checkUpcomingReminders = (appointments) => {
             if (!appointments || !appointments.length) return;
