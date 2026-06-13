@@ -216,17 +216,17 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1.5">Upload Insurance Card (Front & Back) <span class="text-red-500">*</span></label>
-                        <div class="border border-dashed border-gray-300 rounded-xl p-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition relative">
-                            <div class="flex items-center gap-3">
+                        <div class="border border-dashed border-gray-300 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 sm:gap-0 bg-gray-50 hover:bg-gray-100 transition relative text-center sm:text-left">
+                            <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
                                 <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0">
                                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                                 </div>
                                 <div>
                                     <div class="text-sm font-bold text-gray-700" id="ins-file-name">Drag & drop your file</div>
-                                    <div class="text-[10px] text-gray-500">Max file size: 10MB (PDF, DOC, DOCX, JPG, PNG)</div>
+                                    <div class="text-[10px] text-gray-500 mt-0.5">Max file size: 10MB (PDF, DOC, DOCX, JPG, PNG)</div>
                                 </div>
                             </div>
-                            <button type="button" onclick="document.getElementById('ins-file').click()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition shrink-0 z-10 relative">Browse from Computer</button>
+                            <button type="button" onclick="document.getElementById('ins-file').click()" class="w-full sm:w-auto bg-gray-600 hover:bg-gray-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition shrink-0 z-10 relative">Browse from Computer</button>
                             <input type="file" id="ins-file" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="document.getElementById('ins-file-name').innerText = this.files[0] ? this.files[0].name : 'Drag & drop your file'; document.getElementById('ins-file-name').classList.add('text-[#0066FF]');">
                         </div>
                     </div>
