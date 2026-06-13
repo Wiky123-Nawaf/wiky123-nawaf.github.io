@@ -462,8 +462,12 @@
                                     </div>
                                 </div>
                                 <div class="col-span-3 text-center flex flex-col justify-center items-center">
-                                    <div class="text-[13px] font-bold text-gray-800 flex items-center justify-center">${freq}${durationText}</div>
-                                    <div class="text-[11px] text-gray-500 font-medium mt-1">${specificInstruction}</div>
+                                    <div class="text-[13px] font-bold text-gray-800 whitespace-nowrap">
+                                        ${freq} ${durationText}
+                                    </div>
+                                    <div class="text-[11px] text-gray-500 font-medium mt-1">
+                                        ${specificInstruction}
+                                    </div>
                                 </div>
                                 <div class="col-span-2 text-center flex flex-col justify-center">
                                     <div class="text-[16px] font-extrabold text-gray-900">${m.quantity || 1}</div>
