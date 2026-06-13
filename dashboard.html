@@ -910,6 +910,7 @@
         window.notifiedAppointments = new Set();
         window.currentInsStep = 1;
         window.insuranceConsentAccepted = false; // Tracks panel/insurance booking consent
+        window.isChatProcessing = false; // Prevents duplicate chat submissions
 
         const chatLogoUrl = "https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true";
 
@@ -1700,9 +1701,18 @@
         }
 
         window.sendChat = async (voiceInput = null) => {
+            if (window.isChatProcessing) return; // Safeguard: Exit if already processing
+
             const input = document.getElementById('chat-input');
             const msg = voiceInput || input.value.trim(); 
             if(!msg) return; 
+
+            // Lock chat and UI
+            window.isChatProcessing = true;
+            input.disabled = true;
+            const sendBtn = document.querySelector('button[onclick="sendChat()"]');
+            if (sendBtn) sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
             input.value = '';
             input.style.height = '36px'; 
 
@@ -1806,6 +1816,16 @@
                 if(isVoiceActive) {
                     setVoiceState('IDLE');
                     document.getElementById('voice-transcript').innerText = "Network Error. Please try again.";
+                }
+            } finally {
+                // Unlock chat and UI regardless of success or error
+                window.isChatProcessing = false;
+                input.disabled = false;
+                if (sendBtn) sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                // Keep mobile keyboard hidden if voice is active, otherwise refocus for typing
+                if (!isVoiceActive && window.innerWidth > 768) {
+                    input.focus();
                 }
             }
         };
