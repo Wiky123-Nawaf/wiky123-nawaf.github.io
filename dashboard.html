@@ -2151,7 +2151,18 @@
                     document.getElementById('doctor-selected-content').innerHTML = '<span class="text-red-500 font-bold">No doctors available immediately</span>';
                     document.getElementById('doctor-list').innerHTML = `
                         <div class="p-6 text-center flex flex-col items-center justify-center">
-                            <svg class="w-10 h-10 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-12 h-12"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
                             <span class="text-sm font-bold text-gray-800">No matching doctor is available immediately.</span>
                             <span class="text-xs text-gray-500 mt-1">Please select 'Schedule for Later' to book a future slot.</span>
                         </div>
