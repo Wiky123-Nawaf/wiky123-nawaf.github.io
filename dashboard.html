@@ -279,11 +279,11 @@
                         </div>
                         <div class="border border-gray-200 bg-gray-50 rounded-lg p-3.5 flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="bg-white border border-gray-200 w-8 h-8 rounded flex items-center justify-center text-[10px] font-bold text-red-500">PDF</div>
-                                <div>
-                                    <div class="text-xs font-bold text-gray-700 truncate max-w-[200px]" id="rev-ins-filename">card.pdf</div>
-                                    <div class="text-[10px] text-gray-400 mt-0.5">Ready for upload</div>
-                                </div>
+                                <div id="rev-ins-file-ext" class="bg-white border border-gray-200 w-8 h-8 rounded flex items-center justify-center text-[10px] font-bold text-red-500 uppercase">PDF</div>
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-700 truncate max-w-[200px]" id="rev-ins-filename">card.pdf</div>
+                                        <div class="text-[10px] text-gray-400 mt-0.5">Ready for upload</div>
+                                    </div>
                             </div>
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                         </div>
@@ -2165,6 +2165,27 @@
                 document.getElementById('rev-ins-provider').innerText = document.getElementById('ins-provider').value || '-';
                 document.getElementById('rev-ins-policy').innerText = document.getElementById('ins-policy').value || '-';
                 document.getElementById('rev-ins-emp').innerText = document.getElementById('ins-emp').value || 'N/A';
+                
+                // Retrieve file info and update the UI
+                const fileInput = document.getElementById('ins-file');
+                if(fileInput && fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const fileName = file.name;
+                    
+                    // Extract the file extension (e.g. pdf, jpg, png)
+                    const fileExt = fileName.split('.').pop().toUpperCase();
+                    
+                    // Update the file name text
+                    document.getElementById('rev-ins-filename').innerText = fileName;
+                    
+                    // Update the file extension box and dynamically alter color based on file type
+                    const extBox = document.getElementById('rev-ins-file-ext');
+                    if(extBox) {
+                        extBox.innerText = fileExt.substring(0, 4); // Limit to 4 chars
+                        extBox.className = "bg-white border border-gray-200 w-8 h-8 rounded flex items-center justify-center text-[10px] font-bold uppercase " + 
+                           (fileExt === 'PDF' ? 'text-red-500' : 'text-blue-500'); // PDF gets red, images get blue
+                    }
+                }
             }
         };
 
