@@ -426,8 +426,14 @@
                                 category = m.notes.split('|')[0].replace("Reason:", "").trim();
                             }
 
-                            // Format duration with a stylized red text to mimic handwriting
-                            const durationText = m.duration ? `<span style="color: #dc2626; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; font-weight: 700; margin-left: 6px;">x ${m.duration.toLowerCase()}</span>` : '';
+                            // Clean the duration text (e.g. "3 DAY(S)" -> "3 days")
+                            let cleanDuration = "";
+                            if (m.duration) {
+                                cleanDuration = m.duration.toLowerCase().replace("(s)", "s");
+                            }
+
+                            // Format duration with a stylized red text to mimic handwriting exactly
+                            const durationText = cleanDuration ? `<span style="color: #dc2626; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; font-weight: 700; margin-left: 6px;">x ${cleanDuration}</span>` : '';
 
                             rxList.innerHTML += `
                             <div class="grid grid-cols-12 items-center px-6 py-5 bg-white hover:bg-gray-50/50 transition border-b border-gray-50">
