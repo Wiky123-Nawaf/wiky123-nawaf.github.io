@@ -2361,64 +2361,72 @@ let formatClinicalText = (text) => {
     </script>
 
     <!-- Mobile Logos Marquee Script -->
-    <script>
-        // Use 'load' instead of 'DOMContentLoaded' to guarantee 
-        // all images are 100% loaded and heights/widths are fully rendered.
-        window.addEventListener("load", () => {
-            const track = document.getElementById('logo-track');
-            if (!track) return;
+    <!-- Mobile Logos Marquee Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const track = document.getElementById('logo-track');
+        if (!track) return;
 
-            const originalItems = Array.from(track.children);
-            
-            // 1. Clone the items immediately so they exist in the DOM
-            originalItems.forEach(item => {
-                const clone = item.cloneNode(true);
-                track.appendChild(clone);
-            });
+        const originalItems = Array.from(track.children);
+        
+        // 1. Clone the items immediately
+        originalItems.forEach(item => {
+            const clone = item.cloneNode(true);
+            track.appendChild(clone);
+        });
 
-            // 2. Identify the first cloned item (the 11th child, index 10)
-            const firstClone = track.children[originalItems.length];
-            
-            // 3. Dynamically measure the perfect offset using offsetLeft
-            // This is calculated directly by the browser layout engine.
-            let setWidth = firstClone.offsetLeft;
+        // 2. Identify the first cloned item
+        const firstClone = track.children[originalItems.length];
+        
+        let setWidth = firstClone.offsetLeft || 1000; // Fallback width
+        let currentPos = 0;
+        let isPaused = false;
 
-            let currentPos = 0;
-            let isPaused = false;
-
-            // Recalculate if the screen resizes
-            window.addEventListener('resize', () => {
+        // 3. Dynamically update width as each image loads
+        function updateWidth() {
+            if (firstClone.offsetLeft > 0) {
                 setWidth = firstClone.offsetLeft;
-            });
+            }
+        }
 
-            document.addEventListener("visibilitychange", () => {
-                isPaused = document.hidden;
-            });
+        // Listen for image loads to recalculate scroll bounds smoothly
+        track.querySelectorAll('img').forEach(img => {
+            if (img.complete) updateWidth();
+            else img.addEventListener('load', updateWidth);
+        });
 
-            function scrollMarquee() {
-				    if (!isPaused) {
-				        currentPos += 0.8;
-				        if (currentPos >= setWidth) {
-				            currentPos -= setWidth;
-				        }
-				        track.style.transform = `translateX(-${currentPos}px)`;
-				    }
-				    requestAnimationFrame(scrollMarquee);
-					}
-					
-					// Desktop: pause on hover
-					track.addEventListener('mouseenter', () => { isPaused = true; });
-					track.addEventListener('mouseleave', () => { isPaused = false; });
-					
-					// Mobile: pause while finger is held
-					track.addEventListener('touchstart',  () => { isPaused = true; },  { passive: true });
-					track.addEventListener('touchend',    () => { isPaused = false; }, { passive: true });
-					track.addEventListener('touchcancel', () => { isPaused = false; }, { passive: true });
-					
-					track.style.cursor = 'grab';
-					
-					requestAnimationFrame(scrollMarquee);
-	        });
-    </script>
+        window.addEventListener('resize', updateWidth);
+        window.addEventListener('load', updateWidth); // Catch-all for final load
+
+        document.addEventListener("visibilitychange", () => {
+            isPaused = document.hidden;
+        });
+
+        function scrollMarquee() {
+            if (!isPaused && setWidth > 0) {
+                currentPos += 0.8;
+                if (currentPos >= setWidth) {
+                    currentPos -= setWidth;
+                }
+                track.style.transform = `translateX(-${currentPos}px)`;
+            }
+            requestAnimationFrame(scrollMarquee);
+        }
+        
+        // Desktop: pause on hover
+        track.addEventListener('mouseenter', () => { isPaused = true; });
+        track.addEventListener('mouseleave', () => { isPaused = false; });
+        
+        // Mobile: pause while finger is held
+        track.addEventListener('touchstart',  () => { isPaused = true; },  { passive: true });
+        track.addEventListener('touchend',    () => { isPaused = false; }, { passive: true });
+        track.addEventListener('touchcancel', () => { isPaused = false; }, { passive: true });
+        
+        track.style.cursor = 'grab';
+        
+        // START IMMEDIATELY!
+        requestAnimationFrame(scrollMarquee);
+    });
+</script>
 </body>
 </html>
