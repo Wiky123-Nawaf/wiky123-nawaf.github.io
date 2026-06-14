@@ -322,6 +322,22 @@
                         <span id="total-cost" class="text-[26px] font-extrabold text-[#0066FF] tracking-tight">RM 0.00</span>
                     </div>
 
+                    <div id="delivery-pay-method-wrapper" class="mb-5 hidden">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Payment Method</label>
+                        <div class="flex bg-gray-50 p-1.5 rounded-xl border border-gray-200 shadow-sm">
+                            <label class="flex-1 text-center cursor-pointer relative">
+                                <input type="radio" name="del_pay_type" value="self" checked class="peer sr-only" onchange="toggleDelPayType('self')">
+                                <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-[#0066FF] peer-checked:shadow-sm transition">💳 Self Pay</div>
+                            </label>
+                            <label class="flex-1 text-center cursor-pointer relative">
+                                <input type="radio" name="del_pay_type" value="insurance" class="peer sr-only" onchange="toggleDelPayType('insurance')">
+                                <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-[#0066FF] peer-checked:shadow-sm transition">🏥 Panel / Insurance</div>
+                            </label>
+                        </div>
+                        <!-- Warning if they don't have active insurance -->
+                        <div id="del-insurance-warning" class="hidden mt-3 text-xs text-red-600 bg-red-50 p-3 rounded-lg border border-red-100 font-medium leading-relaxed"></div>
+                    </div>
+                    
                     <!-- Delivery Form -->
                     <div id="delivery-form-wrapper" class="bg-[#f8faff] border border-blue-100 rounded-xl p-5 mb-5 hidden">
                         <h4 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -784,6 +800,38 @@
             } catch (err) {
                 window.showInlineMessage("Network Error: Could not connect to payment server.", "error");
                 btn.innerHTML = origHTML; btn.disabled = false;
+            }
+        };
+        window.delPayType = 'self';
+        window.originalDeliveryTotal = 0.0;
+        
+        window.toggleDelPayType = (type) => {
+            window.delPayType = type;
+            const totalEl = document.getElementById('total-cost');
+            const warningEl = document.getElementById('del-insurance-warning');
+            const btn = document.getElementById('pay-btn');
+        
+            if (type === 'self') {
+                totalEl.innerText = `RM ${window.originalDeliveryTotal.toFixed(2)}`;
+                warningEl.classList.add('hidden');
+                btn.innerHTML = `<span>Proceed to Payment</span><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>`;
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                // Check if user actually has an approved panel
+                if (window.userData.insurance_status === 'approved') {
+                    totalEl.innerText = `RM 0.00 (Covered)`;
+                    warningEl.classList.add('hidden');
+                    btn.innerHTML = `<span>Confirm Panel Delivery</span><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    totalEl.innerText = `RM 0.00`;
+                    warningEl.innerText = "You do not have an approved insurance panel on file. Please use Self Pay or update your settings.";
+                    warningEl.classList.remove('hidden');
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
             }
         };
     </script>
