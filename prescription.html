@@ -787,16 +787,23 @@
                 const r = await fetch(`${API_BASE}/api/delivery/checkout`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ appointment_id: parseInt(apptIdStr), delivery_name: dName, delivery_phone: dPhone, delivery_address: dAddress })
+                    body: JSON.stringify({ appointment_id: parseInt(apptIdStr), delivery_name: dName, delivery_phone: dPhone, delivery_address: dAddress, payment_method: window.delPayType })
                 });
                 const data = await r.json();
 
-                if (data.stripe_url) {
-                    window.location.href = data.stripe_url;
-                } else {
-                    window.showInlineMessage(data.detail || data.message || "Failed to setup checkout session.", "error");
-                    btn.innerHTML = origHTML; btn.disabled = false;
-                }
+                    if (data.stripe_url) {
+                        window.location.href = data.stripe_url; // Self Pay redirects to Stripe
+                    } else if (data.success && window.delPayType === 'insurance') {
+                        // Insurance bypasses stripe, update UI to show success
+                        window.showInlineMessage("Panel Delivery Confirmed!", "success");
+                        document.getElementById('delivery-form-wrapper').classList.add('hidden');
+                        document.getElementById('delivery-pay-method-wrapper').classList.add('hidden');
+                        btn.classList.add('hidden');
+                        document.getElementById('delivery-paid-wrapper').classList.remove('hidden');
+                    } else {
+                        window.showInlineMessage(data.detail || data.message || "Failed to setup checkout session.", "error");
+                        btn.innerHTML = origHTML; btn.disabled = false;
+                    }
             } catch (err) {
                 window.showInlineMessage("Network Error: Could not connect to payment server.", "error");
                 btn.innerHTML = origHTML; btn.disabled = false;
