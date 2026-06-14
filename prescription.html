@@ -604,9 +604,14 @@
                         paidWrapper.classList.remove('hidden');
                     } else {
                         breakdownUI.innerHTML += `<div class="flex justify-between text-xs text-[#0066FF] font-bold uppercase tracking-wider pt-4 mt-2 border-t border-dashed border-gray-200"><span>DELIVERY RATE</span><span>RM ${parseFloat(data.delivery_fee).toFixed(2)}</span></div>`;
-                        let gTotal = subTotal + parseFloat(data.delivery_fee);
-                        if (document.getElementById('total-cost')) document.getElementById('total-cost').innerText = `RM ${gTotal.toFixed(2)}`;
                         
+                        // --- THIS IS THE FIX: Set global total and un-hide the toggle! ---
+                        window.originalDeliveryTotal = subTotal + parseFloat(data.delivery_fee);
+                        if (document.getElementById('total-cost')) document.getElementById('total-cost').innerText = `RM ${window.originalDeliveryTotal.toFixed(2)}`;
+                        
+                        document.getElementById('delivery-pay-method-wrapper').classList.remove('hidden'); 
+                        // -----------------------------------------------------------------
+                    
                         formWrapper.classList.remove('hidden');
                         payBtn.classList.remove('hidden');
                         payBtn.classList.add('flex');
