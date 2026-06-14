@@ -76,8 +76,7 @@
         .page-title p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
 
         /* ====== HOME METRIC CARDS ====== */
-        .metrics-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
-        @media (max-width: 1200px) { .metrics-grid { grid-template-columns: repeat(3, 1fr); } }
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .metric-card { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; cursor: pointer; transition: 0.2s; }
         .metric-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
         .metric-card:hover .arrow { color: var(--primary); }
@@ -424,40 +423,6 @@
                     </div>
                     <div class="card-footer"><span>Total this month</span> <span style="color:var(--primary); margin-left:auto;">View History →</span></div>
                 </div>
-
-                <!-- NEW PANEL NOTIFICATION CARD -->
-                <div class="metric-card clickable" onclick="window.location.hash='#/patients?filter=pending_panel'" style="border-color: var(--warning-border); background: var(--warning-bg);" title="Review Pending Panel Requests">
-                    <div class="card-header" style="color: #b45309;">Panel Reviews <span class="arrow" style="color:var(--warning);">↗</span></div>
-                    <div class="card-body">
-                        <div class="value" id="stat-pending-panel" style="color: #b45309;">0</div>
-                    </div>
-                    <div class="card-footer" style="color:var(--warning); font-weight:600; border-top-color: #fde68a;" id="stat-pending-panel-sub">0 Pending Approvals</div>
-                </div>
-            </div>
-
-                <div class="metric-card clickable" onclick="openStatsModal('doctors')" title="Click to view details">
-                    <div class="card-header">Total Doctors <span class="arrow">↗</span></div>
-                    <div class="card-body">
-                        <div class="value" id="stat-doctors">0</div>
-                    </div>
-                    <div class="card-footer" id="stat-doctors-sub">Loading...</div>
-                </div>
-
-                <div class="metric-card clickable" onclick="openStatsModal('appointments')" title="Click to view details">
-                    <div class="card-header">Active Appointments <span class="arrow">↗</span></div>
-                    <div class="card-body">
-                        <div class="value" id="stat-appts">0</div>
-                    </div>
-                    <div class="card-footer" id="stat-appts-sub">Loading...</div>
-                </div>
-
-                <div class="metric-card clickable" onclick="openRevenueModal()" title="Click to view all-time history">
-                    <div class="card-header">Monthly Revenue <span class="arrow" style="color:var(--primary);">↗</span></div>
-                    <div class="card-body rev-body">
-                        <div class="value" id="stat-revenue">MYR 0.00</div>
-                    </div>
-                    <div class="card-footer"><span>Total this month</span> <span style="color:var(--primary); margin-left:auto;">View History →</span></div>
-                </div>
             </div>
 
             <div class="layout-grid">
@@ -588,8 +553,6 @@
                             <option value="Premium">Premium</option>
                             <option value="Inactive">Inactive</option>
                             <option value="Deactivated">Deactivated</option>
-                            <option value="HasPanel">🏥 Has Panel (Approved)</option>
-                            <option value="PendingPanel">⚠️ Pending Panel Review</option>
                         </select>
                         <button class="btn-add" onclick="openAddPatientModal()">+ Add New User</button>
                     </div>
@@ -946,9 +909,7 @@
 
         // View Switching / Hash Routing Mechanism
         function handleHashRouting() {
-            const hashFull = window.location.hash || '#/dashboard';
-            const [hash, query] = hashFull.split('?');
-
+            const hash = window.location.hash || '#/dashboard';
             document.querySelectorAll('.dashboard-body').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
 
@@ -958,12 +919,6 @@
             } else if (hash === '#/patients') {
                 document.getElementById('nav-patients').classList.add('active');
                 document.getElementById('patients-view').classList.add('active');
-                
-                // Auto-apply filter if coming from dashboard panel review card
-                if (query && query.includes('filter=pending_panel')) {
-                    document.getElementById('patientFilterSelect').value = 'PendingPanel';
-                    filterPatientsTable(); // Trigger the filter update visually
-                }
             } else if (hash === '#/settings') {
                 document.getElementById('nav-settings').classList.add('active');
                 document.getElementById('settings-view').classList.add('active');
@@ -1227,10 +1182,6 @@
             
             document.getElementById('stat-appts').innerText = active;
             document.getElementById('stat-appts-sub').innerHTML = `<span style="color:var(--primary); font-weight:600;">${active} Upcoming</span><span style="margin-left:auto;">${past} Completed</span>`;
-
-            let pendingPanelCount = allPatientsData.filter(p => p.insurance_status === 'pending').length;
-                document.getElementById('stat-pending-panel').innerText = pendingPanelCount;
-                document.getElementById('stat-pending-panel-sub').innerText = `${pendingPanelCount} Pending Approvals`;
         }
 
         // 3. REVENUE ENGINE (HOME)
@@ -1384,10 +1335,7 @@
                                     (p.email || "").toLowerCase().includes(query) ||
                                     (p.id || "").toLowerCase().includes(query);
                                     
-                const matchFilter = (filterVal === "All") || 
-                                    (filterVal === "HasPanel" && p.insurance_status === "approved") ||
-                                    (filterVal === "PendingPanel" && p.insurance_status === "pending") ||
-                                    (p.statusCategory === filterVal);
+                const matchFilter = (filterVal === "All") || (p.statusCategory === filterVal);
 
                 return matchSearch && matchFilter;
             });
@@ -1581,7 +1529,7 @@
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Policy Number</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_policy_no || 'N/A'}</strong>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_policy_number || 'N/A'}</strong>
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Employee Company</span>
@@ -1649,10 +1597,6 @@
                             <input type="text" class="vp-form-input readonly" value="${patient.email || 'N/A'}" readonly>
                         </div>
                         <div class="vp-form-group">
-                            <label>IC / Passport Number</label>
-                            <input type="text" class="vp-form-input readonly" value="${patient.ic_number || 'N/A'}" readonly>
-                        </div>
-                        <div class="vp-form-group">
                             <label>Phone Number</label>
                             <input type="text" id="vp-edit-phone" class="vp-form-input" value="${patient.phone || ''}">
                         </div>
@@ -1667,7 +1611,7 @@
                             <label>Booking</label>
                             <input type="text" class="vp-form-input readonly" value="${bookingsCount}" readonly>
                         </div>
-                        <div class="vp-form-group">
+                        <div class="vp-form-group" style="grid-column: 1 / -1;">
                             <label>Status Category</label>
                             <div class="vp-form-input readonly" style="justify-content:space-between;">
                                 <span>${patient.statusCategory}</span>
