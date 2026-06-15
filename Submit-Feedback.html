@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="color-scheme" content="light">
-    <title>Doktura.ai - Submit Feedback</title>
+    <title>Share Your Feedback</title>
 
     <link class="favicon" rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,271 +15,130 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* --- Reset & Base Styles --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            color: #1a1a1a !important;
-            line-height: 1.5;
+            color: #1a1a1a;
             -webkit-font-smoothing: antialiased;
-            /* Added a soft background so the white form card pops out */
-            background-color: #F4FAFC !important; 
-            display: flex;
-            flex-direction: column;
+            /* Beautiful soft gradient background */
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #e6f2ff 100%);
             min-height: 100vh;
-        }
-
-        /* --- Header Styles --- */
-        .top-header {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 40px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        .logo-wrap img { height: 32px; object-fit: contain; }
-        
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-        .nav-links a {
-            font-size: 15px;
-            color: #64748b;
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: #111111; }
-        
-        .btn-primary {
-            background-color: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 999px;
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.2s;
-            text-decoration: none;
-        }
-        .btn-primary:hover { opacity: 0.9; }
-
-        @media (max-width: 1024px) {
-            .nav-links { display: none; }
-            .top-header { padding: 16px 20px; }
+            padding: 24px;
         }
 
-        /* Preserved Footer Styles */
-        .footer-section { background-color: #111111; color: #ffffff; padding: 80px 0 40px 0; width: 100%; border-top-left-radius: 32px; border-top-right-radius: 32px; margin-top: auto; }
-        .footer-content { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; }
-        .footer-top { display: flex; justify-content: space-between; gap: 60px; padding-bottom: 60px; }
-        .footer-brand { max-width: 380px; }
-        .footer-brand img { height: 40px; width: auto; margin-bottom: 24px; display: block; }
-        .footer-brand p { color: #a0aab5; font-size: 15px; line-height: 1.6; }
-        .footer-links-group { display: flex; gap: 120px; }
-        .footer-col h4 { font-size: 16px; font-weight: 600; margin-bottom: 24px; color: #ffffff; }
-        .footer-col a { display: block; color: #a0aab5; font-size: 14px; margin-bottom: 16px; text-decoration: none; transition: color 0.2s; }
-        .footer-col a:hover { color: #ffffff; }
-        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        .footer-bottom p { color: #a0aab5; font-size: 13px; }
-        .social-area { display: flex; align-items: center; gap: 20px; }
-        .social-area span { color: #ffffff; font-weight: 500; font-size: 14px; }
-        .social-icons { display: flex; align-items: center; gap: 16px; }
-        .social-icons a { color: #ffffff; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-        .social-icons a:hover { opacity: 0.7; }
-
-        @media (max-width: 1024px) {
-            .footer-top { flex-direction: column; gap: 40px; }
-            .footer-links-group { gap: 60px; justify-content: flex-start; }
-            .footer-section { border-radius: 0; }
+        /* Subtle entrance animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 768px) {
-            .footer-links-group { flex-direction: column; gap: 32px; }
-            .footer-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
-            .social-area { flex-direction: column; align-items: flex-start; gap: 16px; }
+        .animate-fade-up {
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="top-header">
-        <a href="index.html" class="logo-wrap">
-            <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665235.png?download=true" alt="Doktura Logo">
-        </a>
+    <!-- Main Standalone Form Card -->
+    <div id="feedbackContainer" class="bg-white rounded-[32px] w-full max-w-lg p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,102,204,0.08)] flex flex-col items-center animate-fade-up border border-blue-50/50">
         
-        <nav class="nav-links">
-            <a href="About-us.html">About Us</a>
-            <a href="FAQ.html">FAQ</a>
-            <a href="Feedback.html">Feedback</a>
-            <a href="Contact-Us.html">Contact Us</a>
-            <a href="terms.html">Terms of Service</a>
-        </nav>
-
-        <div class="flex items-center gap-4">
-            <button class="mobile-menu-btn text-gray-500">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            </button>
-            <a href="https://doktura.ai/login.html" class="btn-primary">Login Now</a>
+        <!-- Document Illustration -->
+        <div class="relative w-28 h-28 mb-4 flex items-center justify-center">
+            <div class="absolute inset-0 bg-blue-50 rounded-full opacity-60 filter blur-md"></div>
+            <svg class="w-20 h-20 relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="25" y="15" width="50" height="65" rx="8" fill="white" stroke="#E2E8F0" stroke-width="2" />
+                <line x1="35" y1="28" x2="55" y2="28" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+                <line x1="35" y1="38" x2="65" y2="38" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                <line x1="35" y1="46" x2="65" y2="46" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                <line x1="35" y1="54" x2="55" y2="54" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="35" y1="62" x2="45" y2="62" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="65" cy="70" r="14" fill="#0066cc" />
+                <path d="M65 64V74M65 74L61 70M65 74L69 70" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
         </div>
-    </header>
 
-    <!-- Main Standalone Form Area -->
-    <main class="flex-1 flex items-center justify-center p-4 py-12">
-        <!-- Form Container -->
-        <div id="feedbackContainer" class="bg-white rounded-[32px] w-full max-w-lg p-8 shadow-2xl flex flex-col items-center">
+        <!-- Header Titles -->
+        <h3 class="text-[26px] font-extrabold text-gray-900 tracking-tight text-center mb-2">Thank You For Consulting!</h3>
+        <p class="text-sm text-gray-500 font-medium text-center max-w-[280px] mb-8 leading-relaxed">
+            We value your experience. Please take a moment to share your feedback.
+        </p>
+
+        <!-- Hidden iframe to handle Google's strict CORS without redirecting the page -->
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+        <!-- Feedback Submission Form -->
+        <form id="feedbackForm" action="https://script.google.com/macros/s/AKfycbzGM8-7ISd10bg5pZToBB_IeHt47zQTpBJsfezSQKCdBQpa5zGSnvU3pJFozmj_8-Rzkg/exec" method="POST" target="hidden_iframe" class="w-full">
             
-            <!-- Document Illustration -->
-            <div class="relative w-28 h-28 mb-4 flex items-center justify-center">
-                <div class="absolute inset-0 bg-blue-50 rounded-full opacity-60 filter blur-md"></div>
-                <svg class="w-20 h-20 relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="25" y="15" width="50" height="65" rx="8" fill="white" stroke="#E2E8F0" stroke-width="2" />
-                    <line x1="35" y1="28" x2="55" y2="28" stroke="#111111" stroke-width="3" stroke-linecap="round" />
-                    <line x1="35" y1="38" x2="65" y2="38" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
-                    <line x1="35" y1="46" x2="65" y2="46" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
-                    <line x1="35" y1="54" x2="55" y2="54" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" />
-                    <line x1="35" y1="62" x2="45" y2="62" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" />
-                    <circle cx="65" cy="70" r="14" fill="#0066cc" />
-                    <path d="M65 64V74M65 74L61 70M65 74L69 70" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+            <!-- Underline Inputs (Name & Email) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mb-8">
+                <div class="relative">
+                    <input type="text" name="name" placeholder="Your Name" required class="w-full border-b-2 border-gray-100 focus:border-[#0066cc] outline-none py-2.5 text-[15px] text-gray-900 placeholder-gray-400 bg-transparent transition-colors" />
+                </div>
+                <div class="relative">
+                    <input type="email" name="email" placeholder="Your Email" required class="w-full border-b-2 border-gray-100 focus:border-[#0066cc] outline-none py-2.5 text-[15px] text-gray-900 placeholder-gray-400 bg-transparent transition-colors" />
+                </div>
             </div>
 
-            <!-- Header Titles -->
-            <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight text-center mb-1">Thank You For Consulting With Us!</h3>
-            <p class="text-xs text-gray-500 font-medium text-center max-w-sm mb-6 leading-relaxed">
-                We value your experience.<br>Please take a moment to share your feedback about Doktura.
-            </p>
-
-            <!-- Hidden iframe to handle Google's strict CORS without redirecting the page -->
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-
-            <!-- Feedback Submission Form -->
-            <form id="feedbackForm" action="https://script.google.com/macros/s/AKfycbzGM8-7ISd10bg5pZToBB_IeHt47zQTpBJsfezSQKCdBQpa5zGSnvU3pJFozmj_8-Rzkg/exec" method="POST" target="hidden_iframe" class="w-full">
+            <!-- Rating System -->
+            <div class="w-full mb-8 flex flex-col items-center bg-gray-50/50 p-5 rounded-2xl border border-gray-50">
+                <p class="text-sm font-semibold text-gray-800 text-center mb-4">How would you rate your experience?</p>
                 
-                <!-- Underline Inputs (Name & Email) -->
-                <div class="grid grid-cols-2 gap-6 w-full mb-6">
-                    <div class="relative">
-                        <input type="text" name="name" placeholder="Name" required class="w-full border-b border-gray-200 focus:border-blue-500 outline-none py-2 text-sm text-gray-800 placeholder-gray-400 bg-transparent transition" />
+                <div class="flex flex-col items-center w-full max-w-[280px]">
+                    <div class="flex justify-between w-full px-2" id="starsContainer">
+                        <!-- Star Buttons -->
+                        <button type="button" data-value="1" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 1 Star">
+                            <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                            </svg>
+                        </button>
+                        <button type="button" data-value="2" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 2 Stars">
+                            <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                            </svg>
+                        </button>
+                        <button type="button" data-value="3" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 3 Stars">
+                            <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                            </svg>
+                        </button>
+                        <button type="button" data-value="4" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 4 Stars">
+                            <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                            </svg>
+                        </button>
+                        <button type="button" data-value="5" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 5 Stars">
+                            <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="relative">
-                        <input type="email" name="email" placeholder="Email" required class="w-full border-b border-gray-200 focus:border-blue-500 outline-none py-2 text-sm text-gray-800 placeholder-gray-400 bg-transparent transition" />
-                    </div>
-                </div>
-
-                <!-- Rating System -->
-                <div class="w-full mb-6 flex flex-col items-center">
-                    <p class="text-[13px] font-semibold text-gray-700 text-center mb-3">How would you rate your overall experience with <span class="text-blue-600 font-bold">Doktura</span>?</p>
                     
-                    <div class="flex flex-col items-center w-full max-w-xs">
-                        <div class="flex justify-between w-full px-2" id="starsContainer">
-                            <!-- Star Buttons -->
-                            <button type="button" data-value="1" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 1 Star">
-                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
-                                </svg>
-                            </button>
-                            <button type="button" data-value="2" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 2 Stars">
-                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
-                                </svg>
-                            </button>
-                            <button type="button" data-value="3" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 3 Stars">
-                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
-                                </svg>
-                            </button>
-                            <button type="button" data-value="4" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 4 Stars">
-                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
-                                </svg>
-                            </button>
-                            <button type="button" data-value="5" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 5 Stars">
-                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        
-                        <div class="flex justify-between w-full text-[11px] text-gray-400 mt-2 px-1 font-medium">
-                            <span>Very Poor</span>
-                            <span>Excellent</span>
-                        </div>
-                    </div>
-                    <!-- Hidden rating storage -->
-                    <input type="hidden" id="ratingValue" name="rating" value="5" required />
-                </div>
-
-                <!-- Textarea -->
-                <div class="w-full text-left mb-6">
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">Any additional comments or suggestions?</label>
-                    <textarea name="feedback" required placeholder="Share your thoughts with us..." class="w-full h-32 bg-[#F8F9FA] border border-gray-100 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition resize-none"></textarea>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="w-full mb-4">
-                    <button type="submit" class="w-full py-4 bg-[#0066cc] hover:bg-blue-700 text-white font-semibold rounded-xl text-[15px] shadow-md transition">Submit Feedback</button>
-                </div>
-
-                <p class="text-[11px] text-gray-400 text-center italic leading-normal">
-                    Your feedback helps us improve and provide better care for you and others.
-                </p>
-            </form>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-content">
-            <div class="footer-top">
-                <div class="footer-brand">
-                    <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Group%202085665233.png?download=true" alt="Doktura.ai Logo">
-                    <p>Providing AI-powered medical insights and<br>seamless doctor bookings 24/7.</p>
-                </div>
-
-                <div class="footer-links-group">
-                    <div class="footer-col">
-                        <h4>Company</h4>
-                        <a href="https://doktura.ai/About-us.html">About</a>
-                        <a href="#">Careers</a>
-                        <a href="https://doktura.ai/Contact-Us.html">Contact Us</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Legal</h4>
-                        <a href="https://doktura.ai/privacy.html">Privacy Policy</a>
-                        <a href="https://doktura.ai/terms.html">Terms of Service</a>
-                        <a href="https://doktura.ai/pdpa.html">PDPA</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Support</h4>
-                        <a href="https://doktura.ai/FAQ.html">FAQ</a>
-                        <a href="https://doktura.ai/doctor-registration.html">Doctor Portal Login</a>
+                    <div class="flex justify-between w-full text-[12px] text-gray-400 mt-2 px-1 font-medium">
+                        <span>Very Poor</span>
+                        <span>Excellent</span>
                     </div>
                 </div>
+                <!-- Hidden rating storage -->
+                <input type="hidden" id="ratingValue" name="rating" value="5" required />
             </div>
 
-            <div class="footer-bottom">
-                <p>Copyright 2026 © Doktura Plt Registration No. 202604000898 (LLP0046127-LGN)</p>
-                <div class="social-area">
-                    <span>Connect with us</span>
-                    <div class="social-icons">
-                        <a href="https://www.instagram.com/doktura.ai/" target="_blank" aria-label="Instagram">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                        </a>
-                        <a href="https://www.linkedin.com/company/doktura-ai" target="_blank" aria-label="LinkedIn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                        </a>
-                    </div>
-                </div>
+            <!-- Textarea -->
+            <div class="w-full text-left mb-8">
+                <textarea name="feedback" required placeholder="Any additional comments or suggestions?" class="w-full h-32 bg-[#F8F9FA] border border-gray-200 rounded-2xl p-5 text-[15px] outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-[#0066cc] focus:bg-white transition-all resize-none placeholder-gray-400"></textarea>
             </div>
-        </div>
-    </footer>
+
+            <!-- Submit Button -->
+            <div class="w-full mb-4">
+                <button type="submit" class="w-full py-4 bg-[#0066cc] hover:bg-[#0052a3] text-white font-semibold rounded-2xl text-[16px] shadow-[0_8px_20px_rgba(0,102,204,0.2)] hover:shadow-[0_8px_25px_rgba(0,102,204,0.3)] transition-all transform hover:-translate-y-[1px]">Submit Feedback</button>
+            </div>
+
+            <p class="text-[12px] text-gray-400 text-center mt-6">
+                Your feedback helps us improve and provide better care for you and others.
+            </p>
+        </form>
+    </div>
 
     <!-- Scripts -->
     <script>
@@ -330,24 +189,32 @@
 
         form.addEventListener('submit', function() {
             const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.innerHTML = 'Sending...';
+            submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Sending...
+            `;
             submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
             submitted = true;
         });
 
         hiddenIframe.addEventListener('load', function() {
             if (submitted) {
-                // Show the Thank You view inside the standalone card
+                // Show the beautifully centered Thank You state
                 container.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-16 text-center w-full">
-                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6 mx-auto">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <div class="flex flex-col items-center justify-center py-10 text-center w-full animate-fade-up">
+                        <div class="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center text-green-500 mb-8 border-[6px] border-white shadow-sm">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
-                        <h3 class="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">Thank You!</h3>
-                        <p class="text-gray-500 text-[15px] mb-10 max-w-sm mx-auto leading-relaxed">Your experience evaluation was submitted successfully. We appreciate your valuable support.</p>
-                        <a href="index.html" class="px-8 py-4 bg-[#0066cc] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition shadow-md w-full max-w-[240px] text-center no-underline inline-block">Return to Homepage</a>
+                        <h3 class="text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">Thank You!</h3>
+                        <p class="text-gray-500 text-[16px] mb-10 max-w-[300px] mx-auto leading-relaxed">Your feedback was submitted successfully. We appreciate your valuable support.</p>
+                        
+                        <a href="https://doktura.ai" class="py-4 px-8 bg-[#0066cc] hover:bg-[#0052a3] text-white font-semibold rounded-2xl text-[16px] shadow-[0_8px_20px_rgba(0,102,204,0.2)] transition-all inline-block text-decoration-none">Return to Website</a>
                     </div>
                 `;
                 submitted = false; 
