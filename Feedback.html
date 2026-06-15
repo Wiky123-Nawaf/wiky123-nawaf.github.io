@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="light">
     <title>Doktura.ai - Stories & Feedback</title>
 
-    <link rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
+    <link class="favicon" rel="icon" type="image/jpeg" href="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -500,5 +500,238 @@
         </div>
     </footer>
 
+    <!-- Floating Feedback Icon Button -->
+    <button id="openFeedbackBtn" class="fixed bottom-8 right-8 bg-[#0066cc] hover:bg-blue-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 z-40 flex items-center justify-center" aria-label="Give Feedback">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z" />
+        </svg>
+    </button>
+
+    <!-- Feedback Modal Backdrop -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <!-- Modal Card -->
+        <div class="bg-white rounded-[32px] w-full max-w-lg p-8 relative shadow-2xl transform scale-95 transition-all duration-300 flex flex-col items-center">
+            
+            <!-- Close 'X' Button -->
+            <button id="closeXBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition" aria-label="Close modal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <!-- Document Illustration -->
+            <div class="relative w-28 h-28 mb-4 flex items-center justify-center">
+                <div class="absolute inset-0 bg-blue-50 rounded-full opacity-60 filter blur-md"></div>
+                <svg class="w-20 h-20 relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- White Paper document -->
+                    <rect x="25" y="15" width="50" height="65" rx="8" fill="white" stroke="#E2E8F0" stroke-width="2" />
+                    <!-- Document content lines -->
+                    <line x1="35" y1="28" x2="55" y2="28" stroke="#111111" stroke-width="3" stroke-linecap="round" />
+                    <line x1="35" y1="38" x2="65" y2="38" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                    <line x1="35" y1="46" x2="65" y2="46" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" />
+                    <line x1="35" y1="54" x2="55" y2="54" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" />
+                    <line x1="35" y1="62" x2="45" y2="62" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round" />
+                    <!-- Blue overlapping circle badge with download arrow -->
+                    <circle cx="65" cy="70" r="14" fill="#0066cc" />
+                    <!-- Arrow graphic -->
+                    <path d="M65 64V74M65 74L61 70M65 74L69 70" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+
+            <!-- Header Titles -->
+            <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight text-center mb-1">Thank You For Consulting With Us!</h3>
+            <p class="text-xs text-gray-500 font-medium text-center max-w-sm mb-6 leading-relaxed">
+                We value your experience.<br>Please take a moment to share your feedback about Doktura.
+            </p>
+
+            <!-- Feedback Submission Form -->
+            <form id="feedbackForm" action="https://script.google.com/macros/s/AKfycbzGM8-7ISd10bg5pZToBB_IeHt47zQTpBJsfezSQKCdBQpa5zGSnvU3pJFozmj_8-Rzkg/exec" method="POST" class="w-full">
+                
+                <!-- Underline Inputs (Name & Email) -->
+                <div class="grid grid-cols-2 gap-6 w-full mb-6">
+                    <div class="relative">
+                        <input type="text" name="name" placeholder="Name" required class="w-full border-b border-gray-200 focus:border-blue-500 outline-none py-2 text-sm text-gray-800 placeholder-gray-400 bg-transparent transition" />
+                    </div>
+                    <div class="relative">
+                        <input type="email" name="email" placeholder="Email" required class="w-full border-b border-gray-200 focus:border-blue-500 outline-none py-2 text-sm text-gray-800 placeholder-gray-400 bg-transparent transition" />
+                    </div>
+                </div>
+
+                <!-- Rating System -->
+                <div class="w-full mb-6 flex flex-col items-center">
+                    <p class="text-[13px] font-semibold text-gray-700 text-center mb-3">How would you rate your overall experience with <span class="text-blue-600 font-bold">Doktura</span>?</p>
+                    
+                    <div class="flex flex-col items-center w-full max-w-xs">
+                        <!-- Rating Stars -->
+                        <div class="flex justify-between w-full px-2" id="starsContainer">
+                            <button type="button" data-value="1" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 1 Star">
+                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                                </svg>
+                            </button>
+                            <button type="button" data-value="2" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 2 Stars">
+                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                                </svg>
+                            </button>
+                            <button type="button" data-value="3" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 3 Stars">
+                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                                </svg>
+                            </button>
+                            <button type="button" data-value="4" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 4 Stars">
+                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                                </svg>
+                            </button>
+                            <button type="button" data-value="5" class="star-btn text-gray-300 hover:scale-110 transition duration-150" aria-label="Rate 5 Stars">
+                                <svg class="w-10 h-10 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.25.588 1.81l-3.97 2.883a1 1 0 00-.364 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.971-2.883a1 1 0 00-1.18 0l-3.97 2.883c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118L2.98 10.1c-.773-.56-.375-1.81.587-1.81h4.907a1 1 0 00.95-.69l1.519-4.674z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Very Poor / Excellent Labels -->
+                        <div class="flex justify-between w-full text-[11px] text-gray-400 mt-2 px-1 font-medium">
+                            <span>Very Poor</span>
+                            <span>Excellent</span>
+                        </div>
+                    </div>
+                    <!-- Hidden rating value storage -->
+                    <input type="hidden" id="ratingValue" name="rating" value="5" required />
+                </div>
+
+                <!-- Textarea Segment -->
+                <div class="w-full text-left mb-6">
+                    <label class="block text-sm font-semibold text-gray-800 mb-2">Any additional comments or suggestions?</label>
+                    <textarea name="feedback" required placeholder="Share your thoughts with us..." class="w-full h-32 bg-[#F8F9FA] border border-gray-100 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition resize-none"></textarea>
+                </div>
+
+                <!-- Form Operations Action Group -->
+                <div class="flex gap-4 w-full mb-4">
+                    <button type="button" id="closeModalBtn" class="flex-1 py-3 border border-blue-600 text-blue-600 font-semibold rounded-xl text-sm hover:bg-blue-50 transition">Close</button>
+                    <button type="submit" class="flex-1 py-3 bg-[#0066cc] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-md transition">Submit Feedback</button>
+                </div>
+
+                <p class="text-[11px] text-gray-400 text-center italic leading-normal">
+                    Your feedback helps us improve and provide better care for you and others.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- Modal Interactions ---
+        const modal = document.getElementById('feedbackModal');
+        const modalContent = modal.querySelector('.transform');
+        const openBtn = document.getElementById('openFeedbackBtn');
+        const closeXBtn = document.getElementById('closeXBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        function openModal() {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+        }
+
+        openBtn.addEventListener('click', openModal);
+        closeXBtn.addEventListener('click', closeModal);
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Close on clicking outside the modal background
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // --- Star Rating Functionality ---
+        const stars = document.querySelectorAll('.star-btn');
+        const ratingValue = document.getElementById('ratingValue');
+        let chosenRating = 5; // Default matches visual mockup setup
+
+        // Initial setup
+        updateStarIcons(chosenRating);
+
+        stars.forEach(star => {
+            const val = parseInt(star.getAttribute('data-value'));
+
+            star.addEventListener('click', () => {
+                chosenRating = val;
+                ratingValue.value = val;
+                updateStarIcons(val);
+            });
+
+            star.addEventListener('mouseenter', () => {
+                updateStarIcons(val);
+            });
+
+            star.addEventListener('mouseleave', () => {
+                updateStarIcons(chosenRating);
+            });
+        });
+
+        function updateStarIcons(count) {
+            stars.forEach(star => {
+                const val = parseInt(star.getAttribute('data-value'));
+                const svg = star.querySelector('svg');
+                if (val <= count) {
+                    svg.classList.remove('text-gray-300', 'fill-none');
+                    svg.classList.add('text-yellow-400', 'fill-yellow-400');
+                } else {
+                    svg.classList.remove('text-yellow-400', 'fill-yellow-400');
+                    svg.classList.add('text-gray-300', 'fill-none');
+                }
+            });
+        }
+
+        // --- AJAX Form Submission to Google Sheet ---
+        const form = document.getElementById('feedbackForm');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Submitting state indication
+            submitBtn.innerHTML = 'Sending...';
+            submitBtn.disabled = true;
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                mode: 'no-cors' // Resolves redirect/CORS issues with App Script endpoints
+            })
+            .then(() => {
+                // Displaying immediate inline Thank You confirmation inside the popup
+                modalContent.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
+                        <p class="text-gray-500 text-sm mb-8 max-w-xs leading-relaxed">Your experience evaluation was submitted successfully. We appreciate your valuable support.</p>
+                        <button onclick="window.location.reload();" class="px-8 py-3 bg-[#0066cc] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition shadow-md">Back to page</button>
+                    </div>
+                `;
+            })
+            .catch(err => {
+                console.error('Submission error:', err);
+                alert('We encountered a problem sending your feedback. Please try again.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
 </body>
 </html>
