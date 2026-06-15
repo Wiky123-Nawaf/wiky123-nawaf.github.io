@@ -400,7 +400,7 @@
                     <div class="card-footer" id="stat-patients-sub">Loading...</div>
                 </div>
 
-                <div class="metric-card clickable" onclick="openStatsModal('doctors')" title="Click to view details">
+                <div class="metric-card clickable" onclick="window.location.href='admin_doctors.html#/doctors'" title="Manage Doctors">
                     <div class="card-header">Total Doctors <span class="arrow">↗</span></div>
                     <div class="card-body">
                         <div class="value" id="stat-doctors">0</div>
@@ -493,6 +493,17 @@
                             <p style="text-align: center; color: var(--text-light); font-size: 13px;">Searching for upcoming appointments...</p>
                         </div>
                     </div>
+
+                    <!-- NEW: PANEL PRE-APPROVALS WIDGET -->
+                    <div class="panel">
+                    <div class="panel-header">
+                        <div><span style="color:var(--text-muted); margin-right:8px;">🏥</span> Panel Pre-Approvals</div>
+                        <button style="border:1px solid var(--border); background:#fff; border-radius:6px; padding:4px 12px; font-size:11px; cursor:pointer;" onclick="switchToPatientsTab('Pending')">See All</button>
+                    </div>
+                    <div id="list-pending-insurance" class="doc-list">
+                        <p style="text-align: center; color: var(--text-light); font-size: 13px;">Checking for pending approvals...</p>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -546,13 +557,14 @@
                         <span style="color:var(--text-muted);">🔍</span> 
                         <input type="text" id="patientSearchInput" placeholder="Search by name or email" onkeyup="filterPatientsTable()">
                     </div>
-                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                        <select id="patientFilterSelect" onchange="filterPatientsTable()" style="border:1px solid var(--border); background:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; font-size: 13px; font-weight: 500; outline:none;">
+                    <select id="patientFilterSelect" onchange="filterPatientsTable()" style="border:1px solid var(--border); background:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; font-size: 13px; font-weight: 500; outline:none;">
                             <option value="All">⚙️ Filter Status: All</option>
                             <option value="Active">Active</option>
                             <option value="Premium">Premium</option>
                             <option value="Inactive">Inactive</option>
                             <option value="Deactivated">Deactivated</option>
+                            <option value="Panel">🏥 Panel / Insurance</option>
+                            <option value="Pending">⌛ Pending Verification</option>
                         </select>
                         <button class="btn-add" onclick="openAddPatientModal()">+ Add New User</button>
                     </div>
@@ -1401,6 +1413,7 @@
         }
 
         // ================= VIEW PATIENT (WITH INSURANCE UI) =================
+        // ================= VIEW PATIENT (WITH INSURANCE & NRIC UI) =================
         async function viewPatient(id) {
             const patient = allPatientsData.find(p => p.id === id);
             if (!patient) return;
@@ -1423,18 +1436,6 @@
 
                 if (appts.length === 0) {
                     appts = allAppointmentsData.filter(a => a.patient_id === id || a.patient_name === patient.name);
-                }
-
-                if (reports.length === 0) {
-                    try {
-                        const reportsRes = await fetch(`${API_BASE}/reports`, { headers });
-                        if(reportsRes.ok) {
-                            const repData = await reportsRes.json();
-                            if(repData.reports && repData.reports.length > 0) {
-                                reports = repData.reports.filter(r => r.patient_id === id || !r.patient_id);
-                            }
-                        }
-                    } catch(e) { console.log("Fallback report fetch failed."); }
                 }
 
                 const joinedStr = new Date(patient.created_at).toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-');
@@ -1529,11 +1530,11 @@
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Policy Number</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_policy_number || 'N/A'}</strong>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_policy_no || 'N/A'}</strong>
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Employee Company</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_company || 'N/A'}</strong>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_employee_company || 'N/A'}</strong>
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Status</span>
@@ -1601,6 +1602,10 @@
                             <input type="text" id="vp-edit-phone" class="vp-form-input" value="${patient.phone || ''}">
                         </div>
                         <div class="vp-form-group">
+                            <label>NRIC / Passport Number</label>
+                            <input type="text" id="vp-edit-ic" class="vp-form-input" value="${patient.ic_number || ''}" placeholder="e.g. 960101-10-1234">
+                        </div>
+                        <div class="vp-form-group">
                             <label>Joined</label>
                             <div class="vp-form-input readonly with-icon">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1611,7 +1616,7 @@
                             <label>Booking</label>
                             <input type="text" class="vp-form-input readonly" value="${bookingsCount}" readonly>
                         </div>
-                        <div class="vp-form-group" style="grid-column: 1 / -1;">
+                        <div class="vp-form-group">
                             <label>Status Category</label>
                             <div class="vp-form-input readonly" style="justify-content:space-between;">
                                 <span>${patient.statusCategory}</span>
@@ -1696,19 +1701,21 @@
             const name = document.getElementById('vp-edit-name').value;
             const age = document.getElementById('vp-edit-age').value;
             const phone = document.getElementById('vp-edit-phone').value;
+            const ic_number = document.getElementById('vp-edit-ic').value; // <-- Added NRIC
 
             const patient = allPatientsData.find(p => p.id === id);
             if(patient) {
                 patient.name = name;
                 patient.age = age;
                 patient.phone = phone;
+                patient.ic_number = ic_number; // <-- Added NRIC
             }
 
             try {
                 const res = await fetch(`${API_BASE}/admin/patient/${id}`, {
                     method: 'PUT',
                     headers: headers,
-                    body: JSON.stringify({ name, age, phone })
+                    body: JSON.stringify({ name, age, phone, ic_number })
                 });
                 
                 if(!res.ok) throw new Error("Failed to update on backend.");
@@ -1859,6 +1866,7 @@
 
                 processPatientData();
                 renderNotifications();
+                renderPendingInsuranceWidget();
 
                 console.log("Dashboard data synchronized successfully.");
 
@@ -2233,6 +2241,46 @@
             
             setInterval(runBackgroundAlertPolling, 10000);
             setInterval(loadCoreData, 30000);
+        };
+    // ================= WIDGET: PENDING INSURANCE CARD REDIRECTS =================
+        function renderPendingInsuranceWidget() {
+            const container = document.getElementById('list-pending-insurance');
+            if (!container) return;
+
+            const pendingPatients = allPatientsData.filter(p => p.insurance_status === 'pending');
+            if (pendingPatients.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:gray; font-size:12px; padding:20px;">No pending insurer validations.</p>`;
+                return;
+            }
+
+            container.innerHTML = pendingPatients.map(p => {
+                return `
+                <div class="doc-card" onclick="viewPatient('${p.id}')">
+                    <div style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="doc-info">
+                                <img src="${p.photo_url || `https://ui-avatars.com/api/?name=${p.name}&background=random`}" alt="Patient Avatar">
+                                <div class="doc-info-text">
+                                    <div class="name">${p.name || 'Unknown Patient'}</div>
+                                    <div class="spec">Provider: ${p.insurance_provider || 'N/A'}</div>
+                                </div>
+                            </div>
+                            <span class="badge pending">Pending</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.switchToPatientsTab = function(filterType) {
+            window.location.hash = '#/patients';
+            setTimeout(() => {
+                const selectEl = document.getElementById('patientFilterSelect');
+                if (selectEl) {
+                    selectEl.value = filterType;
+                    filterPatientsTable();
+                }
+            }, 150);
         };
     </script>
 </body>
