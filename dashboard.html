@@ -2019,9 +2019,9 @@
             } else if (type === 'insurance') {
                 statusBox.classList.remove('hidden');
 
-                // Check for real-time expiration
+                // Check for real-time expiration ONLY if status is currently approved
                 let isExpired = false;
-                if (window.userData.insurance_expiry) {
+                if (status === 'approved' && window.userData.insurance_expiry) {
                     const expiryDate = new Date(window.userData.insurance_expiry);
                     const today = new Date();
                     today.setHours(0,0,0,0);
