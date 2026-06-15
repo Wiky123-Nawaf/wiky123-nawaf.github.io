@@ -544,8 +544,11 @@
                 We value your experience.<br>Please take a moment to share your feedback about Doktura.
             </p>
 
-            <!-- Feedback Submission Form -->
-            <form id="feedbackForm" action="https://script.google.com/macros/s/AKfycbzGM8-7ISd10bg5pZToBB_IeHt47zQTpBJsfezSQKCdBQpa5zGSnvU3pJFozmj_8-Rzkg/exec" method="POST" class="w-full">
+            <!-- Hidden iframe to handle Google's strict CORS without redirecting the page -->
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+            <!-- Feedback Submission Form - Target is set to the iframe above -->
+            <form id="feedbackForm" action="https://script.google.com/macros/s/AKfycbzGM8-7ISd10bg5pZToBB_IeHt47zQTpBJsfezSQKCdBQpa5zGSnvU3pJFozmj_8-Rzkg/exec" method="POST" target="hidden_iframe" class="w-full">
                 
                 <!-- Underline Inputs (Name & Email) -->
                 <div class="grid grid-cols-2 gap-6 w-full mb-6">
@@ -621,7 +624,6 @@
     </div>
 
     <!-- Scripts -->
-    <!-- Scripts -->
     <script>
         // --- Modal Interactions ---
         const modal = document.getElementById('feedbackModal');
@@ -693,52 +695,37 @@
             });
         }
 
-        // --- AJAX Form Submission to Google Sheet ---
+        // --- Hidden Iframe Form Submission ---
+        let submitted = false;
         const form = document.getElementById('feedbackForm');
+        const hiddenIframe = document.getElementById('hidden_iframe');
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        // When the user clicks the submit button, we show "Sending..."
+        form.addEventListener('submit', function() {
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            // Submitting state indication
             submitBtn.innerHTML = 'Sending...';
             submitBtn.disabled = true;
+            submitted = true;
+        });
 
-            // Convert FormData to application/x-www-form-urlencoded
-            const formData = new FormData(form);
-            const urlEncodedData = new URLSearchParams(formData).toString();
-
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: urlEncodedData,
-                mode: 'no-cors' // Resolves redirect/CORS issues with App Script endpoints
-            })
-            .then(() => {
-                // Displaying immediate inline Thank You confirmation inside the popup
+        // When the hidden iframe loads, the submission has been completed!
+        hiddenIframe.addEventListener('load', function() {
+            if (submitted) {
+                // Show the Thank You view inside the modal
                 modalContent.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-12 text-center">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6">
+                    <div class="flex flex-col items-center justify-center py-12 text-center w-full">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6 mx-auto">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
                         <h3 class="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
-                        <p class="text-gray-500 text-sm mb-8 max-w-xs leading-relaxed">Your experience evaluation was submitted successfully. We appreciate your valuable support.</p>
-                        <button onclick="window.location.reload();" class="px-8 py-3 bg-[#0066cc] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition shadow-md">Back to page</button>
+                        <p class="text-gray-500 text-sm mb-8 max-w-xs mx-auto leading-relaxed">Your experience evaluation was submitted successfully. We appreciate your valuable support.</p>
+                        <button onclick="window.location.reload();" class="px-8 py-3 bg-[#0066cc] hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition shadow-md w-full max-w-[200px]">Back to page</button>
                     </div>
                 `;
-            })
-            .catch(err => {
-                console.error('Submission error:', err);
-                alert('We encountered a problem sending your feedback. Please try again.');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            });
+                submitted = false; // Reset the flag
+            }
         });
     </script>
 </body>
