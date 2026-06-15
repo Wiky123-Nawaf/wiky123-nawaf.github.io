@@ -2033,7 +2033,8 @@
                 hideGlobalLoader();
                 isProcessingLink = false;
                 
-                if(data.is_complete || data.status === 'approved') { 
+                // UPDATE THIS LINE: Allow pending status to enter the dashboard
+                if(data.is_complete || data.status === 'approved' || data.status === 'pending') { 
                     if (forceCompleteData && !data.is_complete) {
                         populateCompleteDataForm(user, data, phoneClean);
                         showView('view-complete-data');
