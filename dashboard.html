@@ -2218,6 +2218,9 @@
             fd.append('insurance_policy_no', document.getElementById('ins-policy').value);
             fd.append('insurance_employee_company', document.getElementById('ins-emp').value);
             
+            // ADD THIS LINE to send the IC/Passport value matching your backend parameter
+            fd.append('ic_number', document.getElementById('ins-ic').value); 
+            
             const fileInput = document.getElementById('ins-file');
             if(fileInput.files[0]) fd.append('file', fileInput.files[0]);
 
