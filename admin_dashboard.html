@@ -1512,6 +1512,7 @@
                 }
 
                 // Insurance Pre-Approval UI Segment
+                // Insurance Pre-Approval UI Segment
                 let insuranceHtml = '';
                 if (patient.insurance_status && patient.insurance_status.toLowerCase() !== 'none') {
                     const statusVal = patient.insurance_status.toLowerCase();
@@ -1527,6 +1528,11 @@
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Provider</span>
                                 <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_provider || 'N/A'}</strong>
+                            </div>
+                            <!-- Added Passport/IC field block here -->
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Passport / IC Number</span>
+                                <strong style="font-size: 14px; color: var(--text-main);">${patient.ic_number || 'N/A'}</strong>
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Policy Number</span>
@@ -2263,6 +2269,8 @@
                                 <div class="doc-info-text">
                                     <div class="name">${p.name || 'Unknown Patient'}</div>
                                     <div class="spec">Provider: ${p.insurance_provider || 'N/A'}</div>
+                                    <!-- Added NRIC/Passport label to the list items -->
+                                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 1px;">ID/Passport: ${p.ic_number || 'N/A'}</div>
                                 </div>
                             </div>
                             <span class="badge pending">Pending</span>
