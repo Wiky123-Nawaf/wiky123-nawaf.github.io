@@ -1243,10 +1243,11 @@
             document.getElementById('header-title').innerText = headerName;
 
             // ─── RESET BOOKING FORM WHEN LEAVING THE BOOK TAB ───
+            // ─── RESET BOOKING FORM WHEN LEAVING THE BOOK TAB ───
             if (tab !== 'book') {
                 const bookForm = document.getElementById('booking-online-section');
                 if (bookForm) bookForm.reset();
-
+            
                 // Clear selected doctor preview and hidden input
                 const docSelectedContent = document.getElementById('doctor-selected-content');
                 if (docSelectedContent) {
@@ -1254,19 +1255,27 @@
                 }
                 const bookDoctorInput = document.getElementById('book-doctor');
                 if (bookDoctorInput) bookDoctorInput.value = '';
-
+            
                 // Hide and clear available time slots
                 const slotsWrapper = document.getElementById('slots-wrapper');
                 if (slotsWrapper) slotsWrapper.classList.add('hidden');
                 const selectedSlotInput = document.getElementById('selected-slot');
                 if (selectedSlotInput) selectedSlotInput.value = '';
-
+            
                 // Reset payment method selection to 'Self Pay' default
                 window.bookingPayType = 'self';
                 const paySelfRadio = document.querySelector('input[name="pay_type_toggle"][value="self"]');
                 if (paySelfRadio) paySelfRadio.checked = true;
                 window.togglePayType('self');
-
+            
+                // 👇 ADD THESE LINES BELOW TO FIX THE BUG 👇
+                // Reset booking urgency to 'regular' default
+                window.bookingUrgency = 'regular';
+                const urgencyRegularRadio = document.querySelector('input[name="urgency_toggle"][value="regular"]');
+                if (urgencyRegularRadio) urgencyRegularRadio.checked = true;
+                window.toggleUrgency('regular'); // Re-fetches the full doctor list
+                // 👆 END ADDED LINES 👆
+            
                 // Clear symptoms input field
                 const symptomsInput = document.getElementById('book-symptoms');
                 if (symptomsInput) symptomsInput.value = '';
