@@ -1513,47 +1513,42 @@
 
                 // Insurance Pre-Approval UI Segment
                 // Insurance Pre-Approval UI Segment
+                // Insurance Pre-Approval UI Segment
                 let insuranceHtml = '';
                 if (patient.insurance_status && patient.insurance_status.toLowerCase() !== 'none') {
                     const statusVal = patient.insurance_status.toLowerCase();
-                    let statusBadgeClass = 'inactive';
-                    if (statusVal === 'approved') statusBadgeClass = 'active';
-                    if (statusVal === 'rejected') statusBadgeClass = 'deactivated';
-                    if (statusVal === 'pending') statusBadgeClass = 'premium';
+                    
+                    // Create dropdown options for Status
+                    const statusOptions = ['pending', 'approved', 'rejected', 'none'].map(s => 
+                        `<option value="${s}" ${statusVal === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
+                    ).join('');
 
                     insuranceHtml = `
-                    <div class="vp-section-title">Insurance Pre-Approval</div>
+                    <div class="vp-section-title">Insurance Details (Editable)</div>
                     <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Provider</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_provider || 'N/A'}</strong>
-                            </div>
-                            <!-- Added Passport/IC field block here -->
-                            <div>
-                                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Passport / IC Number</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.ic_number || 'N/A'}</strong>
+                                <input type="text" id="vp-edit-ins-provider" class="vp-form-input" style="padding: 8px; width: 100%;" value="${patient.insurance_provider || ''}">
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Policy Number</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_policy_no || 'N/A'}</strong>
+                                <input type="text" id="vp-edit-ins-policy" class="vp-form-input" style="padding: 8px; width: 100%;" value="${patient.insurance_policy_no || ''}">
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Employee Company</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_employee_company || 'N/A'}</strong>
+                                <input type="text" id="vp-edit-ins-emp" class="vp-form-input" style="padding: 8px; width: 100%;" value="${patient.insurance_employee_company || ''}">
                             </div>
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Status</span>
-                                <span class="status-badge ${statusBadgeClass}" style="text-transform: capitalize; margin-top: 2px;">
-                                    ${patient.insurance_status}
-                                </span>
+                                <select id="vp-edit-ins-status" class="vp-form-input" style="padding: 8px; width: 100%; cursor: pointer;">
+                                    ${statusOptions}
+                                </select>
                             </div>
-                            ${patient.insurance_expiry ? `
                             <div>
                                 <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Expiry Date</span>
-                                <strong style="font-size: 14px; color: var(--text-main);">${patient.insurance_expiry}</strong>
+                                <input type="date" id="vp-edit-ins-expiry" class="vp-form-input" style="padding: 8px; width: 100%;" value="${patient.insurance_expiry || ''}">
                             </div>
-                            ` : ''}
                         </div>
                         
                         ${patient.insurance_card_url ? `
@@ -1568,10 +1563,6 @@
                         ${statusVal === 'pending' ? `
                         <hr style="border: 0; border-top: 1px solid #bfdbfe; margin: 16px 0;">
                         <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label style="font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: block;">Set Coverage Expiry Date <span style="color: var(--danger); font-size: 11px;">(Required for Approval)</span></label>
-                                <input type="date" id="insurance-expiry-input" class="form-control" style="background: #fff; max-width: 250px;">
-                            </div>
                             <div style="display: flex; gap: 12px; margin-top: 8px;">
                                 <button class="btn-primary" onclick="verifyInsurance('${patient.id}', 'approve')" style="background: var(--success); width: auto; padding: 10px 16px;">Approve & Grant Cashless</button>
                                 <button class="btn-primary" onclick="verifyInsurance('${patient.id}', 'reject')" style="background: var(--danger); width: auto; padding: 10px 16px;">Reject</button>
@@ -1657,10 +1648,12 @@
         function closeViewPatientModal() { document.getElementById('viewPatientModal').style.display = 'none'; }
 
         // ================= ASYNC INSURANCE VERIFICATION CONTROLLER =================
+        // ================= ASYNC INSURANCE VERIFICATION CONTROLLER =================
         async function verifyInsurance(patientId, action) {
             let expiryDate = null;
             if (action === 'approve') {
-                const dateInput = document.getElementById('insurance-expiry-input');
+                // UPDATE ID HERE to match the new editable input
+                const dateInput = document.getElementById('vp-edit-ins-expiry'); 
                 expiryDate = dateInput ? dateInput.value : null;
                 if (!expiryDate) {
                     alert("Please select a valid coverage expiry date to approve the insurance.");
@@ -1703,34 +1696,72 @@
         }
 
         // ================= SAVE PATIENT DETAILS =================
+        // ================= SAVE PATIENT DETAILS =================
         async function savePatientDetails(id) {
-            const name = document.getElementById('vp-edit-name').value;
-            const age = document.getElementById('vp-edit-age').value;
-            const phone = document.getElementById('vp-edit-phone').value;
-            const ic_number = document.getElementById('vp-edit-ic').value; // <-- Added NRIC
+            // Get base details
+            const name = document.getElementById('vp-edit-name')?.value;
+            const age = document.getElementById('vp-edit-age')?.value;
+            const phone = document.getElementById('vp-edit-phone')?.value;
+            const ic_number = document.getElementById('vp-edit-ic')?.value; 
+            
+            // Get insurance details (will be undefined if patient has no insurance data UI active)
+            const ins_provider = document.getElementById('vp-edit-ins-provider')?.value;
+            const ins_policy = document.getElementById('vp-edit-ins-policy')?.value;
+            const ins_emp = document.getElementById('vp-edit-ins-emp')?.value;
+            const ins_status = document.getElementById('vp-edit-ins-status')?.value;
+            const ins_expiry = document.getElementById('vp-edit-ins-expiry')?.value;
 
+            // Construct payload (undefined keys are automatically dropped by JSON.stringify)
+            const payload = {
+                name,
+                age: age ? parseInt(age) : null,
+                phone,
+                ic_number,
+                insurance_provider: ins_provider,
+                insurance_policy_no: ins_policy,
+                insurance_employee_company: ins_emp,
+                insurance_status: ins_status,
+                insurance_expiry: ins_expiry
+            };
+
+            // Update local UI state immediately
             const patient = allPatientsData.find(p => p.id === id);
             if(patient) {
-                patient.name = name;
-                patient.age = age;
-                patient.phone = phone;
-                patient.ic_number = ic_number; // <-- Added NRIC
+                if (name !== undefined) patient.name = name;
+                if (age !== undefined) patient.age = age;
+                if (phone !== undefined) patient.phone = phone;
+                if (ic_number !== undefined) patient.ic_number = ic_number;
+                if (ins_provider !== undefined) patient.insurance_provider = ins_provider;
+                if (ins_policy !== undefined) patient.insurance_policy_no = ins_policy;
+                if (ins_emp !== undefined) patient.insurance_employee_company = ins_emp;
+                if (ins_status !== undefined) patient.insurance_status = ins_status;
+                if (ins_expiry !== undefined) patient.insurance_expiry = ins_expiry;
             }
 
             try {
-                const res = await fetch(`${API_BASE}/admin/patient/${id}`, {
+                // Send to the NEW Backend Edit Endpoint
+                const res = await fetch(`${API_BASE}/admin/patient/${id}/edit`, {
                     method: 'PUT',
                     headers: headers,
-                    body: JSON.stringify({ name, age, phone, ic_number })
+                    body: JSON.stringify(payload)
                 });
                 
-                if(!res.ok) throw new Error("Failed to update on backend.");
+                if(!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || "Failed to update on backend.");
+                }
+                
+                alert("Patient details successfully updated!");
+                
+                // Refresh data
+                processPatientData();
+                loadCoreData();
+                closeViewPatientModal();
+                
             } catch(e) {
                 console.warn(e.message, "- Falling back to local data update.");
+                alert("Updated local state, but backend failed: " + e.message);
             }
-
-            alert("Patient details successfully updated!");
-            processPatientData();
         }
 
         // ================= DEACTIVATE / DELETE PATIENT =================
