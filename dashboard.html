@@ -2392,7 +2392,7 @@
                 const container = document.getElementById('available-slots-container');
 
                 const now = new Date();
-                const fifteenMinsLater = new Date(now.getTime() + 15*60*1000); // Adds 15 minutes instead of 1 hour
+                const fifteenMinsLater = new Date(now.getTime() + 15*60*1000); // 15-minute standby window
 
                 const formatTime = (d) => d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
