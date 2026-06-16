@@ -1409,7 +1409,17 @@
                 const timeStr = d.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
                 
                 const typeTag = appt.visit_type.toLowerCase().includes('online') ? `<span class="tag online">💻 Online</span>` : `<span class="tag clinic">🏥 In-Clinic Visit</span>`;
-                const callBtn = appt.action_url ? `<button class="btn-call" onclick="window.open('${API_BASE}${appt.action_url}', '_blank')">Start Video Call</button>` : `<span style="color:#9ca3af; font-size:13px;">In Clinic</span>`;
+                let callBtn;
+                        if (appt.action_url) {
+                            callBtn = `<button class="btn-call" onclick="window.open('${API_BASE}${appt.action_url}', '_blank')">Start Video Call</button>`;
+                        } else {
+                            // If there is no active call link, check if it was originally an online consultation
+                            if (appt.visit_type.toLowerCase().includes('online')) {
+                                callBtn = `<span style="color:#64748b; font-size:13px; font-weight: 500;">Call Ended</span>`;
+                            } else {
+                                callBtn = `<span style="color:#9ca3af; font-size:13px;">In Clinic</span>`;
+                            }
+                        }
                 
                 const recordBtn = appt.consultation_completed 
                     ? `<span style="color:#16a34a; font-size:12px; font-weight:600;">✓ Completed</span>` 
