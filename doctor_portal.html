@@ -1608,13 +1608,16 @@
         let medCount = 0;
         let searchTimeout = null;
 
-        window.openPrescriptionModal = function(appointmentId) {
+        window.openPrescriptionModal = async function(appointmentId) {
+            // 👇 1. FORCE A SILENT CLOUD REFRESH TO GET THE NEWEST NOTES 👇
+            await window.loadAppointments(true);
+            
             activeAppointmentIdForPrescription = appointmentId;
             document.getElementById('prescriptionModal').style.display = 'flex';
             document.body.classList.add('modal-open');
             document.getElementById('medicationsContainer').innerHTML = '';
             
-            // 👇 FIXED: Converts ID to string to ensure a match with database notes draft 👇
+            // 👇 2. NOW LOOK UP THE FRESH DATA 👇
             const appt = currentAppointments.find(a => String(a.appointment_id) === String(appointmentId));
             document.getElementById('prescNotes').value = (appt && appt.doctor_notes) ? appt.doctor_notes : '';
 
@@ -1624,7 +1627,7 @@
             medCount = 0;
             addMedicationBlock(); 
         }
-
+        
         window.toggleMCDays = function() {
             const isChecked = document.getElementById('mcCheckbox').checked;
             document.getElementById('mcDaysContainer').style.display = isChecked ? 'block' : 'none';
