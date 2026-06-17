@@ -1613,7 +1613,11 @@
             document.getElementById('prescriptionModal').style.display = 'flex';
             document.body.classList.add('modal-open');
             document.getElementById('medicationsContainer').innerHTML = '';
-            document.getElementById('prescNotes').value = '';
+            
+            // 👇 LOOK UP THE SAVED NOTES DRAFT AND PRE-FILL THE FIELD 👇
+            const appt = currentAppointments.find(a => a.appointment_id === appointmentId);
+            document.getElementById('prescNotes').value = (appt && appt.doctor_notes) ? appt.doctor_notes : '';
+
             document.getElementById('mcCheckbox').checked = false;
             document.getElementById('mcDaysContainer').style.display = 'none';
             document.getElementById('mcDays').value = '';
