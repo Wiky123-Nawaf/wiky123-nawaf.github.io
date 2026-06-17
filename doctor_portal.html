@@ -1614,8 +1614,8 @@
             document.body.classList.add('modal-open');
             document.getElementById('medicationsContainer').innerHTML = '';
             
-            // 👇 LOOK UP THE SAVED NOTES DRAFT AND PRE-FILL THE FIELD 👇
-            const appt = currentAppointments.find(a => a.appointment_id === appointmentId);
+            // 👇 FIXED: Converts ID to string to ensure a match with database notes draft 👇
+            const appt = currentAppointments.find(a => String(a.appointment_id) === String(appointmentId));
             document.getElementById('prescNotes').value = (appt && appt.doctor_notes) ? appt.doctor_notes : '';
 
             document.getElementById('mcCheckbox').checked = false;
@@ -1623,12 +1623,6 @@
             document.getElementById('mcDays').value = '';
             medCount = 0;
             addMedicationBlock(); 
-        }
-
-        window.closePrescriptionModal = function() {
-            document.getElementById('prescriptionModal').style.display = 'none';
-            document.body.classList.remove('modal-open');
-            activeAppointmentIdForPrescription = null;
         }
 
         window.toggleMCDays = function() {
