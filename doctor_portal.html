@@ -1627,7 +1627,14 @@
             medCount = 0;
             addMedicationBlock(); 
         }
-        
+
+        // 👇 ADD THIS MISSING FUNCTION BACK IN 👇
+        window.closePrescriptionModal = function() {
+            document.getElementById('prescriptionModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+            activeAppointmentIdForPrescription = null;
+        }
+
         window.toggleMCDays = function() {
             const isChecked = document.getElementById('mcCheckbox').checked;
             document.getElementById('mcDaysContainer').style.display = isChecked ? 'block' : 'none';
