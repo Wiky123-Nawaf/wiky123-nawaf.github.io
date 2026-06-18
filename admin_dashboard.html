@@ -1344,8 +1344,8 @@
             document.getElementById('p-stat-active').innerText = activeCount;
             document.getElementById('p-stat-inactive').innerText = inactiveCount;
 
-            filteredPatientsData = [...allPatientsData];
-            renderPatientsTable();
+            // Automatically re-apply search keywords and status filters to fresh data
+            filterPatientsTable();
         }
 
         function isInsuranceExpired(expiryStr) {
