@@ -22,16 +22,17 @@
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0mm; /* THIS REMOVES THE URL, DATE, AND PAGE NUMBERS */
+                margin: 0mm; /* REMOVES THE URL, DATE, AND PAGE NUMBERS */
             }
             body { 
                 background: white !important; 
                 margin: 0 !important;
-                padding: 15mm 20mm !important; /* Creates clean document margins instead of browser margins */
+                padding: 15mm 20mm !important; /* Clean document margins */
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important; 
             }
             .no-print { display: none !important; }
+            .mobile-download-card { display: none !important; }
             
             #main-content {
                 display: block !important;
@@ -41,10 +42,11 @@
             }
 
             #delivery-sidebar {
-                display: none !important; /* Force hide delivery sidebar on print */
+                display: none !important; 
             }
 
             #rx-paper {
+                display: block !important; /* Ensure the prescription paper is rendered on print output */
                 box-shadow: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -55,12 +57,12 @@
                 min-height: auto !important;
             }
 
-            /* Prevent awkward page splits cutting elements in half */
+            /* Prevent awkward page splits */
             .grid > div, #ui-med-list > div {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
-            .mt-16 { /* Protects the signature area */
+            .mt-16 { 
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
@@ -97,7 +99,6 @@
     <div id="verification-modal" class="modal-backdrop fixed inset-0 bg-gray-900/50 z-[500] hidden items-center justify-center px-4 no-print">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden relative">
             
-            <!-- Close Button (Revealed only if patient has existing valid data) -->
             <button id="close-verify-btn" onclick="closeVerificationModal()" class="absolute top-4 right-4 text-white hover:text-gray-200 z-10 hidden" title="Close without saving">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -153,19 +154,34 @@
     <!-- ===================== MAIN CONTENT ===================== -->
     <div id="main-content" class="hidden max-w-[85rem] mx-auto px-4 sm:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
 
-        <!-- ======== LEFT: E-PRESCRIPTION PAPER EXACT MATCH ======== -->
+        <!-- ======== LEFT: E-PRESCRIPTION PAPER AND MOBILE ACTION ======== -->
         <div class="lg:col-span-8 flex flex-col w-full">
 
-            <!-- Print button -->
-            <div class="no-print w-full flex justify-end mb-4">
+            <!-- Mobile-only Minimal Action Card -->
+            <div class="mobile-download-card block sm:hidden bg-white border border-gray-200 rounded-2xl p-6 shadow-sm text-center mb-6 no-print">
+                <div class="w-16 h-16 bg-blue-50 text-[#0066FF] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1">Prescription is Ready</h3>
+                <p class="text-xs text-gray-500 mb-6 leading-relaxed max-w-[280px] mx-auto">Your prescription has been issued by Hello Doctor Clinic. Tap below to download or print the document.</p>
+                <button onclick="window.print()" class="w-full flex items-center justify-center gap-2 text-sm font-bold bg-[#0066FF] text-white py-3.5 px-5 rounded-xl hover:bg-blue-700 active:scale-95 shadow-md shadow-blue-500/10 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    Download / Print PDF
+                </button>
+            </div>
+
+            <!-- Print button (desktop only) -->
+            <div class="hidden sm:flex no-print w-full justify-end mb-4">
                 <button onclick="window.print()" class="flex items-center gap-2 text-sm font-bold bg-white text-gray-600 border border-gray-200 px-5 py-2.5 rounded-xl hover:bg-gray-50 active:scale-95 shadow-sm transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     Download PDF / Print
                 </button>
             </div>
 
-            <!-- ===== PRESCRIPTION PAPER ===== -->
-            <div id="rx-paper" class="w-full bg-white border border-gray-200 rounded-md p-8 sm:p-12 min-h-0 sm:min-h-[850px] relative mx-auto shadow-sm">
+            <!-- ===== PRESCRIPTION PAPER (Hidden on mobile screens, shown when printing) ===== -->
+            <div id="rx-paper" class="hidden sm:block w-full bg-white border border-gray-200 rounded-md p-8 sm:p-12 min-h-0 sm:min-h-[850px] relative mx-auto shadow-sm">
                 
                 <img src="https://huggingface.co/NAwafo/SmolLM-Keyboard-GGUF/resolve/main/Vector%20(4).png?download=true" class="rx-watermark" alt="">
 
@@ -239,7 +255,6 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
                     
                     <!-- Clinical Notes -->
-                    <!-- Clinical Notes -->
                     <div class="border border-gray-200 rounded-xl p-5 bg-white flex flex-col">
                         <div class="flex items-center gap-2 mb-4">
                             <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -254,7 +269,6 @@
                         <div class="border-t border-gray-100 pt-4">
                             <p id="ui-doctor-notes" class="text-[13px] text-gray-800 font-medium italic leading-relaxed mb-4 break-words whitespace-pre-wrap"></p>
                             
-                            <!-- Internal Divider specifically for MC flag inside the notes card -->
                             <div id="ui-mc-divider-wrap" class="mt-auto border-t border-gray-100 pt-4 hidden">
                                 <p id="ui-notes-mc-flag" class="text-xs font-bold text-gray-800 italic"></p>
                             </div>
@@ -299,7 +313,7 @@
             </div>
         </div>
 
-        <!-- ======== RIGHT: DELIVERY SIDEBAR EXACT MATCH ======== -->
+        <!-- ======== RIGHT: DELIVERY SIDEBAR ======== -->
         <div id="delivery-sidebar" class="no-print lg:col-span-4 hidden sticky top-20 w-full mb-10">
             <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
                 <!-- Banner -->
@@ -335,7 +349,6 @@
                                 <div class="py-2.5 rounded-lg text-xs sm:text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-[#0066FF] peer-checked:shadow-sm transition">🏥 Panel / Insurance</div>
                             </label>
                         </div>
-                        <!-- Warning if they don't have active insurance -->
                         <div id="del-insurance-warning" class="hidden mt-3 text-xs text-red-600 bg-red-50 p-3 rounded-lg border border-red-100 font-medium leading-relaxed"></div>
                     </div>
                     
@@ -444,10 +457,8 @@
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.detail || "Unable to fetch prescription data.");
 
-                // Store prescription data globally to power UI re-renders
                 window.prescriptionData = data;
 
-                // ----- Populate Rx Header -----
                 if (document.getElementById('ui-appt-id')) document.getElementById('ui-appt-id').innerText = data.appointment_id.toString().padStart(6, '0');
                 try {
                     let d = new Date(data.date.replace('T', ' '));
@@ -471,7 +482,6 @@
                             const uomText = m.uom ? `(${m.uom})` : '(Strip)';
                             const freq = m.pills_per_day || m.frequency || 'ONCE A DAY';
                             
-                            // Extract a dynamic category from notes if possible, else default
                             let category = "General Medication";
                             let specificInstruction = "Take as directed";
 
@@ -480,7 +490,6 @@
                                     const parts = m.notes.split('|');
                                     category = parts[0].replace(/Reason:/i, "").trim();
                                     
-                                    // Check if the "Instructions" segment exists and is not empty
                                     if (parts.length > 1 && parts[1].toLowerCase().includes("instructions:")) {
                                         const extractedInstruction = parts[1].replace(/Instructions:/i, "").trim();
                                         if (extractedInstruction) {
@@ -488,7 +497,6 @@
                                         }
                                     }
                                 } else {
-                                    // Fallback: Use the whole notes string as instruction if it doesn't match the strict format
                                     const trimmedNote = m.notes.trim();
                                     if (trimmedNote) {
                                         specificInstruction = trimmedNote;
@@ -496,7 +504,6 @@
                                 }
                             }
 
-                            // Format duration with a stylized red text to mimic handwriting
                             const durationText = m.duration ? `<span style="color: #dc2626; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; font-weight: 700; margin-left: 6px;">x ${m.duration.toLowerCase()}</span>` : '';
 
                             rxList.innerHTML += `
@@ -531,15 +538,13 @@
 
                 // Populate clinical notes and dynamically extract MC days
                 let rawNotes = data.doctor_notes || "Use all prescribed medicine exactly as directed. In case of unexpected allergic reaction or worsening symptoms, contact your medical center immediately.";
-                let extractedMcValue = "1"; // Default fallback
+                let extractedMcValue = "1"; 
 
-                // Match "MC Issued: [anything]" in the doctor's notes (case insensitive)
                 const mcRegex = /MC Issued:\s*([^\n]+)/i;
                 const mcMatch = rawNotes.match(mcRegex);
 
                 if (mcMatch) {
-                    extractedMcValue = mcMatch[1].trim(); // Grabs the "2", "3", "Yes", etc.
-                    // Remove the matched line from the main notes body to prevent duplication
+                    extractedMcValue = mcMatch[1].trim(); 
                     rawNotes = rawNotes.replace(mcRegex, '').trim();
                 }
 
@@ -547,12 +552,10 @@
                     document.getElementById('ui-doctor-notes').innerText = rawNotes;
                 }
 
-                // Setup the bottom MC Issue Flag dynamically
                 const mcFlag = document.getElementById('ui-notes-mc-flag');
                 const mcDivider = document.getElementById('ui-mc-divider-wrap');
                 
                 if (mcFlag && mcDivider) {
-                    // Show if the backend flag is true, OR if the doctor explicitly wrote "MC Issued: X"
                     if (data.mc_needed || mcMatch) {
                         mcFlag.innerText = `MC Issued: ${extractedMcValue}`;
                         mcDivider.classList.remove('hidden');
@@ -567,7 +570,6 @@
                         <svg class="w-4 h-4 text-[#0066FF]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
                         </svg> Required / Approved`;
-                    // Apply exact style: white background, blue border, blue text
                     mcBadge.className = "inline-flex items-center gap-1.5 text-[13px] font-bold px-4 py-2 rounded-full border-[1.5px] border-[#0066FF] text-[#0066FF] bg-white";
                 }
 
@@ -606,12 +608,10 @@
                     } else {
                         breakdownUI.innerHTML += `<div class="flex justify-between text-xs text-[#0066FF] font-bold uppercase tracking-wider pt-4 mt-2 border-t border-dashed border-gray-200"><span>DELIVERY RATE</span><span>RM ${parseFloat(data.delivery_fee).toFixed(2)}</span></div>`;
                         
-                        // --- THIS IS THE FIX: Set global total and un-hide the toggle! ---
                         window.originalDeliveryTotal = subTotal + parseFloat(data.delivery_fee);
                         if (document.getElementById('total-cost')) document.getElementById('total-cost').innerText = `RM ${window.originalDeliveryTotal.toFixed(2)}`;
                         
                         document.getElementById('delivery-pay-method-wrapper').classList.remove('hidden'); 
-                        // -----------------------------------------------------------------
                     
                         formWrapper.classList.remove('hidden');
                         payBtn.classList.remove('hidden');
@@ -626,7 +626,6 @@
                     }
                 }
 
-                // Show Verification modal to guarantee data capture before viewing
                 checkAndTriggerVerification();
 
             } catch (error) {
@@ -640,13 +639,11 @@
             }
         }
 
-        // Verification Gateway Logic
         function checkAndTriggerVerification() {
             document.getElementById('loader')?.classList.add('hidden');
             window.showVerificationModal();
         }
 
-        // Expose globally so onclick can call it
         window.showVerificationModal = function() {
             const ud = window.userData;
             const pData = window.prescriptionData || {};
@@ -655,7 +652,6 @@
             if (document.getElementById('modal-ic')) document.getElementById('modal-ic').value = ud.ic_number || localStorage.getItem('user_ic_number') || "";
             if (document.getElementById('modal-address')) document.getElementById('modal-address').value = ud.address || localStorage.getItem('user_address') || "";
 
-            // Allow closing the modal if they already have required delivery data on file
             const hasRequired = (ud.ic_number || localStorage.getItem('user_ic_number')) && (ud.address || localStorage.getItem('user_address'));
             if (hasRequired && document.getElementById('close-verify-btn')) {
                 document.getElementById('close-verify-btn').style.display = 'block';
@@ -704,7 +700,6 @@
 
             if (!name || !phone || !ic || !address) return;
 
-            // Update global userData cache
             if (window.userData) {
                 window.userData.name = name;
                 window.userData.phone = phone;
@@ -712,7 +707,6 @@
                 window.userData.address = address;
             }
 
-            // Sync to sidebar delivery fields
             try {
                 if (document.getElementById('del-name')) document.getElementById('del-name').value = name;
                 if (document.getElementById('del-phone')) document.getElementById('del-phone').value = phone;
@@ -720,7 +714,6 @@
                 if (document.getElementById('del-address')) document.getElementById('del-address').value = address;
             } catch(e) {}
 
-            // Persist to localStorage & backend
             try {
                 localStorage.setItem('user_ic_number', ic);
                 localStorage.setItem('user_address', address);
@@ -742,10 +735,8 @@
                 }
             } catch(e) {}
 
-            // Update the live Rx paper
             updateLiveRxDetails();
 
-            // Hide modal and reveal prescription instantly
             document.getElementById('verification-modal').classList.add('hidden');
             document.getElementById('verification-modal').classList.remove('flex');
             document.getElementById('main-content')?.classList.remove('hidden');
@@ -798,9 +789,8 @@
                 const data = await r.json();
 
                     if (data.stripe_url) {
-                        window.location.href = data.stripe_url; // Self Pay redirects to Stripe
+                        window.location.href = data.stripe_url; 
                     } else if (data.success && window.delPayType === 'insurance') {
-                        // Insurance bypasses stripe, update UI to show success
                         window.showInlineMessage("Panel Delivery Confirmed!", "success");
                         document.getElementById('delivery-form-wrapper').classList.add('hidden');
                         document.getElementById('delivery-pay-method-wrapper').classList.add('hidden');
@@ -831,7 +821,6 @@
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                // Check if user actually has an approved panel
                 if (window.userData.insurance_status === 'approved') {
                     totalEl.innerText = `RM 0.00 (Covered)`;
                     warningEl.classList.add('hidden');
