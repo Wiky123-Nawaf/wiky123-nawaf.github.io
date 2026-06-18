@@ -580,17 +580,17 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table>
+                    <table style="table-layout: fixed; width: 100%;">
                         <thead>
                             <tr>
-                                <th>Name ↕</th>
-                                <th>Age ↕</th>
-                                <th>Patient ID ↕</th>
-                                <th>Joined ↕</th>
-                                <th>Phone Number ↕</th>
-                                <th>Booking ↕</th>
-                                <th>Status ↕</th>
-                                <th>Action ↕</th>
+                                <th style="width: 22%;">Name ↕</th>
+                                <th style="width: 8%;">Age ↕</th>
+                                <th style="width: 14%;">Patient ID ↕</th>
+                                <th style="width: 14%;">Joined ↕</th>
+                                <th style="width: 16%;">Phone Number ↕</th>
+                                <th style="width: 10%;">Booking ↕</th>
+                                <th style="width: 12%;">Status ↕</th>
+                                <th style="width: 14%;">Action ↕</th>
                             </tr>
                         </thead>
                         <tbody id="table-patients">
@@ -1348,6 +1348,28 @@
             renderPatientsTable();
         }
 
+        function isInsuranceExpired(expiryStr) {
+            if (!expiryStr) return false;
+            let cleanStr = expiryStr.replace(/-/g, '/');
+            let expiryDate = new Date(cleanStr);
+            if (isNaN(expiryDate.getTime())) {
+                const parts = cleanStr.split('/');
+                if (parts.length === 3) {
+                    const p0 = parseInt(parts[0]);
+                    const p1 = parseInt(parts[1]);
+                    const p2 = parseInt(parts[2]);
+                    expiryDate = p0 > 12 ? new Date(p2, p1 - 1, p0) : new Date(p2, p0 - 1, p1);
+                }
+            }
+            if (expiryDate && !isNaN(expiryDate.getTime())) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                expiryDate.setHours(0,0,0,0);
+                return expiryDate < today;
+            }
+            return false;
+        }
+
         function filterPatientsTable() {
             const query = document.getElementById('patientSearchInput').value.toLowerCase();
             const filterVal = document.getElementById('patientFilterSelect').value;
@@ -1357,7 +1379,16 @@
                                     (p.email || "").toLowerCase().includes(query) ||
                                     (p.id || "").toLowerCase().includes(query);
                                     
-                const matchFilter = (filterVal === "All") || (p.statusCategory === filterVal);
+                let matchFilter = false;
+                if (filterVal === "All") {
+                    matchFilter = true;
+                } else if (filterVal === "Pending") {
+                    matchFilter = (p.insurance_status && p.insurance_status.toLowerCase() === 'pending');
+                } else if (filterVal === "Panel") {
+                    matchFilter = (p.insurance_status && p.insurance_status.toLowerCase() === 'approved' && !isInsuranceExpired(p.insurance_expiry));
+                } else {
+                    matchFilter = (p.statusCategory === filterVal);
+                }
 
                 return matchSearch && matchFilter;
             });
