@@ -524,7 +524,6 @@
         </div>
 
         <!-- VIEW 3: GLOBAL APPOINTMENTS -->
-        <!-- VIEW 3: GLOBAL APPOINTMENTS -->
         <div class="dashboard-body" id="global-appointments-view">
             <div class="page-title">
                 <h1>Appointments & Revenue</h1>
@@ -534,10 +533,7 @@
                         <input type="text" id="globalApptSearchInput" placeholder="Search patient or doctor..." onkeyup="filterGlobalAppts()">
                     </div>
                 </div>
-            </div>
-
-            <!-- VIEW 4: PANEL CLAIMED -->
-<div class="dashboard-body" id="panel-claimed-view">
+                <div class="dashboard-body" id="panel-claimed-view">
     <div class="page-title">
         <h1>Panel Claims Management</h1>
         <div style="display:flex; gap:12px; flex-wrap: wrap;">
@@ -545,6 +541,8 @@
             <button class="btn-primary" onclick="bulkUpdateToPanelClaimed()">✅ Mark Selected as Claimed</button>
         </div>
     </div>
+                
+            </div>
 
     <!-- FILTERS -->
     <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; align-items: flex-end; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
@@ -913,10 +911,6 @@
             
             document.querySelectorAll('.dashboard-body').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
-
-            // (Existing code)
-            document.querySelectorAll('.dashboard-body').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-menu a').forEach(el => el.classList.remove('active'));
             
             const searchWrap = document.getElementById('search-bar-wrap');
             searchWrap.style.display = 'none';
@@ -1181,7 +1175,9 @@
                         }
                     } else if (hash === '#/appointments') {
                         renderGlobalAppointments();
-                    }
+                    } else if (hash === '#/panel-claimed') {
+                    renderPanelClaimedView(); // <--- ADD THIS LINE
+                }
                 }
 
             } catch (e) {
