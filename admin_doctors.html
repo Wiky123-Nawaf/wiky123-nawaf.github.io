@@ -533,7 +533,7 @@
                         <input type="text" id="globalApptSearchInput" placeholder="Search patient or doctor..." onkeyup="filterGlobalAppts()">
                     </div>
                 </div>
-                <div class="dashboard-body" id="panel-claimed-view">
+            </div>
     <div class="page-title">
         <h1>Panel Claims Management</h1>
         <div style="display:flex; gap:12px; flex-wrap: wrap;">
@@ -613,6 +613,50 @@
             </div>
 
             <div class="docs-grid-container" id="global-appointments-grid">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div> <!-- THIS CLOSES VIEW 3 -->
+
+        <!-- VIEW 4: PANEL CLAIMED -->
+        <div class="dashboard-body" id="panel-claimed-view">
+            <div class="page-title">
+                <h1>Panel Claims Management</h1>
+                <div style="display:flex; gap:12px; flex-wrap: wrap;">
+                    <button class="btn-primary" style="background:#10b981;" onclick="exportPanelClaimedCSV()">📥 Export CSV</button>
+                    <button class="btn-primary" onclick="bulkUpdateToPanelClaimed()">✅ Mark Selected as Claimed</button>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; align-items: flex-end; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                <div class="form-group">
+                    <label style="font-size: 11px; font-weight: 600;">Date From</label>
+                    <input type="date" id="panelFilterFrom" class="form-control" onchange="renderPanelClaimedView()">
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 11px; font-weight: 600;">Date To</label>
+                    <input type="date" id="panelFilterTo" class="form-control" onchange="renderPanelClaimedView()">
+                </div>
+                
+                <div class="form-group">
+                    <label style="font-size: 11px; font-weight: 600;">Status</label>
+                    <select id="panelFilterStatus" class="form-control" onchange="renderPanelClaimedView()">
+                        <option value="completed">Not Panel Claimed (Completed)</option>
+                        <option value="panel_claimed">Panel Claimed</option>
+                        <option value="all">All Panel Appointments</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- SELECT ALL CHECKBOX -->
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="selectAllPanelAppts" onchange="toggleAllPanelCheckboxes(this)" style="width: 16px; height: 16px;">
+                    Select All Displayed
+                </label>
+            </div>
+
+            <div class="docs-grid-container" id="panel-claimed-grid">
                 <!-- Populated dynamically via JS -->
             </div>
         </div>
