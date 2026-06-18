@@ -859,7 +859,48 @@
                 window.currentAvatar = avatar;
 
                 // Render dynamic insurance states
+                // Render dynamic insurance states
                 renderInsuranceUI();
+
+                // Robust Date Parsing Helper to handle multiple date formats safely
+                function parseExpiryDate(dateStr) {
+                    if (!dateStr) return null;
+                    let cleanStr = dateStr.replace(/-/g, '/');
+                    let parsed = new Date(cleanStr);
+                    if (!isNaN(parsed.getTime())) return parsed;
+                    
+                    const parts = cleanStr.split('/');
+                    if (parts.length === 3) {
+                        const p0 = parseInt(parts[0]);
+                        const p1 = parseInt(parts[1]);
+                        const p2 = parseInt(parts[2]);
+                        if (p0 > 12) {
+                            return new Date(p2, p1 - 1, p0); // DD/MM/YYYY
+                        } else {
+                            return new Date(p2, p0 - 1, p1); // MM/DD/YYYY
+                        }
+                    }
+                    return null;
+                }
+
+                // Trigger warnings immediately on the exact date of expiration
+                if (window.userData.insurance_expiry) {
+                    const expiryDate = parseExpiryDate(window.userData.insurance_expiry);
+                    if (expiryDate) {
+                        const today = new Date();
+                        today.setHours(0,0,0,0);
+                        expiryDate.setHours(0,0,0,0);
+                        if (expiryDate < today) {
+                            window.addNotification(
+                                "Insurance Card Expired", 
+                                `Your panel insurance card expired on ${window.userData.insurance_expiry}. Cashless consultation benefits have been suspended.`, 
+                                "switchTab('settings')", 
+                                'warning'
+                            );
+                            window.showInlineMessage(`Your corporate/insurance panel has expired (${window.userData.insurance_expiry}). Please upload a valid replacement under Profile Settings.`, 'warning');
+                        }
+                    }
+                }
 
                 const params = new URLSearchParams(window.location.search);
                 const urlTab = params.get('tab');
@@ -2106,7 +2147,41 @@
             const box = document.getElementById('settings-insurance-box');
             if(!box) return;
 
-            if(status === 'approved') {
+            // Robust check expiration on render
+            let isExpired = false;
+            if (window.userData.insurance_expiry) {
+                let cleanStr = window.userData.insurance_expiry.replace(/-/g, '/');
+                let expiryDate = new Date(cleanStr);
+                if (isNaN(expiryDate.getTime())) {
+                    const parts = cleanStr.split('/');
+                    if (parts.length === 3) {
+                        const p0 = parseInt(parts[0]);
+                        const p1 = parseInt(parts[1]);
+                        const p2 = parseInt(parts[2]);
+                        expiryDate = p0 > 12 ? new Date(p2, p1 - 1, p0) : new Date(p2, p0 - 1, p1);
+                    }
+                }
+
+                if (expiryDate && !isNaN(expiryDate.getTime())) {
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    expiryDate.setHours(0,0,0,0);
+                    if (expiryDate < today) {
+                        isExpired = true;
+                    }
+                }
+            }
+
+            if (isExpired) {
+                box.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-center shadow-sm">
+                        <svg class="w-10 h-10 text-red-500 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <h4 class="font-bold text-red-800 mb-1">Insurance Coverage Expired</h4>
+                        <p class="text-xs text-red-700 max-w-xs mx-auto">Your registered insurance card expired on ${window.userData.insurance_expiry}. Please upload a valid replacement card to restore cashless benefits.</p>
+                        <button onclick="openInsuranceModal()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm whitespace-nowrap active:scale-95 transition">Upload Valid Card</button>
+                    </div>
+                `;
+            } else if(status === 'approved') {
                 box.innerHTML = `
                     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                         <div class="flex items-center gap-3 mb-4">
